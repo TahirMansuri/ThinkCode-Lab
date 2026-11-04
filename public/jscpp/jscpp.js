@@ -1,4 +1,4 @@
-// JSCPP runtime wrapped for ThinkCode Lab offline C++ execution
+// JSCPP runtime wrapped for ThinkCode Lab offline C++ execution (with dynamic interactive stdin)
 (function(global) {
 "use strict";
 var JSCPP_EXPORT = (() => {
@@ -26237,6 +26237,9 @@ var JSCPP_EXPORT = (() => {
                     rt3.raiseException(">> operator in istream cannot accept " + rt3.makeTypeString(t.t));
                   }
                   let b2 = _cin.v.buf;
+                  if ((!b2 || _skipSpace(b2).length === 0) && _cin.v.istream && typeof _cin.v.istream.drain === "function") {
+                    b2 = _cin.v.buf = _cin.v.istream.drain() || "";
+                  }
                   _cin.v.eofbit = b2.length === 0;
                   let r;
                   let v;
@@ -26304,6 +26307,9 @@ var JSCPP_EXPORT = (() => {
               rt3.raiseException("only a pointer to string can be used as storage");
             }
             let b2 = _cin.v.buf;
+            if ((!b2 || _skipSpace(b2).length === 0) && _cin.v.istream && typeof _cin.v.istream.drain === "function") {
+              b2 = _cin.v.buf = _cin.v.istream.drain() || "";
+            }
             _cin.v.eofbit = b2.length === 0;
             b2 = _skipSpace(b2);
             const r = _read(rt3, /^\S*/, b2, t.t)[0];

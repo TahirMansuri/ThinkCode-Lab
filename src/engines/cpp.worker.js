@@ -1,8 +1,32 @@
 // C++ classic worker: Fast offline C++ runtime supporting iostream, cmath, cstring, pointers, arrays, and OOP classes.
-let base = '';
+let base = '', queue = [];
 let status = null, dataLen = null, dataBuf = null;
 const dec = new TextDecoder();
 const post = (t, s) => postMessage({ t, s });
+
+function requestInputFromConsole() {
+  // Priority 1: Interactive in-console stdin via SharedArrayBuffer (exact same as Python)
+  if (status) {
+    post('need_input');
+    Atomics.store(status, 0, 1); // 1 = WAITING_FOR_INPUT
+    Atomics.wait(status, 0, 1);
+    if (Atomics.load(status, 0) === 2) { // 2 = INPUT_READY
+      const len = Atomics.load(dataLen, 0);
+      const copy = new Uint8Array(len);
+      copy.set(dataBuf.subarray(0, len));
+      const text = dec.decode(copy) + '\n';
+      Atomics.store(status, 0, 0);
+      return text;
+    }
+    Atomics.store(status, 0, 0);
+    return '\n';
+  }
+  // Fallback: Pre-buffered input queue (only if SharedArrayBuffer is unavailable)
+  if (queue.length > 0) {
+    return queue.shift() + '\n';
+  }
+  return '\n';
+}
 
 function stripTypes(paramStr) {
   if (!paramStr || !paramStr.trim()) return '';
@@ -12,7 +36,16 @@ function stripTypes(paramStr) {
   }).filter(Boolean).join(', ');
 }
 
-function runCppOop(cppCode, stdinStr) {
+function prepareCppCode(cppCode) {
+  let c = cppCode;
+  c = c.replace(/#include\s*<string>/g, '');
+  if (/\bstring\b/.test(c) && !/typedef\s+char\s+string\b/.test(c)) {
+    c = 'typedef char string[256];\n' + c;
+  }
+  return c;
+}
+
+function runCppOop(cppCode) {
   let code = cppCode;
 
   // Strip headers and namespace
@@ -67,32 +100,20 @@ function runCppOop(cppCode, stdinStr) {
     return parts.map(v => `${v} = cin.next();`).join(' ');
   });
 
-  let stdinQueue = (stdinStr || '').split(/\s+/).filter(Boolean);
+  let oopTokens = [];
   const env = {
     cout: {
       print: (...args) => post('out', args.join(''))
     },
     cin: {
       next: () => {
-        if (stdinQueue.length > 0) return stdinQueue.shift();
-        if (status) {
-          post('need_input');
-          Atomics.store(status, 0, 1);
-          Atomics.wait(status, 0, 1);
-          if (Atomics.load(status, 0) === 2) {
-            const len = Atomics.load(dataLen, 0);
-            const copy = new Uint8Array(len);
-            copy.set(dataBuf.subarray(0, len));
-            const text = dec.decode(copy);
-            Atomics.store(status, 0, 0);
-            const tokens = text.split(/\s+/).filter(Boolean);
-            if (tokens.length > 0) {
-              const res = tokens.shift();
-              stdinQueue.push(...tokens);
-              return res;
-            }
-          }
-          Atomics.store(status, 0, 0);
+        if (oopTokens.length > 0) return oopTokens.shift();
+        const text = requestInputFromConsole();
+        const tokens = text.split(/\s+/).filter(Boolean);
+        if (tokens.length > 0) {
+          const res = tokens.shift();
+          oopTokens.push(...tokens);
+          return res;
         }
         return '';
       }
@@ -124,19 +145,20 @@ onmessage = async ({ data }) => {
 
   if (data.type === 'run') {
     const cppCode = data.code || '';
-    const stdinStr = data.stdin || '';
+    queue = (data.stdin || '').split('\n').filter(Boolean);
     const hasClass = /\bclass\s+[A-Za-z_]\w*/.test(cppCode);
 
     try {
       if (hasClass) {
-        runCppOop(cppCode, stdinStr);
+        runCppOop(cppCode);
       } else {
         if (!globalThis.JSCPP) {
           throw new Error('JSCPP engine is not initialized');
         }
-        globalThis.JSCPP.run(cppCode, stdinStr, {
+        globalThis.JSCPP.run(prepareCppCode(cppCode), '', {
           stdio: {
-            write: (s) => post('out', s)
+            write: (s) => post('out', s),
+            drain: () => requestInputFromConsole()
           }
         });
       }

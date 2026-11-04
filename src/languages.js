@@ -76,30 +76,24 @@ int main() {
     printf("Factorial of %d is %d\\n", num, factorial(num));
     return 0;
 }
-`, stdin: '5' },
+`, stdin: '' },
   { id: 'cpp', name: 'C++', file: 'main.cpp', engine: 'cpp', hue: '#8B5CF6', input: 'stdin',
     tpl: `// C++ — runs 100% offline on your device
 #include <iostream>
 using namespace std;
 
-class Student {
-private:
+int main() {
     string name;
     int roll;
-public:
-    Student(string n, int r) {
-        this.name = n;
-        this.roll = r;
-    }
-    void display() {
-        cout << "Student: " << this.name << " | Roll No: " << this.roll << endl;
-    }
-};
 
-int main() {
-    cout << "=== ThinkCode Lab C++ Practical ===" << endl;
-    Student s("Tahir", 101);
-    s.display();
+    cout << "Enter your name: ";
+    cin >> name;
+
+    cout << "Enter your roll number: ";
+    cin >> roll;
+
+    cout << "\\nHello, " << name << "! (Roll: " << roll << ")" << endl;
+    cout << "C++ interactive in-console input is working!" << endl;
     return 0;
 }
 `, stdin: '' },

@@ -1,5 +1,5 @@
 // Copies offline runtimes from node_modules into public/ so they ship inside the APK.
-import { cpSync, mkdirSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdirSync, existsSync, readFileSync, writeFileSync, promises as fsPromises } from 'node:fs';
 import esbuild from 'esbuild';
 
 const jobs = [
@@ -39,11 +39,11 @@ ${umd.substring(start, end)}
   writeFileSync('public/picoc/picoc.js', picocStandalone);
 }
 
-// Generate public/jscpp/jscpp.js for C++ engine
+// Generate public/jscpp/jscpp.js for C++ engine with dynamic interactive in-console stdin
 if (existsSync('node_modules/JSCPP/lib/launcher.js')) {
   mkdirSync('public/jscpp', { recursive: true });
   const mockPlugin = {
-    name: 'mock-plugin',
+    name: 'jscpp-interactive-plugin',
     setup(build) {
       build.onResolve({ filter: /^(babel-polyfill|util|stream)$/ }, args => ({
         path: args.path,
@@ -53,6 +53,19 @@ if (existsSync('node_modules/JSCPP/lib/launcher.js')) {
         if (args.path === 'util') return { contents: 'module.exports = { inspect: (x) => String(x) };' };
         if (args.path === 'stream') return { contents: 'module.exports = { Stream: class {} };' };
         return { contents: 'module.exports = {};' };
+      });
+
+      // Patch iostream.js so cin >> calls drain() interactively when the input buffer is empty
+      build.onLoad({ filter: /iostream\.js$/ }, async args => {
+        let content = await fsPromises.readFile(args.path, 'utf8');
+        const injection = `
+let b = _cin.v.buf;
+if ((!b || _skipSpace(b).length === 0) && _cin.v.istream && typeof _cin.v.istream.drain === "function") {
+    b = _cin.v.buf = _cin.v.istream.drain() || "";
+}
+`;
+        content = content.replaceAll('let b = _cin.v.buf;', injection);
+        return { contents: content, loader: 'js' };
       });
     }
   };
@@ -68,7 +81,7 @@ if (existsSync('node_modules/JSCPP/lib/launcher.js')) {
     define: { 'process.env.NODE_ENV': '"production"' }
   });
 
-  const jscppStandalone = `// JSCPP runtime wrapped for ThinkCode Lab offline C++ execution
+  const jscppStandalone = `// JSCPP runtime wrapped for ThinkCode Lab offline C++ execution (with dynamic interactive stdin)
 (function(global) {
 ${res.outputFiles[0].text}
   global.JSCPP = JSCPP_EXPORT.default;
