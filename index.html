@@ -14,8 +14,158 @@
       const s = document.createElement('script'); s.src = './coi-serviceworker.js'; document.head.appendChild(s);
     }
   </script>
+  <style id="critical-splash-css">
+    /* Critical Instant Reset: Prevent unstyled content flash on slow networks */
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #080C14;
+      color: #F0F4F8;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      overflow: hidden;
+    }
+    body.app-ready {
+      overflow: visible;
+    }
+    
+    /* Hide main application until styles and scripts are completely ready */
+    header.top, nav.rail, main.work, footer.dock {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+    }
+    body.app-ready header.top,
+    body.app-ready nav.rail,
+    body.app-ready main.work,
+    body.app-ready footer.dock {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Fullscreen Branded Loading Screen */
+    #app-splash {
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+      background: #080C14;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-sizing: border-box;
+      user-select: none;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+    #app-splash.fade-out {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .splash-mark {
+      width: 68px;
+      height: 68px;
+      border-radius: 18px;
+      box-shadow: 0 10px 32px rgba(168, 85, 247, 0.45);
+      margin-bottom: 20px;
+      animation: splash-pulse 2.2s ease-in-out infinite;
+      background: linear-gradient(135deg, #121128 0%, #091824 100%);
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(168, 85, 247, 0.4);
+    }
+    .splash-mark img {
+      width: 100%;
+      height: 100%;
+      border-radius: 18px;
+      display: block;
+    }
+    .splash-fallback {
+      color: #A855F7;
+      font-family: monospace;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .splash-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin: 0 0 6px;
+      color: #F0F4F8;
+      text-align: center;
+    }
+
+    .splash-sub {
+      font-size: 13px;
+      font-weight: 500;
+      color: #8B9BB0;
+      margin: 0 0 30px;
+      text-align: center;
+    }
+    .splash-sub b {
+      color: #FFB04A;
+      font-weight: 600;
+    }
+
+    /* Animated Progress Bar */
+    .splash-loader {
+      width: 220px;
+      max-width: 80vw;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 0 12px rgba(88, 166, 255, 0.15);
+    }
+
+    .splash-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: 45%;
+      background: linear-gradient(90deg, #A855F7 0%, #3B82F6 50%, #FFB04A 100%);
+      border-radius: 999px;
+      animation: splash-glide 1.6s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+    }
+
+    .splash-caption {
+      margin-top: 16px;
+      font-size: 11.5px;
+      color: #5A6A7E;
+      letter-spacing: 0.02em;
+      font-family: monospace;
+    }
+
+    @keyframes splash-glide {
+      0% { left: -45%; width: 45%; }
+      50% { left: 25%; width: 55%; }
+      100% { left: 100%; width: 45%; }
+    }
+
+    @keyframes splash-pulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 8px 24px rgba(168, 85, 247, 0.4)); }
+      50% { transform: scale(1.06); filter: drop-shadow(0 12px 36px rgba(255, 176, 74, 0.5)); }
+    }
+  </style>
 </head>
 <body>
+
+<div id="app-splash" aria-label="Loading ThinkCode Lab">
+  <div class="splash-mark">
+    <img src="assets/icon.svg" width="68" height="68" alt="ThinkCode Logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+    <div class="splash-fallback" style="display:none;">&lt;/&gt;</div>
+  </div>
+  <div class="splash-title">ThinkCode Lab</div>
+  <div class="splash-sub">100% Offline Code IDE • <b>by Tahir Mansuri</b></div>
+  <div class="splash-loader">
+    <div class="splash-bar"></div>
+  </div>
+  <div class="splash-caption">Loading offline environments…</div>
+</div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5z" fill="currentColor"/></symbol>
   <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></symbol>
@@ -26,14 +176,22 @@
   <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
   <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
   <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
 </svg>
 
 <header class="top">
-  <div class="brand">
+  <div class="brand" id="brandDev" title="About Developer & Architecture (Tahir Mansuri)" role="button" tabindex="0">
     <img class="mark" src="assets/icon.svg" width="34" height="34" alt="ThinkCode Lab Logo">
-    <div><b>ThinkCode Lab</b><span id="runtimeState" class="state" data-s="idle">Offline code lab</span></div>
+    <div>
+      <b>ThinkCode Lab</b>
+      <div class="brand-sub">
+        <span id="runtimeState" class="state" data-s="idle">Offline code lab</span>
+        <span class="by-dev" title="Architected & Developed by Tahir Mansuri">by Tahir Mansuri</span>
+      </div>
+    </div>
   </div>
   <div class="top-actions">
+    <button class="icon" id="btnDev" title="About Developer (Tahir Mansuri)" aria-label="About Developer"><svg><use href="#i-user"/></svg></button>
     <button class="icon" id="btnOpen" title="Open file" aria-label="Open file"><svg><use href="#i-up"/></svg></button>
     <button class="icon" id="btnExport" title="Save to device" aria-label="Save to device"><svg><use href="#i-down"/></svg></button>
     <button class="icon" id="btnReset" title="Reset to template" aria-label="Reset to template"><svg><use href="#i-reset"/></svg></button>
@@ -115,6 +273,24 @@
   <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
     <div class="sheet-head"><b id="sheetTitle"></b><button class="icon" data-close aria-label="Close">✕</button></div>
     <div id="sheetBody" class="sheet-body"></div>
+  </div>
+</div>
+
+<div id="promptModal" class="prompt-modal" hidden>
+  <div class="pm-backdrop" data-cancel-prompt></div>
+  <div class="pm-box" role="dialog" aria-modal="true" aria-labelledby="pmMessage">
+    <div class="pm-header">
+      <span class="pm-badge" id="pmBadge">JavaScript</span>
+      <b class="pm-title" id="pmTitle">Prompt</b>
+    </div>
+    <div id="pmMessage" class="pm-message">Please enter input:</div>
+    <form id="pmForm" class="pm-form" autocomplete="off">
+      <input type="text" id="pmInput" class="pm-input" placeholder="Type your answer here…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+      <div class="pm-actions">
+        <button type="button" id="pmCancel" class="pm-btn pm-cancel">Cancel</button>
+        <button type="submit" id="pmOk" class="pm-btn pm-ok">OK</button>
+      </div>
+    </form>
   </div>
 </div>
 <div id="toast" class="toast" role="status"></div>

@@ -25,21 +25,34 @@ class WorkerEngine {
     this.finish = null;
     this.readyReject = null;
     this.q = null;
+    this.isReady = false;
   }
   spawn(sink) {
     this.w = this.factory();
+    this.isReady = false;
     this.ready = new Promise((ok, no) => {
       this.readyReject = no;
       this.w.onmessage = ({ data: d }) => {
-        if (d.t === 'ready') ok();
-        else if (d.t === 'fatal') { no(new Error(d.s)); }
+        if (d.t === 'ready') {
+          this.isReady = true;
+          ok();
+        }
+        else if (d.t === 'fatal') {
+          this.isReady = false;
+          no(new Error(d.s));
+        }
         else if (d.t === 'status') (this.cb || sink)?.status?.(d.s);
         else if (d.t === 'done') { this.finish?.(); this.finish = null; }
-        else if (d.t === 'table') (this.cb || sink).table(d.columns, d.rows);
+        else if (d.t === 'table') (this.cb || sink).table?.(d.columns, d.rows);
         else if (d.t === 'need_input') (this.cb || sink).need_input?.(d.s);
+        else if (d.t === 'prompt_modal') (this.cb || sink).prompt_modal?.(d.s, d);
+        else if (d.t === 'alert_modal') (this.cb || sink).alert_modal?.(d.s, d);
         else (this.cb || sink)[d.t]?.(d.s);
       };
-      this.w.onerror = e => no(new Error(e.message || 'Worker crashed'));
+      this.w.onerror = e => {
+        this.isReady = false;
+        no(new Error(e.message || 'Worker crashed'));
+      };
       this.w.postMessage({
         type: 'init',
         base: BASE,
@@ -47,7 +60,7 @@ class WorkerEngine {
         sharedData
       });
     });
-    this.ready.catch(() => {});
+    this.ready.catch(() => { this.isReady = false; });
   }
   async load(sink) { if (!this.w) this.spawn(sink); await this.ready; }
   chain(fn) { const p = (this.q || Promise.resolve()).then(fn, fn); this.q = p.catch(() => {}); return p; }
@@ -71,6 +84,23 @@ class WorkerEngine {
       Atomics.notify(ctrl, 0, 1);
     }
   }
+  sendPromptResponse(value) {
+    this.w?.postMessage({ type: 'prompt_response', value });
+    if (sharedCtrl && sharedData) {
+      if (value === null) {
+        const ctrl = new Int32Array(sharedCtrl);
+        Atomics.store(ctrl, 0, 0); // cancelled / null
+        Atomics.notify(ctrl, 0, 1);
+      } else {
+        const enc = new TextEncoder().encode(String(value));
+        new Uint8Array(sharedData).set(enc);
+        const ctrl = new Int32Array(sharedCtrl);
+        Atomics.store(ctrl, 1, enc.length);
+        Atomics.store(ctrl, 0, 2); // 2 = INPUT_READY
+        Atomics.notify(ctrl, 0, 1);
+      }
+    }
+  }
   extra(type, sink, payload = {}) {
     return this.chain(async () => {
       this.cb = sink;
@@ -92,6 +122,7 @@ class WorkerEngine {
     this.w = null;
     this.ready = null;
     this.q = null;
+    this.isReady = false;
     try { worker.terminate(); } catch (_) {}
     this.readyReject?.(new Error('Stopped'));
     this.readyReject = null;
@@ -103,6 +134,7 @@ class WorkerEngine {
 
 class ShellEngine {
   constructor() { this.sh = new Shell(); }
+  get isReady() { return true; }
   async load() {}
   async run(code, stdin, sink) { this.sh.run(code, sink, stdin); }
   exec(line, sink) { this.sh.run(line, sink); }
@@ -111,6 +143,7 @@ class ShellEngine {
 }
 
 class WebEngine {
+  get isReady() { return true; }
   async load() {}
   async run(code, _stdin, sink) { sink.preview(code); sink.out('Preview updated. Open the Preview tab.\n'); }
   stop() {}

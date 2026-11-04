@@ -75,9 +75,86 @@ function showTab(name) {
   con.hidden = name !== 'console'; preview.hidden = name !== 'preview'; $('schemaView').hidden = name !== 'schema';
   for (const n of ['Console', 'Preview', 'Schema']) $('tab' + n).classList.toggle('on', name === n.toLowerCase());
 }
+
+let currentPromptCb = null;
+
+function showPromptModal(msg, defaultVal = '', cb, badgeText = 'JavaScript', titleText = 'Prompt', isAlert = false) {
+  closePromptModal(null);
+  currentPromptCb = cb;
+
+  const modal = $('promptModal');
+  const badge = $('pmBadge');
+  const title = $('pmTitle');
+  const messageEl = $('pmMessage');
+  const input = $('pmInput');
+  const cancelBtn = $('pmCancel');
+  const okBtn = $('pmOk');
+
+  if (!modal) return;
+
+  if (badge) badge.textContent = badgeText;
+  if (title) title.textContent = titleText;
+  if (messageEl) messageEl.textContent = msg || (isAlert ? 'Alert' : 'Please enter a value:');
+
+  if (isAlert) {
+    if (input) input.style.display = 'none';
+    if (cancelBtn) cancelBtn.style.display = 'none';
+    if (okBtn) okBtn.textContent = 'OK';
+  } else {
+    if (input) {
+      input.style.display = '';
+      input.value = defaultVal || '';
+    }
+    if (cancelBtn) cancelBtn.style.display = '';
+    if (okBtn) okBtn.textContent = 'OK';
+  }
+
+  modal.hidden = false;
+
+  setTimeout(() => {
+    if (!isAlert && input) {
+      input.focus();
+      if (defaultVal) input.select();
+    } else if (okBtn) {
+      okBtn.focus();
+    }
+  }, 40);
+}
+
+function closePromptModal(result = null) {
+  const modal = $('promptModal');
+  if (modal) modal.hidden = true;
+  if (currentPromptCb) {
+    const cb = currentPromptCb;
+    currentPromptCb = null;
+    cb(result);
+  }
+}
+
 const sink = {
   out: s => print(s), err: s => print(s, 'err'), table,
-  need_input: () => {
+  prompt_modal: (msg, data) => {
+    const def = (data && data.defaultVal) || '';
+    showPromptModal(msg, def, val => {
+      engines[cur.engine]?.sendPromptResponse?.(val);
+    }, 'JavaScript', 'Prompt', false);
+  },
+  alert_modal: (msg) => {
+    showPromptModal(msg, '', () => {
+      engines[cur.engine]?.sendPromptResponse?.('');
+    }, 'JavaScript', 'Alert', true);
+  },
+  need_input: (promptMsg) => {
+    const isMobile = window.innerWidth <= 768 || ('ontouchstart' in window);
+    if (isMobile) {
+      const langName = cur.name || cur.engine?.toUpperCase() || 'Input';
+      showPromptModal(promptMsg || 'Enter input for program:', '', val => {
+        const text = val !== null ? val : '';
+        print(text + '\n');
+        engines[cur.engine]?.sendInput(text);
+      }, langName, 'Input Required', false);
+      return;
+    }
     con.querySelector('.con-input')?.remove();
     const inp = document.createElement('input');
     inp.type = 'text';
@@ -109,7 +186,12 @@ const sink = {
     setTimeout(() => inp.focus(), 15);
   },
   meta: m => sqlui.onMeta(m), save: v => sqlui.onSave(v), tx: v => sqlui.onTx(v), export: v => sqlui.onExport(v),
-  status: s => setState('loading', s), clear: () => (con.textContent = ''),
+  status: s => {
+    setState('loading', s);
+    const txt = con.querySelector('.cwn-text');
+    if (txt) txt.textContent = s;
+  },
+  clear: () => (con.textContent = ''),
   preview: html => {
     preview.srcdoc = /<head[^>]*>/i.test(html) ? html.replace(/<head[^>]*>/i, m => m + HOOK) : HOOK + html;
     showTab('preview');
@@ -182,11 +264,56 @@ async function extra(type) {
   try { await engines[cur.engine].extra(type, sink); } catch (e) { print(String(e.message || e) + '\n', 'err'); }
   running = false; syncButtons();
 }
+function showConsoleWarmNotice(label) {
+  if (running) return;
+  const existing = con.querySelector('.console-warm-notice');
+  if (existing) return;
+  con.innerHTML = `
+    <div class="console-warm-notice">
+      <div class="cwn-header">
+        <div class="cwn-spinner"></div>
+        <b>Initializing ${label} WebAssembly Environment…</b>
+      </div>
+      <p class="cwn-text">Downloading & preparing offline runtime files on your device. First load may take a moment over mobile networks.</p>
+      <p class="cwn-sub">💡 <i>You can write your code now. Clicking "Run" will queue execution to start automatically when ready.</i></p>
+    </div>
+  `;
+}
+
+function hideConsoleWarmNotice(label) {
+  const notice = con.querySelector('.console-warm-notice');
+  if (notice && !running) {
+    notice.innerHTML = `
+      <div class="cwn-ready">
+        <b>✓ ${label} is ready!</b> Tap <span class="cwn-run-btn">Run</span> or press <kbd>⌘↵</kbd> to execute your code.
+      </div>
+    `;
+    setTimeout(() => {
+      if (!running && con.querySelector('.cwn-ready')) {
+        con.textContent = '';
+      }
+    }, 4500);
+  }
+}
+
 function warm() {
-  const eng = engines[cur.engine], label = eng.label || cur.name;
-  if (cur.id === 'python' || cur.id === 'sql' || cur.id === 'php') setState('loading', `Loading ${label}…`);
+  const eng = engines[cur.engine], label = eng?.label || cur.name;
+  if (!eng) return;
+  const needsWarm = cur.id === 'python' || cur.id === 'sql' || cur.id === 'php';
+  if (needsWarm && !eng.isReady) {
+    setState('loading', `Loading ${label}…`);
+    if (!running && con.textContent.trim() === '') {
+      showConsoleWarmNotice(label);
+    }
+  } else if (eng.isReady) {
+    setState('ready', `${label} · offline`);
+  }
+
   eng.load(sink).then(() => {
-    if (!stopped) setState('ready', `${label} · offline`);
+    if (!stopped) {
+      setState('ready', `${label} · offline`);
+      hideConsoleWarmNotice(label);
+    }
     if (cur.id === 'sql') sqlui.ensure().catch(e => { if (!stopped) print(String(e.message || e) + '\n', 'err'); });
   }).catch(e => {
     if (!stopped && e?.message !== 'Stopped') {
@@ -231,7 +358,10 @@ function syncButtons() {
   $('btnRun').querySelector('span').textContent = running ? 'Running…' : 'Run';
   const bSec = $('btnRunPhpSec');
   if (bSec) bSec.disabled = running;
-  if (!running) con.querySelector('.con-input')?.remove();
+  if (!running) {
+    con.querySelector('.con-input')?.remove();
+    closePromptModal(null);
+  }
 }
 async function run(arg) {
   if (running || !cur.engine) return;
@@ -276,10 +406,22 @@ async function run(arg) {
     }
 
     if (cur.id !== 'web' && (!opts || opts.tab !== 'preview')) showTab('console');
+    const wasWarming = !eng.isReady && (cur.id === 'python' || cur.id === 'sql' || cur.id === 'php');
     sink.clear();
+    if (wasWarming) {
+      print(`⏳ ${eng.label || cur.name} runtime is still downloading/loading on your device…\n`, 'sys');
+      print(`   Execution is queued — your code will run automatically as soon as ready!\n\n`, 'mute');
+      toast(`⏳ Loading ${eng.label || cur.name}... queued to run`);
+      $('btnRun').querySelector('span').textContent = 'Loading…';
+    }
     const t0 = performance.now();
     if (cur.id === 'shell') print(`$ bash ${cur.file}\n`, 'cmd');
     await eng.load(sink); setState('ready', `${eng.label || cur.name} · offline`);
+    if (wasWarming && !stopped) {
+      print(`✓ ${eng.label || cur.name} ready! Executing your code…\n`, 'ok');
+      print('──────────────────────────────────────────────────\n', 'mute');
+      $('btnRun').querySelector('span').textContent = 'Running…';
+    }
     if (cur.id === 'sql') await sqlui.ensure();
     runStart = performance.now();
     await eng.run(customCode || editor.get(), cur.input === 'stdin' ? $('stdin').value : '', sink, opts);
@@ -302,6 +444,7 @@ function stop() {
   running = false;
   syncButtons();
   con.querySelector('.con-input')?.remove();
+  closePromptModal(null);
   try { engines[cur.engine]?.stop(sink); } catch (_) {}
   if (cur.id !== 'shell') $('promptbar').hidden = true;
   setState('idle', 'Stopped');
@@ -309,11 +452,23 @@ function stop() {
 
 async function executePhpCode(code) {
   const eng = engines.php;
+  const wasWarming = !eng.isReady;
   showTab('console');
   sink.clear();
+  if (wasWarming) {
+    print(`⏳ PHP 8.2 WebAssembly runtime is still downloading/loading on your device…\n`, 'sys');
+    print(`   Execution is queued — script will run automatically once loading completes!\n\n`, 'mute');
+    toast('⏳ Initializing PHP runtime...');
+    $('btnRun').querySelector('span').textContent = 'Loading…';
+  }
   const t0 = performance.now();
   print(`$ php process.php\n`, 'cmd');
   await eng.load(sink);
+  if (wasWarming && !stopped) {
+    print(`✓ PHP 8.2 ready! Executing code…\n`, 'ok');
+    print('──────────────────────────────────────────────────\n', 'mute');
+    $('btnRun').querySelector('span').textContent = 'Running…';
+  }
   await eng.run(code, '', sink);
   if (!stopped) print(`\n✓ Finished in ${Math.round(performance.now() - t0)} ms\n`, 'ok');
 }
@@ -389,9 +544,105 @@ $('btnExport').onclick = () => {
     saveFile(cur.file, editor.get());
   }
 };
-function openSheet(title, node) { $('sheetTitle').textContent = title; const b = $('sheetBody'); b.textContent = ''; b.append(node); $('sheet').hidden = false; }
+function openSheet(title, node) {
+  $('sheetTitle').textContent = title;
+  const b = $('sheetBody');
+  b.textContent = '';
+  if (typeof node === 'string') b.innerHTML = node;
+  else b.append(node);
+  $('sheet').hidden = false;
+}
 function closeSheet() { $('sheet').hidden = true; }
 document.querySelectorAll('[data-close]').forEach(e => (e.onclick = closeSheet));
+
+const pmForm = $('pmForm');
+if (pmForm) {
+  pmForm.onsubmit = e => {
+    e.preventDefault();
+    const isAlert = $('pmInput')?.style.display === 'none';
+    const val = isAlert ? '' : ($('pmInput')?.value || '');
+    closePromptModal(val);
+  };
+}
+const pmCancel = $('pmCancel');
+if (pmCancel) {
+  pmCancel.onclick = () => closePromptModal(null);
+}
+const promptModal = $('promptModal');
+if (promptModal) {
+  promptModal.addEventListener('click', e => {
+    if (e.target.dataset.cancelPrompt !== undefined) closePromptModal(null);
+  });
+}
+window.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && promptModal && !promptModal.hidden) closePromptModal(null);
+});
+
+function showDevProfile() {
+  const card = document.createElement('div');
+  card.className = 'dev-card';
+  card.innerHTML = `
+    <div class="dev-header">
+      <div class="dev-avatar">
+        <img src="assets/tahir-mansuri.png" alt="Tahir Mansuri" onerror="this.onerror=null; this.src='https://github.com/TahirMansuri.png';">
+      </div>
+      <div class="dev-titles">
+        <h3 class="dev-name">Tahir Mansuri</h3>
+        <p class="dev-role">Lead System Engineer • Educator • Full-Stack Developer</p>
+        <p class="dev-org">IMRD College • Department of Computer Applications</p>
+      </div>
+    </div>
+
+    <div class="dev-tags">
+      <span class="dtag dtag-pri">System Architect</span>
+      <span class="dtag">Educator</span>
+      <span class="dtag">WebAssembly</span>
+      <span class="dtag">ThinkCode Ecosystem</span>
+    </div>
+
+    <div class="dev-section">
+      <h4>⚡ About ThinkCode Lab</h4>
+      <p>
+        Architected by <b>Tahir Mansuri</b> as a 100% offline multi-language coding playground and mobile IDE for students across BCA, B.Sc. IT, B.Tech, and MCA.
+        Runs Python 3.12, PHP 8.2 with Dual-Section HTML+PHP Practical Workspace, Oracle-compatible SQL, and Linux Bash locally in WebAssembly with zero server latency.
+      </p>
+    </div>
+
+    <div class="dev-project-box">
+      <div class="dpb-icon">
+        <img src="assets/icon.svg" width="28" height="28" alt="ThinkCode Icon">
+      </div>
+      <div class="dpb-info">
+        <b>ThinkCode Platform</b>
+        <small>Interactive DSA Visualizer & Dual-Engine Code Tracer</small>
+      </div>
+      <a href="https://thinkcode.infogalaxy.space/" target="_blank" rel="noopener" class="dpb-btn">
+        Visit ↗
+      </a>
+    </div>
+
+    <div class="dev-links">
+      <a href="https://github.com/TahirMansuri" target="_blank" rel="noopener" class="dev-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        <span>GitHub Profile</span>
+      </a>
+      <a href="mailto:tahirmansuri086@gmail.com" class="dev-link">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span>Email Contact</span>
+      </a>
+    </div>
+
+    <div class="dev-meta">
+      <span>ThinkCode Lab v1.1.1 (Production Release) • 100% Offline WASM</span>
+    </div>
+  `;
+  openSheet('Developer & Architecture', card);
+}
+$('btnDev')?.addEventListener('click', showDevProfile);
+$('brandDev')?.addEventListener('click', showDevProfile);
+$('brandDev')?.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showDevProfile(); }
+});
 $('btnOpen').onclick = () => $('filePick').click();
 $('filePick').onchange = async e => {
   const f = e.target.files[0]; if (!f) return;
@@ -544,3 +795,16 @@ sqlui.init({ engine: engines.sql, editor, sink, run, toast, store, openSheet, cl
 $('stdin').value = cur.input === 'stdin' ? store.get('cf.in.' + cur.id, cur.stdin || '') : '';
 applyLang(); syncButtons(); warm();
 window.__app = { run, stop, engines, cur: () => cur, editorPhp: () => editorPhp, editorHtml: () => editorHtml, running: () => running };
+
+// ---------- app ready & splash dismissal ----------
+requestAnimationFrame(() => {
+  document.body.classList.add('app-ready');
+  const splash = $('app-splash');
+  if (splash) {
+    splash.classList.add('fade-out');
+    setTimeout(() => {
+      splash.remove();
+      $('critical-splash-css')?.remove();
+    }, 450);
+  }
+});

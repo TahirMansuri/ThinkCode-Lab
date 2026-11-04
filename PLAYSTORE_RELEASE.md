@@ -39,13 +39,22 @@ This document contains the signing credentials, certificate fingerprints, and re
 ## 📦 Generated Release Artifacts
 
 1. **Google Play Console App Bundle (.aab)**:
-   - **Path**: `ThinkCodeLab-release.aab` *(16 MB)*
-   - **Version**: `1.1.1` (VersionCode: `3`)
+   - **File**: `ThinkCodeLab-release.aab` *(16 MB)*
+   - **Version**: `1.1.2` (VersionCode: `4`)
    - **Usage**: **This is the exact file you upload to Google Play Console** (Production, Closed Testing, or Internal Testing track).
 2. **Signed Release Standalone APK (.apk)**:
-   - **Path**: `ThinkCodeLab-release.apk` *(16 MB)*
-   - **Version**: `1.1.1` (VersionCode: `3`)
+   - **File**: `ThinkCodeLab-release.apk` *(16 MB)*
+   - **Version**: `1.1.2` (VersionCode: `4`)
    - **Usage**: Install directly on any real Android device (`adb install` or via file transfer) to test the signed production build locally.
+
+---
+
+## 🎨 Store Listing Assets Ready in Project
+
+- **App Icon (512x512)**: `resources/icon-512.png`
+- **High-Res Icon (1024x1024)**: `resources/icon.png`
+- **Feature Graphic (1024x500)**: `resources/feature-graphic.png`
+- **Privacy Policy**: `public/privacy.html` (Host on GitHub Pages or personal domain)
 
 ---
 
