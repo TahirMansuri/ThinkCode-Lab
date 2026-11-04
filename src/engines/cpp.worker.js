@@ -1,6 +1,5 @@
-// C++ worker: Fast offline C++ runtime supporting iostream, cmath, cstring, pointers, arrays, and OOP classes.
-import JSCPP from 'JSCPP';
-
+// C++ classic worker: Fast offline C++ runtime supporting iostream, cmath, cstring, pointers, arrays, and OOP classes.
+let base = '';
 let status = null, dataLen = null, dataBuf = null;
 const dec = new TextDecoder();
 const post = (t, s) => postMessage({ t, s });
@@ -107,13 +106,19 @@ function runCppOop(cppCode, stdinStr) {
 
 onmessage = async ({ data }) => {
   if (data.type === 'init') {
+    base = data.base;
     if (data.sharedCtrl && data.sharedData) {
       status = new Int32Array(data.sharedCtrl, 0, 1);
       dataLen = new Int32Array(data.sharedCtrl, 4, 1);
       dataBuf = new Uint8Array(data.sharedData);
     }
     post('status', 'Loading C++ runtime…');
-    post('ready');
+    try {
+      importScripts(base + 'jscpp/jscpp.js');
+      post('ready');
+    } catch (e) {
+      post('fatal', 'C++ runtime failed to load: ' + e);
+    }
     return;
   }
 
@@ -126,7 +131,10 @@ onmessage = async ({ data }) => {
       if (hasClass) {
         runCppOop(cppCode, stdinStr);
       } else {
-        JSCPP.run(cppCode, stdinStr, {
+        if (!globalThis.JSCPP) {
+          throw new Error('JSCPP engine is not initialized');
+        }
+        globalThis.JSCPP.run(cppCode, stdinStr, {
           stdio: {
             write: (s) => post('out', s)
           }

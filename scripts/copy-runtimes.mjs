@@ -1,5 +1,6 @@
 // Copies offline runtimes from node_modules into public/ so they ship inside the APK.
 import { cpSync, mkdirSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
+import esbuild from 'esbuild';
 
 const jobs = [
   ['node_modules/pyodide', 'public/pyodide',
@@ -36,6 +37,44 @@ ${umd.substring(start, end)}
 })(typeof self !== "undefined" ? self : globalThis);
 `;
   writeFileSync('public/picoc/picoc.js', picocStandalone);
+}
+
+// Generate public/jscpp/jscpp.js for C++ engine
+if (existsSync('node_modules/JSCPP/lib/launcher.js')) {
+  mkdirSync('public/jscpp', { recursive: true });
+  const mockPlugin = {
+    name: 'mock-plugin',
+    setup(build) {
+      build.onResolve({ filter: /^(babel-polyfill|util|stream)$/ }, args => ({
+        path: args.path,
+        namespace: 'mock-ns'
+      }));
+      build.onLoad({ filter: /.*/, namespace: 'mock-ns' }, args => {
+        if (args.path === 'util') return { contents: 'module.exports = { inspect: (x) => String(x) };' };
+        if (args.path === 'stream') return { contents: 'module.exports = { Stream: class {} };' };
+        return { contents: 'module.exports = {};' };
+      });
+    }
+  };
+
+  const res = await esbuild.build({
+    entryPoints: ['node_modules/JSCPP/lib/launcher.js'],
+    bundle: true,
+    format: 'iife',
+    globalName: 'JSCPP_EXPORT',
+    write: false,
+    platform: 'browser',
+    plugins: [mockPlugin],
+    define: { 'process.env.NODE_ENV': '"production"' }
+  });
+
+  const jscppStandalone = `// JSCPP runtime wrapped for ThinkCode Lab offline C++ execution
+(function(global) {
+${res.outputFiles[0].text}
+  global.JSCPP = JSCPP_EXPORT.default;
+})(typeof self !== "undefined" ? self : globalThis);
+`;
+  writeFileSync('public/jscpp/jscpp.js', jscppStandalone);
 }
 
 console.log('Offline runtimes ready in public/');
