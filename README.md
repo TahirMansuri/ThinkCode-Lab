@@ -6,7 +6,7 @@
 ### 100% Offline Multi-Language Code Playground & Mobile IDE for Students
 
 > **Write, Compile & Execute Anywhere — Zero Latency, Zero Backend.**  
-> Built for Computer Science and IT students to practice Python, PHP, Oracle SQL, JavaScript, HTML/CSS, and Linux Shell with true interactive runtime input directly on Web and Android.
+> Built for Computer Science and IT students to practice Python, PHP, C, C++, Oracle SQL, JavaScript, HTML/CSS, and Linux Shell with true interactive runtime input directly on Web and Android.
 
 [![Parent Initiative: ThinkCode](https://img.shields.io/badge/Companion_To-ThinkCode_Visualizer-8e5bd6?style=for-the-badge&logo=googlechrome&logoColor=white)](https://thinkcode.infogalaxy.space/)
 [![Python 3.12](https://img.shields.io/badge/Python-3.12_WebAssembly-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://pyodide.org/)
@@ -39,7 +39,7 @@ Most online code playgrounds and cloud IDEs rely on remote backend servers to sp
 | **Offline Capability** | ❌ Requires Internet | ⚠️ Limited / Ad-supported | **✅ 100% Fully Offline** |
 | **Interactive Terminal Input** | ❌ Pre-buffered Stdin | ⚠️ Often Broken | **✅ True Inline `input()` & `fgets(STDIN)`** |
 | **Oracle SQL Simulation** | ❌ Standard SQLite only | ❌ None | **✅ Live Schemas + Oracle Dialect** |
-| **Multi-Language Breadth** | Usually 1-2 | Usually 1 | **✅ 6 Runtimes (Python/PHP/SQL/JS/Web/Shell)** |
+| **Multi-Language Breadth** | Usually 1-2 | Usually 1 | **✅ 8 Runtimes (Python/PHP/C/C++/SQL/JS/Web/Shell)** |
 | **Native Android App** | ❌ Web-only | ⚠️ Heavy (>100 MB) | **✅ Ultra-lightweight APK (~12 MB)** |
 | **Zero Backend Cost** | ❌ Expensive cloud | ⚠️ Ads / Subscriptions | **✅ Open-Source & Self-Contained** |
 
@@ -81,7 +81,8 @@ Most online code playgrounds and cloud IDEs rely on remote backend servers to sp
 | **JavaScript** | Modern ES2022+ Engine | Web Worker (`AsyncFunction`) | Intercepted console, touch-friendly `prompt()` & `alert()` modal |
 | **HTML / CSS** | Sandboxed `<iframe>` | Main Thread DOM Preview | Live reload, DOM error forwarding, console sync |
 | **Linux Shell** | Virtual Bash Emulator | Main Thread Engine | 35+ commands, virtual FS, pipes, redirects |
-| **C / C++** | Clang WASI Toolchain | Planned (Phase 3) | Full STL, GCC/G++ compatible offline packs |
+| **C (C99)** | PicoC WebAssembly (WASM) | Isolated Web Worker | Real pointers, `malloc`/`free`, `struct`, arrays, `stdio.h`, interactive `scanf` |
+| **C++** | JSCPP + OOP Transpiler Engine | Isolated Web Worker | `iostream` (`cin`/`cout`), `cmath`, formatted I/O, classes, constructors, methods |
 | **Java** | JVM WebAssembly | Planned (Phase 4) | Standard Java SE, OOP, Collections |
 
 ---

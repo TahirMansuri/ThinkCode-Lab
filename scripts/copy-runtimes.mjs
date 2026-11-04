@@ -1,5 +1,5 @@
 // Copies offline runtimes from node_modules into public/ so they ship inside the APK.
-import { cpSync, mkdirSync, existsSync } from 'node:fs';
+import { cpSync, mkdirSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
 
 const jobs = [
   ['node_modules/pyodide', 'public/pyodide',
@@ -22,4 +22,20 @@ for (const [src, dst, files] of jobs) {
     cpSync(srcPath, dstPath);
   }
 }
+
+// Generate public/picoc/picoc.js for C engine
+if (existsSync('node_modules/picoc-js/dist/bundle.umd.js')) {
+  mkdirSync('public/picoc', { recursive: true });
+  const umd = readFileSync('node_modules/picoc-js/dist/bundle.umd.js', 'utf8');
+  const start = umd.indexOf('var PicocModule =');
+  const end = umd.indexOf('module.exports = PicocModule;');
+  const picocStandalone = `// PicoC WebAssembly runtime wrapped for ThinkCode Lab offline execution
+(function(global) {
+${umd.substring(start, end)}
+  global.Picoc = PicocModule;
+})(typeof self !== "undefined" ? self : globalThis);
+`;
+  writeFileSync('public/picoc/picoc.js', picocStandalone);
+}
+
 console.log('Offline runtimes ready in public/');

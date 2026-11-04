@@ -60,7 +60,48 @@ ls -l
 
 ?>
 `, stdin: '' },
-  { id: 'c', name: 'C', file: 'main.c', engine: null, hue: '#8E9AAF', soon: 'Phase 3 — Clang WASM offline pack' },
-  { id: 'cpp', name: 'C++', file: 'main.cpp', engine: null, hue: '#B388EB', soon: 'Phase 3 — Clang WASM offline pack' },
+  { id: 'c', name: 'C', file: 'main.c', engine: 'c', hue: '#64748B', input: 'stdin',
+    tpl: `// C (C99) — runs 100% offline on your device
+#include <stdio.h>
+
+int factorial(int n) {
+    if (n <= 1) return 1;
+    return n * factorial(n - 1);
+}
+
+int main() {
+    int num;
+    printf("Enter a number: ");
+    scanf("%d", &num);
+    printf("Factorial of %d is %d\\n", num, factorial(num));
+    return 0;
+}
+`, stdin: '5' },
+  { id: 'cpp', name: 'C++', file: 'main.cpp', engine: 'cpp', hue: '#8B5CF6', input: 'stdin',
+    tpl: `// C++ — runs 100% offline on your device
+#include <iostream>
+using namespace std;
+
+class Student {
+private:
+    string name;
+    int roll;
+public:
+    Student(string n, int r) {
+        this.name = n;
+        this.roll = r;
+    }
+    void display() {
+        cout << "Student: " << this.name << " | Roll No: " << this.roll << endl;
+    }
+};
+
+int main() {
+    cout << "=== ThinkCode Lab C++ Practical ===" << endl;
+    Student s("Tahir", 101);
+    s.display();
+    return 0;
+}
+`, stdin: '' },
   { id: 'java', name: 'Java', file: 'Main.java', engine: null, hue: '#F28482', soon: 'Phase 4 — JVM offline pack' }
 ];

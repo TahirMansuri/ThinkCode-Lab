@@ -66,9 +66,18 @@ While ThinkCode focuses on visual algorithm tracing and step-by-step memory insp
    - Supports 35+ UNIX commands (`ls`, `cat`, `grep`, `mkdir`, `rm`, `find`, `curl`, `tree`, `wc`, `head`, `tail`, `touch`, `chmod`, `alias`, etc.).
    - UNIX pipelines (`|`), input/output redirections (`>`, `>>`, `<`), environment variables (`$VAR`), and control flow (`if`/`for`/`while`).
 
-### In Development (Phase 3 – Phase 5)
-- **C / C++**: Compilation and execution via Clang WASM + WASI runtime pack.
+7. **C (C99) (PicoC WebAssembly Engine)**
+   - 100% offline ANSI/C99 execution via PicoC in an isolated Web Worker (`c.worker.js`).
+   - True pointer arithmetic, dynamic memory (`malloc`/`free`), structures (`struct`), unions, arrays, functions, recursion, and `<stdio.h>`, `<stdlib.h>`, `<string.h>`, `<math.h>`.
+   - Interactive `scanf` and `getchar` supported via `SharedArrayBuffer` (`Atomics.wait`) and input queue.
+8. **C++ (JSCPP + OOP Transpiler Engine)**
+   - Interactive C++ execution via `cpp.worker.js`.
+   - Native `<iostream>` (`cin >>`, `cout <<`, `endl`), formatted I/O (`<iomanip>`), `<cmath>`, 1D/2D arrays, recursion, and pointer arithmetic.
+   - User-defined classes (`class`), constructors, destructors, access specifiers (`public:`/`private:`), member methods, and object lifecycles.
+
+### In Development (Phase 4 – Phase 5)
 - **Java**: Bytecode execution via JVM WebAssembly.
+- **Clang WASM Pack (Option 2 Upgrade)**: Detailed in `C_CPP_ENGINE_ARCHITECTURE.md` for advanced STL and competitive programming.
 
 ---
 

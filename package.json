@@ -32,7 +32,9 @@
     "@fontsource-variable/bricolage-grotesque": "^5.1.0",
     "@fontsource-variable/jetbrains-mono": "^5.1.0",
     "@lezer/highlight": "^1.2.1",
+    "JSCPP": "^2.0.9",
     "php-wasm": "^0.2.0",
+    "picoc-js": "^1.0.12",
     "pyodide": "0.26.4",
     "sql.js": "^1.11.0"
   },

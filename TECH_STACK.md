@@ -86,6 +86,23 @@ ThinkCode Studio is designed as an **offline-first, zero-backend, multi-threaded
 - **Command Set:** 35+ core UNIX utilities (`ls`, `cat`, `head`, `tail`, `grep`, `mkdir`, `rm`, `cp`, `mv`, `chmod`, `wc`, `find`, `curl`, `tree`, `touch`, `clear`, `echo`, `export`, `alias`, etc.).
 - **Shell Features:** Pipelines (`cmd1 | cmd2`), file redirects (`>`, `>>`, `<`), command substitution (`$(cmd)`), arithmetic expansion (`$((1 + 2))`), variables (`$USER`), and conditionals (`if`/`else`, `for`, `while`).
 
+### ⚙️ C (C99) Real WebAssembly Execution Engine (`src/engines/c.worker.js`)
+- **Technology:** [PicoC](https://github.com/jpoirier/picoc) ANSI/C99 interpreter compiled to WebAssembly via Emscripten (`public/picoc/picoc.js`).
+- **Offline Footprint:** Compact ~800 KB bundle, 100% self-hosted, 0 external network requests.
+- **Key Capabilities:**
+  - True pointer arithmetic, address-of `&`, dereferencing `*`, pointer arithmetic (`p + i`), and double pointers `**`.
+  - Dynamic memory allocation (`malloc`, `free`).
+  - Real structures (`struct`), unions, and typedefs for college data structures (Linked Lists, Stacks, Queues, Binary Trees).
+  - Standard headers: `<stdio.h>`, `<stdlib.h>`, `<string.h>`, `<math.h>`, `<ctype.h>`.
+  - Interactive `scanf` and `getchar` supported via `SharedArrayBuffer` (`Atomics.wait`) and input queue.
+
+### ⚡ C++ Interactive & OOP Engine (`src/engines/cpp.worker.js`)
+- **Technology:** JSCPP + Custom OOP Transpiler Engine (~380 KB).
+- **Execution Architecture:**
+  - **Procedural Logic:** Native `<iostream>` (`cin >>`, `cout <<`, `endl`), `<cmath>`, `<cstring>`, `<cctype>`, `<cstdlib>`, `<ctime>`, and `<iomanip>` (`setw`, `setprecision`, `fixed`).
+  - **Object-Oriented Practicals:** Compiles user-defined classes (`class`, access specifiers `public:`/`private:`, constructors, destructors, member methods, member fields, objects) into native JavaScript runtime execution.
+- **CodeMirror Integration:** Syntax highlighting powered by `@codemirror/legacy-modes/mode/clike`.
+
 ---
 
 ## 🔄 3. Interactive Runtime Stdin via `SharedArrayBuffer` & `Atomics`

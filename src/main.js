@@ -299,7 +299,7 @@ function hideConsoleWarmNotice(label) {
 function warm() {
   const eng = engines[cur.engine], label = eng?.label || cur.name;
   if (!eng) return Promise.resolve();
-  const needsWarm = cur.id === 'python' || cur.id === 'sql' || cur.id === 'php';
+  const needsWarm = cur.id === 'python' || cur.id === 'sql' || cur.id === 'php' || cur.id === 'c' || cur.id === 'cpp';
   if (needsWarm && !eng.isReady) {
     setState('loading', `Loading ${label}…`);
     if (!running && con.textContent.trim() === '') {
@@ -406,7 +406,7 @@ async function run(arg) {
     }
 
     if (cur.id !== 'web' && (!opts || opts.tab !== 'preview')) showTab('console');
-    const wasWarming = !eng.isReady && (cur.id === 'python' || cur.id === 'sql' || cur.id === 'php');
+    const wasWarming = !eng.isReady && (cur.id === 'python' || cur.id === 'sql' || cur.id === 'php' || cur.id === 'c' || cur.id === 'cpp');
     sink.clear();
     if (wasWarming) {
       print(`⏳ ${eng.label || cur.name} runtime is still downloading/loading on your device…\n`, 'sys');
@@ -416,6 +416,8 @@ async function run(arg) {
     }
     const t0 = performance.now();
     if (cur.id === 'shell') print(`$ bash ${cur.file}\n`, 'cmd');
+    else if (cur.id === 'c') print(`$ gcc ${cur.file} -o main && ./main\n`, 'cmd');
+    else if (cur.id === 'cpp') print(`$ g++ ${cur.file} -o main && ./main\n`, 'cmd');
     await eng.load(sink); setState('ready', `${eng.label || cur.name} · offline`);
     if (wasWarming && !stopped) {
       print(`✓ ${eng.label || cur.name} ready! Executing your code…\n`, 'ok');

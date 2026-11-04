@@ -5,11 +5,13 @@ Standalone Android app (Capacitor) with ALL language engines running 100% OFFLIN
 Python, PHP, Oracle SQL, JavaScript, HTML/CSS, Linux shell, then C/C++, Java.
 Sibling of the ThinkCode web project (Tahir Mansuri, IMRD College). User wants: low token use, professional + stylish UI, no extra prose.
 
-## Status: v1.1.4 Submitted to Google Play Production (versionCode 6, targetSdk 36, minSdk 24)
+## Status: v1.2.0 (Phase 3 C & C++ Lightweight Engines + v1.1.4 in Play Store Production)
 | Engine | Tech | Where | Notes |
 |---|---|---|---|
 | Python 3.12 | Pyodide 0.26.4 (self-hosted in public/pyodide) | src/engines/python.worker.js | stdlib only; interactive in-console input() + mobile touch modal |
 | PHP 8.2 | php-wasm 0.2.0 (self-hosted in public/php) | src/engines/php.worker.js | Standalone WASM, Dual-Section Split Editor (HTML+PHP), 3 view modes, CGI form bridge |
+| C (C99) | PicoC WebAssembly (self-hosted in public/picoc) | src/engines/c.worker.js | Real pointers, malloc/free, struct, unions, linked lists, stdio.h, math.h, string.h, interactive scanf |
+| C++ | JSCPP + OOP Transpiler Runner | src/engines/cpp.worker.js | iostream (cin/cout/endl), cmath, cstring, iomanip, 1D/2D arrays, recursion, OOP classes, constructors, methods |
 | JavaScript | AsyncFunction in Web Worker | js.worker.js | console.* + touch-friendly prompt() and alert() modal with non-blocking Promise resolution |
 | SQL | sql.js (SQLite WASM) + Oracle layer | sql.worker.js | NVL NVL2 INITCAP LPAD RPAD MOD CEIL FLOOR POWER SQRT TO_CHAR TO_DATE ADD_MONTHS MONTHS_BETWEEN, DUAL, SYSDATE, MINUS, ROWNUM<=n, FETCH FIRST, DESC, SHOW TABLES, user_tables; 4 schemas (SCOTT, UNIVERSITY, BANK, WORKSPACE) |
 | HTML/CSS/JS | sandboxed iframe (srcdoc) + console hook | engines/index.js WebEngine | Preview tab |

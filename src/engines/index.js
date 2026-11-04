@@ -155,6 +155,8 @@ export const engines = {
   js: new WorkerEngine(() => new Worker(new URL('./js.worker.js', import.meta.url)), 'JavaScript'),
   sql: new WorkerEngine(() => new Worker(new URL('./sql.worker.js', import.meta.url)), 'Oracle SQL'),
   php: new WorkerEngine(() => new Worker(new URL('./php.worker.js', import.meta.url)), 'PHP 8.2'),
+  c: new WorkerEngine(() => new Worker(new URL('./c.worker.js', import.meta.url)), 'C (C99)'),
+  cpp: new WorkerEngine(() => new Worker(new URL('./cpp.worker.js', import.meta.url)), 'C++'),
   shell: new ShellEngine(),
   web: new WebEngine()
 };

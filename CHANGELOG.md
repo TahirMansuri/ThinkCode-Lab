@@ -4,7 +4,33 @@ All notable changes, optimizations, and technical updates to **ThinkCode Lab** a
 
 ---
 
-## 🚀 Version 1.1.4 — Google Play Store Production Release (Current Release)
+## 🚀 Version 1.2.0 — C & C++ Lightweight Embedded Engines (Phase 3 Milestone)
+*Release Date: November 2026*
+
+### ⚙️ C (C99) Real WebAssembly Execution Engine (`src/engines/c.worker.js`)
+- **PicoC WebAssembly Architecture**:
+  - Embedded the fast, lightweight ANSI/C99 PicoC interpreter compiled directly to WebAssembly (`public/picoc/picoc.js`).
+  - Total package impact is only ~800 KB, preserving ThinkCode Lab's compact ~18 MB App Bundle footprint with 0 external network requests.
+- **Academic Syllabus Coverage**:
+  - **Pointers & Memory**: Real pointer arithmetic, address-of `&`, dereferencing `*`, double pointers `**`, and dynamic memory management (`malloc`, `free`).
+  - **Data Structures**: Structures (`struct`), unions, and typedefs for practical college data structures (Linked Lists, Stacks, Queues, Binary Trees).
+  - **Standard Libraries**: Comprehensive support for `<stdio.h>`, `<stdlib.h>`, `<string.h>`, `<math.h>`, and `<ctype.h>`.
+  - **Interactive I/O**: Interactive `scanf` and `getchar` bridge connected to `SharedArrayBuffer` (`Atomics.wait`) and pre-buffered stdin queue.
+
+### ⚡ C++ Interactive Engine (`src/engines/cpp.worker.js`)
+- **Dual-Path C++ Execution**:
+  - **Procedural Logic**: Powered by `JSCPP` for instant, native evaluation of `<iostream>` (`cin >>`, `cout <<`, `endl`), `<cmath>`, `<cstring>`, `<cctype>`, `<cstdlib>`, `<ctime>`, and `<iomanip>` (`setw`, `setprecision`, `fixed`).
+  - **Object-Oriented Practicals**: Integrated OOP Transpiler Runner that seamlessly compiles user-defined classes (`class`, access specifiers `public:`/`private:`, constructors, destructors, member methods, member fields, objects) into native JavaScript runtime execution.
+- **Academic Practical Starter Templates**:
+  - Preloaded starter templates for C (Factorial with `printf`/`scanf`) and C++ (Class `Student` with constructor, member method, and `cout`).
+- **CodeMirror Syntax Highlighting**:
+  - Connected `@codemirror/legacy-modes/mode/clike` for rich C and C++ syntax highlighting in `src/editor.js`.
+- **Architectural Reference (`C_CPP_ENGINE_ARCHITECTURE.md`)**:
+  - Authored a dedicated architectural reference documenting Option 1 (Embedded Engine), Option 2 (Clang WASM Downloadable Pack), and Option 3 (Pre-bundled Clang) with a step-by-step upgrade guide for future competitive programming extensions.
+
+---
+
+## 🚀 Version 1.1.4 — Google Play Store Production Release
 *Release Date: November 2026*
 
 ### 📱 Google Play Production Release & Full Rollout

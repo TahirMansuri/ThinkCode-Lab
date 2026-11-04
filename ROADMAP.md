@@ -9,13 +9,13 @@
 ```
 ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
 │     PHASE 1     │     │     PHASE 2     │     │     PHASE 3     │     │  PHASE 4 & 5    │
-│  [COMPLETED]    │ ──▶ │  [IN PROGRESS]  │ ──▶ │   [PLANNED]     │ ──▶ │   [FUTURE]      │
+│  [COMPLETED]    │ ──▶ │  [COMPLETED]    │ ──▶ │  [COMPLETED]    │ ──▶ │   [FUTURE]      │
 │                 │     │                 │     │                 │     │                 │
-│ • Python 3.12   │     │ • PHP 8.2 WASM  │     │ • Clang C/C++   │     │ • Java Runtime  │
-│ • Oracle SQL    │     │   Runtime       │     │   WASM Compiler │     │ • PL/SQL Blocks │
-│ • JavaScript    │     │ • File Manager  │     │ • Downloadable  │     │ • ER Diagrams   │
-│ • HTML/CSS Web  │     │ • SQL CSV Export│     │   Offline Packs │     │ • Play Store    │
-│ • Bash Shell    │     │ • Snippets Lib  │     │ • xterm.js Shell│     │   Release AAB   │
+│ • Python 3.12   │     │ • PHP 8.2 WASM  │     │ • C (C99) PicoC │     │ • Java Runtime  │
+│ • Oracle SQL    │     │   Runtime       │     │   WASM Engine   │     │ • Clang Pack    │
+│ • JavaScript    │     │ • Split Editor  │     │ • C++ Engine    │     │   (Option 2)    │
+│ • HTML/CSS Web  │     │ • Play Store    │     │ • OOP Classes   │     │ • PL/SQL Blocks │
+│ • Bash Shell    │     │   AAB Release   │     │ • CodeMirror C  │     │ • ER Diagrams   │
 └─────────────────┘     └─────────────────┘     └─────────────────┘     └─────────────────┘
 ```
 
@@ -45,19 +45,28 @@
 
 ---
 
-## ⚙️ Phase 3: Systems Programming — C / C++ Offline Engine (Mid-Term)
+## ⚙️ Phase 3: Systems Programming — C / C++ Offline Engine [✅ COMPLETED]
 
-### 💻 1. In-Browser Clang / WASI Compiler
-- **Architecture:** Downloadable offline pack leveraging LLVM Clang compiled to WebAssembly.
-- **Pack Management:** On first use (or via Settings), download the ~25 MB Clang toolchain and cache it locally in Capacitor's native Filesystem (for Android) or CacheStorage (for Web).
-- **Capabilities:**
-  - Standard C (`gcc` / `clang`) and C++17/20 (`g++` / `clang++`).
-  - Full STL support (`std::vector`, `std::map`, `std::string`, `std::algorithm`, pointers, structs, dynamic memory).
-  - Interactive `cin` and `scanf` standard input handled via `SharedArrayBuffer` + `Atomics`.
+### 💻 1. C (C99) Real WebAssembly Execution Engine (`src/engines/c.worker.js`) [✅ COMPLETED]
+- **Technology:** PicoC ANSI/C99 interpreter compiled to WebAssembly (~800 KB bundle, 0 external network requests).
+- **Features Implemented:**
+  - Real pointer arithmetic, address-of `&`, dereference `*`, double pointers `**`.
+  - Dynamic memory allocation (`malloc`, `free`).
+  - Structures (`struct`), unions, and typedefs for college data structures (Linked Lists, Stacks, Queues, Binary Trees).
+  - Standard headers: `<stdio.h>`, `<stdlib.h>`, `<string.h>`, `<math.h>`, `<ctype.h>`.
+  - Interactive `scanf` and `getchar` supported via `SharedArrayBuffer` (`Atomics.wait`) and input queue.
 
-### 🖥️ 2. Terminal Upgrade (xterm.js)
-- Upgrade the simple terminal output box with a full-fledged [xterm.js](https://xtermjs.org/) terminal emulator.
-- Add ANSI 256-color support, bash prompt customization, tab completion, command history navigation (`Up`/`Down` arrows), and clear shortcuts (`Ctrl+L`).
+### ⚡ 2. C++ Interactive & OOP Engine (`src/engines/cpp.worker.js`) [✅ COMPLETED]
+- **Technology:** JSCPP + OOP Transpiler Engine (~380 KB).
+- **Features Implemented:**
+  - Native `<iostream>` (`cin >>`, `cout <<`, `endl`), formatted I/O (`<iomanip>`), `<cmath>`, `<cstring>`.
+  - Arrays (1D & 2D matrices), recursion, and pointer arithmetic.
+  - User-defined classes (`class`), constructors, destructors, access specifiers (`public:`/`private:`), member methods, and object lifecycles.
+  - CodeMirror syntax highlighting via `@codemirror/legacy-modes/mode/clike`.
+
+### 📦 3. Future Upgrade Path: Clang WASM Downloadable Pack (Option 2)
+- Detailed in [`C_CPP_ENGINE_ARCHITECTURE.md`](C_CPP_ENGINE_ARCHITECTURE.md).
+- Allows on-demand downloading of full Clang/LLVM toolchain (~30 MB) when expanding to advanced C++ STL (`<vector>`, `<map>`, `<algorithm>`) without inflating the base APK size.
 
 ---
 
