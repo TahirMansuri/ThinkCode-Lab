@@ -26217,7 +26217,7 @@ var JSCPP_EXPORT = (() => {
           const cin = {
             t: cinType,
             v: {
-              buf: stdio.drain(),
+              buf: "",
               istream: stdio,
               members: {}
             },
@@ -26334,7 +26334,10 @@ var JSCPP_EXPORT = (() => {
             }
             const limit = limitV.v;
             const delim = delimV != null ? String.fromCharCode(delimV.v) : "\n";
-            const b2 = _cin.v.buf;
+            let b2 = _cin.v.buf;
+            if ((!b2 || _skipSpace(b2).length === 0) && _cin.v.istream && typeof _cin.v.istream.drain === "function") {
+              b2 = _cin.v.buf = _cin.v.istream.drain() || "";
+            }
             _cin.v.eofbit = b2.length === 0;
             let r = _read(rt3, new RegExp(`^[^${delim}]*`), b2, t.t)[0];
             if (r.length + 1 > limit) {
@@ -26361,7 +26364,10 @@ var JSCPP_EXPORT = (() => {
           rt2.regFunc(_getline, cin.t, "getline", [pchar2, rt2.intTypeLiteral, rt2.charTypeLiteral], cin.t);
           rt2.regFunc(_getline, cin.t, "getline", [pchar2, rt2.intTypeLiteral], cin.t);
           const _get = function(rt3, _cin) {
-            const b2 = _cin.v.buf;
+            let b2 = _cin.v.buf;
+            if ((!b2 || _skipSpace(b2).length === 0) && _cin.v.istream && typeof _cin.v.istream.drain === "function") {
+              b2 = _cin.v.buf = _cin.v.istream.drain() || "";
+            }
             _cin.v.eofbit = b2.length === 0;
             if (_cin.v.eofbit) {
               return rt3.val(rt3.intTypeLiteral, -1);

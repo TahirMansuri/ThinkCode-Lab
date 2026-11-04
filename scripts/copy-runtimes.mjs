@@ -58,6 +58,7 @@ if (existsSync('node_modules/JSCPP/lib/launcher.js')) {
       // Patch iostream.js so cin >> calls drain() interactively when the input buffer is empty
       build.onLoad({ filter: /iostream\.js$/ }, async args => {
         let content = await fsPromises.readFile(args.path, 'utf8');
+        content = content.replace('buf: stdio.drain(),', 'buf: "",');
         const injection = `
 let b = _cin.v.buf;
 if ((!b || _skipSpace(b).length === 0) && _cin.v.istream && typeof _cin.v.istream.drain === "function") {
@@ -65,6 +66,7 @@ if ((!b || _skipSpace(b).length === 0) && _cin.v.istream && typeof _cin.v.istrea
 }
 `;
         content = content.replaceAll('let b = _cin.v.buf;', injection);
+        content = content.replaceAll('const b = _cin.v.buf;', injection);
         return { contents: content, loader: 'js' };
       });
     }
