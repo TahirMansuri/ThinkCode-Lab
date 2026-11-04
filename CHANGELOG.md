@@ -4,7 +4,45 @@ All notable changes, optimizations, and technical updates to **ThinkCode Lab** a
 
 ---
 
-## 🚀 Version 1.1.1 — (Current Release)
+## 🚀 Version 1.1.4 — Google Play Store Production Release (Current Release)
+*Release Date: November 2026*
+
+### 📱 Google Play Production Release & Full Rollout
+- **Google Play Console Submission**:
+  - Successfully compiled, signed, verified, and submitted production App Bundle `ThinkCodeLab-release.aab` (`versionCode 6`, `versionName "1.1.4"`) to the Google Play Console Production track.
+  - Full rollout initiated across target countries (India, Bangladesh, United Arab Emirates).
+- **Target API 36 Compliance**:
+  - Upgraded project build targets to `targetSdkVersion 36` and `compileSdkVersion 36` to satisfy Google Play's latest security and runtime performance requirements (Android 15 & 16 ready).
+- **Min SDK 24 Auto-Protection**:
+  - Upgraded `minSdkVersion` to `24` (Android 7.0+) satisfying Google Play's Play Automatic App Protection prerequisite.
+- **Store Listing & Privacy Compliance**:
+  - Bundled high-resolution 512x512 app icon, 1024x500 banner feature graphic, and screenshots.
+  - Published fully offline, zero-data-collection educational Privacy Policy (`privacy.html` and `docs/privacy.html`) hosted on GitHub Pages.
+
+---
+
+## 🚀 Version 1.1.2 — JavaScript Prompt Modal & Universal Mobile Input
+*Release Date: November 2026*
+
+### 💬 Dedicated Touch-Friendly JavaScript `prompt()` & `alert()` Modal
+- **Glassmorphic Popup Dialog (`#promptModal`)**:
+  - Engineered an accessible `#promptModal` pop-up dialog in `index.html` and `src/styles.css` matching the obsidian luminous theme with amber `#F4D35E` accents.
+  - Includes prompt message display, autofocus text input, and explicit `Cancel` and `OK` action buttons.
+- **Asynchronous Code Transformation (`transformPromptCode`)**:
+  - Implemented automatic AST/regex pre-transformation in `src/engines/js.worker.js` that wraps `prompt()` and `alert()` calls in asynchronous message-passing.
+  - **Dual-Mode Execution**:
+    - **With `SharedArrayBuffer`**: Synchronous blocking via `Atomics.wait`.
+    - **Without `SharedArrayBuffer` (Mobile Web, iOS Safari, Cloudflare Tunnel)**: Non-blocking Promise resolution between Web Worker and UI thread.
+  - Completely eliminated the issue on mobile web where `prompt()` previously dropped input and silently returned `null`.
+- **Universal Mobile Input Modal (Python & JavaScript)**:
+  - Upgraded `sink.need_input` in `src/main.js`: on mobile screens (touch devices and narrow viewports), prompts for Python `input()` and program inputs automatically display the touch-friendly modal dialog.
+  - Mobile keyboards on Android and iOS submit cleanly via standard `<form>` submission without losing focus or dropping Enter keys.
+- **Stop Button & Modal Lifecycle**:
+  - Clicking the **Stop** button or pressing <kbd>Escape</kbd> automatically dismisses the prompt modal and gracefully unblocks worker runtime execution.
+
+---
+
+## 🚀 Version 1.1.1
 *Release Date: November 2026*
 
 ### 📱 Android WebView Runtime & Stop Synchronization Hardening

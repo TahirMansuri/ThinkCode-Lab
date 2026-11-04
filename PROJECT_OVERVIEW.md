@@ -57,7 +57,7 @@ While ThinkCode focuses on visual algorithm tracing and step-by-step memory insp
 4. **Modern JavaScript (ES2022+ Worker Engine)**
    - Sandboxed execution with asynchronous loop safety and timeout guards.
    - Console intercepts (`log`, `warn`, `error`, `table`, `info`, `dir`).
-   - Interactive runtime `prompt()` support.
+   - Interactive runtime touch-friendly `prompt()` and `alert()` modal dialog (`#promptModal`) with non-blocking Promise resolution and virtual keyboard support.
 5. **HTML / CSS / JS Live Web Preview**
    - Sandboxed `<iframe>` with instant live reload and render-on-run toggle.
    - DOM error capturing and bidirectional console message forwarding.

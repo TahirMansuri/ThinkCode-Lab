@@ -78,7 +78,7 @@ Most online code playgrounds and cloud IDEs rely on remote backend servers to sp
 | **Python 3.12** | Pyodide 0.26.4 (WASM) | Isolated Web Worker | Full stdlib, interactive `input()`, clean tracebacks |
 | **PHP 8.2** | php-wasm (PHP 8.2.11 WASM) | Isolated Web Worker | Full OOP, arrays, associative maps, `fgets(STDIN)`, instant execution |
 | **Oracle SQL** | sql.js (SQLite WASM) + Oracle Layer | Isolated Web Worker | SCOTT/UNIVERSITY schemas, transactions, Oracle functions |
-| **JavaScript** | Modern ES2022+ Engine | Web Worker (`AsyncFunction`) | Intercepted console, interactive `prompt()` |
+| **JavaScript** | Modern ES2022+ Engine | Web Worker (`AsyncFunction`) | Intercepted console, touch-friendly `prompt()` & `alert()` modal |
 | **HTML / CSS** | Sandboxed `<iframe>` | Main Thread DOM Preview | Live reload, DOM error forwarding, console sync |
 | **Linux Shell** | Virtual Bash Emulator | Main Thread Engine | 35+ commands, virtual FS, pipes, redirects |
 | **C / C++** | Clang WASI Toolchain | Planned (Phase 3) | Full STL, GCC/G++ compatible offline packs |
@@ -95,8 +95,8 @@ Most online code playgrounds and cloud IDEs rely on remote backend servers to sp
 ### 1. Clone & Install
 ```bash
 # Clone the repository
-git clone https://github.com/TahirMansuri/ThinkCode-Studio.git
-cd ThinkCode-Studio
+git clone https://github.com/TahirMansuri/ThinkCode-Lab.git
+cd ThinkCode-Lab
 
 # Install dependencies
 npm install
@@ -131,8 +131,10 @@ cd android
 ```
 
 The compiled release artifacts:
-- **Standalone Release APK (`v1.1.1` / `versionCode 3`):** `ThinkCodeLab-release.apk`
-- **Google Play App Bundle (`v1.1.1` / `versionCode 3`):** `ThinkCodeLab-release.aab`
+- **Standalone Release APK (`v1.1.4` / `versionCode 6`):** `ThinkCodeLab-release.apk`
+- **Google Play App Bundle (`v1.1.4` / `versionCode 6`):** `ThinkCodeLab-release.aab`
+- **Target SDK:** API 36 (Android 15 / 16) | **Min SDK:** API 24 (Android 7.0+)
+- **Google Play Store Status:** Submitted to Production track (in review).
 
 ---
 

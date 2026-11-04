@@ -84,8 +84,9 @@
 ## 📱 Phase 6: Mobile Distribution & Google Play Store
 
 - **Production Signing [✅ COMPLETED]:** Generated official release keystore (`thinkcode-lab.keystore`) and configured Gradle release signing configs.
-- **Signed Android App Bundle & APK [✅ COMPLETED]:** Built signed release APK (`ThinkCodeLab-release.apk`) and Android App Bundle (`ThinkCodeLab-release.aab`) v1.1.1 (`versionCode 3`).
+- **Signed Android App Bundle & APK [✅ COMPLETED]:** Built signed release APK (`ThinkCodeLab-release.apk`) and Android App Bundle (`ThinkCodeLab-release.aab`) v1.1.4 (`versionCode 6`) targeting API 36 with `minSdkVersion 24`.
 - **Play Asset Delivery (PAD):** Modularize heavy offline language packs (Clang, JVM) as on-demand asset packs for future phases.
-- **Google Play Console Release:**
-  - Complete App Store listing, high-resolution feature graphics, tablet/phone screenshots, and privacy policy.
+- **Google Play Console Release [✅ COMPLETED]:**
+  - Store listing, high-resolution feature graphics (1024x500), 512x512 app icon, tablet/phone screenshots, and educational privacy policy completed.
+  - Production track submitted and actively in review by Google Play.
 - **GitHub Actions CI/CD:** Automated workflow to compile web assets, run headless Playwright test suite, and assemble debug/release APK artifacts on every commit.

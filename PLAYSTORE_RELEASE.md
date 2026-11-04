@@ -1,6 +1,6 @@
 # 🚀 Google Play Store Release Details — ThinkCode Lab
 
-This document contains the signing credentials, certificate fingerprints, and release artifacts for publishing **ThinkCode Lab** on the **Google Play Console**.
+This document contains the signing credentials, certificate fingerprints, configuration, and release artifacts for publishing **ThinkCode Lab** on the **Google Play Console**.
 
 ---
 
@@ -36,67 +36,52 @@ This document contains the signing credentials, certificate fingerprints, and re
 
 ---
 
-## 📦 Generated Release Artifacts
+## 📦 Current Production Release Artifacts (v1.1.4)
 
-1. **Google Play Console App Bundle (.aab)**:
-   - **File**: `ThinkCodeLab-release.aab` *(16 MB)*
-   - **Version**: `1.1.2` (VersionCode: `4`)
-   - **Usage**: **This is the exact file you upload to Google Play Console** (Production, Closed Testing, or Internal Testing track).
-2. **Signed Release Standalone APK (.apk)**:
-   - **File**: `ThinkCodeLab-release.apk` *(16 MB)*
-   - **Version**: `1.1.2` (VersionCode: `4`)
-   - **Usage**: Install directly on any real Android device (`adb install` or via file transfer) to test the signed production build locally.
+| Artifact | File Name | Version | Version Code | Target SDK | Min SDK | Size |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **Google Play Bundle** | `ThinkCodeLab-release.aab` | **1.1.4** | **6** | **API 36** | **API 24** | **16 MB** |
+| **Standalone Release APK** | `ThinkCodeLab-release.apk` | **1.1.4** | **6** | **API 36** | **API 24** | **16 MB** |
+
+> **Play Store Compliance**:
+> - `minSdkVersion: 24` (Android 7.0+) satisfies Google Play's Play Automatic App Protection.
+> - `targetSdkVersion: 36` and `compileSdkVersion: 36` satisfies Google Play's latest target API level mandate.
 
 ---
 
 ## 🎨 Store Listing Assets Ready in Project
 
-- **App Icon (512x512)**: `resources/icon-512.png`
+- **App Icon (512x512)**: `resources/icon-512.png` & `ThinkCode-PlayStore-Assets/01-app-icon/`
 - **High-Res Icon (1024x1024)**: `resources/icon.png`
-- **Feature Graphic (1024x500)**: `resources/feature-graphic.png`
-- **Privacy Policy**: `public/privacy.html` (Host on GitHub Pages or personal domain)
+- **Feature Graphic (1024x500)**: `resources/feature-graphic.png` & `ThinkCode-PlayStore-Assets/feature-graphic-1024x500.png`
+- **Phone Screenshots**: `ThinkCode-PlayStore-Assets/02-phone-screenshots/`
+- **Tablet 7-inch Screenshots**: `ThinkCode-PlayStore-Assets/03-tablet-7inch/`
+- **Tablet 10-inch Screenshots**: `ThinkCode-PlayStore-Assets/04-tablet-10inch/`
+- **Privacy Policy**: `privacy.html` & `docs/privacy.html` (Hosted on GitHub Pages: `https://tahirmansuri.github.io/ThinkCode-Lab/privacy.html`)
 
 ---
 
-## 📋 Steps to Publish on Google Play Console
+## 📋 Google Play Console Submission Status
 
-1. **Log in to Google Play Console**:
-   - Go to [play.google.com/console](https://play.google.com/console).
-2. **Create New App** (or select existing app if already created):
-   - App name: **ThinkCode Lab**
-   - Default language: **English (United States)**
-   - App or game: **App**
-   - Free or paid: **Free**
-   - Accept the declarations and click **Create app**.
-3. **Set Up App Details (Dashboard)**:
-   - Complete the **Set up your app** tasks:
-     - **Privacy Policy URL**: Link to your privacy policy.
-     - **App access**: All functionality is available without special access.
-     - **Ads**: No (ThinkCode Lab contains zero ads).
-     - **Target audience & Content**: Select 13+ (or students/all ages).
-     - **News app / Financial app**: No.
-     - **Data safety**: App runs 100% offline, collects NO user data.
-4. **Store Listing Assets**:
-   - **App icon**: Upload `resources/icon.png` (512x512 / 1024x1024).
-   - **Feature graphic**: 1024x500 banner.
-   - **Screenshots**: Take 2–4 screenshots from your phone or browser running ThinkCode Lab.
-   - **Short description**:
-     > 100% offline multi-language code playground and mobile IDE for students. Python, PHP, Oracle SQL, JavaScript, HTML/CSS, and Linux Shell.
-   - **Full description**: Use the full overview from [`PROJECT_OVERVIEW.md`](PROJECT_OVERVIEW.md).
-5. **Create Production / Internal Release**:
-   - Under **Release**, go to **Production** (or **Internal testing** first).
-   - Click **Create new release**.
-   - Upload [`ThinkCodeLab-release.aab`](ThinkCodeLab-release.aab).
-   - Release name: `1.1.1`
-   - Release notes:
-     ```
-     ThinkCode Lab v1.1.1:
-     - 100% offline multi-language code playground.
-     - Full PHP 8.2 WebAssembly runtime with client-side CGI form bridge.
-     - Dual-section split editor for PHP web practicals (HTML Form + PHP Backend).
-     - Hardened runtime Stop & Re-Run lifecycle and button state synchronization.
-     - Python 3.12 with real-time interactive in-console input().
-     - Oracle-compatible SQL engine with live schemas (SCOTT, UNIVERSITY, BANK).
-     - JavaScript, sandboxed HTML/CSS Web Preview, and Linux Bash Shell.
-     ```
-   - Click **Next** → **Review and rollout release**!
+- **Application ID / Package**: `com.igc.thinkcodelab`
+- **App Name**: `ThinkCode-Lab`
+- **Release Track**: **Production** (`v1.1.4`, Version Code `6`)
+- **Rollout Status**: Full Rollout submitted (Under Google Review)
+- **Target Countries / Regions**: India, United Arab Emirates, Bangladesh (expandable to all regions)
+- **Content Rating**: Everyone / PEGI 3 (No violence, no objectionable content)
+- **Data Safety**: 100% Offline — No data collected, shared, or transmitted.
+
+---
+
+## 📝 Release Notes (Production v1.1.4)
+
+```text
+ThinkCode Lab v1.1.4:
+• 100% offline multi-language code playground & mobile IDE.
+• Python 3.12 with interactive in-console input() support.
+• PHP 8.2 WebAssembly runtime with Dual-Section HTML+PHP workspace.
+• Oracle-compatible SQL engine with live schema visualizer.
+• Touch-friendly JavaScript prompt() and alert() popups for mobile & desktop.
+• Sandboxed HTML/CSS Web Preview & Linux Bash Shell.
+• Built on latest Android API 36 with optimized performance and battery efficiency.
+```

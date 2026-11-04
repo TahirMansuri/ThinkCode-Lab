@@ -5,12 +5,12 @@ Standalone Android app (Capacitor) with ALL language engines running 100% OFFLIN
 Python, PHP, Oracle SQL, JavaScript, HTML/CSS, Linux shell, then C/C++, Java.
 Sibling of the ThinkCode web project (Tahir Mansuri, IMRD College). User wants: low token use, professional + stylish UI, no extra prose.
 
-## Status: v1.1.1 Released (versionCode 3) (verified on live Android Emulator + desktop Chromium, 0 errors)
+## Status: v1.1.4 Submitted to Google Play Production (versionCode 6, targetSdk 36, minSdk 24)
 | Engine | Tech | Where | Notes |
 |---|---|---|---|
-| Python 3.12 | Pyodide 0.26.4 (self-hosted in public/pyodide) | src/engines/python.worker.js | stdlib only; interactive in-console input() |
+| Python 3.12 | Pyodide 0.26.4 (self-hosted in public/pyodide) | src/engines/python.worker.js | stdlib only; interactive in-console input() + mobile touch modal |
 | PHP 8.2 | php-wasm 0.2.0 (self-hosted in public/php) | src/engines/php.worker.js | Standalone WASM, Dual-Section Split Editor (HTML+PHP), 3 view modes, CGI form bridge |
-| JavaScript | AsyncFunction in Web Worker | js.worker.js | console.* + prompt() from Input box |
+| JavaScript | AsyncFunction in Web Worker | js.worker.js | console.* + touch-friendly prompt() and alert() modal with non-blocking Promise resolution |
 | SQL | sql.js (SQLite WASM) + Oracle layer | sql.worker.js | NVL NVL2 INITCAP LPAD RPAD MOD CEIL FLOOR POWER SQRT TO_CHAR TO_DATE ADD_MONTHS MONTHS_BETWEEN, DUAL, SYSDATE, MINUS, ROWNUM<=n, FETCH FIRST, DESC, SHOW TABLES, user_tables; 4 schemas (SCOTT, UNIVERSITY, BANK, WORKSPACE) |
 | HTML/CSS/JS | sandboxed iframe (srcdoc) + console hook | engines/index.js WebEngine | Preview tab |
 | Shell | custom bash emulator, virtual FS in localStorage | shell.js (main thread) | pipes, > >> <, && \|\|, vars, $(..), $((..)), if/for/while, ~35 commands, interactive prompt |
@@ -42,7 +42,11 @@ Release AAB: ThinkCodeLab-release.aab (~16 MB, Google Play Console ready).
 - Backups: STRICT RULE — Do NOT create backups after each change. Only create a backup when the user explicitly requests one.
 - Stop Button Lifecycle: `stop()` must always reset `running = false` and invoke `syncButtons()`. Worker termination rejects `this.readyReject` and resolves `this.finish`, and `run()` encloses execution in `try ... finally { running = false; syncButtons(); }` to prevent Run button deadlock on "Running...".
 - Android WebView Post-Stop Rejection: In `warm()`, `run()`, and `runPhpDirect()`, guard `.catch()` against `if (!stopped && e?.message !== 'Stopped')` so terminating a running worker cleanly sets state to `"Stopped"` rather than falsely printing `"Stopped"` in red and marking state as `"Runtime failed"`.
-- Android Package Updates: When rebuilding APK, bump `versionCode` in `build.gradle` (currently `versionCode 3`, `versionName "1.1.1"`) so Android package manager and WebView HTTP cache properly invalidate old web bundles.
+- Android Package Updates: When rebuilding APK, bump `versionCode` in `build.gradle` (currently `versionCode 6`, `versionName "1.1.4"`).
+- Google Play Auto-Protection: Mandates `minSdkVersion >= 24` in `variables.gradle`.
+- Google Play Target API: Mandates `targetSdkVersion >= 36` and `compileSdkVersion >= 36`.
+- JavaScript Web Worker `prompt()`: Web Workers do not have `window.prompt()`. Solved via `transformPromptCode` (rewriting `prompt(` to `await prompt(`) + message-based `#promptModal` with dual-mode support (synchronous `Atomics.wait` when `SharedArrayBuffer` exists, async Promise resolution on mobile web/Safari).
+- Mobile Virtual Keyboard Input: Virtual keyboards on touch devices emit composition/beforeinput instead of desktop Enter; solved by wrapping inputs in `<form id="pmForm">` with explicit Submit and Cancel buttons.
 
 ## Assets (added)
 User supplied ThinkCode brand assets (purple/teal "<·>" node icon; also hero-banner.png, cpp/python logos, profilepic — not used). Copied icon.svg, icon-192/512, favicons, apple-touch to public/assets and linked in index.html. resources/icon.png (1024) is for `npm run icons` (@capacitor/assets → Android launcher icons, after `npx cap add android`). In-app header mark is still the ember CodeForge mark; decide whether to unify branding.

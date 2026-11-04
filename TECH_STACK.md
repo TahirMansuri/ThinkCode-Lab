@@ -149,11 +149,13 @@ Android Native Application (.apk / .aab)
 ```
 
 - **Build Output:** Standalone release APK (`ThinkCodeLab-release.apk` ~16 MB) and Google Play Bundle (`ThinkCodeLab-release.aab` ~16 MB).
-- **Release Version:** `v1.1.1` (`versionCode 3`, `versionName "1.1.1"`).
-- **Target SDK:** Android 14 (API level 34) with backward compatibility down to Android 7.0 (API level 24).
+- **Release Version:** `v1.1.4` (`versionCode 6`, `versionName "1.1.4"`).
+- **Target SDK:** API level 36 (Android 15 / 16) with minimum SDK set to API level 24 (Android 7.0+ for Play Store auto-protection).
+- **Google Play Status:** Submitted to Production track (in review).
 - **Adaptive Icons & Splash Screen:** 74 pre-rendered adaptive mipmap icons and vector splash configurations generated via `@capacitor/assets`.
 - **Build Toolchain:** OpenJDK 17 + Gradle 8.2.1 + Android Gradle Plugin (AGP) 8.2.1.
 - **Stop & Re-run Lifecycle Hardening:** Guaranteed promise resolution and worker termination handling ensuring instantaneous reset of UI buttons and zero deadlocks.
+- **Dedicated Touch Modal Engine:** Responsive `#promptModal` pop-up dialog with asynchronous AST code pre-transformation (`transformPromptCode`) supporting non-blocking JavaScript `prompt()` / `alert()` execution and touch-friendly mobile keyboard submissions.
 
 ---
 
