@@ -11,7 +11,7 @@ Sibling of the ThinkCode web project (Tahir Mansuri, IMRD College). User wants: 
 | Python 3.12 | Pyodide 0.26.4 (self-hosted in public/pyodide) | src/engines/python.worker.js | stdlib only; interactive in-console input() + mobile touch modal |
 | PHP 8.2 | php-wasm 0.2.0 (self-hosted in public/php) | src/engines/php.worker.js | Standalone WASM, Dual-Section Split Editor (HTML+PHP), 3 view modes, CGI form bridge |
 | C (C99) | PicoC WebAssembly (self-hosted in public/picoc) | src/engines/c.worker.js | Real pointers, malloc/free, struct, unions, linked lists, stdio.h, math.h, string.h, interactive scanf |
-| C++ | JSCPP + OOP Transpiler Runner | src/engines/cpp.worker.js | iostream (cin/cout/endl), cmath, cstring, iomanip, 1D/2D arrays, recursion, OOP classes, constructors, methods |
+| C++ | JSCPP + OOP Transpiler Runner | src/engines/cpp.worker.js | iostream (cin/cout/endl), cmath, cstring, iomanip, 1D/2D arrays, recursion, OOP classes, constructors, methods. Dynamic in-console sequential input (cout prints before cin prompts). |
 | JavaScript | AsyncFunction in Web Worker | js.worker.js | console.* + touch-friendly prompt() and alert() modal with non-blocking Promise resolution |
 | SQL | sql.js (SQLite WASM) + Oracle layer | sql.worker.js | NVL NVL2 INITCAP LPAD RPAD MOD CEIL FLOOR POWER SQRT TO_CHAR TO_DATE ADD_MONTHS MONTHS_BETWEEN, DUAL, SYSDATE, MINUS, ROWNUM<=n, FETCH FIRST, DESC, SHOW TABLES, user_tables; 4 schemas (SCOTT, UNIVERSITY, BANK, WORKSPACE) |
 | HTML/CSS/JS | sandboxed iframe (srcdoc) + console hook | engines/index.js WebEngine | Preview tab |
@@ -49,6 +49,8 @@ Release AAB: ThinkCodeLab-release.aab (~16 MB, Google Play Console ready).
 - Google Play Target API: Mandates `targetSdkVersion >= 36` and `compileSdkVersion >= 36`.
 - JavaScript Web Worker `prompt()`: Web Workers do not have `window.prompt()`. Solved via `transformPromptCode` (rewriting `prompt(` to `await prompt(`) + message-based `#promptModal` with dual-mode support (synchronous `Atomics.wait` when `SharedArrayBuffer` exists, async Promise resolution on mobile web/Safari).
 - Mobile Virtual Keyboard Input: Virtual keyboards on touch devices emit composition/beforeinput instead of desktop Enter; solved by wrapping inputs in `<form id="pmForm">` with explicit Submit and Cancel buttons.
+- C++ `cin >>` / `cout <<` Sequential Ordering: In JSCPP's `iostream.js`, `cin` was initialized at load time with `buf: stdio.drain()`, blocking before `main()` printed `cout`. Replaced with `buf: ""` and triggered `stdio.drain()` strictly on-demand when `_cin.v.buf` is empty during `cin >>`.
+- UI Input Bar: Redundant raw STDIN "Program input" textarea was removed from `index.html` and languages set to `input: null` since all engines now handle dynamic in-console interactive stdin.
 
 ## Assets (added)
 User supplied ThinkCode brand assets (purple/teal "<·>" node icon; also hero-banner.png, cpp/python logos, profilepic — not used). Copied icon.svg, icon-192/512, favicons, apple-touch to public/assets and linked in index.html. resources/icon.png (1024) is for `npm run icons` (@capacitor/assets → Android launcher icons, after `npx cap add android`). In-app header mark is still the ember CodeForge mark; decide whether to unify branding.
