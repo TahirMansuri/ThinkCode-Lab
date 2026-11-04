@@ -298,7 +298,7 @@ function hideConsoleWarmNotice(label) {
 
 function warm() {
   const eng = engines[cur.engine], label = eng?.label || cur.name;
-  if (!eng) return;
+  if (!eng) return Promise.resolve();
   const needsWarm = cur.id === 'python' || cur.id === 'sql' || cur.id === 'php';
   if (needsWarm && !eng.isReady) {
     setState('loading', `Loading ${label}…`);
@@ -309,7 +309,7 @@ function warm() {
     setState('ready', `${label} · offline`);
   }
 
-  eng.load(sink).then(() => {
+  return eng.load(sink).then(() => {
     if (!stopped) {
       setState('ready', `${label} · offline`);
       hideConsoleWarmNotice(label);
@@ -793,18 +793,33 @@ shellui.init({ sh: engines.shell.sh, cmd: shellCmd });
 sqlui.init({ engine: engines.sql, editor, sink, run, toast, store, openSheet, closeSheet, saveFile, refreshTools: renderTools,
   busy: () => running, showText: t => { sink.clear(); showTab('console'); print(t, 'sys'); } });
 $('stdin').value = cur.input === 'stdin' ? store.get('cf.in.' + cur.id, cur.stdin || '') : '';
-applyLang(); syncButtons(); warm();
+applyLang(); syncButtons();
+const warmPromise = warm();
 window.__app = { run, stop, engines, cur: () => cur, editorPhp: () => editorPhp, editorHtml: () => editorHtml, running: () => running };
 
-// ---------- app ready & splash dismissal ----------
-requestAnimationFrame(() => {
-  document.body.classList.add('app-ready');
-  const splash = $('app-splash');
-  if (splash) {
-    splash.classList.add('fade-out');
-    setTimeout(() => {
-      splash.remove();
-      $('critical-splash-css')?.remove();
-    }, 450);
-  }
+// ---------- compulsory 2.5s splash screen + component loading ----------
+const splashMinTimer = new Promise(resolve => setTimeout(resolve, 2500));
+const maxSafetyTimeout = new Promise(resolve => setTimeout(resolve, 6000));
+const componentReady = Promise.all([
+  warmPromise || Promise.resolve(),
+  document.fonts ? document.fonts.ready.catch(() => {}) : Promise.resolve()
+]);
+
+Promise.all([
+  splashMinTimer,
+  Promise.race([componentReady, maxSafetyTimeout])
+]).then(() => {
+  requestAnimationFrame(() => {
+    document.body.classList.add('app-ready');
+    const splash = $('app-splash');
+    if (splash) {
+      const caption = splash.querySelector('.splash-caption');
+      if (caption) caption.textContent = 'Ready!';
+      splash.classList.add('fade-out');
+      setTimeout(() => {
+        splash.remove();
+        $('critical-splash-css')?.remove();
+      }, 450);
+    }
+  });
 });
