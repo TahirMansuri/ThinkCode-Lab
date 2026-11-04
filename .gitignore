@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+
+# Production build outputs
+dist/
+build/
+
+# Generated WASM runtime binaries (generated via npm run prepare-runtimes)
+public/pyodide/
+public/sql/
+public/php/
+
+# Android build outputs & local environment
+*.apk
+*.aab
+*.dex
+*.class
+android/.gradle/
+android/app/build/
+android/capacitor-cordova-android-plugins/build/
+android/.idea/
+android/local.properties
+android/captures/
+.externalNativeBuild/
+.cxx/
+
+# Capacitor copied web assets & generated configs (rebuilt via npx cap sync android)
+android/app/src/main/assets/public/
+android/app/src/main/assets/capacitor.config.json
+android/app/src/main/assets/capacitor.plugins.json
+
+# Keystore files & credentials
+*.keystore
+*.jks
+
+# Backups & archives
+BackUp/
+*.zip
+*.tar.gz
+
+# System files & logs
+.DS_Store
+Thumbs.db
+*.log

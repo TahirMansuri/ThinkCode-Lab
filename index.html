@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0C1720">
+  <title>ThinkCode Lab — 100% Offline Multi-Language Code Playground</title>
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <script>
+    if (!window.crossOriginIsolated && 'serviceWorker' in navigator) {
+      const s = document.createElement('script'); s.src = './coi-serviceworker.js'; document.head.appendChild(s);
+    }
+  </script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12-7.5a1 1 0 0 0 0-1.72l-12-7.5A1 1 0 0 0 7 4.5z" fill="currentColor"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24"><path d="M12 16V5m0 0L8 9m4-4l4 4M5 20h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="brand">
+    <img class="mark" src="assets/icon.svg" width="34" height="34" alt="ThinkCode Lab Logo">
+    <div><b>ThinkCode Lab</b><span id="runtimeState" class="state" data-s="idle">Offline code lab</span></div>
+  </div>
+  <div class="top-actions">
+    <button class="icon" id="btnOpen" title="Open file" aria-label="Open file"><svg><use href="#i-up"/></svg></button>
+    <button class="icon" id="btnExport" title="Save to device" aria-label="Save to device"><svg><use href="#i-down"/></svg></button>
+    <button class="icon" id="btnReset" title="Reset to template" aria-label="Reset to template"><svg><use href="#i-reset"/></svg></button>
+    <button class="icon" id="btnTheme" title="Toggle theme" aria-label="Toggle theme"><svg><use href="#i-sun"/></svg></button>
+    <input type="file" id="filePick" hidden>
+  </div>
+</header>
+
+<nav id="rail" class="rail" aria-label="Languages"></nav>
+
+<main class="work" id="work">
+  <section class="pane" id="editorPane">
+    <div class="pane-head">
+      <div class="head-left">
+        <span id="fileName" class="fname"></span>
+        <div id="phpViewSwitch" class="php-view-switch" hidden>
+          <button type="button" class="view-btn on" data-mode="split" title="Split HTML and PHP">⬍ Split</button>
+          <button type="button" class="view-btn" data-mode="html" title="HTML Form only">🌐 HTML</button>
+          <button type="button" class="view-btn" data-mode="php" title="PHP Script only">🐘 PHP</button>
+        </div>
+      </div>
+      <span id="saveState" class="mute">Saved</span>
+    </div>
+    <div id="editor" class="editor"></div>
+    <div id="dualEditor" class="dual-editor" hidden>
+      <div class="dual-sec dual-html-sec" id="secHtml">
+        <div class="sub-head">
+          <span class="sub-tag tag-html">🌐 HTML Form (Frontend) &bull; <small>index.html</small></span>
+          <button type="button" id="btnPreviewHtml" class="sec-run-btn" title="Preview HTML form in Preview tab">🌐 Preview Form</button>
+        </div>
+        <div id="editorHtml" class="sub-cm"></div>
+      </div>
+      <div class="dual-resizer" id="dualResizer"></div>
+      <div class="dual-sec dual-php-sec" id="secPhp">
+        <div class="sub-head">
+          <span class="sub-tag tag-php">🐘 PHP Code (Backend) &bull; <small>process.php</small></span>
+          <button type="button" id="btnRunPhpSec" class="sec-run-btn" title="Run PHP script directly in Output tab">▶ Run PHP</button>
+        </div>
+        <div id="editorPhp" class="sub-cm"></div>
+      </div>
+    </div>
+  </section>
+
+  <div id="grip" class="grip" role="separator" aria-label="Resize panels" tabindex="0"><i></i></div>
+
+  <section class="pane out-pane">
+    <div class="pane-head">
+      <div class="tabs" role="tablist">
+        <button role="tab" id="tabConsole" class="tab on">Output</button>
+        <button role="tab" id="tabSchema" class="tab" hidden>Schema</button>
+        <button role="tab" id="tabPreview" class="tab" hidden>Preview</button>
+      </div>
+      <div id="tools" class="tools"></div>
+    </div>
+    <div id="tableStrip" class="strip" hidden></div>
+    <div id="fileTree" class="ftree" hidden></div>
+    <div id="console" class="console" data-empty="Run your code to see output here."></div>
+    <div id="schemaView" class="schema" hidden></div>
+    <iframe id="preview" title="Preview" sandbox="allow-scripts allow-modals allow-forms allow-same-origin" hidden></iframe>
+    <div id="inputbar" class="inputbar" hidden>
+      <div class="mute in-label">Program input</div>
+      <textarea id="stdin" rows="2" spellcheck="false" placeholder="Program input — one value per line"></textarea>
+    </div>
+    <form id="promptbar" class="promptbar" hidden autocomplete="off">
+      <label id="promptLabel" for="promptInput">$</label>
+      <input id="promptInput" spellcheck="false" autocapitalize="off" autocorrect="off" placeholder="type a command, press Enter">
+    </form>
+  </section>
+</main>
+
+<footer class="dock">
+  <button id="btnRun" class="run"><svg><use href="#i-play"/></svg><span>Run</span><kbd class="kbd">⌘↵</kbd></button>
+  <button id="btnStop" class="ghost" disabled><svg><use href="#i-stop"/></svg><span>Stop</span></button>
+  <button id="btnClear" class="ghost"><svg><use href="#i-trash"/></svg><span>Clear</span></button>
+</footer>
+
+<div id="sheet" class="sheet" hidden>
+  <div class="sheet-back" data-close></div>
+  <div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet-head"><b id="sheetTitle"></b><button class="icon" data-close aria-label="Close">✕</button></div>
+    <div id="sheetBody" class="sheet-body"></div>
+  </div>
+</div>
+<div id="toast" class="toast" role="status"></div>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>

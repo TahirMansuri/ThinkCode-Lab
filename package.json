@@ -1,0 +1,42 @@
+{
+  "name": "thinkcode-lab",
+  "version": "0.2.0",
+  "description": "ThinkCode Lab — 100% Offline Multi-Language Code Playground & Mobile IDE",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare-runtimes": "node scripts/copy-runtimes.mjs",
+    "dev": "npm run prepare-runtimes && vite",
+    "build": "npm run prepare-runtimes && vite build",
+    "sync": "npm run build && npx cap sync android",
+    "icons": "npx @capacitor/assets generate --android --iconBackgroundColor '#080C14' --splashBackgroundColor '#080C14'",
+    "android": "npm run sync && npx cap open android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/cli": "^6.1.2",
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/filesystem": "^6.0.1",
+    "@capacitor/share": "^6.0.2",
+    "@codemirror/autocomplete": "^6.18.0",
+    "@codemirror/commands": "^6.7.0",
+    "@codemirror/lang-html": "^6.4.9",
+    "@codemirror/lang-javascript": "^6.2.2",
+    "@codemirror/lang-php": "^6.0.2",
+    "@codemirror/lang-python": "^6.1.6",
+    "@codemirror/lang-sql": "^6.8.0",
+    "@codemirror/language": "^6.10.3",
+    "@codemirror/legacy-modes": "^6.4.1",
+    "@codemirror/state": "^6.4.1",
+    "@codemirror/view": "^6.34.1",
+    "@fontsource-variable/bricolage-grotesque": "^5.1.0",
+    "@fontsource-variable/jetbrains-mono": "^5.1.0",
+    "@lezer/highlight": "^1.2.1",
+    "php-wasm": "^0.2.0",
+    "pyodide": "0.26.4",
+    "sql.js": "^1.11.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.8"
+  }
+}

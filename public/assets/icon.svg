@@ -1,0 +1,189 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <!-- Background Obsidian Gradients -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#080C15"/>
+      <stop offset="45%" stop-color="#121128"/>
+      <stop offset="100%" stop-color="#091824"/>
+    </linearGradient>
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#A855F7"/>
+      <stop offset="40%" stop-color="#3B82F6"/>
+      <stop offset="75%" stop-color="#06B6D4"/>
+      <stop offset="100%" stop-color="#FFB04A"/>
+    </linearGradient>
+
+    <!-- Code Brackets -->
+    <linearGradient id="bracketLeft" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D8B4FE"/>
+      <stop offset="50%" stop-color="#A855F7"/>
+      <stop offset="100%" stop-color="#6366F1"/>
+    </linearGradient>
+    <linearGradient id="bracketRight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5EEAD4"/>
+      <stop offset="50%" stop-color="#14B8A6"/>
+      <stop offset="100%" stop-color="#0284C7"/>
+    </linearGradient>
+
+    <!-- Laptop Lid & Display Gradients -->
+    <linearGradient id="laptopLid" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+    <linearGradient id="screenGlass" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#09101C"/>
+      <stop offset="60%" stop-color="#0E1726"/>
+      <stop offset="100%" stop-color="#131B2E"/>
+    </linearGradient>
+
+    <!-- Laptop Chassis Base Gradients -->
+    <linearGradient id="chassisTop" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#475569"/>
+      <stop offset="40%" stop-color="#334155"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+    <linearGradient id="chassisEdge" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#64748B"/>
+      <stop offset="50%" stop-color="#94A3B8"/>
+      <stop offset="100%" stop-color="#64748B"/>
+    </linearGradient>
+
+    <!-- Code Syntax Colors -->
+    <linearGradient id="synAmber" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#FFB04A"/>
+    </linearGradient>
+    <linearGradient id="synCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06B6D4"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </linearGradient>
+    <linearGradient id="synGreen" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#10B981"/>
+      <stop offset="100%" stop-color="#34D399"/>
+    </linearGradient>
+
+    <!-- Ambient Glow Filters -->
+    <filter id="bloom" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Background Squircle Container -->
+  <rect x="20" y="20" width="472" height="472" rx="116" fill="url(#bgGrad)"/>
+  <rect x="20" y="20" width="472" height="472" rx="116" fill="none" stroke="url(#borderGrad)" stroke-width="10" opacity="0.9"/>
+
+  <!-- Neural Cyber Grid / Algorithmic Flow Lines -->
+  <g opacity="0.16" stroke="#818CF8" stroke-width="2.5">
+    <line x1="60" y1="256" x2="452" y2="256" stroke-dasharray="8 8"/>
+    <circle cx="256" cy="256" r="176" fill="none" stroke-dasharray="6 6"/>
+  </g>
+
+  <!-- Left Code Bracket "<" (ThinkCode Heritage) -->
+  <path d="M 152 148 L 76 256 L 152 364" 
+        fill="none" 
+        stroke="url(#bracketLeft)" 
+        stroke-width="36" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        filter="url(#bloom)"/>
+
+  <!-- Right Code Bracket ">" (ThinkCode Heritage) -->
+  <path d="M 360 148 L 436 256 L 360 364" 
+        fill="none" 
+        stroke="url(#bracketRight)" 
+        stroke-width="36" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+        filter="url(#bloom)"/>
+
+  <!-- =========================================================================
+       Center: Coding Laptop & Interactive Console Terminal
+       ========================================================================= -->
+
+  <!-- Ambient Cyan Ground Glow Under Laptop -->
+  <ellipse cx="256" cy="326" rx="96" ry="16" fill="#38BDF8" opacity="0.25" filter="url(#bloom)"/>
+
+  <!-- 1. LAPTOP SCREEN (Lid & Display) -->
+  <!-- Outer Screen Bezel -->
+  <rect x="180" y="162" width="152" height="106" rx="10" fill="url(#laptopLid)" stroke="#475569" stroke-width="2.5"/>
+
+  <!-- Inner Terminal Display Glass -->
+  <rect x="188" y="170" width="136" height="90" rx="6" fill="url(#screenGlass)"/>
+
+  <!-- Terminal Display Glow -->
+  <rect x="188" y="170" width="136" height="90" rx="6" fill="none" stroke="#38BDF8" stroke-width="1.2" opacity="0.45"/>
+
+  <!-- Window Header Control Dots (Red, Amber, Green) -->
+  <circle cx="199" cy="180" r="3.2" fill="#F87171"/>
+  <circle cx="209" cy="180" r="3.2" fill="#FBBF24"/>
+  <circle cx="219" cy="180" r="3.2" fill="#34D399"/>
+
+  <!-- Header Separator Line -->
+  <line x1="192" y1="188" x2="320" y2="188" stroke="#334155" stroke-width="1.2" opacity="0.6"/>
+
+  <!-- Terminal Command Prompt: ">" -->
+  <path d="M 198 202 L 206 208 L 198 214" 
+        fill="none" 
+        stroke="url(#synCyan)" 
+        stroke-width="3" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"/>
+
+  <!-- Code Line 1 (Command being typed: e.g. run / def) -->
+  <line x1="214" y1="208" x2="258" y2="208" stroke="url(#synAmber)" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- Blinking Terminal Command Cursor -->
+  <rect x="264" y="203" width="6.5" height="10" rx="1.5" fill="#FFFFFF" filter="url(#softGlow)"/>
+
+  <!-- Code Line 2 (Syntax string / output) -->
+  <line x1="198" y1="225" x2="280" y2="225" stroke="url(#synGreen)" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Code Line 3 (Logic / expression) -->
+  <line x1="198" y1="237" x2="310" y2="237" stroke="url(#bracketLeft)" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Code Line 4 (Result / return value) -->
+  <line x1="198" y1="249" x2="248" y2="249" stroke="url(#synCyan)" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- WebCam Dot on Top Bezel -->
+  <circle cx="256" cy="166" r="1.8" fill="#64748B"/>
+
+  <!-- 2. LAPTOP BASE (Keyboard Chassis & Trackpad) -->
+  <!-- Main Tapered Keyboard Chassis -->
+  <path d="M 176 268 
+           L 336 268 
+           L 356 312 
+           Q 358 318 350 320 
+           L 162 320 
+           Q 154 318 156 312 
+           Z" 
+        fill="url(#chassisTop)" 
+        stroke="#1E293B" 
+        stroke-width="2"/>
+
+  <!-- Front Rim Highlight Edge -->
+  <path d="M 160 319 L 352 319" stroke="url(#chassisEdge)" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Keyboard Well Inset -->
+  <rect x="186" y="272" width="140" height="20" rx="3" fill="#0C1422" opacity="0.9"/>
+
+  <!-- Micro Key Rows (Simulated Chiclet Keyboard) -->
+  <g opacity="0.4" stroke="#64748B" stroke-width="2" stroke-linecap="round">
+    <line x1="192" y1="277" x2="320" y2="277" stroke-dasharray="8 4"/>
+    <line x1="194" y1="284" x2="318" y2="284" stroke-dasharray="10 4"/>
+  </g>
+
+  <!-- Trackpad -->
+  <rect x="238" y="297" width="36" height="15" rx="3" fill="#152132" stroke="#334155" stroke-width="1.2"/>
+
+  <!-- Front Display Opening Notch -->
+  <line x1="244" y1="320" x2="268" y2="320" stroke="#FFB04A" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- 3. CIRCUIT CONNECTIONS (Linking Laptop to Code Brackets) -->
+  <line x1="152" y1="256" x2="178" y2="256" stroke="#A855F7" stroke-width="5" stroke-linecap="round" stroke-dasharray="3 5" opacity="0.75"/>
+  <line x1="334" y1="256" x2="360" y2="256" stroke="#14B8A6" stroke-width="5" stroke-linecap="round" stroke-dasharray="3 5" opacity="0.75"/>
+</svg>

@@ -1,0 +1,7 @@
+{
+  "appId": "com.igc.thinkcodelab",
+  "appName": "ThinkCode Lab",
+  "webDir": "dist",
+  "android": { "allowMixedContent": false },
+  "server": { "androidScheme": "https" }
+}
