@@ -21,6 +21,9 @@ All notable changes, optimizations, and technical updates to **ThinkCode Lab** a
 - **Dual-Path C++ Execution**:
   - **Procedural Logic**: Powered by `JSCPP` for instant, native evaluation of `<iostream>` (`cin >>`, `cout <<`, `endl`), `<cmath>`, `<cstring>`, `<cctype>`, `<cstdlib>`, `<ctime>`, and `<iomanip>` (`setw`, `setprecision`, `fixed`).
   - **Object-Oriented Practicals**: Integrated OOP Transpiler Runner that seamlessly compiles user-defined classes (`class`, access specifiers `public:`/`private:`, constructors, destructors, member methods, member fields, objects) into native JavaScript runtime execution.
+- **Interactive In-Console Input & UI Cleanup**:
+  - Fixed C++ `cin >>` / `cout <<` execution order by removing premature load-time `stdio.drain()` and requesting input strictly on-demand.
+  - Removed the static raw STDIN "Program input" box from the Output tab across all languages (`python`, `c`, `cpp`, `js`, `php`), freeing up vertical console workspace and eliminating redundancy with the live interactive input system.
 - **Academic Practical Starter Templates**:
   - Preloaded starter templates for C (Factorial with `printf`/`scanf`) and C++ (Class `Student` with constructor, member method, and `cout`).
 - **CodeMirror Syntax Highlighting**:

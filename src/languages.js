@@ -1,21 +1,21 @@
 // Language registry: identity colour, engine binding, starter template. status 'soon' = engine pack planned.
 export const LANGS = [
-  { id: 'python', name: 'Python', file: 'main.py', engine: 'python', hue: '#5DA9E9', input: 'stdin',
+  { id: 'python', name: 'Python', file: 'main.py', engine: 'python', hue: '#5DA9E9', input: null,
     tpl: `# Python 3.12 — runs offline on your device
 name = input("Your name: ")
 print(f"Hello, {name}!")
 
 squares = [n * n for n in range(1, 6)]
 print("Squares:", squares)
-` , stdin: 'Tahir' },
-  { id: 'js', name: 'JavaScript', file: 'main.js', engine: 'js', hue: '#F4D35E', input: 'stdin',
+` },
+  { id: 'js', name: 'JavaScript', file: 'main.js', engine: 'js', hue: '#F4D35E', input: null,
     tpl: `// JavaScript — console.log() and prompt() are supported
 const name = prompt("Your name?") ?? "friend";
 console.log(\`Hello, \${name}!\`);
 
 const fib = n => (n < 2 ? n : fib(n - 1) + fib(n - 2));
 console.log([...Array(10).keys()].map(fib));
-`, stdin: 'Tahir' },
+` },
   { id: 'sql', name: 'Oracle SQL', file: 'query.sql', engine: 'sql', hue: '#3DD6C0', input: null, sample: true,
     tpl: `-- Tap "Sample data" to load EMP and DEPT, then run this.
 -- Oracle-style: NVL, DUAL, SYSDATE, ROWNUM, MINUS, TO_CHAR, DESC
@@ -60,7 +60,7 @@ ls -l
 
 ?>
 `, stdin: '' },
-  { id: 'c', name: 'C', file: 'main.c', engine: 'c', hue: '#64748B', input: 'stdin',
+  { id: 'c', name: 'C', file: 'main.c', engine: 'c', hue: '#64748B', input: null,
     tpl: `// C (C99) — runs 100% offline on your device
 #include <stdio.h>
 
@@ -76,8 +76,8 @@ int main() {
     printf("Factorial of %d is %d\\n", num, factorial(num));
     return 0;
 }
-`, stdin: '' },
-  { id: 'cpp', name: 'C++', file: 'main.cpp', engine: 'cpp', hue: '#8B5CF6', input: 'stdin',
+` },
+  { id: 'cpp', name: 'C++', file: 'main.cpp', engine: 'cpp', hue: '#8B5CF6', input: null,
     tpl: `// C++ — runs 100% offline on your device
 #include <iostream>
 using namespace std;
@@ -96,6 +96,6 @@ int main() {
     cout << "C++ interactive in-console input is working!" << endl;
     return 0;
 }
-`, stdin: '' },
+` },
   { id: 'java', name: 'Java', file: 'Main.java', engine: null, hue: '#F28482', soon: 'Phase 4 — JVM offline pack' }
 ];

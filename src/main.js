@@ -326,10 +326,10 @@ function select(l) {
   if (!l.engine) return toast(`${l.name} — ${l.soon}`);
   if (l.id === cur.id) return;
   if (running) return toast('Stop the current run first.');
-  if (cur.input === 'stdin') store.set('cf.in.' + cur.id, $('stdin').value);
+  if (cur.input === 'stdin' && $('stdin')) store.set('cf.in.' + cur.id, $('stdin').value);
   cur = l; store.set('cf.lang', l.id);
   editor.set(store.get('cf.code.' + l.id, l.tpl), l.id);
-  $('stdin').value = l.input === 'stdin' ? store.get('cf.in.' + l.id, l.stdin || '') : '';
+  if ($('stdin')) $('stdin').value = l.input === 'stdin' ? store.get('cf.in.' + l.id, l.stdin || '') : '';
   con.textContent = ''; applyLang(); warm();
 }
 let wasShell = false;
@@ -344,7 +344,7 @@ function applyLang() {
   } else {
     $('fileName').textContent = cur.file;
   }
-  $('inputbar').hidden = cur.input !== 'stdin';
+  if ($('inputbar')) $('inputbar').hidden = cur.input !== 'stdin';
   $('promptbar').hidden = cur.input !== 'prompt';
   $('tabPreview').hidden = cur.id !== 'web' && cur.id !== 'php'; $('tabSchema').hidden = cur.id !== 'sql'; $('fileTree').hidden = cur.id !== 'shell'; if (cur.id === 'shell') shellui.render();
   if ((cur.id === 'shell') !== wasShell) { wasShell = cur.id === 'shell'; setSplit(wasShell ? 34 : 52); } if (cur.id === 'sql') sqlui.refresh(); else $('tableStrip').hidden = true; showTab('console');
@@ -426,7 +426,7 @@ async function run(arg) {
     }
     if (cur.id === 'sql') await sqlui.ensure();
     runStart = performance.now();
-    await eng.run(customCode || editor.get(), cur.input === 'stdin' ? $('stdin').value : '', sink, opts);
+    await eng.run(customCode || editor.get(), (cur.input === 'stdin' && $('stdin')) ? $('stdin').value : '', sink, opts);
     if (!stopped) print(`\n✓ Finished in ${Math.round(performance.now() - t0)} ms\n`, 'ok');
     if (cur.id === 'shell') $('promptLabel').textContent = engines.shell.sh.prompt;
     if (cur.id === 'sql') con.scrollTop = 0;
@@ -499,7 +499,8 @@ function previewHtmlDirect() {
 $('btnRun').onclick = () => run();
 $('btnStop').onclick = stop;
 $('btnClear').onclick = () => { con.textContent = ''; };
-$('stdin').oninput = e => store.set('cf.in.' + cur.id, e.target.value);
+const stdinEl = $('stdin');
+if (stdinEl) stdinEl.oninput = e => store.set('cf.in.' + cur.id, e.target.value);
 window.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); run(); } });
 $('promptbar').onsubmit = e => {
   e.preventDefault();
@@ -794,7 +795,7 @@ function shellCmd(line) { print(`${engines.shell.sh.prompt} ${line}\n`, 'cmd'); 
 shellui.init({ sh: engines.shell.sh, cmd: shellCmd });
 sqlui.init({ engine: engines.sql, editor, sink, run, toast, store, openSheet, closeSheet, saveFile, refreshTools: renderTools,
   busy: () => running, showText: t => { sink.clear(); showTab('console'); print(t, 'sys'); } });
-$('stdin').value = cur.input === 'stdin' ? store.get('cf.in.' + cur.id, cur.stdin || '') : '';
+if ($('stdin')) $('stdin').value = cur.input === 'stdin' ? store.get('cf.in.' + cur.id, cur.stdin || '') : '';
 applyLang(); syncButtons();
 const warmPromise = warm();
 window.__app = { run, stop, engines, cur: () => cur, editorPhp: () => editorPhp, editorHtml: () => editorHtml, running: () => running };
