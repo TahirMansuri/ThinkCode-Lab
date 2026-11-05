@@ -133,9 +133,10 @@ function translate(s) {
     .replace(/\brownum\b/gi, 'ROW_NUMBER() OVER ()')
     .replace(/\b(\w+)\.(nextval|currval)\b/gi, (m, n, k) => `${k.toUpperCase()}('${n}')`)
     .replace(/listagg\s*\(([^)]*)\)\s*within\s+group\s*\([^)]*\)/gi, 'GROUP_CONCAT($1)')
+    .replace(/^create\s+or\s+replace\s+table\s+(\w+)/i, 'DROP TABLE IF EXISTS $1; CREATE TABLE $1')
     .replace(/^create\s+or\s+replace\s+view\s+(\w+)/i, 'DROP VIEW IF EXISTS $1; CREATE VIEW $1')
     .replace(/^(alter\s+table\s+\w+\s+add)\s*\(\s*([^)]+?)\s*\)\s*$/i, '$1 COLUMN $2')
-    .replace(/^(drop\s+table\s+\w+)\s+(cascade\s+constraints\s*)?(purge)?\s*$/i, '$1');
+    .replace(/^drop\s+table\s+(?:if\s+exists\s+)?(\w+)\s*(?:cascade\s+constraints\s*)?(?:purge)?\s*$/i, 'DROP TABLE IF EXISTS $1');
   if (/^alter\s+table\s+\w+\s+(modify|drop\s+constraint)/i.test(s)) throw new Error('ORA-NOTSUP: ALTER TABLE MODIFY / DROP CONSTRAINT is not supported here. Recreate the table with CREATE TABLE ... AS SELECT.');
   s = rewrite(s, 'decode', a => { const [e, ...r] = a; let o = 'CASE'; for (let i = 0; i + 1 < r.length; i += 2) o += ` WHEN (${e}) = (${r[i]}) THEN ${r[i + 1]}`; return o + (r.length % 2 ? ` ELSE ${r[r.length - 1]}` : '') + ' END'; });
   s = rewrite(s, 'to_char', a => (a.length === 1 ? `CAST(${a[0]} AS TEXT)` : null));
@@ -148,7 +149,7 @@ function oraErr(e) {
   const map = [[/no such table/i, 'ORA-00942: table or view does not exist'], [/no such column/i, 'ORA-00904: invalid identifier'],
     [/UNIQUE constraint failed|PRIMARY KEY/i, 'ORA-00001: unique constraint violated'], [/NOT NULL constraint failed/i, 'ORA-01400: cannot insert NULL into a required column'],
     [/FOREIGN KEY constraint failed/i, 'ORA-02291/02292: integrity constraint (foreign key) violated'], [/CHECK constraint failed/i, 'ORA-02290: check constraint violated'],
-    [/already exists/i, 'ORA-00955: name is already used by an existing object'], [/ambiguous column/i, 'ORA-00918: column ambiguously defined'],
+    [/already exists/i, 'ORA-00955: name is already used by an existing object\n  (Tip: use DROP TABLE IF EXISTS <name>; before CREATE TABLE to re-run safely)'], [/ambiguous column/i, 'ORA-00918: column ambiguously defined'],
     [/syntax error|incomplete input|unrecognized token/i, 'ORA-00900: invalid SQL statement (syntax error)']];
   if (/^ORA-/.test(m)) return m;
   const h = map.find(([r]) => r.test(m)); return h ? `${h[1]}\n  (${m})` : 'ORA-00933: ' + m;
@@ -184,7 +185,14 @@ function runOne(s) {
 
   const q = translate(s), k = q.trim().split(/\s+/)[0].toLowerCase();
   if (/^(create|drop|alter)$/.test(k)) {
-    ddl(q);
+    try {
+      ddl(q);
+    } catch (e) {
+      if (/duplicate column name/i.test(e.message)) {
+        return out('Column already exists (skipped).');
+      }
+      throw e;
+    }
     const o = (s.match(/^(?:create|drop|alter)\s+(?:or\s+replace\s+)?(?:unique\s+)?(\w+)/i) || [, 'object'])[1];
     return out(`${cap(o)} ${{ create: 'created', drop: 'dropped', alter: 'altered' }[w]}.`);
   }

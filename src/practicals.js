@@ -1665,6 +1665,9 @@ console.log("Average Score:", (totalScore / scores.length).toFixed(2));
       title: 'CREATE TABLE & INSERT 10 Records',
       desc: 'Creates an EMPLOYEES table and inserts 10 sample records for DBMS practicals.',
       code: `-- Practical 1: CREATE TABLE and INSERT 10 Records
+-- Drop table if it already exists so practical can be re-run safely
+DROP TABLE IF EXISTS employees;
+
 CREATE TABLE employees (
     emp_id INT PRIMARY KEY,
     emp_name VARCHAR(50) NOT NULL,
@@ -1792,6 +1795,9 @@ ORDER BY avg_salary DESC;
       title: 'INNER JOIN and LEFT JOIN',
       desc: 'Demonstrates relational joins between EMPLOYEES and DEPARTMENTS tables.',
       code: `-- Practical 7: Relational JOINS in SQL
+-- Drop table if it already exists so practical can be re-run safely
+DROP TABLE IF EXISTS departments;
+
 CREATE TABLE departments (
     dept_id INT PRIMARY KEY,
     dept_name VARCHAR(30),
