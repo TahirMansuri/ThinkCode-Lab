@@ -6,6 +6,7 @@ import { engines } from './engines/index.js';
 import { createEditor } from './editor.js';
 import { sqlui } from './sql-ui.js';
 import { shellui } from './shell-ui.js';
+import { PRACTICALS } from './practicals.js';
 
 const $ = id => document.getElementById(id);
 const store = {
@@ -646,6 +647,127 @@ $('brandDev')?.addEventListener('click', showDevProfile);
 $('brandDev')?.addEventListener('keydown', e => {
   if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showDevProfile(); }
 });
+
+function openPracticalsSheet() {
+  let activeLang = cur.id === 'shell' ? 'shell' : 'cpp';
+  let activeCat = 'All';
+  let searchQuery = '';
+
+  const container = document.createElement('div');
+  container.className = 'prac-container';
+
+  const langBar = document.createElement('div');
+  langBar.className = 'prac-filter-bar';
+  langBar.innerHTML = `
+    <button type="button" class="prac-chip ${activeLang === 'cpp' ? 'active' : ''}" data-lang="cpp">⚡ C++ (CA-112 & CA-121)</button>
+    <button type="button" class="prac-chip ${activeLang === 'shell' ? 'active' : ''}" data-lang="shell">🐧 Linux OS (CA-123)</button>
+  `;
+
+  const searchInput = document.createElement('input');
+  searchInput.type = 'text';
+  searchInput.className = 'sheet-search';
+  searchInput.placeholder = 'Search practicals (e.g. Prime, Factorial, Matrix, Class)...';
+
+  const catBar = document.createElement('div');
+  catBar.className = 'prac-filter-bar';
+
+  const list = document.createElement('div');
+  list.className = 'prac-cards-list';
+
+  function renderCats() {
+    catBar.innerHTML = '';
+    const items = PRACTICALS[activeLang] || [];
+    const cats = ['All', ...new Set(items.map(i => i.cat))];
+    cats.forEach(c => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = `prac-chip ${activeCat === c ? 'active' : ''}`;
+      btn.textContent = c;
+      btn.onclick = () => {
+        activeCat = c;
+        renderCats();
+        renderList();
+      };
+      catBar.appendChild(btn);
+    });
+  }
+
+  function renderList() {
+    list.innerHTML = '';
+    const items = PRACTICALS[activeLang] || [];
+    const q = searchQuery.toLowerCase().trim();
+
+    const filtered = items.filter(item => {
+      const matchesCat = activeCat === 'All' || item.cat === activeCat;
+      const matchesSearch = !q || item.title.toLowerCase().includes(q) || item.num.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q);
+      return matchesCat && matchesSearch;
+    });
+
+    if (filtered.length === 0) {
+      list.innerHTML = '<div style="padding: 24px; text-align: center; color: var(--mute);">No practicals found matching your search.</div>';
+      return;
+    }
+
+    filtered.forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'prac-card';
+      card.innerHTML = `
+        <div class="prac-card-top">
+          <span class="prac-badge">${item.num}</span>
+          <span class="prac-cat">${item.cat}</span>
+        </div>
+        <h4 class="prac-card-title">${item.title}</h4>
+        <p class="prac-card-desc">${item.desc}</p>
+        <div class="prac-card-footer">
+          <button type="button" class="prac-btn-load">Load into Editor ➔</button>
+        </div>
+      `;
+      card.onclick = () => {
+        loadPracticalCode(item, activeLang);
+      };
+      list.appendChild(card);
+    });
+  }
+
+  langBar.querySelectorAll('button').forEach(btn => {
+    btn.onclick = () => {
+      activeLang = btn.dataset.lang;
+      activeCat = 'All';
+      langBar.querySelectorAll('button').forEach(b => b.classList.toggle('active', b === btn));
+      renderCats();
+      renderList();
+    };
+  });
+
+  searchInput.oninput = e => {
+    searchQuery = e.target.value;
+    renderList();
+  };
+
+  container.appendChild(langBar);
+  container.appendChild(searchInput);
+  container.appendChild(catBar);
+  container.appendChild(list);
+
+  renderCats();
+  renderList();
+
+  openSheet('📚 University Lab Practicals', container);
+}
+
+function loadPracticalCode(item, langId) {
+  const targetLang = LANGS.find(l => l.id === langId);
+  if (!targetLang) return;
+
+  if (cur.id !== langId) {
+    select(targetLang);
+  }
+  editor.set(item.code, langId);
+  closeSheet();
+  toast(`✓ Loaded ${item.num}: ${item.title}`);
+}
+
+$('btnPracticals')?.addEventListener('click', openPracticalsSheet);
 $('btnOpen').onclick = () => $('filePick').click();
 $('filePick').onchange = async e => {
   const f = e.target.files[0]; if (!f) return;

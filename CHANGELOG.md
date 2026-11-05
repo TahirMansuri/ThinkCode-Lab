@@ -29,6 +29,11 @@ All notable changes, optimizations, and technical updates to **ThinkCode Lab** a
   - Formatted error messages with standard `g++` line, column, and visual caret (`^`) indicators for authentic educational feedback.
   - Added auto-normalization for legacy college Turbo C++ headers (`<iostream.h>`, `<conio.h>`).
   - Added runtime error translation that converts JavaScript exceptions into clean C++ scope errors (e.g. `error: 'variable' was not declared in this scope`).
+- **Academic Syllabus Practicals & Code Library Drawer (`src/practicals.js`)**:
+  - Embedded a dedicated `📚 Practicals` drawer button directly in the editor header.
+  - Implemented all 17 university assignments for C++ (CA-112, CA-113, CA-121, CA-123): Arithmetic, Control statements, Loops, Prime, Factorial, Fibonacci, 2D Matrix addition, Functions (call by value/reference), String functions, Structs, 10-Student examination tabulation, Average age with default arguments, Series of squares, Classes, Constructors/Destructors, Single & Multilevel Inheritance, and the Refrigerator mini-project.
+  - Implemented all 10 Linux OS Shell practicals for CA-123: Commands demonstration (`cal`, `date`, `whoami`, `wc`), Fibonacci series, System time dynamic greeting, User login check, Factorial, Divisible by 7, Prime, Palindrome, Armstrong number, and Result sheet with filters (`head`, `tail`, `cut`, `paste`).
+  - Added live text search, category filter chips, and one-click "Load into Editor" with automatic language switching and confirmation toast.
 - **Academic Practical Starter Templates**:
   - Preloaded starter templates for C (Factorial with `printf`/`scanf`) and C++ (Class `Student` with constructor, member method, and `cout`).
 - **CodeMirror Syntax Highlighting**:
