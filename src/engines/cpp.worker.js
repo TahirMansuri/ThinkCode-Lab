@@ -36,6 +36,18 @@ function stripTypes(paramStr) {
   }).filter(Boolean).join(', ');
 }
 
+function findMatchingBrace(str, startIndex) {
+  let depth = 0;
+  for (let i = startIndex; i < str.length; i++) {
+    if (str[i] === '{') depth++;
+    else if (str[i] === '}') {
+      depth--;
+      if (depth === 0) return i;
+    }
+  }
+  return -1;
+}
+
 function prepareCppCode(cppCode) {
   let c = cppCode;
   c = c.replace(/#include\s*<string>/g, '');
@@ -48,43 +60,122 @@ function prepareCppCode(cppCode) {
 function runCppOop(cppCode) {
   let code = cppCode;
 
-  // Strip headers and namespace
+  // 1. Strip comments
+  code = code.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*/g, '');
+
+  // 2. Strip headers & namespace
   code = code.replace(/#include\s*<[^>]+>/g, '');
   code = code.replace(/using\s+namespace\s+std\s*;/g, '');
-  code = code.replace(/\b(public|private|protected)\s*:/g, '');
 
+  // 3. Find and transform each class block with balanced brace matching
   const classNames = [];
-  const classRegex = /\bclass\s+([A-Za-z_]\w*)(?:\s*:\s*public\s+([A-Za-z_]\w*))?\s*\{/g;
-  let m;
-  while ((m = classRegex.exec(code)) !== null) {
-    classNames.push(m[1]);
+  let searchIdx = 0;
+
+  while (true) {
+    const classMatch = /\bclass\s+([A-Za-z_]\w*)(?:\s*:\s*public\s+([A-Za-z_]\w*))?\s*\{/g;
+    classMatch.lastIndex = searchIdx;
+    const m = classMatch.exec(code);
+    if (!m) break;
+
+    const className = m[1];
+    const baseClass = m[2];
+    classNames.push(className);
+
+    const openBrace = m.index + m[0].length - 1;
+    const closeBrace = findMatchingBrace(code, openBrace);
+    if (closeBrace === -1) break;
+
+    let classBody = code.substring(openBrace + 1, closeBrace);
+
+    // Extract member fields (including arrays e.g. char name[20];)
+    const fieldNames = new Set();
+    const fieldLineRegex = /\b(?:int|float|double|char|string|bool|long|short)\s+([^;()]+);/g;
+    let fm;
+    while ((fm = fieldLineRegex.exec(classBody)) !== null) {
+      const decls = fm[1].split(',');
+      for (const d of decls) {
+        const nameMatch = d.trim().match(/^([A-Za-z_]\w*)(?:\[.*\])?(?:\s*=.*)?$/);
+        if (nameMatch) {
+          fieldNames.add(nameMatch[1]);
+        }
+      }
+    }
+
+    // Clean up access specifiers
+    classBody = classBody.replace(/\b(public|private|protected)\s*:/g, '');
+
+    // Check if explicit constructor exists
+    const ctorRe = new RegExp('\\b' + className + '\\s*\\(([^)]*)\\)\\s*\\{', 'g');
+    const hasCtor = ctorRe.test(classBody);
+
+    // Remove raw C++ field declarations from class body
+    classBody = classBody.replace(/\b(?:int|float|double|char|string|bool|long|short)\s+([^;()]+);/g, '');
+
+    // Rewrite constructors: ClassName(...) {
+    classBody = classBody.replace(new RegExp('\\b' + className + '\\s*\\(([^)]*)\\)\\s*\\{', 'g'), (match, params) => {
+      const fieldInits = Array.from(fieldNames).map(f => `this.${f} = "";`).join(' ');
+      return `constructor(${stripTypes(params)}) { ${baseClass ? 'super(); ' : ''}${fieldInits} `;
+    });
+
+    // If no explicit constructor, inject default constructor with field inits
+    let ctorCode = '';
+    if (!hasCtor) {
+      const fieldInits = Array.from(fieldNames).map(f => `this.${f} = "";`).join(' ');
+      ctorCode = `\n  constructor() { ${baseClass ? 'super(); ' : ''}${fieldInits} }\n`;
+    }
+
+    // Rewrite member methods: void methodName(...) { -> methodName(...) {
+    classBody = classBody.replace(/\b(?:void|int|float|double|char|string|bool|long|short)\s+([A-Za-z_]\w*)\s*\(([^)]*)\)\s*\{/g, (match, name, params) => {
+      return `${name}(${stripTypes(params)}) {`;
+    });
+
+    // Inside class methods, replace member field references with this.fieldName
+    for (const fName of fieldNames) {
+      const fieldRefRe = new RegExp('(?<![\\w.]|this\\.)\\b' + fName + '\\b', 'g');
+      classBody = classBody.replace(fieldRefRe, 'this.' + fName);
+    }
+
+    const transformedClass = `class ${className}${baseClass ? ' extends ' + baseClass : ''} {${ctorCode}\n${classBody}\n};`;
+    
+    // Replace class in code (also consuming optional trailing semicolon if present)
+    const afterClose = code.substring(closeBrace + 1);
+    const semicolonMatch = afterClose.match(/^\s*;/);
+    const endReplace = closeBrace + 1 + (semicolonMatch ? semicolonMatch[0].length : 0);
+
+    code = code.substring(0, m.index) + transformedClass + code.substring(endReplace);
+    searchIdx = m.index + transformedClass.length;
   }
 
-  // Rewrite constructors
-  for (const cName of classNames) {
-    const ctorRe = new RegExp('\\b' + cName + '\\s*\\(([^)]*)\\)\\s*\\{', 'g');
-    code = code.replace(ctorRe, (match, params) => `constructor(${stripTypes(params)}) {`);
-  }
-
-  // Class fields
-  code = code.replace(/\b(?:int|float|double|char|string|bool|long)\s+([A-Za-z_]\w*)\s*;/g, '$1;');
-
-  // Methods and functions
-  code = code.replace(/\b(?:void|int|float|double|char|string|bool|long)\s+([A-Za-z_]\w*)\s*\(([^)]*)\)\s*\{/g, (match, name, params) => {
-    if (name === 'main') return 'function main() {';
-    return `${name}(${stripTypes(params)}) {`;
+  // 4. Rewrite main and standalone functions outside classes
+  code = code.replace(/\b(?:void|int)\s+main\s*\([^)]*\)\s*\{/g, 'function main() {');
+  code = code.replace(/\b(?:void|int|float|double|char|string|bool|long)\s+([A-Za-z_]\w*)\s*\(([^)]*)\)\s*\{/g, (m, name, params) => {
+    return `function ${name}(${stripTypes(params)}) {`;
   });
 
-  // Object instantiations
+  // 5. Rewrite object instantiations: Student S; or Student s(args);
   for (const cName of classNames) {
-    const instWithArgs = new RegExp('\\b' + cName + '\\s+([A-Za-z_]\\w*)\\s*\\(([^)]*)\\)\\s*;', 'g');
-    code = code.replace(instWithArgs, 'let $1 = new ' + cName + '($2);');
+    const instArgsRe = new RegExp('\\b' + cName + '\\s+([A-Za-z_]\\w*)\\s*\\(([^)]*)\\)\\s*;', 'g');
+    code = code.replace(instArgsRe, 'let $1 = new ' + cName + '($2);');
 
-    const instNoArgs = new RegExp('\\b' + cName + '\\s+([A-Za-z_]\\w*)\\s*;', 'g');
-    code = code.replace(instNoArgs, 'let $1 = new ' + cName + '();');
+    const instNoArgsRe = new RegExp('\\b' + cName + '\\s+([A-Za-z_][\\w\\s,]*);', 'g');
+    code = code.replace(instNoArgsRe, (match, vars) => {
+      const parts = vars.split(',').map(v => v.trim()).filter(Boolean);
+      return parts.map(v => `let ${v} = new ${cName}();`).join(' ');
+    });
   }
 
-  // cout << a << b << endl;
+  // 6. Rewrite local variable declarations inside functions
+  code = code.replace(/\b(?:int|float|double|char|string|bool|long|short)\s+([^;()]+);/g, (match, decls) => {
+    const parts = decls.split(',').map(d => {
+      const trimmed = d.trim();
+      const arrMatch = trimmed.match(/^([A-Za-z_]\w*)\[.*\]$/);
+      if (arrMatch) return `${arrMatch[1]} = ""`;
+      return trimmed;
+    });
+    return `let ${parts.join(', ')};`;
+  });
+
+  // 7. Rewrite cout << ... ;
   code = code.replace(/cout\s*<<\s*([^;]+);/g, (match, exprs) => {
     const parts = exprs.split('<<').map(s => s.trim());
     const jsArgs = parts.map(p => {
@@ -94,7 +185,7 @@ function runCppOop(cppCode) {
     return `cout.print(${jsArgs.join(', ')});`;
   });
 
-  // cin >> a >> b;
+  // 8. Rewrite cin >> ... ;
   code = code.replace(/cin\s*>>\s*([^;]+);/g, (match, vars) => {
     const parts = vars.split('>>').map(s => s.trim());
     return parts.map(v => `${v} = cin.next();`).join(' ');
