@@ -105,7 +105,7 @@ export const sqlui = {
   init(ctx) { C = ctx; schema = C.store.get('cf.sql.schema', 'SCOTT'); },
   async ensure() { const e = C.engine; await e.load(C.sink); if (loaded !== e.w) await connect(); else if (pend) await pend; },
   tools(box) {
-    box.append(btn(`${schema} ▾`, schemaSheet, 'tool pri'), btn('Queries', queriesSheet));
+    box.append(btn(`${schema} ▾`, schemaSheet, 'tool pri'), btn('✨ Queries', queriesSheet, 'tool tool-queries-glow'));
     if (inTx) box.append(btn('Commit', () => C.run('COMMIT;'), 'tool ok'), btn('Rollback', () => C.run('ROLLBACK;'), 'tool warn'));
   },
   onMeta(m) { meta = m; if (m.inTx !== inTx) { inTx = m.inTx; C.refreshTools(); } renderSchema(); },
