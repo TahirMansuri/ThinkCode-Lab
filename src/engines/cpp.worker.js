@@ -31,8 +31,16 @@ function requestInputFromConsole() {
 function stripTypes(paramStr) {
   if (!paramStr || !paramStr.trim()) return '';
   return paramStr.split(',').map(p => {
-    const parts = p.trim().split(/\s+/);
-    return parts[parts.length - 1].replace(/^[*&]+/, '');
+    let clean = p.trim();
+    const eqIdx = clean.indexOf('=');
+    let defVal = '';
+    if (eqIdx !== -1) {
+      defVal = clean.slice(eqIdx);
+      clean = clean.slice(0, eqIdx).trim();
+    }
+    const parts = clean.split(/\s+/);
+    const varName = parts[parts.length - 1].replace(/^[*&]+/, '').replace(/\[.*\]$/, '');
+    return varName + defVal;
   }).filter(Boolean).join(', ');
 }
 
@@ -207,6 +215,10 @@ function runCppOop(cppCode) {
   // 2. Strip headers & namespace
   code = code.replace(/#include\s*<[^>]+>/g, '');
   code = code.replace(/using\s+namespace\s+std\s*;/g, '');
+
+  // 2b. Normalize C++ structs to classes with public members
+  code = code.replace(/\bstruct\s+([A-Za-z_]\w*)\s*\{/g, 'class $1 {\n public:\n');
+  code = code.replace(/\bstruct\s+([A-Za-z_]\w*)\s+([A-Za-z_]\w*)/g, '$1 $2');
 
   // 3. Find and transform each class block with balanced brace matching
   const classNames = [];
@@ -393,7 +405,7 @@ onmessage = async ({ data }) => {
       return;
     }
 
-    const hasClass = /\bclass\s+[A-Za-z_]\w*/.test(cppCode);
+    const hasClass = /\b(?:class|struct)\s+[A-Za-z_]\w*/.test(cppCode);
 
     try {
       if (hasClass) {

@@ -233,7 +233,55 @@ export class Shell {
       case 'tr': { const [x, y] = rest; return o(inp.replace(new RegExp(`[${x}]`, 'g'), c => y[x.indexOf(c)] ?? y.at(-1))); }
       case 'find': { const root = this.abs(rest[0] && !rest[0].startsWith('-') ? rest[0] : '.'), i = a.indexOf('-name'), re = i >= 0 ? new RegExp('^' + a[i + 1].replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '.*').replace(/\?/g, '.') + '$') : null; return o(Object.keys(this.fs).filter(k => (k === root || k.startsWith(root === '/' ? '/' : root + '/')) && (!re || re.test(k.split('/').pop()))).sort().join('\n') + '\n'); }
       case 'date': return o(new Date().toString() + '\n');
+      case 'cal': {
+        const now = new Date();
+        const year = now.getFullYear();
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        const month = now.getMonth();
+        const title = `${monthNames[month]} ${year}`;
+        const pad = Math.floor((20 - title.length) / 2);
+        let out = ' '.repeat(pad) + title + '\nSu Mo Tu We Th Fr Sa\n';
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        out += '   '.repeat(firstDay);
+        for (let d = 1; d <= daysInMonth; d++) {
+          out += String(d).padStart(2) + ' ';
+          if ((firstDay + d) % 7 === 0) out += '\n';
+        }
+        if (!out.endsWith('\n')) out += '\n';
+        return o(out);
+      }
+      case 'who': return o(`${this.env.USER}  tty1         ${new Date().toISOString().slice(0, 10)} 08:30\n`);
       case 'whoami': return o(this.env.USER + '\n');
+      case 'ps': return o('  PID TTY          TIME CMD\n 1240 pts/0    00:00:00 bash\n 1852 pts/0    00:00:00 ps\n');
+      case 'kill': {
+        if (!rest.length) return fail('kill: usage: kill [-s sigspec | -n signum | -sigspec] pid | jobspec ... or kill -l [sigspec]');
+        return o('');
+      }
+      case 'more': case 'less': {
+        if (!rest.length) return o(inp);
+        let t = '';
+        for (const p of rest) { const r = this.read(p); if (r.err) return fail(name + ': ' + r.err); t += r.c; }
+        return o(t);
+      }
+      case 'man': {
+        const cmdName = rest[0];
+        if (!cmdName) return fail('What manual page do you want?');
+        return o(`${cmdName.toUpperCase()}(1)               General Commands Manual               ${cmdName.toUpperCase()}(1)\n\nNAME\n       ${cmdName} - Linux command manual\n\nDESCRIPTION\n       Offline execution of ${cmdName} command inside ThinkCode Lab.\n\nSEE ALSO\n       help\n`);
+      }
+      case 'paste': {
+        const dIdx = a.indexOf('-d');
+        const delim = dIdx >= 0 ? (a[dIdx + 1] ?? '\t') : '\t';
+        const files = rest.filter(x => x !== a[dIdx] && x !== a[dIdx + 1]);
+        const fileContents = files.map(p => this.read(p).c ?? '');
+        const lineSets = fileContents.map(c => c.split('\n'));
+        const maxLines = Math.max(...lineSets.map(s => s.length));
+        const rows = [];
+        for (let i = 0; i < maxLines; i++) {
+          rows.push(lineSets.map(s => s[i] ?? '').join(delim));
+        }
+        return o(rows.join('\n') + '\n');
+      }
       case 'hostname': return o('forge\n');
       case 'uname': return o(flags.includes('a') ? 'Linux forge 6.1.0 #1 SMP aarch64 GNU/Linux\n' : 'Linux\n');
       case 'env': case 'printenv': return o(Object.entries(this.env).map(([k, v]) => `${k}=${v}`).join('\n') + '\n');
