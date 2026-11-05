@@ -145,18 +145,11 @@ const sink = {
       engines[cur.engine]?.sendPromptResponse?.('');
     }, 'JavaScript', 'Alert', true);
   },
-  need_input: (promptMsg) => {
-    const isMobile = window.innerWidth <= 768 || ('ontouchstart' in window);
-    if (isMobile) {
-      const langName = cur.name || cur.engine?.toUpperCase() || 'Input';
-      showPromptModal(promptMsg || 'Enter input for program:', '', val => {
-        const text = val !== null ? val : '';
-        print(text + '\n');
-        engines[cur.engine]?.sendInput(text);
-      }, langName, 'Input Required', false);
-      return;
-    }
-    con.querySelector('.con-input')?.remove();
+  need_input: () => {
+    con.querySelector('.con-input-wrap, .con-input')?.remove();
+    const wrap = document.createElement('span');
+    wrap.className = 'con-input-wrap';
+
     const inp = document.createElement('input');
     inp.type = 'text';
     inp.className = 'con-input';
@@ -164,27 +157,49 @@ const sink = {
     inp.autocorrect = 'off';
     inp.autocapitalize = 'off';
     inp.spellcheck = false;
-    inp.style.width = '2ch';
+    inp.enterKeyHint = 'send';
+    inp.style.width = '3ch';
     inp.oninput = () => {
-      inp.style.width = Math.max(2, inp.value.length + 1) + 'ch';
+      inp.style.width = Math.max(3, inp.value.length + 1) + 'ch';
       stick();
     };
+
+    const submit = () => {
+      const val = inp.value;
+      const s = document.createElement('span');
+      s.className = 'con-val';
+      s.textContent = val + '\n';
+      wrap.replaceWith(s);
+      engines[cur.engine]?.sendInput(val);
+      stick();
+    };
+
     inp.onkeydown = e => {
       e.stopPropagation();
-      if (e.key === 'Enter') {
+      if (e.key === 'Enter' || e.keyCode === 13 || e.which === 13) {
         e.preventDefault();
-        const val = inp.value;
-        const s = document.createElement('span');
-        s.className = 'con-val';
-        s.textContent = val + '\n';
-        inp.replaceWith(s);
-        engines[cur.engine]?.sendInput(val);
-        stick();
+        submit();
       }
     };
-    con.append(inp);
+
+    const btnSend = document.createElement('button');
+    btnSend.type = 'button';
+    btnSend.className = 'con-input-submit';
+    btnSend.textContent = '↵';
+    btnSend.title = 'Send input (Enter)';
+    btnSend.onclick = e => {
+      e.preventDefault();
+      e.stopPropagation();
+      submit();
+    };
+
+    wrap.append(inp, btnSend);
+    con.append(wrap);
     stick();
-    setTimeout(() => inp.focus(), 15);
+    setTimeout(() => {
+      inp.focus();
+      inp.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }, 25);
   },
   meta: m => sqlui.onMeta(m), save: v => sqlui.onSave(v), tx: v => sqlui.onTx(v), export: v => sqlui.onExport(v),
   status: s => {

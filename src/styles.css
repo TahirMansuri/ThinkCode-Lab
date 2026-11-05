@@ -1088,6 +1088,13 @@ svg {
 .console .cmd { color: var(--ember); font-weight: 600; }
 
 /* In-console interactive runtime input */
+.con-input-wrap {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: baseline;
+  gap: 4px;
+  margin: 0 2px;
+}
 .con-input {
   display: inline-block;
   font: inherit;
@@ -1098,7 +1105,6 @@ svg {
   border-radius: 3px 3px 0 0;
   outline: none;
   padding: 0 4px;
-  margin: 0 2px;
   min-width: 3ch;
   width: 3ch;
   caret-color: var(--ember);
@@ -1110,6 +1116,26 @@ svg {
   outline: none;
   background: color-mix(in srgb, var(--ember) 24%, transparent);
   box-shadow: 0 0 12px var(--ember-glow);
+}
+.con-input-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  height: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 4px;
+  border: 1px solid var(--ember);
+  background: var(--ember);
+  color: #111;
+  cursor: pointer;
+  line-height: 1;
+  vertical-align: middle;
+  transition: transform 0.1s ease, background 0.15s ease;
+}
+.con-input-submit:active {
+  transform: scale(0.92);
 }
 .con-val {
   color: var(--ember);
