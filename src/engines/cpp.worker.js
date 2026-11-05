@@ -50,11 +50,152 @@ function findMatchingBrace(str, startIndex) {
 
 function prepareCppCode(cppCode) {
   let c = cppCode;
+  c = c.replace(/#include\s*<iostream\.h>/g, '#include <iostream>');
+  c = c.replace(/#include\s*<conio\.h>/g, '');
   c = c.replace(/#include\s*<string>/g, '');
   if (/\bstring\b/.test(c) && !/typedef\s+char\s+string\b/.test(c)) {
     c = 'typedef char string[256];\n' + c;
   }
   return c;
+}
+
+function validateCppCode(code) {
+  const errors = [];
+  const lines = code.split('\n');
+
+  // Check 1: Missing main function
+  if (!/\b(?:int|void)\s+main\s*\(/.test(code)) {
+    return ["main.cpp: error: undefined reference to 'main'\ncollect2: error: ld returned 1 exit status\n"];
+  }
+
+  // Check 2: Balanced braces and class definitions
+  let braceDepth = 0;
+  const braceStack = [];
+  let inString = false;
+  let inChar = false;
+  let inBlockComment = false;
+
+  for (let l = 0; l < lines.length; l++) {
+    const line = lines[l];
+    let inLineComment = false;
+
+    for (let c = 0; c < line.length; c++) {
+      const ch = line[c];
+      const next = line[c + 1] || '';
+
+      if (inBlockComment) {
+        if (ch === '*' && next === '/') { inBlockComment = false; c++; }
+        continue;
+      }
+      if (inLineComment) continue;
+
+      if (ch === '/' && next === '*') { inBlockComment = true; c++; continue; }
+      if (ch === '/' && next === '/') { inLineComment = true; c++; continue; }
+      if (ch === '"' && !inChar) {
+        if (c === 0 || line[c - 1] !== '\\') inString = !inString;
+        continue;
+      }
+      if (ch === "'" && !inString) {
+        if (c === 0 || line[c - 1] !== '\\') inChar = !inChar;
+        continue;
+      }
+      if (inString || inChar) continue;
+
+      if (ch === '{') {
+        braceDepth++;
+        braceStack.push({ line: l + 1, col: c + 1 });
+      } else if (ch === '}') {
+        braceDepth--;
+        if (braceDepth < 0) {
+          const caret = ' '.repeat(c) + '^';
+          errors.push(`main.cpp:${l + 1}:${c + 1}: error: expected unqualified-id before '}' token\n ${line}\n ${caret}\n`);
+          braceDepth = 0;
+        } else {
+          braceStack.pop();
+        }
+      }
+    }
+  }
+
+  if (braceDepth > 0 && braceStack.length > 0) {
+    const unclosed = braceStack[braceStack.length - 1];
+    const lineText = lines[unclosed.line - 1] || '';
+    const caret = ' '.repeat(Math.max(0, unclosed.col - 1)) + '^';
+    errors.push(`main.cpp:${lines.length}:${(lines[lines.length - 1] || '').length + 1}: error: expected '}' at end of input\n ${lineText}\n ${caret}\n`);
+    return errors;
+  }
+
+  // Check 3: Missing semicolon after class definition
+  const classRe = /\bclass\s+([A-Za-z_]\w*)(?:\s*:\s*public\s+([A-Za-z_]\w*))?\s*\{/g;
+  let cm;
+  while ((cm = classRe.exec(code)) !== null) {
+    const openIdx = cm.index + cm[0].length - 1;
+    let depth = 0;
+    let closeIdx = -1;
+    for (let i = openIdx; i < code.length; i++) {
+      if (code[i] === '{') depth++;
+      else if (code[i] === '}') {
+        depth--;
+        if (depth === 0) { closeIdx = i; break; }
+      }
+    }
+    if (closeIdx !== -1) {
+      const after = code.slice(closeIdx + 1);
+      const trimmedAfter = after.match(/^\s*([^\s;])/);
+      if (trimmedAfter) {
+        const beforeClose = code.slice(0, closeIdx);
+        const lNum = beforeClose.split('\n').length;
+        const cNum = beforeClose.split('\n').pop().length + 1;
+        const lineText = lines[lNum - 1] || '}';
+        const caret = ' '.repeat(Math.max(0, cNum - 1)) + '^';
+        errors.push(`main.cpp:${lNum}:${cNum}: error: expected ';' after class definition\n ${lineText}\n ${caret}\n ;\n`);
+      }
+    }
+  }
+
+  // Check 4: Missing semicolon on regular statement lines
+  for (let l = 0; l < lines.length; l++) {
+    const raw = lines[l];
+    const stripped = raw.replace(/\/\/.*/, '').trim();
+    if (!stripped) continue;
+    if (stripped.startsWith('#')) continue;
+    if (/^(?:public|private|protected)\s*:/.test(stripped)) continue;
+    if (stripped.endsWith(';') || stripped.endsWith('{') || stripped.endsWith('}') || stripped.endsWith(':')) continue;
+    if (/^(?:if|else|while|for|switch|case|default)\b/.test(stripped)) continue;
+    if (/^(?:class|struct|union)\b/.test(stripped)) continue;
+    if (/^(?:void|int|float|double|char|string|bool|long)\s+[A-Za-z_]\w*\s*\(/.test(stripped)) continue;
+    if (stripped.endsWith(',') || stripped.endsWith('<<') || stripped.endsWith('>>') || stripped.endsWith('+') || stripped.endsWith('-') || stripped.endsWith('*') || stripped.endsWith('/') || stripped.endsWith('=')) continue;
+
+    const nextLine = (lines[l + 1] || '').trim();
+    if (nextLine === '}' || /^(?:cout|cin|return|int|float|double|char|string|bool|long|while|for|if)\b/.test(nextLine) || /^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)?\s*\(/.test(nextLine)) {
+      const cNum = raw.trimEnd().length + 1;
+      const caret = ' '.repeat(Math.max(0, cNum - 1)) + '^';
+      errors.push(`main.cpp:${l + 1}:${cNum}: error: expected ';' before end of statement\n ${raw}\n ${caret}\n ;\n`);
+    }
+  }
+
+  return errors;
+}
+
+function formatRuntimeError(e) {
+  const msg = String(e?.message || e);
+  const refMatch = msg.match(/(\w+) is not defined/);
+  if (refMatch) {
+    return `main.cpp: error: '${refMatch[1]}' was not declared in this scope\n`;
+  }
+  const typeMatch = msg.match(/(\w+) is not a function/);
+  if (typeMatch) {
+    return `main.cpp: error: '${typeMatch[1]}' cannot be used as a function\n`;
+  }
+  const synMatch = msg.match(/Unexpected identifier '(\w+)'/);
+  if (synMatch) {
+    return `main.cpp: error: syntax error near '${synMatch[1]}'\n`;
+  }
+  const firstLine = msg.split('\n')[0];
+  if (firstLine.startsWith('ERROR:') || firstLine.startsWith('Error:')) {
+    return `main.cpp: error: ${firstLine.replace(/^ERROR:\s*/i, '')}\n`;
+  }
+  return `main.cpp: error: ${firstLine}\n`;
 }
 
 function runCppOop(cppCode) {
@@ -235,8 +376,23 @@ onmessage = async ({ data }) => {
   }
 
   if (data.type === 'run') {
-    const cppCode = data.code || '';
+    let cppCode = data.code || '';
     queue = (data.stdin || '').split('\n').filter(Boolean);
+
+    // Normalize legacy Turbo C++ headers if present
+    cppCode = cppCode.replace(/#include\s*<iostream\.h>/g, '#include <iostream>');
+    cppCode = cppCode.replace(/#include\s*<conio\.h>/g, '');
+
+    // 1. Run C++ Syntax & Semantic Validation Layer (reports genuine g++ errors)
+    const syntaxErrors = validateCppCode(cppCode);
+    if (syntaxErrors.length > 0) {
+      for (const err of syntaxErrors) {
+        post('err', err);
+      }
+      post('done');
+      return;
+    }
+
     const hasClass = /\bclass\s+[A-Za-z_]\w*/.test(cppCode);
 
     try {
@@ -254,7 +410,7 @@ onmessage = async ({ data }) => {
         });
       }
     } catch (e) {
-      post('err', String(e.message || e) + '\n');
+      post('err', formatRuntimeError(e));
     }
 
     post('done');

@@ -24,6 +24,11 @@ All notable changes, optimizations, and technical updates to **ThinkCode Lab** a
 - **Interactive In-Console Input & UI Cleanup**:
   - Fixed C++ `cin >>` / `cout <<` execution order by removing premature load-time `stdio.drain()` and requesting input strictly on-demand.
   - Removed the static raw STDIN "Program input" box from the Output tab across all languages (`python`, `c`, `cpp`, `js`, `php`), freeing up vertical console workspace and eliminating redundancy with the live interactive input system.
+- **Authentic C++ Compiler Diagnostics & Linter Layer**:
+  - Embedded a syntax and semantic validation layer in `cpp.worker.js` that catches missing semicolons after class definitions (`error: expected ';' after class definition`), missing statement semicolons, unbalanced braces, and missing `main()` entry points.
+  - Formatted error messages with standard `g++` line, column, and visual caret (`^`) indicators for authentic educational feedback.
+  - Added auto-normalization for legacy college Turbo C++ headers (`<iostream.h>`, `<conio.h>`).
+  - Added runtime error translation that converts JavaScript exceptions into clean C++ scope errors (e.g. `error: 'variable' was not declared in this scope`).
 - **Academic Practical Starter Templates**:
   - Preloaded starter templates for C (Factorial with `printf`/`scanf`) and C++ (Class `Student` with constructor, member method, and `cout`).
 - **CodeMirror Syntax Highlighting**:
