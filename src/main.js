@@ -649,24 +649,43 @@ $('brandDev')?.addEventListener('keydown', e => {
 });
 
 function openPracticalsSheet() {
-  let activeLang = cur.id === 'shell' ? 'shell' : 'cpp';
+  const activeLang = cur.id;
   let activeCat = 'All';
   let searchQuery = '';
+
+  const titles = {
+    python: '🐍 Python Lab Practicals (CA-214)',
+    cpp: '⚡ C++ Lab Practicals (CA-113 & CA-123)',
+    shell: '🐧 Linux OS Practicals (CA-123)',
+    web: '🌐 Web Design-I HTML Practicals (CA-115)',
+    js: '💛 Web Design-II JavaScript Practicals (CA-125)',
+    sql: '🗄️ DBMS Oracle SQL Practicals (CA-223)',
+    c: '⚙️ C Programming Practicals'
+  };
+
+  const title = titles[activeLang] || `📚 ${cur.name} Practicals`;
 
   const container = document.createElement('div');
   container.className = 'prac-container';
 
-  const langBar = document.createElement('div');
-  langBar.className = 'prac-filter-bar';
-  langBar.innerHTML = `
-    <button type="button" class="prac-chip ${activeLang === 'cpp' ? 'active' : ''}" data-lang="cpp">⚡ C++ (CA-112 & CA-121)</button>
-    <button type="button" class="prac-chip ${activeLang === 'shell' ? 'active' : ''}" data-lang="shell">🐧 Linux OS (CA-123)</button>
-  `;
+  const items = PRACTICALS[activeLang] || [];
+
+  if (items.length === 0) {
+    container.innerHTML = `
+      <div style="padding: 40px 20px; text-align: center; color: var(--mute);">
+        <div style="font-size: 32px; margin-bottom: 12px;">📚</div>
+        <h3 style="color: var(--text); margin-bottom: 8px;">No Practicals Available Yet</h3>
+        <p>University syllabus practicals for ${cur.name} are coming soon.</p>
+      </div>
+    `;
+    openSheet(title, container);
+    return;
+  }
 
   const searchInput = document.createElement('input');
   searchInput.type = 'text';
   searchInput.className = 'sheet-search';
-  searchInput.placeholder = 'Search practicals (e.g. Prime, Factorial, Matrix, Class)...';
+  searchInput.placeholder = `Search ${cur.name} practicals (e.g. Assignment, Function, Loop)...`;
 
   const catBar = document.createElement('div');
   catBar.className = 'prac-filter-bar';
@@ -676,8 +695,12 @@ function openPracticalsSheet() {
 
   function renderCats() {
     catBar.innerHTML = '';
-    const items = PRACTICALS[activeLang] || [];
     const cats = ['All', ...new Set(items.map(i => i.cat))];
+    if (cats.length <= 2 && cats[0] === 'All') {
+      catBar.style.display = 'none';
+      return;
+    }
+    catBar.style.display = 'flex';
     cats.forEach(c => {
       const btn = document.createElement('button');
       btn.type = 'button';
@@ -694,12 +717,14 @@ function openPracticalsSheet() {
 
   function renderList() {
     list.innerHTML = '';
-    const items = PRACTICALS[activeLang] || [];
     const q = searchQuery.toLowerCase().trim();
 
     const filtered = items.filter(item => {
       const matchesCat = activeCat === 'All' || item.cat === activeCat;
-      const matchesSearch = !q || item.title.toLowerCase().includes(q) || item.num.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q);
+      const matchesSearch = !q ||
+        item.title.toLowerCase().includes(q) ||
+        item.num.toLowerCase().includes(q) ||
+        item.desc.toLowerCase().includes(q);
       return matchesCat && matchesSearch;
     });
 
@@ -729,22 +754,11 @@ function openPracticalsSheet() {
     });
   }
 
-  langBar.querySelectorAll('button').forEach(btn => {
-    btn.onclick = () => {
-      activeLang = btn.dataset.lang;
-      activeCat = 'All';
-      langBar.querySelectorAll('button').forEach(b => b.classList.toggle('active', b === btn));
-      renderCats();
-      renderList();
-    };
-  });
-
   searchInput.oninput = e => {
     searchQuery = e.target.value;
     renderList();
   };
 
-  container.appendChild(langBar);
   container.appendChild(searchInput);
   container.appendChild(catBar);
   container.appendChild(list);
@@ -752,7 +766,7 @@ function openPracticalsSheet() {
   renderCats();
   renderList();
 
-  openSheet('📚 University Lab Practicals', container);
+  openSheet(title, container);
 }
 
 function loadPracticalCode(item, langId) {
@@ -763,6 +777,7 @@ function loadPracticalCode(item, langId) {
     select(targetLang);
   }
   editor.set(item.code, langId);
+  store.set('cf.code.' + langId, item.code);
   closeSheet();
   toast(`✓ Loaded ${item.num}: ${item.title}`);
 }
