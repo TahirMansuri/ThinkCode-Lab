@@ -210,10 +210,11 @@ print("Sorted list  :", fruits)
       code: `# Practical 8: Dictionary Operations in Python
 student = {
     "roll_no": 101,
-    "name": "Aarav Sharma",
+    "name": "Tahir Mansuri",
+    "center": "InfoGalaxy Computers",
     "course": "BCA",
     "semester": 3,
-    "marks": 87.5
+    "marks": 94.5
 }
 
 print("=== Student Record ===")
@@ -221,8 +222,8 @@ for key, val in student.items():
     print(f"{key.capitalize():10} : {val}")
 
 # Adding new key-value pair and updating
-student["grade"] = "A"
-student["marks"] = 91.0
+student["grade"] = "A+"
+student["marks"] = 96.0
 print("\\nUpdated Marks:", student["marks"])
 
 # Keys and Values
@@ -264,7 +265,7 @@ print("Combined Tuple     :", combined)
       code: `# Practical 10: Classes and Objects in Python
 class Student:
     # Class attribute
-    college_name = "BCA Institute of Technology"
+    college_name = "InfoGalaxy Computers"
 
     def __init__(self, roll_no, name, marks):
         # Instance attributes
@@ -280,8 +281,8 @@ class Student:
         print("-------------------------")
 
 # Creating objects
-s1 = Student(101, "Rohan Verma", 85.5)
-s2 = Student(102, "Sneha Patil", 92.0)
+s1 = Student(101, "Pratik Hajare", 88.5)
+s2 = Student(102, "Prerana Pawar", 92.0)
 
 print("=== Student Details ===")
 s1.display()
@@ -315,7 +316,7 @@ class Employee(Person):
         print(f"Emp ID: {self.emp_id}, Salary: \${self.salary:,.2f}")
 
 print("=== Employee Record (Inheritance Demo) ===")
-emp = Employee("Pooja Desai", 24, "EMP-204", 45000)
+emp = Employee("Sandesh Marathe", 24, "EMP-204", 48000)
 emp.show_info()
 `
     }
@@ -681,8 +682,8 @@ union DataHolder {
 int main() {
     Student s1;
     s1.rollNo = 101;
-    strcpy(s1.name, "Rahul Gupta");
-    s1.marks = 88.5;
+    strcpy(s1.name, "Tahir Mansuri");
+    s1.marks = 92.5;
 
     cout << "=== Student Structure Record ===" << endl;
     cout << "Roll No: " << s1.rollNo << endl;
@@ -747,8 +748,8 @@ public:
 
 int main() {
     StudentResult s1, s2;
-    s1.setData(101, "Amit Kumar", 78, 85, 90);
-    s2.setData(102, "Pooja Sharma", 65, 58, 70);
+    s1.setData(101, "Juned Khan", 82, 85, 90);
+    s2.setData(102, "Prerana Pawar", 88, 91, 94);
 
     cout << "Roll\\tName\\t\\tTotal\\tPercent\\tGrade" << endl;
     cout << "--------------------------------------------------------" << endl;
@@ -1023,13 +1024,13 @@ fi
       desc: 'Creates and formats a student result sheet using head, tail, cut, and paste commands.',
       code: `#!/bin/bash
 # OS Practical 10: Create Result Sheet Using Filters & Redirection
-echo -e "101\\n102\\n103\\n104" > /tmp/rolls.txt
-echo -e "Aarav\\nDiya\\nRohan\\nSneha" > /tmp/names.txt
-echo -e "85\\n92\\n78\\n88" > /tmp/marks.txt
+echo -e "101\\n102\\n103\\n104\\n105" > /tmp/rolls.txt
+echo -e "Tahir_Mansuri\\nPratik_Hajare\\nPrerana_Pawar\\nSandesh_Marathe\\nJuned_Khan" > /tmp/names.txt
+echo -e "95\\n88\\n92\\n84\\n89" > /tmp/marks.txt
 
-echo "=== Student Marks Sheet (Created with paste & filters) ==="
-echo -e "Roll\\tName\\tMarks"
-echo "------------------------------"
+echo "=== InfoGalaxy Computers - Student Marks Sheet ==="
+echo -e "Roll\\tName\\t\\t\\tMarks"
+echo "-------------------------------------------------"
 paste /tmp/rolls.txt /tmp/names.txt /tmp/marks.txt
 
 echo -e "\\n--- Top 2 Students (head -n 2) ---"
@@ -1150,7 +1151,7 @@ head -n 2 /tmp/names.txt
   <h2>Scrolling Text Demonstration</h2>
   <div class="news-ticker">
     <marquee behavior="scroll" direction="left" scrollamount="6">
-      📢 BCA Semester Examination Schedule has been announced! Download hall tickets from university portal.
+      📢 InfoGalaxy Computers: BCA Practical Batches Started! Guidance by Tahir Mansuri. Admissions open!
     </marquee>
   </div>
   <br>
@@ -1270,7 +1271,7 @@ head -n 2 /tmp/names.txt
   </style>
 </head>
 <body>
-  <h2>FYBCA Semester-I Weekly Timetable</h2>
+  <h2>InfoGalaxy Computers - FYBCA Weekly Timetable</h2>
   <table>
     <tr>
       <th>Day / Time</th>
@@ -1375,16 +1376,16 @@ head -n 2 /tmp/names.txt
 </head>
 <body>
   <div class="form-container">
-    <h2 style="text-align: center; color: #0284c7;">College Admission Form</h2>
+    <h2 style="text-align: center; color: #0284c7;">InfoGalaxy Computers - Admission Form</h2>
     <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Admission Form Submitted Successfully!');">
       <div class="form-group">
         <label for="name">Full Name:</label>
-        <input type="text" id="name" placeholder="Enter full name" required>
+        <input type="text" id="name" placeholder="e.g. Tahir Mansuri" required>
       </div>
 
       <div class="form-group">
         <label for="email">Email Address:</label>
-        <input type="email" id="email" placeholder="example@email.com" required>
+        <input type="email" id="email" placeholder="tahir@infogalaxy.com" required>
       </div>
 
       <div class="form-group">
@@ -1476,16 +1477,18 @@ head -n 2 /tmp/names.txt
       title: 'Embedding JavaScript & Output Methods',
       desc: 'Demonstrates console.log(), alert(), and document.write() output methods in JavaScript.',
       code: `// Practical 1: JavaScript Output Methods
-console.log("=== JavaScript Output Methods ===");
+console.log("=== InfoGalaxy Computers - JS Lab ===");
 
-let studentName = "Aarav Sharma";
+let studentName = "Tahir Mansuri";
+let mentorName = "Pratik Hajare";
 let rollNo = 101;
 
-console.log("Student Name:", studentName);
-console.log("Roll Number :", rollNo);
+console.log("Student Name :", studentName);
+console.log("Mentor Name  :", mentorName);
+console.log("Roll Number  :", rollNo);
 
 // Arithmetic calculation in JS
-let mark1 = 78, mark2 = 84, mark3 = 90;
+let mark1 = 88, mark2 = 92, mark3 = 95;
 let total = mark1 + mark2 + mark3;
 let average = total / 3;
 
@@ -1671,11 +1674,11 @@ CREATE TABLE employees (
     hire_date DATE
 );
 
-INSERT INTO employees VALUES (101, 'Amit Sharma', 'Manager', 'IT', 75000.00, '2020-01-15');
-INSERT INTO employees VALUES (102, 'Priya Patel', 'Developer', 'IT', 52000.00, '2021-03-20');
-INSERT INTO employees VALUES (103, 'Rohan Verma', 'Analyst', 'Finance', 48000.00, '2019-07-11');
-INSERT INTO employees VALUES (104, 'Sneha Joshi', 'HR Executive', 'HR', 42000.00, '2022-02-01');
-INSERT INTO employees VALUES (105, 'Vikas Singh', 'Developer', 'IT', 55000.00, '2021-08-16');
+INSERT INTO employees VALUES (101, 'Tahir Mansuri', 'Lead Architect', 'IT', 95000.00, '2020-01-15');
+INSERT INTO employees VALUES (102, 'Pratik Hajare', 'Sr Developer', 'IT', 72000.00, '2021-03-20');
+INSERT INTO employees VALUES (103, 'Prerana Pawar', 'Database Admin', 'IT', 68000.00, '2019-07-11');
+INSERT INTO employees VALUES (104, 'Sandesh Marathe', 'HR Executive', 'HR', 55000.00, '2022-02-01');
+INSERT INTO employees VALUES (105, 'Juned Khan', 'Full Stack Dev', 'IT', 64000.00, '2021-08-16');
 INSERT INTO employees VALUES (106, 'Ananya Sen', 'Accountant', 'Finance', 46000.00, '2020-11-25');
 INSERT INTO employees VALUES (107, 'Rahul Nair', 'Tester', 'IT', 38000.00, '2023-01-10');
 INSERT INTO employees VALUES (108, 'Neha Kulkarni', 'HR Manager', 'HR', 68000.00, '2018-05-19');
@@ -1717,8 +1720,8 @@ ORDER BY salary DESC;
 -- 1. Add email column to employees table
 ALTER TABLE employees ADD email VARCHAR(100);
 
--- 2. Populate email addresses for employees
-UPDATE employees SET email = LOWER(REPLACE(emp_name, ' ', '.')) || '@thinkcode.org';
+-- 2. Populate email addresses for employees (InfoGalaxy domain)
+UPDATE employees SET email = LOWER(REPLACE(emp_name, ' ', '.')) || '@infogalaxy.com';
 
 -- 3. Display table with new email column
 SELECT emp_id, emp_name, department, email FROM employees;
@@ -1792,19 +1795,21 @@ ORDER BY avg_salary DESC;
 CREATE TABLE departments (
     dept_id INT PRIMARY KEY,
     dept_name VARCHAR(30),
+    organization VARCHAR(40),
     location VARCHAR(50)
 );
 
-INSERT INTO departments VALUES (1, 'IT', 'Tech Park, Floor 4');
-INSERT INTO departments VALUES (2, 'Finance', 'Tower B, Floor 2');
-INSERT INTO departments VALUES (3, 'HR', 'Admin Block, Floor 1');
-INSERT INTO departments VALUES (4, 'Marketing', 'Tower A, Floor 3');
+INSERT INTO departments VALUES (1, 'IT', 'InfoGalaxy Computers', 'Tech Park, Floor 4');
+INSERT INTO departments VALUES (2, 'Finance', 'InfoGalaxy Computers', 'Tower B, Floor 2');
+INSERT INTO departments VALUES (3, 'HR', 'InfoGalaxy Computers', 'Admin Block, Floor 1');
+INSERT INTO departments VALUES (4, 'Marketing', 'InfoGalaxy Computers', 'Tower A, Floor 3');
 
 -- INNER JOIN between Employees and Departments
 SELECT 
     e.emp_id, 
     e.emp_name, 
     e.designation, 
+    d.organization,
     d.dept_name, 
     d.location
 FROM employees e
@@ -1845,6 +1850,7 @@ WHERE salary = (SELECT MAX(salary) FROM employees);
 #include <stdio.h>
 
 int main() {
+    printf("=== InfoGalaxy Computers - C Programming Lab ===\\n");
     int a, b;
     printf("Enter two integers: ");
     scanf("%d %d", &a, &b);
