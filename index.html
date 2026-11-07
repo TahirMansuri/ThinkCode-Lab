@@ -247,6 +247,17 @@
         <div id="editorPhp" class="sub-cm"></div>
       </div>
     </div>
+
+    <!-- Floating Action Button inside Editor Pane (Bottom-Right) -->
+    <button id="btnRun" class="fab-run" type="button" title="Run code (⌘↵)" aria-label="Run code">
+      <span class="fab-icon icon-run" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><polygon points="7 4 21 12 7 20 7 4"/></svg>
+      </span>
+      <span class="fab-icon icon-stop" hidden aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="3"/></svg>
+      </span>
+      <span class="sr-only">Run</span>
+    </button>
   </section>
 
   <div id="grip" class="grip" role="separator" aria-label="Resize panels" tabindex="0"><i></i></div>
@@ -264,6 +275,9 @@
           <button type="button" id="btnOutZoomOut" class="btn-zoom" title="Zoom Out Output">A−</button>
           <button type="button" id="btnOutZoomIn" class="btn-zoom" title="Zoom In Output">A+</button>
         </div>
+        <button type="button" id="btnClear" class="btn-clear-out" title="Clear output (Restores 80:20 split)" aria-label="Clear output">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
       </div>
     </div>
     <div id="tableStrip" class="strip" hidden></div>
@@ -277,12 +291,6 @@
     </form>
   </section>
 </main>
-
-<footer class="dock">
-  <button id="btnRun" class="run"><svg><use href="#i-play"/></svg><span>Run</span><kbd class="kbd">⌘↵</kbd></button>
-  <button id="btnStop" class="ghost" disabled><svg><use href="#i-stop"/></svg><span>Stop</span></button>
-  <button id="btnClear" class="ghost"><svg><use href="#i-trash"/></svg><span>Clear</span></button>
-</footer>
 
 <div id="sheet" class="sheet" hidden>
   <div class="sheet-back" data-close></div>

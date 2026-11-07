@@ -465,7 +465,7 @@ svg {
   min-height: 0;
   display: grid;
   grid-template-rows: var(--split, 80%) 14px minmax(0, 1fr);
-  padding: 10px 14px 0;
+  padding: 10px 14px calc(env(safe-area-inset-bottom) + 12px);
   gap: 0;
   transition: grid-template-rows 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -476,6 +476,7 @@ svg {
 
 /* Code box and Output / Console box */
 .pane {
+  position: relative;
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -1460,89 +1461,136 @@ td.null {
 }
 
 /* ==========================================================================
-   Action Dock (Floating Hero Toolbar)
+   Floating Action Button (Smart Morphing Run / Stop FAB)
    ========================================================================== */
-.dock {
-  display: flex;
-  gap: 12px;
-  padding: 12px 14px calc(env(safe-area-inset-bottom) + 12px);
-  background: transparent;
-  width: 100%;
-}
-
-.run, .ghost {
+.fab-run {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 35;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: linear-gradient(135deg, var(--ember) 0%, var(--ember-hover) 100%);
+  color: var(--ember-ink);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  height: 48px;
-  border-radius: 14px;
-  border: 1px solid transparent;
-  font-weight: 700;
-  transition: all 0.16s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 18px rgba(255, 154, 46, 0.45), 0 2px 6px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.18s ease, background 0.2s ease, border-color 0.2s ease;
   user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.run {
-  flex: 1.6;
-  background: linear-gradient(135deg, var(--ember) 0%, var(--ember-hover) 100%);
-  color: var(--ember-ink);
-  font-size: 15.5px;
-  box-shadow: var(--glow-run);
-  letter-spacing: -0.01em;
+.fab-run:hover:not([disabled]) {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 24px rgba(255, 154, 46, 0.6), 0 3px 8px rgba(0, 0, 0, 0.4);
 }
 
-.run:hover:not([disabled]) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px -2px rgba(255, 176, 74, 0.55);
+.fab-run:active:not([disabled]) {
+  transform: scale(0.93);
 }
 
-.run:active:not([disabled]), .ghost:active:not([disabled]) {
-  transform: scale(0.97);
-}
-
-.run[disabled] {
+.fab-run[disabled] {
   opacity: 0.55;
+  cursor: not-allowed;
   box-shadow: none;
-  cursor: not-allowed;
+  filter: grayscale(0.4);
 }
 
-.run .kbd {
-  display: none;
-  padding: 2px 6px;
-  font: 600 11px var(--mono);
-  background: rgba(0, 0, 0, 0.2);
+.fab-run .fab-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: transform 0.15s ease;
+}
+
+.fab-run .icon-run svg {
+  margin-left: 2px;
+}
+
+/* Running state: Morphs to Stop button with red gradient & pulsing ring */
+.fab-run.is-running {
+  background: linear-gradient(135deg, #FF5C67 0%, #E63746 100%);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 18px rgba(230, 55, 70, 0.55), 0 0 0 0 rgba(230, 55, 70, 0.7);
+  animation: fab-running-pulse 1.6s infinite cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fab-run.is-running:hover:not([disabled]) {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 8px 26px rgba(230, 55, 70, 0.7);
+}
+
+@keyframes fab-running-pulse {
+  0% {
+    box-shadow: 0 4px 18px rgba(230, 55, 70, 0.55), 0 0 0 0 rgba(230, 55, 70, 0.7);
+  }
+  70% {
+    box-shadow: 0 4px 18px rgba(230, 55, 70, 0.55), 0 0 0 10px rgba(230, 55, 70, 0);
+  }
+  100% {
+    box-shadow: 0 4px 18px rgba(230, 55, 70, 0.55), 0 0 0 0 rgba(230, 55, 70, 0);
+  }
+}
+
+/* Screen reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Output Console Clear Button */
+.btn-clear-out {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 26px;
   border-radius: 6px;
-  color: inherit;
-  margin-left: 4px;
-}
-
-.ghost {
-  flex: 1;
-  background: var(--raised);
-  color: var(--text);
-  font-weight: 600;
   border: 1px solid var(--line);
-  box-shadow: var(--shadow-sm), 0 0 8px rgba(88, 166, 255, 0.08);
+  background: var(--raised);
+  color: var(--mute);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  padding: 0;
+  margin-left: 2px;
 }
 
-.ghost:hover:not([disabled]) {
+.btn-clear-out:hover {
   background: var(--raised-hover);
-  border-color: var(--line-light);
-  box-shadow: 0 0 14px rgba(88, 166, 255, 0.16);
-  transform: translateY(-1px);
+  color: #ff5c67;
+  border-color: rgba(255, 92, 103, 0.35);
+  box-shadow: 0 0 8px rgba(255, 92, 103, 0.2);
 }
 
-.ghost[disabled] {
-  opacity: 0.4;
-  cursor: not-allowed;
+.btn-clear-out:active {
+  transform: scale(0.92);
+}
+
+/* Extra bottom padding in editor so code is never occluded under FAB */
+.cm-content {
+  padding-bottom: 64px !important;
 }
 
 /* Toast Notifications */
 .toast {
   position: fixed;
   left: 50%;
-  bottom: calc(env(safe-area-inset-bottom) + 84px);
+  bottom: calc(env(safe-area-inset-bottom) + 20px);
   transform: translate(-50%, 14px);
   max-width: 88vw;
   padding: 10px 18px;

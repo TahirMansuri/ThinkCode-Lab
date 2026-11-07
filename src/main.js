@@ -395,9 +395,40 @@ function applyLang() {
 }
 
 // ---------- run / stop / clear ----------
+function setRunLabel(text) {
+  const btn = $('btnRun');
+  if (!btn) return;
+  const sr = btn.querySelector('.sr-only');
+  if (sr) sr.textContent = text;
+  btn.title = `${text} (⌘↵)`;
+  btn.setAttribute('aria-label', text);
+}
+
 function syncButtons() {
-  $('btnRun').disabled = running; $('btnStop').disabled = !running || cur.id === 'shell' || cur.id === 'web';
-  $('btnRun').querySelector('span').textContent = running ? 'Running…' : 'Run';
+  const btn = $('btnRun');
+  if (btn) {
+    const isUnstoppable = cur.id === 'shell' || cur.id === 'web';
+    const iconRun = btn.querySelector('.icon-run');
+    const iconStop = btn.querySelector('.icon-stop');
+
+    if (running) {
+      btn.classList.add('is-running');
+      if (iconRun) iconRun.hidden = true;
+      if (iconStop) iconStop.hidden = false;
+      btn.disabled = isUnstoppable;
+      setRunLabel(isUnstoppable ? 'Running…' : 'Stop');
+      btn.title = isUnstoppable ? 'Running…' : 'Stop execution (⌘↵)';
+    } else {
+      btn.classList.remove('is-running');
+      if (iconRun) iconRun.hidden = false;
+      if (iconStop) iconStop.hidden = true;
+      btn.disabled = false;
+      setRunLabel('Run');
+      btn.title = 'Run code (⌘↵)';
+    }
+  }
+  const btnStop = $('btnStop');
+  if (btnStop) btnStop.disabled = !running || cur.id === 'shell' || cur.id === 'web';
   const bSec = $('btnRunPhpSec');
   if (bSec) bSec.disabled = running;
   if (!running) {
@@ -456,7 +487,7 @@ async function run(arg) {
       print(`⏳ ${eng.label || cur.name} runtime is still downloading/loading on your device…\n`, 'sys');
       print(`   Execution is queued — your code will run automatically as soon as ready!\n\n`, 'mute');
       toast(`⏳ Loading ${eng.label || cur.name}... queued to run`);
-      $('btnRun').querySelector('span').textContent = 'Loading…';
+      setRunLabel('Loading…');
     }
     const t0 = performance.now();
     if (cur.id === 'shell') print(`$ bash ${cur.file}\n`, 'cmd');
@@ -467,7 +498,7 @@ async function run(arg) {
     if (wasWarming && !stopped) {
       print(`✓ ${eng.label || cur.name} ready! Executing your code…\n`, 'ok');
       print('──────────────────────────────────────────────────\n', 'mute');
-      $('btnRun').querySelector('span').textContent = 'Running…';
+      setRunLabel('Running…');
     }
     if (cur.id === 'sql') await sqlui.ensure();
     runStart = performance.now();
@@ -507,7 +538,7 @@ async function executePhpCode(code) {
     print(`⏳ PHP 8.2 WebAssembly runtime is still downloading/loading on your device…\n`, 'sys');
     print(`   Execution is queued — script will run automatically once loading completes!\n\n`, 'mute');
     toast('⏳ Initializing PHP runtime...');
-    $('btnRun').querySelector('span').textContent = 'Loading…';
+    setRunLabel('Loading…');
   }
   const t0 = performance.now();
   print(`$ php process.php\n`, 'cmd');
@@ -515,7 +546,7 @@ async function executePhpCode(code) {
   if (wasWarming && !stopped) {
     print(`✓ PHP 8.2 ready! Executing code…\n`, 'ok');
     print('──────────────────────────────────────────────────\n', 'mute');
-    $('btnRun').querySelector('span').textContent = 'Running…';
+    setRunLabel('Running…');
   }
   await eng.run(code, '', sink);
   if (!stopped) print(`\n✓ Finished in ${Math.round(performance.now() - t0)} ms\n`, 'ok');
@@ -542,12 +573,26 @@ function previewHtmlDirect() {
   }
 }
 
-$('btnRun').onclick = () => run();
-$('btnStop').onclick = stop;
-$('btnClear').onclick = () => { con.textContent = ''; setOutputSmall(); };
+const bRun = $('btnRun');
+if (bRun) {
+  bRun.onclick = () => {
+    if (running) stop();
+    else run();
+  };
+}
+const bStop = $('btnStop');
+if (bStop) bStop.onclick = stop;
+const bClr = $('btnClear');
+if (bClr) bClr.onclick = () => { con.textContent = ''; setOutputSmall(); };
 const stdinEl = $('stdin');
 if (stdinEl) stdinEl.oninput = e => store.set('cf.in.' + cur.id, e.target.value);
-window.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); run(); } });
+window.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    e.preventDefault();
+    if (running) stop();
+    else run();
+  }
+});
 $('promptbar').onsubmit = e => {
   e.preventDefault();
   const i = $('promptInput'), line = i.value;

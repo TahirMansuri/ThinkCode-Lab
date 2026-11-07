@@ -32,7 +32,7 @@ const style = HighlightStyle.define([
 const theme = EditorView.theme({
   '&': { height: '100%', backgroundColor: 'transparent', color: 'var(--text)' },
   '.cm-scroller': { fontFamily: 'var(--mono)', fontSize: 'var(--editor-font-size, 13.5px)', lineHeight: '1.6', overflow: 'auto' },
-  '.cm-content': { caretColor: 'var(--ember)', padding: '10px 0' },
+  '.cm-content': { caretColor: 'var(--ember)', padding: '10px 0 64px 0' },
   '.cm-gutters': { backgroundColor: 'transparent', color: 'var(--mute)', border: 'none' },
   '.cm-activeLine': { backgroundColor: 'var(--active-line)' },
   '.cm-activeLineGutter': { backgroundColor: 'transparent', color: 'var(--text)' },
