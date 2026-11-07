@@ -30,6 +30,19 @@
   - Removed redundant percentage text in zoom controls to maximize horizontal header real estate on smaller phone screens.
   - Added matching independent `A−` and `A+` zoom controls to the Output Console header, allowing students to scale output text independently from the code editor.
 
+### 🔘 Floating Action Button (FAB) & Full-Screen Mobile Workspace
+- **Removed Bulky Bottom Dock**:
+  - Eliminated the fixed `<footer class="dock">` (~75px–85px height) from mobile viewports, transferring that entire vertical height directly to active editing and output space.
+- **Smart Morphing FAB (`#btnRun`)**:
+  - Pinned directly into the bottom-right corner of the code editor pane (`#editorPane`).
+  - **Idle State**: Glowing ember gradient (`#FFB04A` $\rightarrow$ `#FF8A00`) with Play icon (▶).
+  - **Running State**: Morphs into an active Coral/Red gradient (`#FF5C67` $\rightarrow$ `#E63746`) with Stop icon (⏹) and an ambient pulsing radar ring (`@keyframes fab-running-pulse`).
+  - Single-tap execution when idle; single-tap immediate termination when running.
+- **Output Clear Button Relocation**:
+  - Relocated the Clear button (`#btnClear`) into the Output Console header bar (`.head-right`), freeing bottom space while maintaining one-tap clearing (which also resets the view to the 80:20 split ratio).
+- **Collision-Free Editor Scrolling**:
+  - Added `padding-bottom: 64px !important;` to `.cm-content`, guaranteeing that student code text is never obscured under the floating button even when scrolled to the bottom of long files.
+
 ---
 
 ## 🚀 Version 1.3.1 (Build 8) — Production Minification Fixes & Firebase Hosting
@@ -139,3 +152,4 @@
 - **Linux Shell Emulator**: 35+ UNIX commands, pipelines (`|`), redirections (`>`, `>>`), and persistent virtual filesystem in `localStorage`.
 - **Modern JavaScript & HTML/CSS**: Sandboxed execution with mobile touch-friendly `prompt()` / `alert()` modal and live iframe preview.
 - **UI Architecture**: Obsidian dark cyber theme with luminous glowing borders, CodeMirror 6 code editor, and responsive viewport manager.
+
