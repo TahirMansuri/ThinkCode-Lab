@@ -15,6 +15,7 @@ Welcome to the comprehensive technical documentation for **ThinkCode Lab**. All 
 | **05** | [**Future Roadmap**](05_ROADMAP.md) | Strategic roadmap detailing completed phases 1–5, near-term enhancements (Multi-file manager, PL/SQL blocks, ER diagrams), and future ecosystem plans. |
 | **06** | [**Google Play Store & Android Distribution**](06_PLAYSTORE_RELEASE.md) | Production release keystore details, SHA-256 certificate fingerprints, Play Protect appeal guide, target API 36 compliance, and release build instructions. |
 | **07** | [**Developer Memory & Operational Rules**](07_DEVELOPER_MEMORY.md) | Critical developer memory, strictly enforced rules (Web-only deployment, backup policy), and essential gotchas learned during development. |
+| **08** | [**Future Enhancements & Feature Catalog**](08_FUTURE_ENHANCEMENTS.md) | In-depth specifications for upcoming enhancements: Lab Journal PDF generator, mobile quick-symbol strip, visual SQL ER diagram, viva voce prep, serverless sharing, and multi-file projects. |
 
 ---
 
