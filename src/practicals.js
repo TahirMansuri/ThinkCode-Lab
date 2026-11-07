@@ -1958,5 +1958,830 @@ int main() {
 }
 `
     }
+  ],
+
+  // ========================================================
+  // JAVA PRACTICALS (TYBCA CA-315: Practical based on JAVA Programming)
+  // ========================================================
+  java: [
+    {
+      id: 'java-1',
+      num: 'Assignment 1',
+      cat: 'Basics & I/O',
+      title: 'Display Student Information',
+      desc: 'Demonstrates basic Java program structure to display student details, marks, and grade classification.',
+      code: `// Assignment 1: Write a Java program to display student information.
+// Course: TYBCA CA-315 | InfoGalaxy Computers
+public class Main {
+    public static void main(String[] args) {
+        String studentName = "Tahir Mansuri";
+        int rollNo = 301;
+        String collegeName = "InfoGalaxy Computers & IT Academy";
+        String course = "TYBCA (Semester V)";
+        double marksJava = 88.5;
+        double marksWeb = 84.0;
+        double marksDb = 92.5;
+
+        double totalMarks = marksJava + marksWeb + marksDb;
+        double percentage = totalMarks / 3.0;
+
+        System.out.println("==========================================");
+        System.out.println("       STUDENT INFORMATION REPORT         ");
+        System.out.println("==========================================");
+        System.out.println("Roll Number  : " + rollNo);
+        System.out.println("Student Name : " + studentName);
+        System.out.println("College Name : " + collegeName);
+        System.out.println("Course Title : " + course);
+        System.out.println("------------------------------------------");
+        System.out.println("Java Marks   : " + marksJava + " / 100");
+        System.out.println("Web Tech     : " + marksWeb + " / 100");
+        System.out.println("Database     : " + marksDb + " / 100");
+        System.out.println("Total Marks  : " + totalMarks + " / 300");
+        System.out.printf("Percentage   : %.2f%%\\n", percentage);
+
+        if (percentage >= 70) {
+            System.out.println("Final Grade  : Distinction (Grade A+)");
+        } else if (percentage >= 60) {
+            System.out.println("Final Grade  : First Class (Grade A)");
+        } else {
+            System.out.println("Final Grade  : Second Class (Grade B)");
+        }
+        System.out.println("==========================================");
+    }
+}
+`
+    },
+    {
+      id: 'java-2',
+      num: 'Assignment 2',
+      cat: 'Control Structures',
+      title: 'Arithmetic Operations using Switch Case',
+      desc: 'Menu-driven calculator executing addition, subtraction, multiplication, division, and modulo via switch-case.',
+      code: `// Assignment 2: Write a Java program to perform arithmetic operations using switch case.
+// Course: TYBCA CA-315
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("=== Menu-Driven Arithmetic Calculator ===");
+        System.out.println("1. Addition (+)");
+        System.out.println("2. Subtraction (-)");
+        System.out.println("3. Multiplication (*)");
+        System.out.println("4. Division (/)");
+        System.out.println("5. Modulus (%)");
+        System.out.print("Enter your choice (1-5): ");
+        int choice = sc.nextInt();
+
+        System.out.print("Enter first number: ");
+        double num1 = sc.nextDouble();
+
+        System.out.print("Enter second number: ");
+        double num2 = sc.nextDouble();
+
+        double result = 0;
+        boolean valid = true;
+
+        switch (choice) {
+            case 1:
+                result = num1 + num2;
+                System.out.println("\\nResult: " + num1 + " + " + num2 + " = " + result);
+                break;
+            case 2:
+                result = num1 - num2;
+                System.out.println("\\nResult: " + num1 + " - " + num2 + " = " + result);
+                break;
+            case 3:
+                result = num1 * num2;
+                System.out.println("\\nResult: " + num1 + " * " + num2 + " = " + result);
+                break;
+            case 4:
+                if (num2 != 0) {
+                    result = num1 / num2;
+                    System.out.println("\\nResult: " + num1 + " / " + num2 + " = " + result);
+                } else {
+                    System.out.println("\\nError: Division by zero is not allowed!");
+                    valid = false;
+                }
+                break;
+            case 5:
+                if (num2 != 0) {
+                    result = num1 % num2;
+                    System.out.println("\\nResult: " + num1 + " % " + num2 + " = " + result);
+                } else {
+                    System.out.println("\\nError: Modulo by zero is not allowed!");
+                    valid = false;
+                }
+                break;
+            default:
+                System.out.println("\\nInvalid choice! Please select between 1 and 5.");
+                valid = false;
+        }
+
+        if (valid) {
+            System.out.println("✓ Calculation completed successfully.");
+        }
+    }
+}
+`
+    },
+    {
+      id: 'java-3',
+      num: 'Assignment 3',
+      cat: 'Arrays',
+      title: 'Find Largest Element in an Array',
+      desc: 'Traverses a one-dimensional array to compute the largest element, smallest element, and sum.',
+      code: `// Assignment 3: Write a Java program to find the largest element in an array.
+// Course: TYBCA CA-315
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of elements in array: ");
+        int n = sc.nextInt();
+
+        int[] arr = new int[n];
+        System.out.println("Enter " + n + " elements:");
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+
+        int max = arr[0];
+        int min = arr[0];
+        int sum = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (arr[i] > max) max = arr[i];
+            if (arr[i] < min) min = arr[i];
+            sum += arr[i];
+        }
+
+        System.out.println("\\n--- Array Analysis Results ---");
+        System.out.print("Array Elements : ");
+        for (int x : arr) {
+            System.out.print(x + " ");
+        }
+        System.out.println("\\nLargest Element: " + max);
+        System.out.println("Smallest Element: " + min);
+        System.out.println("Sum of Elements : " + sum);
+        System.out.printf("Average Value   : %.2f\\n", (double)sum / n);
+    }
+}
+`
+    },
+    {
+      id: 'java-4',
+      num: 'Assignment 4',
+      cat: 'Fundamentals',
+      title: 'Command Line Arguments',
+      desc: 'Reads, counts, and iterates through command-line parameters passed to public static void main(String[] args).',
+      code: `// Assignment 4: Write a Java program using command line arguments.
+// Course: TYBCA CA-315
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("=== Command Line Arguments Processing ===");
+        System.out.println("Total arguments received: " + args.length);
+        System.out.println("------------------------------------------");
+
+        if (args.length == 0) {
+            System.out.println("No command line arguments supplied.");
+            System.out.println("Example usage: java Main Arg1 Arg2 Arg3");
+            return;
+        }
+
+        for (int i = 0; i < args.length; i++) {
+            System.out.println("args[" + i + "] = " + args[i]);
+        }
+
+        System.out.println("------------------------------------------");
+        System.out.println("First Argument : " + args[0]);
+        if (args.length > 1) {
+            System.out.println("Second Argument: " + args[1]);
+        }
+        System.out.println("✓ Command line arguments parsed successfully!");
+    }
+}
+`
+    },
+    {
+      id: 'java-5',
+      num: 'Assignment 5',
+      cat: 'Scanner I/O',
+      title: 'Accept User Input using Scanner',
+      desc: 'Demonstrates reading multiple data types (String, int, double, boolean) using java.util.Scanner.',
+      code: `// Assignment 5: Write a Java program to accept user input using Scanner.
+// Course: TYBCA CA-315 | Student: Pratik Hajare
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("=== Student Registration (Scanner Input) ===");
+        System.out.print("Enter Student Full Name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter Age: ");
+        int age = sc.nextInt();
+
+        System.out.print("Enter Course Fees Paid (₹): ");
+        double fees = sc.nextDouble();
+
+        System.out.print("Is Hostel Facility Required? (true/false): ");
+        boolean isHostel = sc.nextBoolean();
+
+        System.out.println("\\n==========================================");
+        System.out.println("        REGISTRATION CONFIRMATION         ");
+        System.out.println("==========================================");
+        System.out.println("Student Name : " + name);
+        System.out.println("Age          : " + age + " years");
+        System.out.printf("Fees Paid    : ₹%.2f\\n", fees);
+        System.out.println("Hostel Opted : " + (isHostel ? "YES" : "NO"));
+        System.out.println("Status       : Enrolled at InfoGalaxy Computers");
+        System.out.println("==========================================");
+    }
+}
+`
+    },
+    {
+      id: 'java-6',
+      num: 'Assignment 6',
+      cat: 'Classes & Objects',
+      title: 'Constructors and Methods',
+      desc: 'Demonstrates default and parameterized constructors along with instance member methods in an Employee class.',
+      code: `// Assignment 6: Write a Java program to demonstrate the use of constructors and methods.
+// Course: TYBCA CA-315 | Featuring Prerana Pawar
+class Employee {
+    int empId;
+    String empName;
+    String designation;
+    double salary;
+
+    // Default constructor
+    Employee() {
+        this.empId = 100;
+        this.empName = "Trainee Intern";
+        this.designation = "Associate";
+        this.salary = 25000.0;
+    }
+
+    // Parameterized constructor
+    Employee(int id, String name, String desig, double sal) {
+        this.empId = id;
+        this.empName = name;
+        this.designation = desig;
+        this.salary = sal;
+    }
+
+    // Member method to calculate annual bonus (10%)
+    double calculateBonus() {
+        return this.salary * 0.10;
+    }
+
+    // Member method to display employee details
+    void displayEmployee() {
+        System.out.println("Employee ID   : " + empId);
+        System.out.println("Employee Name : " + empName);
+        System.out.println("Designation   : " + designation);
+        System.out.println("Monthly Salary: ₹" + salary);
+        System.out.println("Annual Bonus  : ₹" + calculateBonus());
+        System.out.println("------------------------------------------");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("=== Employee Records (Constructors & Methods) ===");
+        System.out.println("------------------------------------------");
+
+        // Invoking default constructor
+        Employee emp1 = new Employee();
+        emp1.displayEmployee();
+
+        // Invoking parameterized constructor
+        Employee emp2 = new Employee(201, "Prerana Pawar", "Software Developer", 72000.0);
+        emp2.displayEmployee();
+    }
+}
+`
+    },
+    {
+      id: 'java-7',
+      num: 'Assignment 7',
+      cat: 'Polymorphism',
+      title: 'Method Overloading',
+      desc: 'Demonstrates compile-time polymorphism by overloading calculateArea methods for various geometric figures.',
+      code: `// Assignment 7: Write a Java program to demonstrate method overloading.
+// Course: TYBCA CA-315
+class AreaService {
+    // 1. Area of Square (1 parameter - side)
+    double area(double side) {
+        return side * side;
+    }
+
+    // 2. Area of Rectangle (2 parameters - length, breadth)
+    double area(double length, double breadth) {
+        return length * breadth;
+    }
+
+    // 3. Area of Triangle (3 parameters - base, height, flag)
+    double area(double base, double height, boolean isTriangle) {
+        return 0.5 * base * height;
+    }
+
+    // 4. Area of Circle (radius with float type)
+    double area(float radius) {
+        return Math.PI * radius * radius;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        AreaService svc = new AreaService();
+
+        System.out.println("=== Method Overloading Demonstration ===");
+        System.out.println("------------------------------------------");
+        System.out.println("Area of Square (side: 5.0)       = " + svc.area(5.0));
+        System.out.println("Area of Rectangle (8.0 x 4.0)    = " + svc.area(8.0, 4.0));
+        System.out.println("Area of Triangle (base:6, ht:5)  = " + svc.area(6.0, 5.0, true));
+        System.out.printf("Area of Circle (radius: 3.5)     = %.2f\\n", svc.area(3.5f));
+        System.out.println("------------------------------------------");
+        System.out.println("✓ Same method name 'area' resolved with distinct signatures.");
+    }
+}
+`
+    },
+    {
+      id: 'java-8',
+      num: 'Assignment 8',
+      cat: 'Inheritance',
+      title: 'Concept of Inheritance',
+      desc: 'Demonstrates multilevel inheritance where a base class Person extends to Student, which extends to DepartmentLeader.',
+      code: `// Assignment 8: Write a Java program to demonstrate the concept of inheritance.
+// Course: TYBCA CA-315 | Student: Sandesh Marathe
+class Person {
+    String name;
+    int age;
+
+    Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    void displayPerson() {
+        System.out.println("Name         : " + name);
+        System.out.println("Age          : " + age + " years");
+    }
+}
+
+class Student extends Person {
+    int rollNo;
+    String course;
+
+    Student(String name, int age, int rollNo, String course) {
+        super(name, age);
+        this.rollNo = rollNo;
+        this.course = course;
+    }
+
+    void displayStudent() {
+        super.displayPerson();
+        System.out.println("Roll Number  : " + rollNo);
+        System.out.println("Course Title : " + course);
+    }
+}
+
+class DepartmentLeader extends Student {
+    String role;
+
+    DepartmentLeader(String name, int age, int rollNo, String course, String role) {
+        super(name, age, rollNo, course);
+        this.role = role;
+    }
+
+    void displayLeader() {
+        super.displayStudent();
+        System.out.println("Campus Role  : " + role);
+        System.out.println("Institute    : InfoGalaxy Computers");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("=== Multilevel Inheritance in Java ===");
+        System.out.println("------------------------------------------");
+
+        DepartmentLeader leader = new DepartmentLeader("Sandesh Marathe", 21, 305, "TYBCA (Computer Science)", "Student General Secretary");
+        leader.displayLeader();
+        System.out.println("------------------------------------------");
+    }
+}
+`
+    },
+    {
+      id: 'java-9',
+      num: 'Assignment 9',
+      cat: 'Polymorphism',
+      title: 'Method Overriding',
+      desc: 'Demonstrates runtime polymorphism where child classes (SBI, HDFC, ICICI) override the getInterestRate() method of parent Bank.',
+      code: `// Assignment 9: Write a Java program to demonstrate method overriding.
+// Course: TYBCA CA-315
+class Bank {
+    double getInterestRate() {
+        return 0.0;
+    }
+}
+
+class SBI extends Bank {
+    double getInterestRate() {
+        return 6.75;
+    }
+}
+
+class HDFC extends Bank {
+    double getInterestRate() {
+        return 7.25;
+    }
+}
+
+class ICICI extends Bank {
+    double getInterestRate() {
+        return 7.10;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("=== Runtime Polymorphism: Method Overriding ===");
+        System.out.println("------------------------------------------");
+
+        Bank b1 = new SBI();
+        Bank b2 = new HDFC();
+        Bank b3 = new ICICI();
+
+        System.out.println("SBI Bank Interest Rate   : " + b1.getInterestRate() + "% per annum");
+        System.out.println("HDFC Bank Interest Rate  : " + b2.getInterestRate() + "% per annum");
+        System.out.println("ICICI Bank Interest Rate : " + b3.getInterestRate() + "% per annum");
+        System.out.println("------------------------------------------");
+        System.out.println("✓ Subclasses overridden method invoked via parent references.");
+    }
+}
+`
+    },
+    {
+      id: 'java-10',
+      num: 'Assignment 10',
+      cat: 'Interfaces',
+      title: 'Interface for Shape Area Calculation',
+      desc: 'Demonstrates Java interface definition and implementation across Rectangle and Circle classes.',
+      code: `// Assignment 10: Write a Java Program to Demonstrate the Use of Interface in Java by Implementing Shape Area Calculation.
+// Course: TYBCA CA-315
+interface Shape {
+    double calculateArea();
+    void displayShape();
+}
+
+class Rectangle implements Shape {
+    double length;
+    double breadth;
+
+    Rectangle(double l, double b) {
+        this.length = l;
+        this.breadth = b;
+    }
+
+    public double calculateArea() {
+        return length * breadth;
+    }
+
+    public void displayShape() {
+        System.out.println("Shape Type  : Rectangle");
+        System.out.println("Dimensions  : Length = " + length + ", Breadth = " + breadth);
+        System.out.println("Area        : " + calculateArea() + " sq. units");
+        System.out.println("------------------------------------------");
+    }
+}
+
+class Circle implements Shape {
+    double radius;
+
+    Circle(double r) {
+        this.radius = r;
+    }
+
+    public double calculateArea() {
+        return Math.PI * radius * radius;
+    }
+
+    public void displayShape() {
+        System.out.println("Shape Type  : Circle");
+        System.out.println("Radius      : " + radius);
+        System.out.printf("Area        : %.2f sq. units\\n", calculateArea());
+        System.out.println("------------------------------------------");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("=== Interface Implementation in Java ===");
+        System.out.println("------------------------------------------");
+
+        Shape rect = new Rectangle(12.0, 7.5);
+        Shape circ = new Circle(5.0);
+
+        rect.displayShape();
+        circ.displayShape();
+    }
+}
+`
+    },
+    {
+      id: 'java-11',
+      num: 'Assignment 11',
+      cat: 'Strings',
+      title: 'String Manipulation Operations',
+      desc: 'Performs string methods (length, charAt, substring, toUpperCase, equalsIgnoreCase) and StringBuffer mutable operations.',
+      code: `// Assignment 11: Write a Java Program for String Manipulation Operations.
+// Course: TYBCA CA-315
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("=== String Manipulation Operations ===");
+        System.out.println("------------------------------------------");
+
+        String str1 = "InfoGalaxy Computers";
+        String str2 = "infogalaxy computers";
+        String str3 = "  Java Programming  ";
+
+        System.out.println("Original String 1   : \\"" + str1 + "\\"");
+        System.out.println("Length of String 1  : " + str1.length);
+        System.out.println("Character at index 4: '" + str1.charAt(4) + "'");
+        System.out.println("Substring (0, 10)   : \\"" + str1.substring(0, 10) + "\\"");
+        System.out.println("To Uppercase        : \\"" + str1.toUpperCase() + "\\"");
+        System.out.println("To Lowercase        : \\"" + str1.toLowerCase() + "\\"");
+        System.out.println("Trimmed String 3    : \\"" + str3.trim() + "\\"");
+        System.out.println("Equals (Exact)      : " + str1.equals(str2));
+        System.out.println("Equals (Ignore Case): " + str1.equalsIgnoreCase(str2));
+
+        System.out.println("\\n--- StringBuffer (Mutable String) ---");
+        StringBuffer sb = new StringBuffer("ThinkCode");
+        System.out.println("Initial Buffer      : " + sb.toString());
+
+        sb.append(" Lab IDE");
+        System.out.println("After append()      : " + sb.toString());
+
+        sb.reverse();
+        System.out.println("After reverse()     : " + sb.toString());
+        System.out.println("Buffer Length       : " + sb.length);
+    }
+}
+`
+    },
+    {
+      id: 'java-12',
+      num: 'Assignment 12',
+      cat: 'Exception Handling',
+      title: 'Try-Catch-Finally Exception Handling',
+      desc: 'Demonstrates robust error handling with arithmetic division checks and guaranteed finally block cleanup.',
+      code: `// Assignment 12: Write a Java Program Using try-catch-finally for Exception Handling.
+// Course: TYBCA CA-315
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("=== Exception Handling (try-catch-finally) ===");
+        System.out.print("Enter Numerator (A)   : ");
+        int a = sc.nextInt();
+
+        System.out.print("Enter Denominator (B) : ");
+        int b = sc.nextInt();
+
+        try {
+            System.out.println("\\n[try block] Attempting division (" + a + " / " + b + ")...");
+            if (b == 0) {
+                throw new Exception("ArithmeticException: Division by zero is mathematically undefined!");
+            }
+            int result = a / b;
+            System.out.println("✓ Result: " + a + " / " + b + " = " + result);
+        } catch (Exception e) {
+            System.out.println("[catch block] ✗ Error Handled: " + e.getMessage());
+        } finally {
+            System.out.println("[finally block] Cleanup complete. Scanner resource safely closed.");
+            System.out.println("✓ Execution flow continues without crashing.");
+        }
+    }
+}
+`
+    },
+    {
+      id: 'java-13',
+      num: 'Assignment 13',
+      cat: 'AWT & Swing',
+      title: 'Simple Calculator Using AWT/Swing',
+      desc: 'Designs a graphical user interface calculator using JFrame, JTextField, and JButtons with action event handling.',
+      code: `// Assignment 13: Write a Java Program to Create a Simple Calculator Using AWT/Swing.
+// Course: TYBCA CA-315
+import javax.swing.*;
+import java.awt.*;
+
+public class Main {
+    public static void main(String[] args) {
+        // Create Swing Window
+        JFrame frame = new JFrame("Simple Calculator — ThinkCode Lab");
+        frame.setSize(350, 450);
+        frame.setLayout(new BorderLayout());
+
+        // Display screen
+        JTextField display = new JTextField("0");
+        frame.add(display, BorderLayout.NORTH);
+
+        // Buttons Panel with GridLayout
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(4, 4));
+
+        String[] buttons = {
+            "7", "8", "9", "/",
+            "4", "5", "6", "*",
+            "1", "2", "3", "-",
+            "C", "0", "=", "+"
+        };
+
+        for (String label : buttons) {
+            JButton btn = new JButton(label);
+            panel.add(btn);
+        }
+
+        frame.add(panel, BorderLayout.CENTER);
+        frame.setVisible(true);
+
+        // Simulation demo calculation: 25 * 4 = 100
+        double n1 = 25.0, n2 = 4.0;
+        double prod = n1 * n2;
+        System.out.println("\\n[Swing Event Listener Triggered]");
+        System.out.println("User Input Simulation: " + n1 + " * " + n2);
+        System.out.println("Calculator Display Output: " + prod);
+    }
+}
+`
+    },
+    {
+      id: 'java-14',
+      num: 'Assignment 14',
+      cat: 'AWT & Swing',
+      title: 'Simple Login Form Using Swing',
+      desc: 'Creates a graphical login window using JFrame, JLabel, JTextField, JPasswordField, and JButton with credential validation.',
+      code: `// Assignment 14: Write a Java Program to Create a Simple Login Form Using Swing.
+// Course: TYBCA CA-315 | Admin: Juned Khan
+import javax.swing.*;
+import java.awt.*;
+
+public class Main {
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("InfoGalaxy Computers — Student Portal Login");
+        frame.setSize(400, 260);
+        frame.setLayout(new GridLayout(4, 2));
+
+        JLabel userLabel = new JLabel("Username:");
+        JTextField userText = new JTextField(15);
+
+        JLabel passLabel = new JLabel("Password:");
+        JPasswordField passText = new JPasswordField(15);
+
+        JButton loginButton = new JButton("Login");
+        JButton resetButton = new JButton("Reset");
+
+        frame.add(userLabel);
+        frame.add(userText);
+        frame.add(passLabel);
+        frame.add(passText);
+        frame.add(loginButton);
+        frame.add(resetButton);
+
+        frame.setVisible(true);
+
+        // Credential validation simulation
+        String inputUser = "juned_khan";
+        String inputPass = "admin@123";
+
+        System.out.println("\\n[Authentication Event Listener]");
+        System.out.println("Authenticating credentials for: " + inputUser);
+
+        if (inputUser.equals("juned_khan") && inputPass.equals("admin@123")) {
+            System.out.println("✓ Login Successful! Welcome to InfoGalaxy Student Portal.");
+        } else {
+            System.out.println("✗ Authentication Failed: Invalid credentials.");
+        }
+    }
+}
+`
+    },
+    {
+      id: 'java-15',
+      num: 'Assignment 15',
+      cat: 'JDBC Database',
+      title: 'Demonstrate Database Connectivity',
+      desc: 'Connects to a relational database using JDBC (Java Database Connectivity) architecture and verifies active connection.',
+      code: `// Assignment 15: Write a Java Program to demonstrate database connectivity.
+// Course: TYBCA CA-315 | JDBC Architecture
+import java.sql.*;
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("==========================================");
+        System.out.println("   JDBC Database Connectivity Pipeline    ");
+        System.out.println("==========================================");
+
+        String url = "jdbc:mysql://localhost:3306/infogalaxy_db";
+        String user = "root";
+        String pass = "mysql@2026";
+
+        try {
+            // Step 1: Register and load JDBC Driver
+            System.out.println("[Step 1] Loading JDBC Driver...");
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            System.out.println("✓ Driver loaded successfully.");
+
+            // Step 2: Establish Connection via DriverManager
+            System.out.println("\\n[Step 2] Establishing database connection...");
+            Connection conn = DriverManager.getConnection(url, user, pass);
+            System.out.println("✓ Connection established successfully!");
+
+            // Step 3: Verify Connection Status
+            System.out.println("\\n[Step 3] Checking connection metadata:");
+            System.out.println("Target Database URL : " + url);
+            System.out.println("Connected User      : " + user);
+            System.out.println("Connection State    : ACTIVE & READY FOR QUERIES");
+
+            // Step 4: Close Connection
+            conn.close();
+            System.out.println("\\n✓ Database connection closed properly.");
+        } catch (Exception e) {
+            System.out.println("✗ Database Error: " + e.getMessage());
+        }
+    }
+}
+`
+    },
+    {
+      id: 'java-16',
+      num: 'Assignment 16',
+      cat: 'JDBC Database',
+      title: 'Perform Insert, Update, Delete (CRUD) on Database',
+      desc: 'Executes DML statements (INSERT, UPDATE, DELETE) and fetches records via ResultSet using JDBC.',
+      code: `// Assignment 16: Write a Java Program to perform insert, update, delete operations on database.
+// Course: TYBCA CA-315 | Student Management System
+import java.sql.*;
+
+public class Main {
+    public static void main(String[] args) {
+        System.out.println("=== JDBC DML Operations: INSERT, UPDATE, DELETE ===");
+        System.out.println("------------------------------------------");
+
+        String url = "jdbc:mysql://localhost:3306/college_db";
+
+        try {
+            Connection conn = DriverManager.getConnection(url, "root", "root123");
+            Statement stmt = conn.createStatement();
+
+            // 1. INSERT Operation
+            String insertSql = "INSERT INTO students (roll_no, name, course, marks) VALUES (106, 'Juned Khan', 'TYBCA', 90)";
+            int inserted = stmt.executeUpdate(insertSql);
+            System.out.println("✓ INSERT Operation: " + inserted + " record(s) inserted.");
+
+            // 2. UPDATE Operation
+            String updateSql = "UPDATE students SET marks = 95 WHERE roll_no = 101";
+            int updated = stmt.executeUpdate(updateSql);
+            System.out.println("✓ UPDATE Operation: " + updated + " record(s) updated.");
+
+            // 3. DELETE Operation
+            String deleteSql = "DELETE FROM students WHERE roll_no = 999";
+            int deleted = stmt.executeUpdate(deleteSql);
+            System.out.println("✓ DELETE Operation: " + deleted + " record(s) removed.");
+
+            // 4. SELECT Operation (Display Records)
+            System.out.println("\\n--- Current Student Records in Database ---");
+            ResultSet rs = stmt.executeQuery("SELECT roll_no, name, course, marks FROM students");
+            while (rs.next()) {
+                int roll = rs.getInt("roll_no");
+                String name = rs.getString("name");
+                String course = rs.getString("course");
+                int marks = rs.getInt("marks");
+                System.out.printf("Roll: %-4d | Name: %-15s | Course: %-6s | Marks: %d\\n", roll, name, course, marks);
+            }
+
+            conn.close();
+            System.out.println("------------------------------------------");
+            System.out.println("✓ All DML and Query operations completed successfully!");
+        } catch (Exception e) {
+            System.out.println("✗ SQL Execution Error: " + e.getMessage());
+        }
+    }
+}
+`
+    }
   ]
 };

@@ -217,7 +217,14 @@
           <button type="button" class="view-btn" data-mode="php" title="PHP Script only">🐘 PHP</button>
         </div>
       </div>
-      <span id="saveState" class="mute">Saved</span>
+      <div class="head-right">
+        <div class="zoom-bar" id="zoomBar" title="Adjust Editor Font Size (Zoom)">
+          <button type="button" id="btnZoomOut" class="btn-zoom" title="Zoom Out (Ctrl -)">A−</button>
+          <button type="button" id="btnZoomReset" class="btn-zoom-reset" title="Reset Zoom (Ctrl 0)"><span id="zoomLevel">100%</span></button>
+          <button type="button" id="btnZoomIn" class="btn-zoom" title="Zoom In (Ctrl +)">A+</button>
+        </div>
+        <span id="saveState" class="mute">Saved</span>
+      </div>
     </div>
     <div id="editor" class="editor"></div>
     <div id="dualEditor" class="dual-editor" hidden>
@@ -293,6 +300,39 @@
     </form>
   </div>
 </div>
+<!-- Java AWT / Swing Interactive Desktop Window Frame -->
+<div id="guiWindowModal" class="gui-window-modal" hidden>
+  <div class="gui-backdrop" id="guiBackdrop" data-close-gui></div>
+  <div class="gui-window" id="guiWindow" role="dialog" aria-modal="true" aria-labelledby="guiWinTitle">
+    <div class="gui-win-titlebar" id="guiWinTitlebar">
+      <div class="gui-win-left">
+        <span class="gui-win-icon" aria-hidden="true">☕</span>
+        <span class="gui-win-title" id="guiWinTitle">Java Application Frame</span>
+      </div>
+      <div class="gui-win-controls">
+        <button type="button" class="gui-win-btn gui-win-min" id="guiBtnMin" title="Minimize Window">−</button>
+        <button type="button" class="gui-win-btn gui-win-max" id="guiBtnMax" title="Maximize Window">▢</button>
+        <button type="button" class="gui-win-btn gui-win-close" id="guiBtnClose" title="Close Window">✕</button>
+      </div>
+    </div>
+    <div class="gui-win-menubar" id="guiWinMenubar">
+      <span>File</span><span>Edit</span><span>Window</span><span>Help</span>
+    </div>
+    <div class="gui-win-body" id="guiWinBody">
+      <div class="gui-win-content" id="guiWinContent"></div>
+    </div>
+    <div class="gui-win-statusbar" id="guiWinStatusbar">
+      <span class="gui-status-dot"></span>
+      <span id="guiStatusText">Java AWT/Swing runtime active</span>
+    </div>
+  </div>
+</div>
+
+<button type="button" id="btnReopenGui" class="btn-reopen-gui" title="Reopen Java Desktop Window" hidden>
+  <span class="reopen-icon">☕</span>
+  <span class="reopen-text">Java GUI Frame</span>
+</button>
+
 <div id="toast" class="toast" role="status"></div>
 <script type="module" src="/src/main.js"></script>
 </body>

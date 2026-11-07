@@ -157,6 +157,7 @@ export const engines = {
   php: new WorkerEngine(() => new Worker(new URL('./php.worker.js', import.meta.url)), 'PHP 8.2'),
   c: new WorkerEngine(() => new Worker(new URL('./c.worker.js', import.meta.url)), 'C (C99)'),
   cpp: new WorkerEngine(() => new Worker(new URL('./cpp.worker.js', import.meta.url)), 'C++'),
+  java: new WorkerEngine(() => new Worker(new URL('./java.worker.js', import.meta.url)), 'Java (JDK)'),
   shell: new ShellEngine(),
   web: new WebEngine()
 };

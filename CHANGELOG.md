@@ -4,6 +4,59 @@ All notable changes, optimizations, and technical updates to **ThinkCode Lab** a
 
 ---
 
+## 🚀 Version 1.3.0 — Offline Java JDK Engine, Swing/AWT Desktop Window & Editor Zoom
+*Release Date: November 2026*
+
+### ☕ 100% Offline Java Programming Engine (`src/engines/java.worker.js`)
+- **Full Offline JDK Simulation**:
+  - Implemented standalone offline Java compiler and transpiler worker supporting core object-oriented features, classes, inheritance, interfaces, abstract classes, and standard Java library classes (`Scanner`, `BufferedReader`, `System.out.println`, `System.out.printf`, `Arrays`, `ArrayList`, `Math`, `String`, etc.).
+  - **Try-Catch-Finally Exception Handling**:
+    - Transpiles typed catch blocks and multiple catch clauses (`catch (ArithmeticException e)`, `catch (Exception ex)`) into clean polymorphic JavaScript catch blocks.
+    - Added full Java exception hierarchy (`Exception`, `RuntimeException`, `ArithmeticException`, `NullPointerException`, `ArrayIndexOutOfBoundsException`, `NumberFormatException`, `SQLException`, `ClassNotFoundException`, `IOException`, `Throwable`) with `.getMessage()` and `.printStackTrace()`.
+  - **Constructor & Method Overloading**:
+    - Synthesizes overloaded constructors and overloaded methods with dynamic argument-length and runtime type dispatching.
+    - Auto-strips Java typecasts (`(double)sum / n`) and float/long number suffixes (`3.5f`, `100L`).
+  - **JDBC Database Simulation**:
+    - Added simulated JDBC connectivity (`DriverManager`, `Connection`, `Statement`, `PreparedStatement`, `ResultSet`, `Class.forName`) for University CRUD assignments.
+
+### 🖼️ Interactive Java AWT / Swing Desktop Window Frame
+- **Real OS-style Desktop Window Experience**:
+  - When Java code invokes `frame.setVisible(true)`, ThinkCode Lab opens a simulated computer desktop window modal with title bar, minimize `—`, maximize `▢`, close `✕` buttons, and desktop menu bar.
+  - Desktop draggable title bar support for laptop and PC users.
+  - Interactive component DOM rendering for `JFrame`, `JPanel`, `JLabel`, `JTextField`, `JPasswordField`, `JButton`, `JCheckBox`, `JRadioButton`, `JComboBox`, `JTextArea`.
+  - Layout Manager emulation for `BorderLayout` (North, Center, South), `GridLayout` (e.g. 4x4 Calculator, 4x2 Login form), and `FlowLayout`.
+  - Live interaction for **Assignment 13 (Simple Calculator)** and **Assignment 14 (Login Form)** with real-time feedback and state persistence.
+  - Floating `[☕ Java GUI Frame]` reopen button when window is minimized or closed.
+
+### 🔍 Code Editor Zoom In / Zoom Out Controls
+- **Toolbar Zoom Bar**:
+  - Added `A−`, `100%`, and `A+` zoom controls directly in the editor pane header.
+  - Smooth scale range from 9.5px (70%) to 24px (178%) using CSS variables on CodeMirror scroller.
+  - Touchscreen pinch-to-zoom gesture on mobile devices.
+  - Desktop keyboard shortcuts (<kbd>Ctrl/Cmd</kbd> + <kbd>+</kbd>, <kbd>−</kbd>, <kbd>0</kbd>).
+  - Saved zoom level remembered in `localStorage` across app sessions.
+
+### 📚 TYBCA Java Programming Syllabus Practicals (CA-313 / CA-315)
+- Embedded all 16 official TYBCA university assignments in `src/practicals.js`:
+  1. Display Student Information
+  2. Arithmetic Operations using Switch Case
+  3. Find Largest Element in an Array
+  4. Command Line Arguments
+  5. Accept User Input using Scanner
+  6. Constructors and Methods (Default & Parameterized)
+  7. Method Overloading (Square, Rectangle, Triangle, Circle)
+  8. Concept of Inheritance (Multilevel Employee-Developer hierarchy)
+  9. Method Overriding (Dynamic polymorphism)
+  10. Interface for Shape Area Calculation
+  11. String Manipulation Operations
+  12. Try-Catch-Finally Exception Handling
+  13. Simple Calculator Using AWT/Swing
+  14. Simple Login Form Using Swing
+  15. Demonstrate Database Connectivity (JDBC)
+  16. Perform Insert, Update, Delete (CRUD) on Database
+
+---
+
 ## 🚀 Version 1.2.0 — C & C++ Lightweight Embedded Engines (Phase 3 Milestone)
 *Release Date: November 2026*
 

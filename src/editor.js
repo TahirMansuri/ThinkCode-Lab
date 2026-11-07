@@ -9,13 +9,14 @@ import { python } from '@codemirror/lang-python';
 import { sql, PLSQL } from '@codemirror/lang-sql';
 import { html } from '@codemirror/lang-html';
 import { shell } from '@codemirror/legacy-modes/mode/shell';
-import { c, cpp } from '@codemirror/legacy-modes/mode/clike';
+import { c, cpp, java } from '@codemirror/legacy-modes/mode/clike';
 import { php } from '@codemirror/lang-php';
 
 const LANG = {
   python: () => python(), js: () => javascript(), sql: () => sql({ dialect: PLSQL }),
   php: () => php(), web: () => html(), shell: () => StreamLanguage.define(shell),
-  c: () => StreamLanguage.define(c), cpp: () => StreamLanguage.define(cpp)
+  c: () => StreamLanguage.define(c), cpp: () => StreamLanguage.define(cpp),
+  java: () => StreamLanguage.define(java)
 };
 
 const style = HighlightStyle.define([
@@ -30,7 +31,7 @@ const style = HighlightStyle.define([
 
 const theme = EditorView.theme({
   '&': { height: '100%', backgroundColor: 'transparent', color: 'var(--text)' },
-  '.cm-scroller': { fontFamily: 'var(--mono)', fontSize: '13.5px', lineHeight: '1.6', overflow: 'auto' },
+  '.cm-scroller': { fontFamily: 'var(--mono)', fontSize: 'var(--editor-font-size, 13.5px)', lineHeight: '1.6', overflow: 'auto' },
   '.cm-content': { caretColor: 'var(--ember)', padding: '10px 0' },
   '.cm-gutters': { backgroundColor: 'transparent', color: 'var(--mute)', border: 'none' },
   '.cm-activeLine': { backgroundColor: 'var(--active-line)' },

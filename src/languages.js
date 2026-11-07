@@ -97,5 +97,23 @@ int main() {
     return 0;
 }
 ` },
-  { id: 'java', name: 'Java', file: 'Main.java', engine: null, hue: '#F28482', soon: 'Phase 4 — JVM offline pack' }
+  { id: 'java', name: 'Java', file: 'Main.java', engine: 'java', hue: '#F28482', input: null,
+    tpl: `// Java (JDK) — runs 100% offline on your device
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter your name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter your roll number: ");
+        int roll = sc.nextInt();
+
+        System.out.println("\\nHello, " + name + "! (Roll: " + roll + ")");
+        System.out.println("Java interactive in-console input is working!");
+    }
+}
+` }
 ];

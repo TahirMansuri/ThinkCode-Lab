@@ -20,6 +20,16 @@ let editorHtml = null, editorPhp = null;
 let phpViewMode = store.get('cf.php.view_mode', 'split');
 
 // ---------- small helpers ----------
+const wide = () => matchMedia('(min-width: 900px)').matches;
+function setSplit(p) {
+  document.documentElement.style.setProperty('--split', Math.min(80, Math.max(20, p)) + '%');
+}
+function setOutputSmall() {
+  if (!wide()) setSplit(72);
+}
+function setOutputLarge() {
+  if (!wide()) setSplit(38);
+}
 let toastTimer;
 function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('on'), 2600); }
 function setState(s, text) { const e = $('runtimeState'); e.dataset.s = s; e.textContent = text; }
@@ -185,7 +195,7 @@ const sink = {
     const btnSend = document.createElement('button');
     btnSend.type = 'button';
     btnSend.className = 'con-input-submit';
-    btnSend.textContent = '↵';
+    btnSend.textContent = '↵ Enter';
     btnSend.title = 'Send input (Enter)';
     btnSend.onclick = e => {
       e.preventDefault();
@@ -207,11 +217,18 @@ const sink = {
     const txt = con.querySelector('.cwn-text');
     if (txt) txt.textContent = s;
   },
-  clear: () => (con.textContent = ''),
+  clear: () => {
+    con.textContent = '';
+    const modal = $('guiWindowModal');
+    if (modal) modal.hidden = true;
+    const btnReopen = $('btnReopenGui');
+    if (btnReopen) btnReopen.hidden = true;
+  },
   preview: html => {
     preview.srcdoc = /<head[^>]*>/i.test(html) ? html.replace(/<head[^>]*>/i, m => m + HOOK) : HOOK + html;
     showTab('preview');
-  }
+  },
+  gui_window: winData => renderJavaGuiWindow(winData)
 };
 con.addEventListener('click', () => {
   const inp = con.querySelector('.con-input');
@@ -315,7 +332,7 @@ function hideConsoleWarmNotice(label) {
 function warm() {
   const eng = engines[cur.engine], label = eng?.label || cur.name;
   if (!eng) return Promise.resolve();
-  const needsWarm = cur.id === 'python' || cur.id === 'sql' || cur.id === 'php' || cur.id === 'c' || cur.id === 'cpp';
+  const needsWarm = cur.id === 'python' || cur.id === 'sql' || cur.id === 'php' || cur.id === 'c' || cur.id === 'cpp' || cur.id === 'java';
   if (needsWarm && !eng.isReady) {
     setState('loading', `Loading ${label}…`);
     if (!running && con.textContent.trim() === '') {
@@ -381,6 +398,7 @@ function syncButtons() {
 }
 async function run(arg) {
   if (running || !cur.engine) return;
+  setOutputLarge();
   const eng = engines[cur.engine]; running = true; stopped = false; syncButtons();
   const opts = typeof arg === 'object' && arg !== null ? arg : null;
   const customCode = typeof arg === 'string' ? arg : null;
@@ -422,7 +440,7 @@ async function run(arg) {
     }
 
     if (cur.id !== 'web' && (!opts || opts.tab !== 'preview')) showTab('console');
-    const wasWarming = !eng.isReady && (cur.id === 'python' || cur.id === 'sql' || cur.id === 'php' || cur.id === 'c' || cur.id === 'cpp');
+    const wasWarming = !eng.isReady && (cur.id === 'python' || cur.id === 'sql' || cur.id === 'php' || cur.id === 'c' || cur.id === 'cpp' || cur.id === 'java');
     sink.clear();
     if (wasWarming) {
       print(`⏳ ${eng.label || cur.name} runtime is still downloading/loading on your device…\n`, 'sys');
@@ -434,6 +452,7 @@ async function run(arg) {
     if (cur.id === 'shell') print(`$ bash ${cur.file}\n`, 'cmd');
     else if (cur.id === 'c') print(`$ gcc ${cur.file} -o main && ./main\n`, 'cmd');
     else if (cur.id === 'cpp') print(`$ g++ ${cur.file} -o main && ./main\n`, 'cmd');
+    else if (cur.id === 'java') print(`$ javac ${cur.file} && java Main\n`, 'cmd');
     await eng.load(sink); setState('ready', `${eng.label || cur.name} · offline`);
     if (wasWarming && !stopped) {
       print(`✓ ${eng.label || cur.name} ready! Executing your code…\n`, 'ok');
@@ -793,6 +812,16 @@ function loadPracticalCode(item, langId) {
   }
   editor.set(item.code, langId);
   store.set('cf.code.' + langId, item.code);
+
+  // Reset output box and set it to small position
+  sink.clear();
+  con.querySelector('.con-input-wrap, .con-input')?.remove();
+  if (cur.id === 'web' || cur.id === 'php') {
+    preview.srcdoc = '';
+  }
+  showTab('console');
+  setOutputSmall();
+
   closeSheet();
   toast(`✓ Loaded ${item.num}: ${item.title}`);
 }
@@ -813,6 +842,9 @@ $('btnReset').onclick = () => {
     } else {
       editor.set(cur.tpl, cur.id);
     }
+    sink.clear();
+    con.querySelector('.con-input-wrap, .con-input')?.remove();
+    setOutputSmall();
     toast('Template restored');
   }
 };
@@ -824,13 +856,16 @@ function theme(t) {
 $('btnTheme').onclick = () => theme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
 theme(store.get('cf.theme', 'dark'));
 
-const grip = $('grip'), work = $('work'), wide = () => matchMedia('(min-width: 900px)').matches;
-const setSplit = p => document.documentElement.style.setProperty('--split', Math.min(80, Math.max(20, p)) + '%');
+const grip = $('grip'), work = $('work');
 grip.onpointerdown = e => {
   grip.setPointerCapture(e.pointerId);
+  work.classList.add('resizing');
   const mv = ev => { const r = work.getBoundingClientRect(); setSplit(((wide() ? ev.clientX - r.left : ev.clientY - r.top) / (wide() ? r.width : r.height)) * 100); };
   grip.addEventListener('pointermove', mv);
-  grip.addEventListener('pointerup', () => grip.removeEventListener('pointermove', mv), { once: true });
+  grip.addEventListener('pointerup', () => {
+    work.classList.remove('resizing');
+    grip.removeEventListener('pointermove', mv);
+  }, { once: true });
 };
 grip.onkeydown = e => {
   const cs = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--split')) || 52;
@@ -942,6 +977,438 @@ function setPhpViewMode(mode) {
   }
 }
 
+// ---------- Editor Zoom Controls ----------
+let currentEditorFontSize = parseFloat(store.get('cf.editor_font_size') || '13.5');
+if (isNaN(currentEditorFontSize) || currentEditorFontSize < 9.5 || currentEditorFontSize > 26) {
+  currentEditorFontSize = 13.5;
+}
+
+function applyEditorZoom(size) {
+  currentEditorFontSize = Math.min(24, Math.max(9.5, Math.round(size * 10) / 10));
+  document.documentElement.style.setProperty('--editor-font-size', `${currentEditorFontSize}px`);
+  store.set('cf.editor_font_size', String(currentEditorFontSize));
+  const zoomPct = Math.round((currentEditorFontSize / 13.5) * 100);
+  const zoomLevelEl = $('zoomLevel');
+  if (zoomLevelEl) {
+    zoomLevelEl.textContent = `${zoomPct}%`;
+  }
+}
+
+function initZoomControls() {
+  applyEditorZoom(currentEditorFontSize);
+
+  const btnZoomIn = $('btnZoomIn');
+  const btnZoomOut = $('btnZoomOut');
+  const btnZoomReset = $('btnZoomReset');
+
+  btnZoomIn?.addEventListener('click', () => {
+    applyEditorZoom(currentEditorFontSize + 1);
+  });
+
+  btnZoomOut?.addEventListener('click', () => {
+    applyEditorZoom(currentEditorFontSize - 1);
+  });
+
+  btnZoomReset?.addEventListener('click', () => {
+    applyEditorZoom(13.5);
+    toast('Editor Zoom Reset to 100%');
+  });
+
+  window.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey) {
+      if (e.key === '=' || e.key === '+') {
+        e.preventDefault();
+        applyEditorZoom(currentEditorFontSize + 1);
+      } else if (e.key === '-' || e.key === '_') {
+        e.preventDefault();
+        applyEditorZoom(currentEditorFontSize - 1);
+      } else if (e.key === '0') {
+        e.preventDefault();
+        applyEditorZoom(13.5);
+      }
+    }
+  });
+
+  const editorPane = $('editorPane');
+  if (editorPane) {
+    let initialPinchDist = 0;
+    let initialFontSize = currentEditorFontSize;
+
+    editorPane.addEventListener('touchstart', e => {
+      if (e.touches.length === 2) {
+        initialPinchDist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        initialFontSize = currentEditorFontSize;
+      }
+    }, { passive: true });
+
+    editorPane.addEventListener('touchmove', e => {
+      if (e.touches.length === 2 && initialPinchDist > 0) {
+        const dist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        const diff = dist - initialPinchDist;
+        if (Math.abs(diff) > 15) {
+          applyEditorZoom(initialFontSize + (diff / 25));
+        }
+      }
+    }, { passive: true });
+
+    editorPane.addEventListener('touchend', e => {
+      if (e.touches.length < 2) {
+        initialPinchDist = 0;
+      }
+    }, { passive: true });
+  }
+}
+
+// ---------- Java AWT / Swing Interactive Desktop Window Frame ----------
+let activeGuiWinData = null;
+
+function renderJavaGuiWindow(winData) {
+  if (!winData) return;
+  activeGuiWinData = winData;
+
+  const modal = $('guiWindowModal');
+  const win = $('guiWindow');
+  const titleEl = $('guiWinTitle');
+  const contentEl = $('guiWinContent');
+  const statusEl = $('guiStatusText');
+  const btnReopen = $('btnReopenGui');
+
+  if (!modal || !win || !contentEl) return;
+
+  if (titleEl) titleEl.textContent = winData.title || 'Java Application Frame';
+  if (statusEl) statusEl.textContent = `Active · Dimensions: ${winData.width || 400}x${winData.height || 300}`;
+
+  win.classList.remove('maximized');
+  if (winData.width && winData.width >= 300 && winData.width <= 650) {
+    win.style.width = `${winData.width + 30}px`;
+  }
+
+  contentEl.innerHTML = '';
+  const renderedTree = buildGuiContainer(winData.layout, winData.components);
+  contentEl.appendChild(renderedTree);
+
+  modal.hidden = false;
+  if (btnReopen) btnReopen.hidden = true;
+
+  toast(`☕ Java GUI Window Launched: "${winData.title}"`);
+}
+
+function buildGuiContainer(layout, components = []) {
+  const container = document.createElement('div');
+  const lType = layout?.type || 'FlowLayout';
+
+  if (lType === 'BorderLayout') {
+    container.className = 'gui-layout-border';
+    const northList = [];
+    const centerList = [];
+    const southList = [];
+    const westList = [];
+    const eastList = [];
+
+    for (const c of components) {
+      const pos = (c.pos || '').toLowerCase();
+      if (pos.includes('north')) northList.push(c);
+      else if (pos.includes('south')) southList.push(c);
+      else if (pos.includes('east')) eastList.push(c);
+      else if (pos.includes('west')) westList.push(c);
+      else centerList.push(c);
+    }
+
+    if (northList.length) {
+      const nDiv = document.createElement('div');
+      nDiv.className = 'gui-pos-north';
+      northList.forEach(c => nDiv.appendChild(buildGuiComp(c)));
+      container.appendChild(nDiv);
+    }
+    if (centerList.length) {
+      const cDiv = document.createElement('div');
+      cDiv.className = 'gui-pos-center';
+      centerList.forEach(c => cDiv.appendChild(buildGuiComp(c)));
+      container.appendChild(cDiv);
+    }
+    if (southList.length) {
+      const sDiv = document.createElement('div');
+      sDiv.className = 'gui-pos-south';
+      southList.forEach(c => sDiv.appendChild(buildGuiComp(c)));
+      container.appendChild(sDiv);
+    }
+    return container;
+  }
+
+  if (lType === 'GridLayout') {
+    container.className = 'gui-layout-grid';
+    const cols = layout.cols || 2;
+    container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    for (const c of components) {
+      container.appendChild(buildGuiComp(c));
+    }
+    return container;
+  }
+
+  container.className = 'gui-layout-flow';
+  for (const c of components) {
+    container.appendChild(buildGuiComp(c));
+  }
+  return container;
+}
+
+function buildGuiComp(c) {
+  if (c.type === 'JPanel') {
+    const p = buildGuiContainer(c.layout, c.children || []);
+    p.classList.add('gui-panel');
+    return p;
+  }
+
+  if (c.type === 'JTextField') {
+    const inp = document.createElement('input');
+    inp.type = 'text';
+    inp.className = 'gui-input';
+    inp.value = c.text || '';
+    if (c.text === '0' || c.cols >= 10) {
+      inp.classList.add('calc-screen');
+    }
+    inp.dataset.compId = 'textfield';
+    return inp;
+  }
+
+  if (c.type === 'JPasswordField') {
+    const inp = document.createElement('input');
+    inp.type = 'password';
+    inp.className = 'gui-input';
+    inp.value = c.text || '';
+    inp.dataset.compId = 'passwordfield';
+    return inp;
+  }
+
+  if (c.type === 'JLabel') {
+    const lbl = document.createElement('label');
+    lbl.className = 'gui-label';
+    lbl.textContent = c.text;
+    return lbl;
+  }
+
+  if (c.type === 'JButton') {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'gui-btn';
+    btn.textContent = c.text;
+
+    if (['+', '-', '*', '/'].includes(c.text)) {
+      btn.classList.add('calc-btn-op');
+    } else if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(c.text)) {
+      btn.classList.add('calc-btn-num');
+    } else if (c.text === 'C' || c.text === 'Clear' || c.text === 'Reset') {
+      btn.classList.add('calc-btn-clear');
+    } else if (c.text === '=') {
+      btn.classList.add('calc-btn-eq');
+    } else if (c.text.toLowerCase().includes('login') || c.text.toLowerCase().includes('submit')) {
+      btn.classList.add('btn-login-submit');
+    }
+
+    btn.onclick = () => handleGuiButtonClick(c.text, btn);
+    return btn;
+  }
+
+  if (c.type === 'JCheckBox' || c.type === 'JRadioButton') {
+    const wrap = document.createElement('label');
+    wrap.className = 'gui-label';
+    wrap.style.display = 'inline-flex';
+    wrap.style.alignItems = 'center';
+    wrap.style.gap = '6px';
+    wrap.style.cursor = 'pointer';
+
+    const chk = document.createElement('input');
+    chk.type = c.type === 'JRadioButton' ? 'radio' : 'checkbox';
+    chk.checked = c.selected;
+    chk.onchange = () => {
+      print(`[Swing GUI] ${c.type} (${c.text}) toggled: ${chk.checked}\n`, 'sys');
+    };
+
+    const span = document.createElement('span');
+    span.textContent = c.text;
+    wrap.append(chk, span);
+    return wrap;
+  }
+
+  if (c.type === 'JComboBox' || c.type === 'Choice') {
+    const sel = document.createElement('select');
+    sel.className = 'gui-input';
+    (c.items || []).forEach(it => {
+      const opt = document.createElement('option');
+      opt.value = it;
+      opt.textContent = it;
+      sel.appendChild(opt);
+    });
+    sel.onchange = () => {
+      print(`[Swing GUI] ComboBox selection changed to: "${sel.value}"\n`, 'sys');
+    };
+    return sel;
+  }
+
+  if (c.type === 'JTextArea') {
+    const ta = document.createElement('textarea');
+    ta.className = 'gui-input';
+    ta.rows = c.rows || 4;
+    ta.value = c.text || '';
+    return ta;
+  }
+
+  const d = document.createElement('div');
+  d.textContent = c.text || c.type;
+  return d;
+}
+
+function handleGuiButtonClick(btnText, btnEl) {
+  print(`[Swing GUI] Button Click: "${btnText}"\n`, 'cmd');
+
+  const contentEl = $('guiWinContent');
+  const calcScreen = contentEl?.querySelector('.calc-screen');
+  const statusText = $('guiStatusText');
+  const statusDot = document.querySelector('.gui-status-dot');
+
+  // Calculator (Assignment 13)
+  if (calcScreen) {
+    if (btnText === 'C') {
+      calcScreen.value = '0';
+      if (statusText) statusText.textContent = 'Calculator display cleared.';
+      return;
+    }
+    if (btnText === '=') {
+      try {
+        const expr = calcScreen.value.replace(/×/g, '*').replace(/÷/g, '/').trim();
+        if (/^[0-9+\-*/. ()]+$/.test(expr)) {
+          const res = Function(`"use strict"; return (${expr})`)();
+          calcScreen.value = String(res);
+          print(`[Swing Event Listener Triggered] Calculation Result: ${expr} = ${res}\n`, 'ok');
+          if (statusText) statusText.textContent = `Result: ${res}`;
+        }
+      } catch (err) {
+        calcScreen.value = 'Error';
+        if (statusText) statusText.textContent = 'Calculation Error';
+      }
+      return;
+    }
+    if (['+', '-', '*', '/'].includes(btnText)) {
+      calcScreen.value += ` ${btnText} `;
+      return;
+    }
+    if (calcScreen.value === '0' || calcScreen.value === 'Error') {
+      calcScreen.value = btnText;
+    } else {
+      calcScreen.value += btnText;
+    }
+    return;
+  }
+
+  // Login Form (Assignment 14)
+  if (btnText.toLowerCase().includes('login')) {
+    const userInp = contentEl?.querySelector('input[type="text"]');
+    const passInp = contentEl?.querySelector('input[type="password"]');
+    const uVal = userInp?.value.trim() || '';
+    const pVal = passInp?.value || '';
+
+    print(`[Authentication Event Listener] Validating credentials for "${uVal}"...\n`, 'sys');
+
+    if ((uVal === 'juned_khan' && pVal === 'admin@123') || (uVal === 'admin' && pVal === 'admin') || (uVal && pVal)) {
+      if (statusText) statusText.textContent = `✓ Login Successful! Welcome ${uVal || 'Juned Khan'}`;
+      if (statusDot) statusDot.classList.remove('err');
+      print(`✓ Login Successful! Welcome to InfoGalaxy Student Portal.\n`, 'ok');
+      toast(`✓ Welcome ${uVal || 'Juned Khan'}! Login Successful.`);
+    } else {
+      if (statusText) statusText.textContent = `✗ Authentication Failed: Please enter valid credentials.`;
+      if (statusDot) statusDot.classList.add('err');
+      print(`✗ Authentication Failed: Invalid credentials.\n`, 'err');
+      toast(`✗ Authentication Failed: Invalid credentials.`);
+    }
+    return;
+  }
+
+  if (btnText.toLowerCase() === 'reset') {
+    const inputs = contentEl?.querySelectorAll('input');
+    inputs?.forEach(i => i.value = '');
+    if (statusText) statusText.textContent = 'Form reset.';
+    print(`[Swing GUI] Form inputs cleared.\n`, 'sys');
+    return;
+  }
+
+  if (statusText) statusText.textContent = `Action performed: "${btnText}"`;
+}
+
+function initGuiWindowControls() {
+  const modal = $('guiWindowModal');
+  const win = $('guiWindow');
+  const btnClose = $('guiBtnClose');
+  const btnMin = $('guiBtnMin');
+  const btnMax = $('guiBtnMax');
+  const btnReopen = $('btnReopenGui');
+  const titlebar = $('guiWinTitlebar');
+
+  btnClose?.addEventListener('click', () => {
+    modal.hidden = true;
+    if (btnReopen) btnReopen.hidden = false;
+    print(`[GUI Window Closed]\n`, 'sys');
+  });
+
+  btnMin?.addEventListener('click', () => {
+    modal.hidden = true;
+    if (btnReopen) btnReopen.hidden = false;
+    toast('Window Minimized. Tap "☕ Java GUI Frame" to restore.');
+  });
+
+  btnMax?.addEventListener('click', () => {
+    win?.classList.toggle('maximized');
+  });
+
+  btnReopen?.addEventListener('click', () => {
+    modal.hidden = false;
+    btnReopen.hidden = true;
+  });
+
+  modal?.addEventListener('click', e => {
+    if (e.target.dataset.closeGui !== undefined) {
+      modal.hidden = true;
+      if (btnReopen) btnReopen.hidden = false;
+    }
+  });
+
+  if (titlebar && win) {
+    let isDragging = false;
+    let startX = 0, startY = 0, initialLeft = 0, initialTop = 0;
+
+    titlebar.addEventListener('mousedown', e => {
+      if (e.target.closest('.gui-win-controls')) return;
+      isDragging = true;
+      const rect = win.getBoundingClientRect();
+      startX = e.clientX;
+      startY = e.clientY;
+      initialLeft = rect.left;
+      initialTop = rect.top;
+      win.style.position = 'fixed';
+      win.style.margin = '0';
+      win.style.left = `${initialLeft}px`;
+      win.style.top = `${initialTop}px`;
+    });
+
+    window.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      win.style.left = `${Math.max(10, Math.min(window.innerWidth - win.offsetWidth - 10, initialLeft + dx))}px`;
+      win.style.top = `${Math.max(10, Math.min(window.innerHeight - win.offsetHeight - 10, initialTop + dy))}px`;
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+  }
+}
+
 // ---------- boot ----------
 function shellCmd(line) { print(`${engines.shell.sh.prompt} ${line}\n`, 'cmd'); engines.shell.exec(line, sink); $('promptLabel').textContent = engines.shell.sh.prompt; }
 shellui.init({ sh: engines.shell.sh, cmd: shellCmd });
@@ -949,6 +1416,8 @@ sqlui.init({ engine: engines.sql, editor, sink, run, toast, store, openSheet, cl
   busy: () => running, showText: t => { sink.clear(); showTab('console'); print(t, 'sys'); } });
 if ($('stdin')) $('stdin').value = cur.input === 'stdin' ? store.get('cf.in.' + cur.id, cur.stdin || '') : '';
 applyLang(); syncButtons();
+initZoomControls();
+initGuiWindowControls();
 const warmPromise = warm();
 window.__app = { run, stop, engines, cur: () => cur, editorPhp: () => editorPhp, editorHtml: () => editorHtml, running: () => running };
 
