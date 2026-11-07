@@ -17,6 +17,7 @@
   - [Feature 6: Multi-File Project Workspace & ZIP Manager](#feature-6-multi-file-project-workspace--zip-manager)
   - [Feature 7: One-Tap Code Beautifier & Auto-Formatter](#feature-7-one-tap-code-beautifier--auto-formatter)
   - [Feature 8: Step-by-Step Execution & Variable Trace Visualizer](#feature-8-step-by-step-execution--variable-trace-visualizer)
+  - [Feature 9: Unified App Menu & Options Drawer (Clean Header Overhaul)](#feature-9-unified-app-menu--options-drawer-clean-header-overhaul)
 - [3. Prioritization & Feasibility Matrix](#3-prioritization--feasibility-matrix)
 - [4. Implementation Architecture & Zero-Server Guarantee](#4-implementation-architecture--zero-server-guarantee)
 
@@ -211,16 +212,44 @@ A visual **"Trace / Step Mode"** (inspired by Python Tutor) that allows students
 
 ---
 
+### Feature 9: Unified App Menu & Options Drawer (Clean Header Overhaul)
+
+#### 📌 Problem Statement
+As features accumulate, the top navigation header becomes crowded with individual action buttons (Download App, Developer Profile, Open File, Save Code, Reset Code, Theme Toggle). On compact mobile viewports, this forces buttons to cram together and reduces horizontal space for the branding and engine runtime indicators.
+
+#### 💡 Feature Overview
+A clean, modern **3-dots action menu (`⋮`)** or **slide-out navigation drawer (`☰`)** in the top header. Consolidates secondary utilities into a polished, high-contrast sheet or dropdown menu, leaving the top header minimal, elegant, and focused.
+
+#### 🛠️ Key Components & Menu Actions
+- **Header Structure**:
+  - Left: App Icon + `ThinkCode Lab` + Runtime Status Indicator (`PHP 8.2 • offline`).
+  - Right: `App` Download pill (compact) + **Menu Button (`⋮` or `☰`)**.
+- **Consolidated Menu / Drawer Items**:
+  1. 💾 **Save Code to Device** (`Export file / project`)
+  2. 📂 **Open Code from Device** (`Import local source file`)
+  3. 🪄 **Format & Beautify Code** (`Auto-indent & clean code`)
+  4. 🔄 **Reset to Syllabus Template** (`Clear edits to original template`)
+  5. 🌓 **Toggle Theme** (`Switch between Dark and Light mode`)
+  6. 📲 **Share App / Code** (`Share via link or WhatsApp`)
+  7. 👤 **About Developer & Architecture** (`Tahir Mansuri / InfoGalaxy Computers`)
+  8. 📜 **Privacy Policy & Offline Guarantee**
+
+#### 🏗️ Technical Architecture
+- Pure CSS & accessible modal/sheet dropdown using existing dialog/sheet architecture with backdrop blur and smooth sliding animation.
+
+---
+
 ## 3. Prioritization & Feasibility Matrix
 
 | Feature | Student Impact | Implementation Effort | Recommended Order |
 | :--- | :---: | :---: | :---: |
-| **2. Mobile Quick-Symbol Strip** | 🔥 High | 🟢 Low (1–2 days) | **Phase 6.1 (Immediate)** |
-| **4. Viva Voce & Cheat-Sheet Drawer** | 🔥 High | 🟢 Low (2–3 days) | **Phase 6.2 (Immediate)** |
-| **7. One-Tap Code Auto-Formatter** | ⚡ High | 🟡 Medium (2–3 days) | **Phase 6.3** |
-| **5. Serverless Code Sharing (QR / Hash)** | ⚡ High | 🟢 Low (1–2 days) | **Phase 6.4** |
-| **1. Lab Journal / Manual PDF Generator** | 💎 Exceptional | 🟡 Medium (3–4 days) | **Phase 6.5** |
-| **3. SQL Visual ER Diagram** | 💎 Exceptional | 🟡 Medium (3–5 days) | **Phase 6.6** |
+| **2. Mobile Quick-Symbol Strip** | 🔥 High | 🟢 Low (1–2 days) | **Phase 6.1 (Active)** |
+| **7. One-Tap Code Auto-Formatter** | ⚡ High | 🟡 Medium (2–3 days) | **Phase 6.2 (Active)** |
+| **9. Unified App Menu / Options Drawer** | 💎 High | 🟢 Low (1–2 days) | **Phase 6.3** |
+| **4. Viva Voce & Cheat-Sheet Drawer** | 🔥 High | 🟢 Low (2–3 days) | **Phase 6.4** |
+| **5. Serverless Code Sharing (QR / Hash)** | ⚡ High | 🟢 Low (1–2 days) | **Phase 6.5** |
+| **1. Lab Journal / Manual PDF Generator** | 💎 Exceptional | 🟡 Medium (3–4 days) | **Phase 6.6** |
+| **3. SQL Visual ER Diagram** | 💎 Exceptional | 🟡 Medium (3–5 days) | **Phase 6.7** |
 | **6. Multi-File Project Workspace** | 🌟 Moderate | 🔴 High (5–7 days) | **Phase 7.0** |
 | **8. Step-by-Step Execution Visualizer** | 🌟 High | 🔴 High (7–10 days) | **Phase 7.1** |
 
@@ -237,3 +266,4 @@ All features detailed above strictly adhere to **ThinkCode Lab's Core Architectu
 ---
 
 *Authored by: **Tahir Mansuri** · InfoGalaxy Computers · ThinkCode Lab Architecture Group*
+

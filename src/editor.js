@@ -62,6 +62,65 @@ export function createEditor(parent, { doc, lang, onChange, onRun }) {
     get: () => view.state.doc.toString(),
     set(text, l) {
       view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: text }, effects: langC.reconfigure(LANG[l] ? LANG[l]() : []) });
+    },
+    view,
+    insertSymbol(sym) {
+      const state = view.state;
+      const sel = state.selection.main;
+      let insertText = sym;
+      let newCursor = sel.from + sym.length;
+
+      // Smart pairs
+      if (sym === '{}') {
+        if (sel.from !== sel.to) {
+          insertText = '{' + state.sliceDoc(sel.from, sel.to) + '}';
+          newCursor = sel.to + 2;
+        } else {
+          insertText = '{}';
+          newCursor = sel.from + 1;
+        }
+      } else if (sym === '()') {
+        if (sel.from !== sel.to) {
+          insertText = '(' + state.sliceDoc(sel.from, sel.to) + ')';
+          newCursor = sel.to + 2;
+        } else {
+          insertText = '()';
+          newCursor = sel.from + 1;
+        }
+      } else if (sym === '[]') {
+        if (sel.from !== sel.to) {
+          insertText = '[' + state.sliceDoc(sel.from, sel.to) + ']';
+          newCursor = sel.to + 2;
+        } else {
+          insertText = '[]';
+          newCursor = sel.from + 1;
+        }
+      } else if (sym === '""') {
+        if (sel.from !== sel.to) {
+          insertText = '"' + state.sliceDoc(sel.from, sel.to) + '"';
+          newCursor = sel.to + 2;
+        } else {
+          insertText = '""';
+          newCursor = sel.from + 1;
+        }
+      } else if (sym === "''") {
+        if (sel.from !== sel.to) {
+          insertText = "'" + state.sliceDoc(sel.from, sel.to) + "'";
+          newCursor = sel.to + 2;
+        } else {
+          insertText = "''";
+          newCursor = sel.from + 1;
+        }
+      } else if (sym === 'Tab') {
+        insertText = '  ';
+        newCursor = sel.from + 2;
+      }
+
+      view.dispatch({
+        changes: { from: sel.from, to: sel.to, insert: insertText },
+        selection: { anchor: newCursor }
+      });
+      view.focus();
     }
   };
 }

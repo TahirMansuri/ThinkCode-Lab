@@ -222,6 +222,13 @@
         </div>
       </div>
       <div class="head-right">
+        <button type="button" id="btnFormat" class="btn-format" title="Format & Beautify Code (Shift+Alt+F)" aria-label="Format code">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 4V2m0 16v-2m8-8h-2M4 10H2m17.5 7.5L18 16m-12 0l-1.5 1.5M18 4l-1.5 1.5M6 4L4.5 5.5"/>
+            <path d="m14 14-8 8"/>
+          </svg>
+          <span>Beautify</span>
+        </button>
         <div class="zoom-bar" id="zoomBar" title="Adjust Editor Font Size">
           <button type="button" id="btnZoomOut" class="btn-zoom" title="Zoom Out Editor (Ctrl -)">A−</button>
           <button type="button" id="btnZoomIn" class="btn-zoom" title="Zoom In Editor (Ctrl +)">A+</button>
@@ -229,6 +236,7 @@
         <span id="saveState" class="mute">Saved</span>
       </div>
     </div>
+    <div id="quickBar" class="quick-bar" aria-label="Quick code symbols"></div>
     <div id="editor" class="editor"></div>
     <div id="dualEditor" class="dual-editor" hidden>
       <div class="dual-sec dual-html-sec" id="secHtml">

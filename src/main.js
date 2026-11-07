@@ -4,6 +4,7 @@ import './styles.css';
 import { LANGS } from './languages.js';
 import { engines } from './engines/index.js';
 import { createEditor } from './editor.js';
+import { formatCode } from './formatter.js';
 import { sqlui } from './sql-ui.js';
 import { shellui } from './shell-ui.js';
 import { PRACTICALS } from './practicals.js';
@@ -16,7 +17,7 @@ const store = {
 const con = $('console'), preview = $('preview');
 let cur = LANGS.find(l => l.id === store.get('cf.lang') && l.engine) || LANGS[0];
 let running = false, stopped = false, saveTimer = 0;
-let editorHtml = null, editorPhp = null;
+let editorHtml = null, editorPhp = null, lastFocusedEditor = null;
 let phpViewMode = store.get('cf.php.view_mode', 'split');
 
 // ---------- small helpers ----------
@@ -265,6 +266,8 @@ const editor = createEditor($('editor'), {
     saveTimer = setTimeout(() => { store.set('cf.code.' + cur.id, text); $('saveState').textContent = 'Saved'; }, 350);
   }
 });
+lastFocusedEditor = editor;
+editor.view?.dom.addEventListener('focusin', () => { lastFocusedEditor = editor; });
 
 // ---------- language rail ----------
 function renderRail() {
@@ -971,6 +974,7 @@ function initDualEditor() {
       saveTimer = setTimeout(() => { store.set('cf.code.php_html', text); $('saveState').textContent = 'Saved'; }, 350);
     }
   });
+  editorHtml.view?.dom.addEventListener('focusin', () => { lastFocusedEditor = editorHtml; });
 
   editorPhp = createEditor($('editorPhp'), {
     doc: initialPhp,
@@ -981,6 +985,7 @@ function initDualEditor() {
       saveTimer = setTimeout(() => { store.set('cf.code.php_script', text); $('saveState').textContent = 'Saved'; }, 350);
     }
   });
+  editorPhp.view?.dom.addEventListener('focusin', () => { lastFocusedEditor = editorPhp; });
 
   // Draggable splitter between HTML and PHP
   let dualDragging = false;
@@ -1548,6 +1553,120 @@ function initGuiWindowControls() {
   }
 }
 
+// ==========================================
+// Quick-Symbol Strip & One-Tap Beautifier
+// ==========================================
+
+const QUICK_SYMBOLS = [
+  { label: 'Tab', val: 'Tab', title: 'Insert Tab (2 spaces)' },
+  { label: '{ }', val: '{}', title: 'Curly braces' },
+  { label: '( )', val: '()', title: 'Parentheses' },
+  { label: '[ ]', val: '[]', title: 'Square brackets' },
+  { label: ';', val: ';', title: 'Semicolon' },
+  { label: ':', val: ':', title: 'Colon' },
+  { label: '"', val: '""', title: 'Double quotes' },
+  { label: "'", val: "''", title: 'Single quotes' },
+  { label: '=', val: '=', title: 'Equals' },
+  { label: '!', val: '!', title: 'Exclamation / Not' },
+  { label: '<', val: '<', title: 'Less than' },
+  { label: '>', val: '>', title: 'Greater than' },
+  { label: '+', val: '+', title: 'Plus' },
+  { label: '-', val: '-', title: 'Minus' },
+  { label: '*', val: '*', title: 'Asterisk / Pointer' },
+  { label: '/', val: '/', title: 'Forward slash / Divide' },
+  { label: '%', val: '%', title: 'Percent / Modulo' },
+  { label: '&', val: '&', title: 'Ampersand' },
+  { label: '|', val: '|', title: 'Pipe / OR' },
+  { label: '$', val: '$', title: 'Dollar' },
+  { label: '->', val: '->', title: 'Arrow pointer' },
+  { label: '.', val: '.', title: 'Dot' },
+  { label: ',', val: ',', title: 'Comma' },
+  { label: '_', val: '_', title: 'Underscore' },
+  { label: '🪄 Beautify', val: '__format__', title: 'Beautify & Auto-Indent Code (Shift+Alt+F)', isAction: true }
+];
+
+function getActiveEditor() {
+  if (cur.id === 'php' && editorHtml && editorPhp) {
+    if (editorHtml.view?.hasFocus) return editorHtml;
+    if (editorPhp.view?.hasFocus) return editorPhp;
+    if (lastFocusedEditor === editorHtml || lastFocusedEditor === editorPhp) return lastFocusedEditor;
+    return editorPhp;
+  }
+  return editor;
+}
+
+function handleFormatCode() {
+  const activeEd = getActiveEditor();
+  if (!activeEd) return;
+  const oldCode = activeEd.get();
+  if (!oldCode || !oldCode.trim()) {
+    toast('Code editor is empty.');
+    return;
+  }
+
+  const targetLang = cur.id === 'php' ? (activeEd === editorHtml ? 'web' : 'php') : cur.id;
+  const formatted = formatCode(oldCode, targetLang);
+
+  if (formatted === oldCode) {
+    toast('✨ Code is already clean & formatted!');
+    return;
+  }
+
+  // Preserve undo history via view.dispatch
+  if (activeEd.view) {
+    activeEd.view.dispatch({
+      changes: { from: 0, to: activeEd.view.state.doc.length, insert: formatted }
+    });
+    activeEd.view.focus();
+  } else {
+    activeEd.set(formatted, targetLang);
+  }
+
+  toast('✨ Code beautified (2-space indent)!');
+}
+
+function initQuickSymbolBar() {
+  const bar = $('quickBar');
+  if (!bar) return;
+  bar.textContent = '';
+
+  for (const item of QUICK_SYMBOLS) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'quick-key' + (item.isAction ? ' quick-key-format' : '');
+    btn.textContent = item.label;
+    btn.title = item.title;
+    btn.setAttribute('aria-label', item.title);
+
+    // pointerdown with preventDefault prevents mobile software keyboard from closing
+    btn.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      if (item.val === '__format__') {
+        handleFormatCode();
+      } else {
+        const activeEd = getActiveEditor();
+        if (activeEd && activeEd.insertSymbol) {
+          activeEd.insertSymbol(item.val);
+        }
+      }
+    });
+
+    bar.appendChild(btn);
+  }
+}
+
+function initCodeFormatter() {
+  $('btnFormat')?.addEventListener('click', handleFormatCode);
+
+  // Shortcut Shift+Alt+F to format
+  window.addEventListener('keydown', e => {
+    if (e.shiftKey && e.altKey && (e.key === 'F' || e.key === 'f')) {
+      e.preventDefault();
+      handleFormatCode();
+    }
+  });
+}
+
 // ---------- boot ----------
 function shellCmd(line) { print(`${engines.shell.sh.prompt} ${line}\n`, 'cmd'); engines.shell.exec(line, sink); $('promptLabel').textContent = engines.shell.sh.prompt; }
 shellui.init({ sh: engines.shell.sh, cmd: shellCmd });
@@ -1558,6 +1677,8 @@ setOutputSmall();
 applyLang(); syncButtons();
 initZoomControls();
 initGuiWindowControls();
+initQuickSymbolBar();
+initCodeFormatter();
 const warmPromise = warm();
 window.__app = { run, stop, engines, cur: () => cur, editorPhp: () => editorPhp, editorHtml: () => editorHtml, running: () => running };
 
