@@ -65,16 +65,16 @@ ls -l
 #include <stdio.h>
 
 int factorial(int n) {
-    if (n <= 1) return 1;
-    return n * factorial(n - 1);
+  if (n <= 1) return 1;
+  return n * factorial(n - 1);
 }
 
 int main() {
-    int num;
-    printf("Enter a number: ");
-    scanf("%d", &num);
-    printf("Factorial of %d is %d\\n", num, factorial(num));
-    return 0;
+  int num;
+  printf("Enter a number: ");
+  scanf("%d", &num);
+  printf("Factorial of %d is %d\\n", num, factorial(num));
+  return 0;
 }
 ` },
   { id: 'cpp', name: 'C++', file: 'main.cpp', engine: 'cpp', hue: '#8B5CF6', input: null,
@@ -83,18 +83,18 @@ int main() {
 using namespace std;
 
 int main() {
-    string name;
-    int roll;
+  string name;
+  int roll;
 
-    cout << "Enter your name: ";
-    cin >> name;
+  cout << "Enter your name: ";
+  cin >> name;
 
-    cout << "Enter your roll number: ";
-    cin >> roll;
+  cout << "Enter your roll number: ";
+  cin >> roll;
 
-    cout << "\\nHello, " << name << "! (Roll: " << roll << ")" << endl;
-    cout << "C++ interactive in-console input is working!" << endl;
-    return 0;
+  cout << "\\nHello, " << name << "! (Roll: " << roll << ")" << endl;
+  cout << "C++ interactive in-console input is working!" << endl;
+  return 0;
 }
 ` },
   { id: 'java', name: 'Java', file: 'Main.java', engine: 'java', hue: '#F28482', input: null,
@@ -102,18 +102,18 @@ int main() {
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+  public static void main(String[] args) {
+    Scanner sc = new Scanner(System.in);
 
-        System.out.print("Enter your name: ");
-        String name = sc.nextLine();
+    System.out.print("Enter your name: ");
+    String name = sc.nextLine();
 
-        System.out.print("Enter your roll number: ");
-        int roll = sc.nextInt();
+    System.out.print("Enter your roll number: ");
+    int roll = sc.nextInt();
 
-        System.out.println("\\nHello, " + name + "! (Roll: " + roll + ")");
-        System.out.println("Java interactive in-console input is working!");
-    }
+    System.out.println("\\nHello, " + name + "! (Roll: " + roll + ")");
+    System.out.println("Java interactive in-console input is working!");
+  }
 }
 ` }
 ];

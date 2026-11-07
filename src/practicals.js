@@ -29,11 +29,11 @@ print(f"Subtraction ({num1} - {num2})    = {num1 - num2}")
 print(f"Multiplication ({num1} * {num2}) = {num1 * num2}")
 
 if num2 != 0:
-    print(f"Division ({num1} / {num2})       = {num1 / num2}")
-    print(f"Floor Division ({num1} // {num2}) = {num1 // num2}")
-    print(f"Modulus ({num1} % {num2})        = {num1 % num2}")
+  print(f"Division ({num1} / {num2})       = {num1 / num2}")
+  print(f"Floor Division ({num1} // {num2}) = {num1 // num2}")
+  print(f"Modulus ({num1} % {num2})        = {num1 % num2}")
 else:
-    print("Division, Floor Div & Modulo: Cannot divide by zero!")
+  print("Division, Floor Div & Modulo: Cannot divide by zero!")
 
 print(f"Exponent ({num1} ** {num2})     = {num1 ** num2}")
 `
@@ -49,19 +49,19 @@ print("=== Student Grade Calculator ===")
 marks = float(input("Enter student marks (0 to 100): "))
 
 if marks < 0 or marks > 100:
-    print("Invalid marks entered!")
+  print("Invalid marks entered!")
 elif marks >= 90:
-    grade = "A+ (Outstanding)"
+  grade = "A+ (Outstanding)"
 elif marks >= 75:
-    grade = "A (Distinction)"
+  grade = "A (Distinction)"
 elif marks >= 60:
-    grade = "B (First Class)"
+  grade = "B (First Class)"
 elif marks >= 50:
-    grade = "C (Second Class)"
+  grade = "C (Second Class)"
 elif marks >= 40:
-    grade = "D (Pass Class)"
+  grade = "D (Pass Class)"
 else:
-    grade = "F (Fail)"
+  grade = "F (Fail)"
 
 print(f"Marks: {marks} | Result Grade: {grade}")
 `
@@ -79,15 +79,15 @@ end = int(input("Enter upper range: "))
 print(f"Prime numbers between {start} and {end} are:")
 count = 0
 for num in range(start, end + 1):
-    if num > 1:
-        is_prime = True
-        for i in range(2, int(num ** 0.5) + 1):
-            if num % i == 0:
-                is_prime = False
-                break
-        if is_prime:
-            print(num, end="  ")
-            count += 1
+  if num > 1:
+    is_prime = True
+    for i in range(2, int(num ** 0.5) + 1):
+      if num % i == 0:
+        is_prime = False
+        break
+    if is_prime:
+      print(num, end="  ")
+      count += 1
 
 print(f"\\nTotal prime numbers found: {count}")
 `
@@ -102,20 +102,20 @@ print(f"\\nTotal prime numbers found: {count}")
 n = int(input("Enter number of terms for Fibonacci series: "))
 
 if n <= 0:
-    print("Please enter a positive integer.")
+  print("Please enter a positive integer.")
 elif n == 1:
-    print("Fibonacci sequence: 0")
+  print("Fibonacci sequence: 0")
 else:
-    a, b = 0, 1
-    count = 0
-    print("Fibonacci sequence:")
-    while count < n:
-        print(a, end="  ")
-        nth = a + b
-        a = b
-        b = nth
-        count += 1
-    print()
+  a, b = 0, 1
+  count = 0
+  print("Fibonacci sequence:")
+  while count < n:
+    print(a, end="  ")
+    nth = a + b
+    a = b
+    b = nth
+    count += 1
+  print()
 `
     },
     {
@@ -150,14 +150,14 @@ print("Split into Words   :", text.split())
       desc: 'Demonstrates function definitions (def), default arguments, returning values, and recursion.',
       code: `# Practical 6: Python Functions and Recursion
 def calc_power(base, exp=2):
-    """Calculates power with default exponent = 2."""
-    return base ** exp
+  """Calculates power with default exponent = 2."""
+  return base ** exp
 
 def factorial(n):
-    """Recursive function to calculate factorial."""
-    if n <= 1:
-        return 1
-    return n * factorial(n - 1)
+  """Recursive function to calculate factorial."""
+  if n <= 1:
+    return 1
+  return n * factorial(n - 1)
 
 print("calc_power(5)       =", calc_power(5))       # 5^2
 print("calc_power(5, 3)    =", calc_power(5, 3))    # 5^3
@@ -209,17 +209,17 @@ print("Sorted list  :", fruits)
       desc: 'Demonstrates creating, accessing, updating, deleting, and traversing dictionaries with keys() and values().',
       code: `# Practical 8: Dictionary Operations in Python
 student = {
-    "roll_no": 101,
-    "name": "Tahir Mansuri",
-    "center": "InfoGalaxy Computers",
-    "course": "BCA",
-    "semester": 3,
-    "marks": 94.5
+  "roll_no": 101,
+  "name": "Tahir Mansuri",
+  "center": "InfoGalaxy Computers",
+  "course": "BCA",
+  "semester": 3,
+  "marks": 94.5
 }
 
 print("=== Student Record ===")
 for key, val in student.items():
-    print(f"{key.capitalize():10} : {val}")
+  print(f"{key.capitalize():10} : {val}")
 
 # Adding new key-value pair and updating
 student["grade"] = "A+"
@@ -264,21 +264,21 @@ print("Combined Tuple     :", combined)
       desc: 'Defines a Student class with constructor, instance attributes, and member methods.',
       code: `# Practical 10: Classes and Objects in Python
 class Student:
-    # Class attribute
-    college_name = "InfoGalaxy Computers"
+  # Class attribute
+  college_name = "InfoGalaxy Computers"
 
-    def __init__(self, roll_no, name, marks):
-        # Instance attributes
-        self.roll_no = roll_no
-        self.name = name
-        self.marks = marks
+  def __init__(self, roll_no, name, marks):
+    # Instance attributes
+    self.roll_no = roll_no
+    self.name = name
+    self.marks = marks
 
-    def display(self):
-        print(f"Roll No : {self.roll_no}")
-        print(f"Name    : {self.name}")
-        print(f"Marks   : {self.marks}")
-        print(f"College : {self.college_name}")
-        print("-------------------------")
+  def display(self):
+    print(f"Roll No : {self.roll_no}")
+    print(f"Name    : {self.name}")
+    print(f"Marks   : {self.marks}")
+    print(f"College : {self.college_name}")
+    print("-------------------------")
 
 # Creating objects
 s1 = Student(101, "Pratik Hajare", 88.5)
@@ -297,23 +297,23 @@ s2.display()
       desc: 'Demonstrates single inheritance, super() call, and method overriding in Python.',
       code: `# Practical 11: Inheritance and Method Overriding
 class Person:
-    def __init__(self, name, age):
-        self.name = name
-        self.age = age
+  def __init__(self, name, age):
+    self.name = name
+    self.age = age
 
-    def show_info(self):
-        print(f"Name: {self.name}, Age: {self.age}")
+  def show_info(self):
+    print(f"Name: {self.name}, Age: {self.age}")
 
 class Employee(Person):
-    def __init__(self, name, age, emp_id, salary):
-        super().__init__(name, age)
-        self.emp_id = emp_id
-        self.salary = salary
+  def __init__(self, name, age, emp_id, salary):
+    super().__init__(name, age)
+    self.emp_id = emp_id
+    self.salary = salary
 
-    # Method Overriding
-    def show_info(self):
-        super().show_info()
-        print(f"Emp ID: {self.emp_id}, Salary: \${self.salary:,.2f}")
+  # Method Overriding
+  def show_info(self):
+    super().show_info()
+    print(f"Emp ID: {self.emp_id}, Salary: \${self.salary:,.2f}")
 
 print("=== Employee Record (Inheritance Demo) ===")
 emp = Employee("Sandesh Marathe", 24, "EMP-204", 48000)
@@ -337,23 +337,23 @@ emp.show_info()
 using namespace std;
 
 int main() {
-    int a, b;
-    cout << "Enter first number: ";
-    cin >> a;
-    cout << "Enter second number: ";
-    cin >> b;
+  int a, b;
+  cout << "Enter first number: ";
+  cin >> a;
+  cout << "Enter second number: ";
+  cin >> b;
 
-    cout << "\\n--- Arithmetic Results ---" << endl;
-    cout << "Addition (a + b)       : " << (a + b) << endl;
-    cout << "Subtraction (a - b)    : " << (a - b) << endl;
-    cout << "Multiplication (a * b) : " << (a * b) << endl;
-    if (b != 0) {
-        cout << "Division (a / b)       : " << (float)a / b << endl;
-        cout << "Modulo (a % b)         : " << (a % b) << endl;
-    } else {
-        cout << "Division & Modulo      : Cannot divide by zero!" << endl;
-    }
-    return 0;
+  cout << "\\n--- Arithmetic Results ---" << endl;
+  cout << "Addition (a + b)       : " << (a + b) << endl;
+  cout << "Subtraction (a - b)    : " << (a - b) << endl;
+  cout << "Multiplication (a * b) : " << (a * b) << endl;
+  if (b != 0) {
+    cout << "Division (a / b)       : " << (float)a / b << endl;
+    cout << "Modulo (a % b)         : " << (a % b) << endl;
+  } else {
+    cout << "Division & Modulo      : Cannot divide by zero!" << endl;
+  }
+  return 0;
 }
 `
     },
@@ -368,35 +368,35 @@ int main() {
 using namespace std;
 
 int main() {
-    int num;
-    cout << "Enter a number to check: ";
-    cin >> num;
+  int num;
+  cout << "Enter a number to check: ";
+  cin >> num;
 
-    if (num > 0) {
-        cout << num << " is Positive." << endl;
-    } else if (num < 0) {
-        cout << num << " is Negative." << endl;
-    } else {
-        cout << "The number is Zero." << endl;
-    }
+  if (num > 0) {
+    cout << num << " is Positive." << endl;
+  } else if (num < 0) {
+    cout << num << " is Negative." << endl;
+  } else {
+    cout << "The number is Zero." << endl;
+  }
 
-    cout << "\\n--- Simple Menu-Driven Calculator ---" << endl;
-    cout << "1. Square\\n2. Cube\\nChoose option (1 or 2): ";
-    int choice;
-    cin >> choice;
+  cout << "\\n--- Simple Menu-Driven Calculator ---" << endl;
+  cout << "1. Square\\n2. Cube\\nChoose option (1 or 2): ";
+  int choice;
+  cin >> choice;
 
-    switch (choice) {
-        case 1:
-            cout << "Square of " << num << " is: " << (num * num) << endl;
-            break;
-        case 2:
-            cout << "Cube of " << num << " is: " << (num * num * num) << endl;
-            break;
-        default:
-            cout << "Invalid choice selected!" << endl;
-            break;
-    }
-    return 0;
+  switch (choice) {
+    case 1:
+      cout << "Square of " << num << " is: " << (num * num) << endl;
+      break;
+    case 2:
+      cout << "Cube of " << num << " is: " << (num * num * num) << endl;
+      break;
+    default:
+      cout << "Invalid choice selected!" << endl;
+      break;
+  }
+  return 0;
 }
 `
     },
@@ -411,31 +411,31 @@ int main() {
 using namespace std;
 
 int main() {
-    int n;
-    cout << "Enter a number for multiplication table: ";
-    cin >> n;
+  int n;
+  cout << "Enter a number for multiplication table: ";
+  cin >> n;
 
-    cout << "\\n--- Table of " << n << " (for loop) ---" << endl;
-    for (int i = 1; i <= 10; i++) {
-        cout << n << " x " << i << " = " << (n * i) << endl;
-    }
+  cout << "\\n--- Table of " << n << " (for loop) ---" << endl;
+  for (int i = 1; i <= 10; i++) {
+    cout << n << " x " << i << " = " << (n * i) << endl;
+  }
 
-    int temp = n, sum = 0;
-    while (temp > 0) {
-        sum += temp % 10;
-        temp /= 10;
-    }
-    cout << "\\nSum of digits of " << n << " (while loop): " << sum << endl;
+  int temp = n, sum = 0;
+  while (temp > 0) {
+    sum += temp % 10;
+    temp /= 10;
+  }
+  cout << "\\nSum of digits of " << n << " (while loop): " << sum << endl;
 
-    int counter = 1;
-    cout << "\\nCounting 1 to 5 (do-while loop): ";
-    do {
-        cout << counter << " ";
-        counter++;
-    } while (counter <= 5);
-    cout << endl;
+  int counter = 1;
+  cout << "\\nCounting 1 to 5 (do-while loop): ";
+  do {
+    cout << counter << " ";
+    counter++;
+  } while (counter <= 5);
+  cout << endl;
 
-    return 0;
+  return 0;
 }
 `
     },
@@ -450,29 +450,29 @@ int main() {
 using namespace std;
 
 int main() {
-    int n;
-    bool isPrime = true;
+  int n;
+  bool isPrime = true;
 
-    cout << "Enter a positive integer: ";
-    cin >> n;
+  cout << "Enter a positive integer: ";
+  cin >> n;
 
-    if (n <= 1) {
+  if (n <= 1) {
+    isPrime = false;
+  } else {
+    for (int i = 2; i * i <= n; ++i) {
+      if (n % i == 0) {
         isPrime = false;
-    } else {
-        for (int i = 2; i * i <= n; ++i) {
-            if (n % i == 0) {
-                isPrime = false;
-                break;
-            }
-        }
+        break;
+      }
     }
+  }
 
-    if (isPrime)
-        cout << n << " is a PRIME number." << endl;
-    else
-        cout << n << " is NOT a prime number." << endl;
+  if (isPrime)
+    cout << n << " is a PRIME number." << endl;
+  else
+    cout << n << " is NOT a prime number." << endl;
 
-    return 0;
+  return 0;
 }
 `
     },
@@ -487,22 +487,22 @@ int main() {
 using namespace std;
 
 int main() {
-    int n;
-    long long fact = 1;
+  int n;
+  long long fact = 1;
 
-    cout << "Enter a positive number: ";
-    cin >> n;
+  cout << "Enter a positive number: ";
+  cin >> n;
 
-    if (n < 0) {
-        cout << "Factorial is not defined for negative numbers." << endl;
-    } else {
-        for (int i = 1; i <= n; i++) {
-            fact *= i;
-        }
-        cout << "Factorial of " << n << " (" << n << "!) = " << fact << endl;
+  if (n < 0) {
+    cout << "Factorial is not defined for negative numbers." << endl;
+  } else {
+    for (int i = 1; i <= n; i++) {
+      fact *= i;
     }
+    cout << "Factorial of " << n << " (" << n << "!) = " << fact << endl;
+  }
 
-    return 0;
+  return 0;
 }
 `
     },
@@ -517,28 +517,28 @@ int main() {
 using namespace std;
 
 int main() {
-    int n, t1 = 0, t2 = 1, nextTerm = 0;
+  int n, t1 = 0, t2 = 1, nextTerm = 0;
 
-    cout << "Enter the number of terms: ";
-    cin >> n;
+  cout << "Enter the number of terms: ";
+  cin >> n;
 
-    cout << "Fibonacci Series: ";
-    for (int i = 1; i <= n; ++i) {
-        if (i == 1) {
-            cout << t1 << " ";
-            continue;
-        }
-        if (i == 2) {
-            cout << t2 << " ";
-            continue;
-        }
-        nextTerm = t1 + t2;
-        t1 = t2;
-        t2 = nextTerm;
-        cout << nextTerm << " ";
+  cout << "Fibonacci Series: ";
+  for (int i = 1; i <= n; ++i) {
+    if (i == 1) {
+      cout << t1 << " ";
+      continue;
     }
-    cout << endl;
-    return 0;
+    if (i == 2) {
+      cout << t2 << " ";
+      continue;
+    }
+    nextTerm = t1 + t2;
+    t1 = t2;
+    t2 = nextTerm;
+    cout << nextTerm << " ";
+  }
+  cout << endl;
+  return 0;
 }
 `
     },
@@ -553,30 +553,30 @@ int main() {
 using namespace std;
 
 int main() {
-    int arr[5] = {23, 45, 12, 89, 34};
-    int sum = 0, maxVal = arr[0], minVal = arr[0];
+  int arr[5] = {23, 45, 12, 89, 34};
+  int sum = 0, maxVal = arr[0], minVal = arr[0];
 
-    for (int i = 0; i < 5; i++) {
-        sum += arr[i];
-        if (arr[i] > maxVal) maxVal = arr[i];
-        if (arr[i] < minVal) minVal = arr[i];
+  for (int i = 0; i < 5; i++) {
+    sum += arr[i];
+    if (arr[i] > maxVal) maxVal = arr[i];
+    if (arr[i] < minVal) minVal = arr[i];
+  }
+
+  cout << "=== 1D Array Analysis ===" << endl;
+  cout << "Elements: 23, 45, 12, 89, 34" << endl;
+  cout << "Sum     : " << sum << endl;
+  cout << "Maximum : " << maxVal << endl;
+  cout << "Minimum : " << minVal << endl;
+
+  cout << "\\n=== 2D Matrix (2x2) ===" << endl;
+  int mat[2][2] = {{1, 2}, {3, 4}};
+  for (int r = 0; r < 2; r++) {
+    for (int c = 0; c < 2; c++) {
+      cout << mat[r][c] << "\\t";
     }
-
-    cout << "=== 1D Array Analysis ===" << endl;
-    cout << "Elements: 23, 45, 12, 89, 34" << endl;
-    cout << "Sum     : " << sum << endl;
-    cout << "Maximum : " << maxVal << endl;
-    cout << "Minimum : " << minVal << endl;
-
-    cout << "\\n=== 2D Matrix (2x2) ===" << endl;
-    int mat[2][2] = {{1, 2}, {3, 4}};
-    for (int r = 0; r < 2; r++) {
-        for (int c = 0; c < 2; c++) {
-            cout << mat[r][c] << "\\t";
-        }
-        cout << endl;
-    }
-    return 0;
+    cout << endl;
+  }
+  return 0;
 }
 `
     },
@@ -591,30 +591,30 @@ int main() {
 using namespace std;
 
 void swapValue(int a, int b) {
-    int t = a; a = b; b = t;
+  int t = a; a = b; b = t;
 }
 
 void swapReference(int &a, int &b) {
-    int t = a; a = b; b = t;
+  int t = a; a = b; b = t;
 }
 
 int recursiveFactorial(int n) {
-    if (n <= 1) return 1;
-    return n * recursiveFactorial(n - 1);
+  if (n <= 1) return 1;
+  return n * recursiveFactorial(n - 1);
 }
 
 int main() {
-    int x = 10, y = 20;
-    cout << "Original: x=" << x << ", y=" << y << endl;
+  int x = 10, y = 20;
+  cout << "Original: x=" << x << ", y=" << y << endl;
 
-    swapValue(x, y);
-    cout << "After swapValue: x=" << x << ", y=" << y << " (Unchanged)" << endl;
+  swapValue(x, y);
+  cout << "After swapValue: x=" << x << ", y=" << y << " (Unchanged)" << endl;
 
-    swapReference(x, y);
-    cout << "After swapReference: x=" << x << ", y=" << y << " (Swapped!)" << endl;
+  swapReference(x, y);
+  cout << "After swapReference: x=" << x << ", y=" << y << " (Swapped!)" << endl;
 
-    cout << "\\nRecursive Factorial of 5: " << recursiveFactorial(5) << endl;
-    return 0;
+  cout << "\\nRecursive Factorial of 5: " << recursiveFactorial(5) << endl;
+  return 0;
 }
 `
     },
@@ -630,29 +630,29 @@ int main() {
 using namespace std;
 
 int main() {
-    string str1 = "Think";
-    string str2 = "Code";
+  string str1 = "Think";
+  string str2 = "Code";
 
-    // Concatenation
-    string full = str1 + str2;
-    cout << "Concatenated string: " << full << endl;
-    cout << "Length of string: " << full.length() << endl;
+  // Concatenation
+  string full = str1 + str2;
+  cout << "Concatenated string: " << full << endl;
+  cout << "Length of string: " << full.length() << endl;
 
-    // Substring
-    cout << "Substring (first 5 chars): " << full.substr(0, 5) << endl;
+  // Substring
+  cout << "Substring (first 5 chars): " << full.substr(0, 5) << endl;
 
-    // Comparison
-    if (str1 == str2) {
-        cout << "Strings are equal." << endl;
-    } else {
-        cout << "Strings are not equal." << endl;
-    }
+  // Comparison
+  if (str1 == str2) {
+    cout << "Strings are equal." << endl;
+  } else {
+    cout << "Strings are not equal." << endl;
+  }
 
-    // Append
-    full.append(" Lab");
-    cout << "After append: " << full << endl;
+  // Append
+  full.append(" Lab");
+  cout << "After append: " << full << endl;
 
-    return 0;
+  return 0;
 }
 `
     },
@@ -668,37 +668,37 @@ int main() {
 using namespace std;
 
 struct Student {
-    int rollNo;
-    char name[30];
-    float marks;
+  int rollNo;
+  char name[30];
+  float marks;
 };
 
 union DataHolder {
-    int intVal;
-    float floatVal;
-    char charVal;
+  int intVal;
+  float floatVal;
+  char charVal;
 };
 
 int main() {
-    Student s1;
-    s1.rollNo = 101;
-    strcpy(s1.name, "Tahir Mansuri");
-    s1.marks = 92.5;
+  Student s1;
+  s1.rollNo = 101;
+  strcpy(s1.name, "Tahir Mansuri");
+  s1.marks = 92.5;
 
-    cout << "=== Student Structure Record ===" << endl;
-    cout << "Roll No: " << s1.rollNo << endl;
-    cout << "Name   : " << s1.name << endl;
-    cout << "Marks  : " << s1.marks << endl;
-    cout << "Size of Structure: " << sizeof(s1) << " bytes" << endl;
+  cout << "=== Student Structure Record ===" << endl;
+  cout << "Roll No: " << s1.rollNo << endl;
+  cout << "Name   : " << s1.name << endl;
+  cout << "Marks  : " << s1.marks << endl;
+  cout << "Size of Structure: " << sizeof(s1) << " bytes" << endl;
 
-    cout << "\\n=== Union Demo ===" << endl;
-    DataHolder dh;
-    dh.intVal = 65;
-    cout << "As Integer: " << dh.intVal << endl;
-    cout << "As Char   : " << dh.charVal << " (Shared memory!)" << endl;
-    cout << "Size of Union: " << sizeof(dh) << " bytes" << endl;
+  cout << "\\n=== Union Demo ===" << endl;
+  DataHolder dh;
+  dh.intVal = 65;
+  cout << "As Integer: " << dh.intVal << endl;
+  cout << "As Char   : " << dh.charVal << " (Shared memory!)" << endl;
+  cout << "Size of Union: " << sizeof(dh) << " bytes" << endl;
 
-    return 0;
+  return 0;
 }
 `
     },
@@ -714,48 +714,48 @@ using namespace std;
 
 class StudentResult {
 private:
-    int rollNo;
-    char name[30];
-    int sub1, sub2, sub3;
-    float total, percentage;
+  int rollNo;
+  char name[30];
+  int sub1, sub2, sub3;
+  float total, percentage;
 
 public:
-    void setData(int r, const char* n, int s1, int s2, int s3) {
-        rollNo = r;
-        int i = 0;
-        while (n[i] != '\\0' && i < 29) { name[i] = n[i]; i++; }
-        name[i] = '\\0';
-        sub1 = s1; sub2 = s2; sub3 = s3;
-        calculate();
-    }
+  void setData(int r, const char* n, int s1, int s2, int s3) {
+    rollNo = r;
+    int i = 0;
+    while (n[i] != '\\0' && i < 29) { name[i] = n[i]; i++; }
+    name[i] = '\\0';
+    sub1 = s1; sub2 = s2; sub3 = s3;
+    calculate();
+  }
 
-    void calculate() {
-        total = sub1 + sub2 + sub3;
-        percentage = (total / 300.0f) * 100.0f;
-    }
+  void calculate() {
+    total = sub1 + sub2 + sub3;
+    percentage = (total / 300.0f) * 100.0f;
+  }
 
-    void display() {
-        cout << rollNo << "\\t" << name << "\\t" 
-             << total << "/300\\t" << percentage << "%\\t";
-        if (percentage >= 70) cout << "Distinction";
-        else if (percentage >= 60) cout << "First Class";
-        else if (percentage >= 50) cout << "Second Class";
-        else if (percentage >= 40) cout << "Pass";
-        else cout << "Fail";
-        cout << endl;
-    }
+  void display() {
+    cout << rollNo << "\\t" << name << "\\t" 
+       << total << "/300\\t" << percentage << "%\\t";
+    if (percentage >= 70) cout << "Distinction";
+    else if (percentage >= 60) cout << "First Class";
+    else if (percentage >= 50) cout << "Second Class";
+    else if (percentage >= 40) cout << "Pass";
+    else cout << "Fail";
+    cout << endl;
+  }
 };
 
 int main() {
-    StudentResult s1, s2;
-    s1.setData(101, "Juned Khan", 82, 85, 90);
-    s2.setData(102, "Prerana Pawar", 88, 91, 94);
+  StudentResult s1, s2;
+  s1.setData(101, "Juned Khan", 82, 85, 90);
+  s2.setData(102, "Prerana Pawar", 88, 91, 94);
 
-    cout << "Roll\\tName\\t\\tTotal\\tPercent\\tGrade" << endl;
-    cout << "--------------------------------------------------------" << endl;
-    s1.display();
-    s2.display();
-    return 0;
+  cout << "Roll\\tName\\t\\tTotal\\tPercent\\tGrade" << endl;
+  cout << "--------------------------------------------------------" << endl;
+  s1.display();
+  s2.display();
+  return 0;
 }
 `
     },
@@ -770,25 +770,25 @@ int main() {
 using namespace std;
 
 int main() {
-    int var = 25;
-    int *ptr = &var;
+  int var = 25;
+  int *ptr = &var;
 
-    cout << "Value of var           : " << var << endl;
-    cout << "Address of var (&var)  : " << &var << endl;
-    cout << "Pointer value (ptr)    : " << ptr << endl;
-    cout << "Value via pointer (*ptr): " << *ptr << endl;
+  cout << "Value of var           : " << var << endl;
+  cout << "Address of var (&var)  : " << &var << endl;
+  cout << "Pointer value (ptr)    : " << ptr << endl;
+  cout << "Value via pointer (*ptr): " << *ptr << endl;
 
-    *ptr = 50; // Modify value through pointer
-    cout << "New value of var       : " << var << endl;
+  *ptr = 50; // Modify value through pointer
+  cout << "New value of var       : " << var << endl;
 
-    int arr[3] = {10, 20, 30};
-    int *arrPtr = arr;
-    cout << "\\n--- Pointer Arithmetic on Array ---" << endl;
-    for (int i = 0; i < 3; i++) {
-        cout << "*(arrPtr + " << i << ") = " << *(arrPtr + i) << endl;
-    }
+  int arr[3] = {10, 20, 30};
+  int *arrPtr = arr;
+  cout << "\\n--- Pointer Arithmetic on Array ---" << endl;
+  for (int i = 0; i < 3; i++) {
+    cout << "*(arrPtr + " << i << ") = " << *(arrPtr + i) << endl;
+  }
 
-    return 0;
+  return 0;
 }
 `
     }
@@ -952,10 +952,10 @@ if [ $num -le 1 ]; then
 else
   for (( i=2; i*i<=num; i++ ))
   do
-    if [ $((num % i)) -eq 0 ]; then
-      isPrime=0
-      break
-    fi
+  if [ $((num % i)) -eq 0 ]; then
+    isPrime=0
+    break
+  fi
   done
 fi
 
@@ -1055,8 +1055,8 @@ head -n 2 /tmp/names.txt
   <meta charset="UTF-8">
   <title>Practical 1: HTML Headings</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
-    h1 { color: #0284c7; }
+  body { font-family: sans-serif; padding: 20px; line-height: 1.6; }
+  h1 { color: #0284c7; }
   </style>
 </head>
 <body>
@@ -1084,21 +1084,21 @@ head -n 2 /tmp/names.txt
   <meta charset="UTF-8">
   <title>Practical 2: Text Formatting</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    .box { background: #f8fafc; border: 1px solid #cbd5e1; padding: 15px; border-radius: 8px; }
+  body { font-family: sans-serif; padding: 20px; }
+  .box { background: #f8fafc; border: 1px solid #cbd5e1; padding: 15px; border-radius: 8px; }
   </style>
 </head>
 <body>
   <h2>Text Formatting Demonstration</h2>
   <div class="box">
-    <p><b>Bold text</b> using &lt;b&gt; tag</p>
-    <p><i>Italic text</i> using &lt;i&gt; tag</p>
-    <p><u>Underlined text</u> using &lt;u&gt; tag</p>
-    <p><mark>Highlighted / Marked text</mark> using &lt;mark&gt; tag</p>
-    <p><del>Strikethrough / Deleted text</del> using &lt;del&gt; tag</p>
-    <p>Chemical Formula for Water: H<sub>2</sub>O (Subscript)</p>
-    <p>Mathematical Equation: (a + b)<sup>2</sup> = a<sup>2</sup> + 2ab + b<sup>2</sup> (Superscript)</p>
-    <p><small>Small fine-print text</small> using &lt;small&gt; tag</p>
+  <p><b>Bold text</b> using &lt;b&gt; tag</p>
+  <p><i>Italic text</i> using &lt;i&gt; tag</p>
+  <p><u>Underlined text</u> using &lt;u&gt; tag</p>
+  <p><mark>Highlighted / Marked text</mark> using &lt;mark&gt; tag</p>
+  <p><del>Strikethrough / Deleted text</del> using &lt;del&gt; tag</p>
+  <p>Chemical Formula for Water: H<sub>2</sub>O (Subscript)</p>
+  <p>Mathematical Equation: (a + b)<sup>2</sup> = a<sup>2</sup> + 2ab + b<sup>2</sup> (Superscript)</p>
+  <p><small>Small fine-print text</small> using &lt;small&gt; tag</p>
   </div>
 </body>
 </html>
@@ -1116,16 +1116,16 @@ head -n 2 /tmp/names.txt
   <meta charset="UTF-8">
   <title>Practical 3: HTML Images</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; text-align: center; }
-    .img-card { display: inline-block; padding: 15px; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-    img { border-radius: 8px; max-width: 100%; height: auto; }
+  body { font-family: sans-serif; padding: 20px; text-align: center; }
+  .img-card { display: inline-block; padding: 15px; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+  img { border-radius: 8px; max-width: 100%; height: auto; }
   </style>
 </head>
 <body>
   <h2>Displaying Images in HTML</h2>
   <div class="img-card">
-    <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500" alt="Coding Laptop" width="400" height="250">
-    <p><b>Caption:</b> Modern Web Development with HTML5</p>
+  <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500" alt="Coding Laptop" width="400" height="250">
+  <p><b>Caption:</b> Modern Web Development with HTML5</p>
   </div>
 </body>
 </html>
@@ -1143,20 +1143,20 @@ head -n 2 /tmp/names.txt
   <meta charset="UTF-8">
   <title>Practical 4: Marquee Demo</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    .news-ticker { background: #0284c7; color: white; padding: 10px; font-weight: bold; border-radius: 6px; }
+  body { font-family: sans-serif; padding: 20px; }
+  .news-ticker { background: #0284c7; color: white; padding: 10px; font-weight: bold; border-radius: 6px; }
   </style>
 </head>
 <body>
   <h2>Scrolling Text Demonstration</h2>
   <div class="news-ticker">
-    <marquee behavior="scroll" direction="left" scrollamount="6">
-      📢 InfoGalaxy Computers: BCA Practical Batches Started! Guidance by Tahir Mansuri. Admissions open!
-    </marquee>
+  <marquee behavior="scroll" direction="left" scrollamount="6">
+    📢 InfoGalaxy Computers: BCA Practical Batches Started! Guidance by Tahir Mansuri. Admissions open!
+  </marquee>
   </div>
   <br>
   <marquee behavior="alternate" direction="right" scrollamount="4" style="background: #f1f5f9; padding: 8px; border: 1px solid #cbd5e1;">
-    ↔️ Bouncing Announcement Banner (Alternate Behavior)
+  ↔️ Bouncing Announcement Banner (Alternate Behavior)
   </marquee>
 </body>
 </html>
@@ -1174,39 +1174,39 @@ head -n 2 /tmp/names.txt
   <meta charset="UTF-8">
   <title>Practical 5: HTML Lists</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    .col { float: left; width: 45%; margin-right: 5%; }
+  body { font-family: sans-serif; padding: 20px; }
+  .col { float: left; width: 45%; margin-right: 5%; }
   </style>
 </head>
 <body>
   <h2>HTML Lists Demonstration</h2>
   <div class="col">
-    <h3>Ordered List (Semester Subjects)</h3>
-    <ol type="1">
-      <li>C++ Programming</li>
-      <li>Data Structures</li>
-      <li>Database Management Systems</li>
-      <li>Web Design-I</li>
-    </ol>
+  <h3>Ordered List (Semester Subjects)</h3>
+  <ol type="1">
+    <li>C++ Programming</li>
+    <li>Data Structures</li>
+    <li>Database Management Systems</li>
+    <li>Web Design-I</li>
+  </ol>
 
-    <h3>Unordered List (Web Technologies)</h3>
-    <ul type="square">
-      <li>HTML5</li>
-      <li>CSS3</li>
-      <li>JavaScript</li>
-    </ul>
+  <h3>Unordered List (Web Technologies)</h3>
+  <ul type="square">
+    <li>HTML5</li>
+    <li>CSS3</li>
+    <li>JavaScript</li>
+  </ul>
   </div>
 
   <div class="col">
-    <h3>Definition List (Web Terms)</h3>
-    <dl>
-      <dt><b>HTML</b></dt>
-      <dd>HyperText Markup Language used for structuring web pages.</dd>
-      <dt><b>CSS</b></dt>
-      <dd>Cascading Style Sheets used for styling document layout.</dd>
-      <dt><b>URL</b></dt>
-      <dd>Uniform Resource Locator indicating address of a web resource.</dd>
-    </dl>
+  <h3>Definition List (Web Terms)</h3>
+  <dl>
+    <dt><b>HTML</b></dt>
+    <dd>HyperText Markup Language used for structuring web pages.</dd>
+    <dt><b>CSS</b></dt>
+    <dd>Cascading Style Sheets used for styling document layout.</dd>
+    <dt><b>URL</b></dt>
+    <dd>Uniform Resource Locator indicating address of a web resource.</dd>
+  </dl>
   </div>
 </body>
 </html>
@@ -1224,10 +1224,10 @@ head -n 2 /tmp/names.txt
   <meta charset="UTF-8">
   <title>Practical 6: Hyperlinks</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    a { color: #0284c7; text-decoration: none; font-weight: bold; }
-    a:hover { text-decoration: underline; }
-    .section { height: 250px; padding: 20px; margin-top: 20px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; }
+  body { font-family: sans-serif; padding: 20px; }
+  a { color: #0284c7; text-decoration: none; font-weight: bold; }
+  a:hover { text-decoration: underline; }
+  .section { height: 250px; padding: 20px; margin-top: 20px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0; }
   </style>
 </head>
 <body>
@@ -1236,15 +1236,15 @@ head -n 2 /tmp/names.txt
   <p>External link: <a href="https://developer.mozilla.org" target="_blank">MDN Web Docs ↗</a></p>
 
   <div id="syllabus" class="section">
-    <h3>📚 Syllabus Section</h3>
-    <p>BCA Web Design-I covers HTML fundamentals, text formatting, forms, and tables.</p>
-    <a href="#">Back to top ↑</a>
+  <h3>📚 Syllabus Section</h3>
+  <p>BCA Web Design-I covers HTML fundamentals, text formatting, forms, and tables.</p>
+  <a href="#">Back to top ↑</a>
   </div>
 
   <div id="contact" class="section">
-    <h3>✉️ Contact Section</h3>
-    <p>Email: <a href="mailto:support@thinkcode.lab">support@thinkcode.lab</a></p>
-    <a href="#">Back to top ↑</a>
+  <h3>✉️ Contact Section</h3>
+  <p>Email: <a href="mailto:support@thinkcode.lab">support@thinkcode.lab</a></p>
+  <a href="#">Back to top ↑</a>
   </div>
 </body>
 </html>
@@ -1262,55 +1262,55 @@ head -n 2 /tmp/names.txt
   <meta charset="UTF-8">
   <title>Practical 7: College Timetable</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    th, td { border: 1px solid #cbd5e1; padding: 10px; text-align: center; }
-    th { background: #0284c7; color: white; }
-    .break { background: #fef08a; font-weight: bold; }
-    .lab { background: #e0f2fe; }
+  body { font-family: sans-serif; padding: 20px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+  th, td { border: 1px solid #cbd5e1; padding: 10px; text-align: center; }
+  th { background: #0284c7; color: white; }
+  .break { background: #fef08a; font-weight: bold; }
+  .lab { background: #e0f2fe; }
   </style>
 </head>
 <body>
   <h2>InfoGalaxy Computers - FYBCA Weekly Timetable</h2>
   <table>
-    <tr>
-      <th>Day / Time</th>
-      <th>09:00 - 10:00</th>
-      <th>10:00 - 11:00</th>
-      <th>11:00 - 11:30</th>
-      <th>11:30 - 01:30</th>
-    </tr>
-    <tr>
-      <th>Monday</th>
-      <td>C++ Theory</td>
-      <td>Web Design-I</td>
-      <td rowspan="5" class="break">R<br>E<br>C<br>E<br>S<br>S</td>
-      <td class="lab">C++ Lab (Batch A)</td>
-    </tr>
-    <tr>
-      <th>Tuesday</th>
-      <td>DBMS</td>
-      <td>Mathematics</td>
-      <td class="lab">HTML Lab (Batch B)</td>
-    </tr>
-    <tr>
-      <th>Wednesday</th>
-      <td>Web Design-I</td>
-      <td>C++ Theory</td>
-      <td class="lab">DBMS Lab (Batch A)</td>
-    </tr>
-    <tr>
-      <th>Thursday</th>
-      <td>Mathematics</td>
-      <td>Environmental Sci</td>
-      <td class="lab">C++ Lab (Batch B)</td>
-    </tr>
-    <tr>
-      <th>Friday</th>
-      <td>DBMS</td>
-      <td>C++ Theory</td>
-      <td class="lab">Project Guidance</td>
-    </tr>
+  <tr>
+    <th>Day / Time</th>
+    <th>09:00 - 10:00</th>
+    <th>10:00 - 11:00</th>
+    <th>11:00 - 11:30</th>
+    <th>11:30 - 01:30</th>
+  </tr>
+  <tr>
+    <th>Monday</th>
+    <td>C++ Theory</td>
+    <td>Web Design-I</td>
+    <td rowspan="5" class="break">R<br>E<br>C<br>E<br>S<br>S</td>
+    <td class="lab">C++ Lab (Batch A)</td>
+  </tr>
+  <tr>
+    <th>Tuesday</th>
+    <td>DBMS</td>
+    <td>Mathematics</td>
+    <td class="lab">HTML Lab (Batch B)</td>
+  </tr>
+  <tr>
+    <th>Wednesday</th>
+    <td>Web Design-I</td>
+    <td>C++ Theory</td>
+    <td class="lab">DBMS Lab (Batch A)</td>
+  </tr>
+  <tr>
+    <th>Thursday</th>
+    <td>Mathematics</td>
+    <td>Environmental Sci</td>
+    <td class="lab">C++ Lab (Batch B)</td>
+  </tr>
+  <tr>
+    <th>Friday</th>
+    <td>DBMS</td>
+    <td>C++ Theory</td>
+    <td class="lab">Project Guidance</td>
+  </tr>
   </table>
 </body>
 </html>
@@ -1328,27 +1328,27 @@ head -n 2 /tmp/names.txt
   <meta charset="UTF-8">
   <title>Practical 8: Multimedia</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; }
-    .media-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 20px; }
+  body { font-family: sans-serif; padding: 20px; }
+  .media-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 20px; }
   </style>
 </head>
 <body>
   <h2>HTML5 Audio & Video Players</h2>
 
   <div class="media-card">
-    <h3>🎵 Audio Player</h3>
-    <audio controls>
-      <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
-    </audio>
+  <h3>🎵 Audio Player</h3>
+  <audio controls>
+    <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
   </div>
 
   <div class="media-card">
-    <h3>🎬 Video Player</h3>
-    <video width="480" height="270" controls poster="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500">
-      <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-      Your browser does not support the video element.
-    </video>
+  <h3>🎬 Video Player</h3>
+  <video width="480" height="270" controls poster="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500">
+    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+    Your browser does not support the video element.
+  </video>
   </div>
 </body>
 </html>
@@ -1366,58 +1366,58 @@ head -n 2 /tmp/names.txt
   <meta charset="UTF-8">
   <title>Practical 9: Student Admission Form</title>
   <style>
-    body { font-family: sans-serif; padding: 20px; background: #f1f5f9; }
-    .form-container { max-width: 500px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-    .form-group { margin-bottom: 15px; }
-    label { display: block; font-weight: bold; margin-bottom: 5px; }
-    input[type=text], input[type=email], select, textarea { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; }
-    .btn { background: #0284c7; color: white; padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
+  body { font-family: sans-serif; padding: 20px; background: #f1f5f9; }
+  .form-container { max-width: 500px; margin: 0 auto; background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+  .form-group { margin-bottom: 15px; }
+  label { display: block; font-weight: bold; margin-bottom: 5px; }
+  input[type=text], input[type=email], select, textarea { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; }
+  .btn { background: #0284c7; color: white; padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
   </style>
 </head>
 <body>
   <div class="form-container">
-    <h2 style="text-align: center; color: #0284c7;">InfoGalaxy Computers - Admission Form</h2>
-    <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Admission Form Submitted Successfully!');">
-      <div class="form-group">
-        <label for="name">Full Name:</label>
-        <input type="text" id="name" placeholder="e.g. Tahir Mansuri" required>
-      </div>
+  <h2 style="text-align: center; color: #0284c7;">InfoGalaxy Computers - Admission Form</h2>
+  <form action="#" method="POST" onsubmit="event.preventDefault(); alert('Admission Form Submitted Successfully!');">
+    <div class="form-group">
+    <label for="name">Full Name:</label>
+    <input type="text" id="name" placeholder="e.g. Tahir Mansuri" required>
+    </div>
 
-      <div class="form-group">
-        <label for="email">Email Address:</label>
-        <input type="email" id="email" placeholder="tahir@infogalaxy.com" required>
-      </div>
+    <div class="form-group">
+    <label for="email">Email Address:</label>
+    <input type="email" id="email" placeholder="tahir@infogalaxy.com" required>
+    </div>
 
-      <div class="form-group">
-        <label>Gender:</label>
-        <input type="radio" id="male" name="gender" value="Male" checked> <label for="male" style="display:inline;">Male</label>
-        <input type="radio" id="female" name="gender" value="Female"> <label for="female" style="display:inline;">Female</label>
-      </div>
+    <div class="form-group">
+    <label>Gender:</label>
+    <input type="radio" id="male" name="gender" value="Male" checked> <label for="male" style="display:inline;">Male</label>
+    <input type="radio" id="female" name="gender" value="Female"> <label for="female" style="display:inline;">Female</label>
+    </div>
 
-      <div class="form-group">
-        <label for="course">Select Course:</label>
-        <select id="course">
-          <option value="BCA">Bachelor of Computer Applications (BCA)</option>
-          <option value="BSc-CS">B.Sc. Computer Science</option>
-          <option value="BSc-IT">B.Sc. Information Technology</option>
-        </select>
-      </div>
+    <div class="form-group">
+    <label for="course">Select Course:</label>
+    <select id="course">
+      <option value="BCA">Bachelor of Computer Applications (BCA)</option>
+      <option value="BSc-CS">B.Sc. Computer Science</option>
+      <option value="BSc-IT">B.Sc. Information Technology</option>
+    </select>
+    </div>
 
-      <div class="form-group">
-        <label>Languages Known:</label>
-        <input type="checkbox" id="lang1" value="English"> English
-        <input type="checkbox" id="lang2" value="Hindi"> Hindi
-        <input type="checkbox" id="lang3" value="Regional"> Gujarati / Marathi
-      </div>
+    <div class="form-group">
+    <label>Languages Known:</label>
+    <input type="checkbox" id="lang1" value="English"> English
+    <input type="checkbox" id="lang2" value="Hindi"> Hindi
+    <input type="checkbox" id="lang3" value="Regional"> Gujarati / Marathi
+    </div>
 
-      <div class="form-group">
-        <label for="address">Permanent Address:</label>
-        <textarea id="address" rows="3" placeholder="Enter complete address"></textarea>
-      </div>
+    <div class="form-group">
+    <label for="address">Permanent Address:</label>
+    <textarea id="address" rows="3" placeholder="Enter complete address"></textarea>
+    </div>
 
-      <button type="submit" class="btn">Submit Application</button>
-      <button type="reset" class="btn" style="background:#64748b;">Reset</button>
-    </form>
+    <button type="submit" class="btn">Submit Application</button>
+    <button type="reset" class="btn" style="background:#64748b;">Reset</button>
+  </form>
   </div>
 </body>
 </html>
@@ -1435,30 +1435,30 @@ head -n 2 /tmp/names.txt
   <meta charset="UTF-8">
   <title>Practical 10: CSS Styling</title>
   <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 25px; background: #e2e8f0; }
-    .card-container { display: flex; gap: 20px; justify-content: center; }
-    .card { background: white; padding: 20px; border-radius: 12px; width: 220px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); text-align: center; border-top: 5px solid #0284c7; }
-    .badge { display: inline-block; padding: 4px 10px; font-size: 12px; font-weight: bold; border-radius: 20px; background: #e0f2fe; color: #0369a1; }
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 25px; background: #e2e8f0; }
+  .card-container { display: flex; gap: 20px; justify-content: center; }
+  .card { background: white; padding: 20px; border-radius: 12px; width: 220px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); text-align: center; border-top: 5px solid #0284c7; }
+  .badge { display: inline-block; padding: 4px 10px; font-size: 12px; font-weight: bold; border-radius: 20px; background: #e0f2fe; color: #0369a1; }
   </style>
 </head>
 <body>
   <h2 style="text-align: center;">CSS Card Showcase</h2>
   <div class="card-container">
-    <div class="card">
-      <span class="badge">FYBCA</span>
-      <h3>Semester 1</h3>
-      <p>C++ & Web Design fundamentals.</p>
-    </div>
-    <div class="card" style="border-top-color: #10b981;">
-      <span class="badge" style="background: #d1fae5; color: #047857;">SYBCA</span>
-      <h3>Semester 3</h3>
-      <p>Python Programming & DBMS Oracle SQL.</p>
-    </div>
-    <div class="card" style="border-top-color: #f59e0b;">
-      <span class="badge" style="background: #fef3c7; color: #b45309;">TYBCA</span>
-      <h3>Semester 5</h3>
-      <p>Full-stack Web Dev & Cloud Computing.</p>
-    </div>
+  <div class="card">
+    <span class="badge">FYBCA</span>
+    <h3>Semester 1</h3>
+    <p>C++ & Web Design fundamentals.</p>
+  </div>
+  <div class="card" style="border-top-color: #10b981;">
+    <span class="badge" style="background: #d1fae5; color: #047857;">SYBCA</span>
+    <h3>Semester 3</h3>
+    <p>Python Programming & DBMS Oracle SQL.</p>
+  </div>
+  <div class="card" style="border-top-color: #f59e0b;">
+    <span class="badge" style="background: #fef3c7; color: #b45309;">TYBCA</span>
+    <h3>Semester 5</h3>
+    <p>Full-stack Web Dev & Cloud Computing.</p>
+  </div>
   </div>
 </body>
 </html>
@@ -1505,9 +1505,9 @@ console.log("Average Marks:", average.toFixed(2));
       code: `// Practical 2: Conditional Statements & Switch-Case
 let num = 28;
 if (num % 2 === 0) {
-    console.log(num + " is an EVEN number.");
+  console.log(num + " is an EVEN number.");
 } else {
-    console.log(num + " is an ODD number.");
+  console.log(num + " is an ODD number.");
 }
 
 // Day of week switch-case
@@ -1515,14 +1515,14 @@ let dayNumber = 3;
 let dayName = "";
 
 switch (dayNumber) {
-    case 1: dayName = "Monday"; break;
-    case 2: dayName = "Tuesday"; break;
-    case 3: dayName = "Wednesday"; break;
-    case 4: dayName = "Thursday"; break;
-    case 5: dayName = "Friday"; break;
-    case 6: dayName = "Saturday"; break;
-    case 7: dayName = "Sunday"; break;
-    default: dayName = "Invalid Day Number"; break;
+  case 1: dayName = "Monday"; break;
+  case 2: dayName = "Tuesday"; break;
+  case 3: dayName = "Wednesday"; break;
+  case 4: dayName = "Thursday"; break;
+  case 5: dayName = "Friday"; break;
+  case 6: dayName = "Saturday"; break;
+  case 7: dayName = "Sunday"; break;
+  default: dayName = "Invalid Day Number"; break;
 }
 console.log("Day " + dayNumber + " corresponds to: " + dayName);
 `
@@ -1537,7 +1537,7 @@ console.log("Day " + dayNumber + " corresponds to: " + dayName);
 let n = 7;
 console.log("--- Multiplication Table of " + n + " ---");
 for (let i = 1; i <= 10; i++) {
-    console.log(n + " x " + i + " = " + (n * i));
+  console.log(n + " x " + i + " = " + (n * i));
 }
 
 // Reverse a number using while loop
@@ -1546,9 +1546,9 @@ let temp = original;
 let rev = 0;
 
 while (temp > 0) {
-    let digit = temp % 10;
-    rev = rev * 10 + digit;
-    temp = Math.floor(temp / 10);
+  let digit = temp % 10;
+  rev = rev * 10 + digit;
+  temp = Math.floor(temp / 10);
 }
 console.log("\\nOriginal Number:", original);
 console.log("Reversed Number:", rev);
@@ -1604,16 +1604,16 @@ console.log("Current Date    :", now.getDate());
       desc: 'Demonstrates function declarations, expressions, arrow functions, and default parameters.',
       code: `// Practical 6: JavaScript Functions
 function calculateSimpleInterest(principal, rate, time = 1) {
-    return (principal * rate * time) / 100;
+  return (principal * rate * time) / 100;
 }
 
 // Arrow function syntax
 const isPrime = (num) => {
-    if (num <= 1) return false;
-    for (let i = 2; i * i <= num; i++) {
-        if (num % i === 0) return false;
-    }
-    return true;
+  if (num <= 1) return false;
+  for (let i = 2; i * i <= num; i++) {
+    if (num % i === 0) return false;
+  }
+  return true;
 };
 
 let p = 10000, r = 7.5, t = 3;
@@ -1669,12 +1669,12 @@ console.log("Average Score:", (totalScore / scores.length).toFixed(2));
 DROP TABLE IF EXISTS employees;
 
 CREATE TABLE employees (
-    emp_id INT PRIMARY KEY,
-    emp_name VARCHAR(50) NOT NULL,
-    designation VARCHAR(30),
-    department VARCHAR(30),
-    salary DECIMAL(10, 2),
-    hire_date DATE
+  emp_id INT PRIMARY KEY,
+  emp_name VARCHAR(50) NOT NULL,
+  designation VARCHAR(30),
+  department VARCHAR(30),
+  salary DECIMAL(10, 2),
+  hire_date DATE
 );
 
 INSERT INTO employees VALUES (101, 'Tahir Mansuri', 'Lead Architect', 'IT', 95000.00, '2020-01-15');
@@ -1761,11 +1761,11 @@ WHERE emp_name LIKE 'P%';
       desc: 'Computes overall and department-wise summary statistics on employee salaries.',
       code: `-- Practical 5: Aggregate Functions in SQL
 SELECT 
-    COUNT(*) AS total_employees,
-    SUM(salary) AS total_payroll,
-    AVG(salary) AS average_salary,
-    MIN(salary) AS minimum_salary,
-    MAX(salary) AS maximum_salary
+  COUNT(*) AS total_employees,
+  SUM(salary) AS total_payroll,
+  AVG(salary) AS average_salary,
+  MIN(salary) AS minimum_salary,
+  MAX(salary) AS maximum_salary
 FROM employees;
 `
     },
@@ -1778,10 +1778,10 @@ FROM employees;
       code: `-- Practical 6: GROUP BY and HAVING Clauses
 -- Department-wise summary: headcount and average salary
 SELECT 
-    department,
-    COUNT(*) AS num_employees,
-    AVG(salary) AS avg_salary,
-    SUM(salary) AS total_expense
+  department,
+  COUNT(*) AS num_employees,
+  AVG(salary) AS avg_salary,
+  SUM(salary) AS total_expense
 FROM employees
 GROUP BY department
 HAVING COUNT(*) >= 2
@@ -1799,10 +1799,10 @@ ORDER BY avg_salary DESC;
 DROP TABLE IF EXISTS departments;
 
 CREATE TABLE departments (
-    dept_id INT PRIMARY KEY,
-    dept_name VARCHAR(30),
-    organization VARCHAR(40),
-    location VARCHAR(50)
+  dept_id INT PRIMARY KEY,
+  dept_name VARCHAR(30),
+  organization VARCHAR(40),
+  location VARCHAR(50)
 );
 
 INSERT INTO departments VALUES (1, 'IT', 'InfoGalaxy Computers', 'Tech Park, Floor 4');
@@ -1812,12 +1812,12 @@ INSERT INTO departments VALUES (4, 'Marketing', 'InfoGalaxy Computers', 'Tower A
 
 -- INNER JOIN between Employees and Departments
 SELECT 
-    e.emp_id, 
-    e.emp_name, 
-    e.designation, 
-    d.organization,
-    d.dept_name, 
-    d.location
+  e.emp_id, 
+  e.emp_name, 
+  e.designation, 
+  d.organization,
+  d.dept_name, 
+  d.location
 FROM employees e
 INNER JOIN departments d ON e.department = d.dept_name;
 `
@@ -1856,21 +1856,21 @@ WHERE salary = (SELECT MAX(salary) FROM employees);
 #include <stdio.h>
 
 int main() {
-    printf("=== InfoGalaxy Computers - C Programming Lab ===\\n");
-    int a, b;
-    printf("Enter two integers: ");
-    scanf("%d %d", &a, &b);
+  printf("=== InfoGalaxy Computers - C Programming Lab ===\\n");
+  int a, b;
+  printf("Enter two integers: ");
+  scanf("%d %d", &a, &b);
 
-    printf("Sum        = %d\\n", a + b);
-    printf("Difference = %d\\n", a - b);
-    printf("Product    = %d\\n", a * b);
-    if (b != 0) {
-        printf("Quotient   = %.2f\\n", (float)a / b);
-        printf("Remainder  = %d\\n", a % b);
-    } else {
-        printf("Cannot divide by zero!\\n");
-    }
-    return 0;
+  printf("Sum        = %d\\n", a + b);
+  printf("Difference = %d\\n", a - b);
+  printf("Product    = %d\\n", a * b);
+  if (b != 0) {
+    printf("Quotient   = %.2f\\n", (float)a / b);
+    printf("Remainder  = %d\\n", a % b);
+  } else {
+    printf("Cannot divide by zero!\\n");
+  }
+  return 0;
 }
 `
     },
@@ -1884,16 +1884,16 @@ int main() {
 #include <stdio.h>
 
 int main() {
-    int year;
-    printf("Enter a year: ");
-    scanf("%d", &year);
+  int year;
+  printf("Enter a year: ");
+  scanf("%d", &year);
 
-    if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
-        printf("%d is a LEAP YEAR.\\n", year);
-    } else {
-        printf("%d is NOT a leap year.\\n", year);
-    }
-    return 0;
+  if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
+    printf("%d is a LEAP YEAR.\\n", year);
+  } else {
+    printf("%d is NOT a leap year.\\n", year);
+  }
+  return 0;
 }
 `
     },
@@ -1907,26 +1907,26 @@ int main() {
 #include <stdio.h>
 
 int main() {
-    int n, i;
-    long long fact = 1;
-    printf("Enter number for factorial: ");
-    scanf("%d", &n);
+  int n, i;
+  long long fact = 1;
+  printf("Enter number for factorial: ");
+  scanf("%d", &n);
 
-    for (i = 1; i <= n; i++) {
-        fact *= i;
-    }
-    printf("Factorial of %d = %lld\\n", n, fact);
+  for (i = 1; i <= n; i++) {
+    fact *= i;
+  }
+  printf("Factorial of %d = %lld\\n", n, fact);
 
-    printf("\\nFibonacci series up to 8 terms: ");
-    int t1 = 0, t2 = 1, next;
-    for (i = 1; i <= 8; i++) {
-        printf("%d ", t1);
-        next = t1 + t2;
-        t1 = t2;
-        t2 = next;
-    }
-    printf("\\n");
-    return 0;
+  printf("\\nFibonacci series up to 8 terms: ");
+  int t1 = 0, t2 = 1, next;
+  for (i = 1; i <= 8; i++) {
+    printf("%d ", t1);
+    next = t1 + t2;
+    t1 = t2;
+    t2 = next;
+  }
+  printf("\\n");
+  return 0;
 }
 `
     },
@@ -1940,21 +1940,21 @@ int main() {
 #include <stdio.h>
 
 int main() {
-    int arr[5] = {45, 12, 89, 32, 67};
-    int i, sum = 0, max = arr[0], min = arr[0];
+  int arr[5] = {45, 12, 89, 32, 67};
+  int i, sum = 0, max = arr[0], min = arr[0];
 
-    for (i = 0; i < 5; i++) {
-        sum += arr[i];
-        if (arr[i] > max) max = arr[i];
-        if (arr[i] < min) min = arr[i];
-    }
+  for (i = 0; i < 5; i++) {
+    sum += arr[i];
+    if (arr[i] > max) max = arr[i];
+    if (arr[i] < min) min = arr[i];
+  }
 
-    printf("Array Elements: 45, 12, 89, 32, 67\\n");
-    printf("Maximum: %d\\n", max);
-    printf("Minimum: %d\\n", min);
-    printf("Sum    : %d\\n", sum);
-    printf("Average: %.2f\\n", (float)sum / 5);
-    return 0;
+  printf("Array Elements: 45, 12, 89, 32, 67\\n");
+  printf("Maximum: %d\\n", max);
+  printf("Minimum: %d\\n", min);
+  printf("Sum    : %d\\n", sum);
+  printf("Average: %.2f\\n", (float)sum / 5);
+  return 0;
 }
 `
     }
@@ -1973,41 +1973,41 @@ int main() {
       code: `// Assignment 1: Write a Java program to display student information.
 // Course: TYBCA CA-315 | InfoGalaxy Computers
 public class Main {
-    public static void main(String[] args) {
-        String studentName = "Tahir Mansuri";
-        int rollNo = 301;
-        String collegeName = "InfoGalaxy Computers & IT Academy";
-        String course = "TYBCA (Semester V)";
-        double marksJava = 88.5;
-        double marksWeb = 84.0;
-        double marksDb = 92.5;
+  public static void main(String[] args) {
+    String studentName = "Tahir Mansuri";
+    int rollNo = 301;
+    String collegeName = "InfoGalaxy Computers & IT Academy";
+    String course = "TYBCA (Semester V)";
+    double marksJava = 88.5;
+    double marksWeb = 84.0;
+    double marksDb = 92.5;
 
-        double totalMarks = marksJava + marksWeb + marksDb;
-        double percentage = totalMarks / 3.0;
+    double totalMarks = marksJava + marksWeb + marksDb;
+    double percentage = totalMarks / 3.0;
 
-        System.out.println("==========================================");
-        System.out.println("       STUDENT INFORMATION REPORT         ");
-        System.out.println("==========================================");
-        System.out.println("Roll Number  : " + rollNo);
-        System.out.println("Student Name : " + studentName);
-        System.out.println("College Name : " + collegeName);
-        System.out.println("Course Title : " + course);
-        System.out.println("------------------------------------------");
-        System.out.println("Java Marks   : " + marksJava + " / 100");
-        System.out.println("Web Tech     : " + marksWeb + " / 100");
-        System.out.println("Database     : " + marksDb + " / 100");
-        System.out.println("Total Marks  : " + totalMarks + " / 300");
-        System.out.printf("Percentage   : %.2f%%\\n", percentage);
+    System.out.println("==========================================");
+    System.out.println("       STUDENT INFORMATION REPORT         ");
+    System.out.println("==========================================");
+    System.out.println("Roll Number  : " + rollNo);
+    System.out.println("Student Name : " + studentName);
+    System.out.println("College Name : " + collegeName);
+    System.out.println("Course Title : " + course);
+    System.out.println("------------------------------------------");
+    System.out.println("Java Marks   : " + marksJava + " / 100");
+    System.out.println("Web Tech     : " + marksWeb + " / 100");
+    System.out.println("Database     : " + marksDb + " / 100");
+    System.out.println("Total Marks  : " + totalMarks + " / 300");
+    System.out.printf("Percentage   : %.2f%%\\n", percentage);
 
-        if (percentage >= 70) {
-            System.out.println("Final Grade  : Distinction (Grade A+)");
-        } else if (percentage >= 60) {
-            System.out.println("Final Grade  : First Class (Grade A)");
-        } else {
-            System.out.println("Final Grade  : Second Class (Grade B)");
-        }
-        System.out.println("==========================================");
+    if (percentage >= 70) {
+      System.out.println("Final Grade  : Distinction (Grade A+)");
+    } else if (percentage >= 60) {
+      System.out.println("Final Grade  : First Class (Grade A)");
+    } else {
+      System.out.println("Final Grade  : Second Class (Grade B)");
     }
+    System.out.println("==========================================");
+  }
 }
 `
     },
@@ -2022,67 +2022,67 @@ public class Main {
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+  public static void main(String[] args) {
+    Scanner sc = new Scanner(System.in);
 
-        System.out.println("=== Menu-Driven Arithmetic Calculator ===");
-        System.out.println("1. Addition (+)");
-        System.out.println("2. Subtraction (-)");
-        System.out.println("3. Multiplication (*)");
-        System.out.println("4. Division (/)");
-        System.out.println("5. Modulus (%)");
-        System.out.print("Enter your choice (1-5): ");
-        int choice = sc.nextInt();
+    System.out.println("=== Menu-Driven Arithmetic Calculator ===");
+    System.out.println("1. Addition (+)");
+    System.out.println("2. Subtraction (-)");
+    System.out.println("3. Multiplication (*)");
+    System.out.println("4. Division (/)");
+    System.out.println("5. Modulus (%)");
+    System.out.print("Enter your choice (1-5): ");
+    int choice = sc.nextInt();
 
-        System.out.print("Enter first number: ");
-        double num1 = sc.nextDouble();
+    System.out.print("Enter first number: ");
+    double num1 = sc.nextDouble();
 
-        System.out.print("Enter second number: ");
-        double num2 = sc.nextDouble();
+    System.out.print("Enter second number: ");
+    double num2 = sc.nextDouble();
 
-        double result = 0;
-        boolean valid = true;
+    double result = 0;
+    boolean valid = true;
 
-        switch (choice) {
-            case 1:
-                result = num1 + num2;
-                System.out.println("\\nResult: " + num1 + " + " + num2 + " = " + result);
-                break;
-            case 2:
-                result = num1 - num2;
-                System.out.println("\\nResult: " + num1 + " - " + num2 + " = " + result);
-                break;
-            case 3:
-                result = num1 * num2;
-                System.out.println("\\nResult: " + num1 + " * " + num2 + " = " + result);
-                break;
-            case 4:
-                if (num2 != 0) {
-                    result = num1 / num2;
-                    System.out.println("\\nResult: " + num1 + " / " + num2 + " = " + result);
-                } else {
-                    System.out.println("\\nError: Division by zero is not allowed!");
-                    valid = false;
-                }
-                break;
-            case 5:
-                if (num2 != 0) {
-                    result = num1 % num2;
-                    System.out.println("\\nResult: " + num1 + " % " + num2 + " = " + result);
-                } else {
-                    System.out.println("\\nError: Modulo by zero is not allowed!");
-                    valid = false;
-                }
-                break;
-            default:
-                System.out.println("\\nInvalid choice! Please select between 1 and 5.");
-                valid = false;
+    switch (choice) {
+      case 1:
+        result = num1 + num2;
+        System.out.println("\\nResult: " + num1 + " + " + num2 + " = " + result);
+        break;
+      case 2:
+        result = num1 - num2;
+        System.out.println("\\nResult: " + num1 + " - " + num2 + " = " + result);
+        break;
+      case 3:
+        result = num1 * num2;
+        System.out.println("\\nResult: " + num1 + " * " + num2 + " = " + result);
+        break;
+      case 4:
+        if (num2 != 0) {
+          result = num1 / num2;
+          System.out.println("\\nResult: " + num1 + " / " + num2 + " = " + result);
+        } else {
+          System.out.println("\\nError: Division by zero is not allowed!");
+          valid = false;
         }
-
-        if (valid) {
-            System.out.println("✓ Calculation completed successfully.");
+        break;
+      case 5:
+        if (num2 != 0) {
+          result = num1 % num2;
+          System.out.println("\\nResult: " + num1 + " % " + num2 + " = " + result);
+        } else {
+          System.out.println("\\nError: Modulo by zero is not allowed!");
+          valid = false;
         }
+        break;
+      default:
+        System.out.println("\\nInvalid choice! Please select between 1 and 5.");
+        valid = false;
     }
+
+    if (valid) {
+      System.out.println("✓ Calculation completed successfully.");
+    }
+  }
 }
 `
     },
@@ -2097,38 +2097,38 @@ public class Main {
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+  public static void main(String[] args) {
+    Scanner sc = new Scanner(System.in);
 
-        System.out.print("Enter number of elements in array: ");
-        int n = sc.nextInt();
+    System.out.print("Enter number of elements in array: ");
+    int n = sc.nextInt();
 
-        int[] arr = new int[n];
-        System.out.println("Enter " + n + " elements:");
-        for (int i = 0; i < n; i++) {
-            arr[i] = sc.nextInt();
-        }
-
-        int max = arr[0];
-        int min = arr[0];
-        int sum = 0;
-
-        for (int i = 0; i < n; i++) {
-            if (arr[i] > max) max = arr[i];
-            if (arr[i] < min) min = arr[i];
-            sum += arr[i];
-        }
-
-        System.out.println("\\n--- Array Analysis Results ---");
-        System.out.print("Array Elements : ");
-        for (int x : arr) {
-            System.out.print(x + " ");
-        }
-        System.out.println("\\nLargest Element: " + max);
-        System.out.println("Smallest Element: " + min);
-        System.out.println("Sum of Elements : " + sum);
-        System.out.printf("Average Value   : %.2f\\n", (double)sum / n);
+    int[] arr = new int[n];
+    System.out.println("Enter " + n + " elements:");
+    for (int i = 0; i < n; i++) {
+      arr[i] = sc.nextInt();
     }
+
+    int max = arr[0];
+    int min = arr[0];
+    int sum = 0;
+
+    for (int i = 0; i < n; i++) {
+      if (arr[i] > max) max = arr[i];
+      if (arr[i] < min) min = arr[i];
+      sum += arr[i];
+    }
+
+    System.out.println("\\n--- Array Analysis Results ---");
+    System.out.print("Array Elements : ");
+    for (int x : arr) {
+      System.out.print(x + " ");
+    }
+    System.out.println("\\nLargest Element: " + max);
+    System.out.println("Smallest Element: " + min);
+    System.out.println("Sum of Elements : " + sum);
+    System.out.printf("Average Value   : %.2f\\n", (double)sum / n);
+  }
 }
 `
     },
@@ -2141,28 +2141,28 @@ public class Main {
       code: `// Assignment 4: Write a Java program using command line arguments.
 // Course: TYBCA CA-315
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("=== Command Line Arguments Processing ===");
-        System.out.println("Total arguments received: " + args.length);
-        System.out.println("------------------------------------------");
+  public static void main(String[] args) {
+    System.out.println("=== Command Line Arguments Processing ===");
+    System.out.println("Total arguments received: " + args.length);
+    System.out.println("------------------------------------------");
 
-        if (args.length == 0) {
-            System.out.println("No command line arguments supplied.");
-            System.out.println("Example usage: java Main Arg1 Arg2 Arg3");
-            return;
-        }
-
-        for (int i = 0; i < args.length; i++) {
-            System.out.println("args[" + i + "] = " + args[i]);
-        }
-
-        System.out.println("------------------------------------------");
-        System.out.println("First Argument : " + args[0]);
-        if (args.length > 1) {
-            System.out.println("Second Argument: " + args[1]);
-        }
-        System.out.println("✓ Command line arguments parsed successfully!");
+    if (args.length == 0) {
+      System.out.println("No command line arguments supplied.");
+      System.out.println("Example usage: java Main Arg1 Arg2 Arg3");
+      return;
     }
+
+    for (int i = 0; i < args.length; i++) {
+      System.out.println("args[" + i + "] = " + args[i]);
+    }
+
+    System.out.println("------------------------------------------");
+    System.out.println("First Argument : " + args[0]);
+    if (args.length > 1) {
+      System.out.println("Second Argument: " + args[1]);
+    }
+    System.out.println("✓ Command line arguments parsed successfully!");
+  }
 }
 `
     },
@@ -2177,32 +2177,32 @@ public class Main {
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+  public static void main(String[] args) {
+    Scanner sc = new Scanner(System.in);
 
-        System.out.println("=== Student Registration (Scanner Input) ===");
-        System.out.print("Enter Student Full Name: ");
-        String name = sc.nextLine();
+    System.out.println("=== Student Registration (Scanner Input) ===");
+    System.out.print("Enter Student Full Name: ");
+    String name = sc.nextLine();
 
-        System.out.print("Enter Age: ");
-        int age = sc.nextInt();
+    System.out.print("Enter Age: ");
+    int age = sc.nextInt();
 
-        System.out.print("Enter Course Fees Paid (₹): ");
-        double fees = sc.nextDouble();
+    System.out.print("Enter Course Fees Paid (₹): ");
+    double fees = sc.nextDouble();
 
-        System.out.print("Is Hostel Facility Required? (true/false): ");
-        boolean isHostel = sc.nextBoolean();
+    System.out.print("Is Hostel Facility Required? (true/false): ");
+    boolean isHostel = sc.nextBoolean();
 
-        System.out.println("\\n==========================================");
-        System.out.println("        REGISTRATION CONFIRMATION         ");
-        System.out.println("==========================================");
-        System.out.println("Student Name : " + name);
-        System.out.println("Age          : " + age + " years");
-        System.out.printf("Fees Paid    : ₹%.2f\\n", fees);
-        System.out.println("Hostel Opted : " + (isHostel ? "YES" : "NO"));
-        System.out.println("Status       : Enrolled at InfoGalaxy Computers");
-        System.out.println("==========================================");
-    }
+    System.out.println("\\n==========================================");
+    System.out.println("        REGISTRATION CONFIRMATION         ");
+    System.out.println("==========================================");
+    System.out.println("Student Name : " + name);
+    System.out.println("Age          : " + age + " years");
+    System.out.printf("Fees Paid    : ₹%.2f\\n", fees);
+    System.out.println("Hostel Opted : " + (isHostel ? "YES" : "NO"));
+    System.out.println("Status       : Enrolled at InfoGalaxy Computers");
+    System.out.println("==========================================");
+  }
 }
 `
     },
@@ -2215,56 +2215,56 @@ public class Main {
       code: `// Assignment 6: Write a Java program to demonstrate the use of constructors and methods.
 // Course: TYBCA CA-315 | Featuring Prerana Pawar
 class Employee {
-    int empId;
-    String empName;
-    String designation;
-    double salary;
+  int empId;
+  String empName;
+  String designation;
+  double salary;
 
-    // Default constructor
-    Employee() {
-        this.empId = 100;
-        this.empName = "Trainee Intern";
-        this.designation = "Associate";
-        this.salary = 25000.0;
-    }
+  // Default constructor
+  Employee() {
+    this.empId = 100;
+    this.empName = "Trainee Intern";
+    this.designation = "Associate";
+    this.salary = 25000.0;
+  }
 
-    // Parameterized constructor
-    Employee(int id, String name, String desig, double sal) {
-        this.empId = id;
-        this.empName = name;
-        this.designation = desig;
-        this.salary = sal;
-    }
+  // Parameterized constructor
+  Employee(int id, String name, String desig, double sal) {
+    this.empId = id;
+    this.empName = name;
+    this.designation = desig;
+    this.salary = sal;
+  }
 
-    // Member method to calculate annual bonus (10%)
-    double calculateBonus() {
-        return this.salary * 0.10;
-    }
+  // Member method to calculate annual bonus (10%)
+  double calculateBonus() {
+    return this.salary * 0.10;
+  }
 
-    // Member method to display employee details
-    void displayEmployee() {
-        System.out.println("Employee ID   : " + empId);
-        System.out.println("Employee Name : " + empName);
-        System.out.println("Designation   : " + designation);
-        System.out.println("Monthly Salary: ₹" + salary);
-        System.out.println("Annual Bonus  : ₹" + calculateBonus());
-        System.out.println("------------------------------------------");
-    }
+  // Member method to display employee details
+  void displayEmployee() {
+    System.out.println("Employee ID   : " + empId);
+    System.out.println("Employee Name : " + empName);
+    System.out.println("Designation   : " + designation);
+    System.out.println("Monthly Salary: ₹" + salary);
+    System.out.println("Annual Bonus  : ₹" + calculateBonus());
+    System.out.println("------------------------------------------");
+  }
 }
 
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("=== Employee Records (Constructors & Methods) ===");
-        System.out.println("------------------------------------------");
+  public static void main(String[] args) {
+    System.out.println("=== Employee Records (Constructors & Methods) ===");
+    System.out.println("------------------------------------------");
 
-        // Invoking default constructor
-        Employee emp1 = new Employee();
-        emp1.displayEmployee();
+    // Invoking default constructor
+    Employee emp1 = new Employee();
+    emp1.displayEmployee();
 
-        // Invoking parameterized constructor
-        Employee emp2 = new Employee(201, "Prerana Pawar", "Software Developer", 72000.0);
-        emp2.displayEmployee();
-    }
+    // Invoking parameterized constructor
+    Employee emp2 = new Employee(201, "Prerana Pawar", "Software Developer", 72000.0);
+    emp2.displayEmployee();
+  }
 }
 `
     },
@@ -2277,40 +2277,40 @@ public class Main {
       code: `// Assignment 7: Write a Java program to demonstrate method overloading.
 // Course: TYBCA CA-315
 class AreaService {
-    // 1. Area of Square (1 parameter - side)
-    double area(double side) {
-        return side * side;
-    }
+  // 1. Area of Square (1 parameter - side)
+  double area(double side) {
+    return side * side;
+  }
 
-    // 2. Area of Rectangle (2 parameters - length, breadth)
-    double area(double length, double breadth) {
-        return length * breadth;
-    }
+  // 2. Area of Rectangle (2 parameters - length, breadth)
+  double area(double length, double breadth) {
+    return length * breadth;
+  }
 
-    // 3. Area of Triangle (3 parameters - base, height, flag)
-    double area(double base, double height, boolean isTriangle) {
-        return 0.5 * base * height;
-    }
+  // 3. Area of Triangle (3 parameters - base, height, flag)
+  double area(double base, double height, boolean isTriangle) {
+    return 0.5 * base * height;
+  }
 
-    // 4. Area of Circle (radius with float type)
-    double area(float radius) {
-        return Math.PI * radius * radius;
-    }
+  // 4. Area of Circle (radius with float type)
+  double area(float radius) {
+    return Math.PI * radius * radius;
+  }
 }
 
 public class Main {
-    public static void main(String[] args) {
-        AreaService svc = new AreaService();
+  public static void main(String[] args) {
+    AreaService svc = new AreaService();
 
-        System.out.println("=== Method Overloading Demonstration ===");
-        System.out.println("------------------------------------------");
-        System.out.println("Area of Square (side: 5.0)       = " + svc.area(5.0));
-        System.out.println("Area of Rectangle (8.0 x 4.0)    = " + svc.area(8.0, 4.0));
-        System.out.println("Area of Triangle (base:6, ht:5)  = " + svc.area(6.0, 5.0, true));
-        System.out.printf("Area of Circle (radius: 3.5)     = %.2f\\n", svc.area(3.5f));
-        System.out.println("------------------------------------------");
-        System.out.println("✓ Same method name 'area' resolved with distinct signatures.");
-    }
+    System.out.println("=== Method Overloading Demonstration ===");
+    System.out.println("------------------------------------------");
+    System.out.println("Area of Square (side: 5.0)       = " + svc.area(5.0));
+    System.out.println("Area of Rectangle (8.0 x 4.0)    = " + svc.area(8.0, 4.0));
+    System.out.println("Area of Triangle (base:6, ht:5)  = " + svc.area(6.0, 5.0, true));
+    System.out.printf("Area of Circle (radius: 3.5)     = %.2f\\n", svc.area(3.5f));
+    System.out.println("------------------------------------------");
+    System.out.println("✓ Same method name 'area' resolved with distinct signatures.");
+  }
 }
 `
     },
@@ -2323,61 +2323,61 @@ public class Main {
       code: `// Assignment 8: Write a Java program to demonstrate the concept of inheritance.
 // Course: TYBCA CA-315 | Student: Sandesh Marathe
 class Person {
-    String name;
-    int age;
+  String name;
+  int age;
 
-    Person(String name, int age) {
-        this.name = name;
-        this.age = age;
-    }
+  Person(String name, int age) {
+    this.name = name;
+    this.age = age;
+  }
 
-    void displayPerson() {
-        System.out.println("Name         : " + name);
-        System.out.println("Age          : " + age + " years");
-    }
+  void displayPerson() {
+    System.out.println("Name         : " + name);
+    System.out.println("Age          : " + age + " years");
+  }
 }
 
 class Student extends Person {
-    int rollNo;
-    String course;
+  int rollNo;
+  String course;
 
-    Student(String name, int age, int rollNo, String course) {
-        super(name, age);
-        this.rollNo = rollNo;
-        this.course = course;
-    }
+  Student(String name, int age, int rollNo, String course) {
+    super(name, age);
+    this.rollNo = rollNo;
+    this.course = course;
+  }
 
-    void displayStudent() {
-        super.displayPerson();
-        System.out.println("Roll Number  : " + rollNo);
-        System.out.println("Course Title : " + course);
-    }
+  void displayStudent() {
+    super.displayPerson();
+    System.out.println("Roll Number  : " + rollNo);
+    System.out.println("Course Title : " + course);
+  }
 }
 
 class DepartmentLeader extends Student {
-    String role;
+  String role;
 
-    DepartmentLeader(String name, int age, int rollNo, String course, String role) {
-        super(name, age, rollNo, course);
-        this.role = role;
-    }
+  DepartmentLeader(String name, int age, int rollNo, String course, String role) {
+    super(name, age, rollNo, course);
+    this.role = role;
+  }
 
-    void displayLeader() {
-        super.displayStudent();
-        System.out.println("Campus Role  : " + role);
-        System.out.println("Institute    : InfoGalaxy Computers");
-    }
+  void displayLeader() {
+    super.displayStudent();
+    System.out.println("Campus Role  : " + role);
+    System.out.println("Institute    : InfoGalaxy Computers");
+  }
 }
 
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("=== Multilevel Inheritance in Java ===");
-        System.out.println("------------------------------------------");
+  public static void main(String[] args) {
+    System.out.println("=== Multilevel Inheritance in Java ===");
+    System.out.println("------------------------------------------");
 
-        DepartmentLeader leader = new DepartmentLeader("Sandesh Marathe", 21, 305, "TYBCA (Computer Science)", "Student General Secretary");
-        leader.displayLeader();
-        System.out.println("------------------------------------------");
-    }
+    DepartmentLeader leader = new DepartmentLeader("Sandesh Marathe", 21, 305, "TYBCA (Computer Science)", "Student General Secretary");
+    leader.displayLeader();
+    System.out.println("------------------------------------------");
+  }
 }
 `
     },
@@ -2390,44 +2390,44 @@ public class Main {
       code: `// Assignment 9: Write a Java program to demonstrate method overriding.
 // Course: TYBCA CA-315
 class Bank {
-    double getInterestRate() {
-        return 0.0;
-    }
+  double getInterestRate() {
+    return 0.0;
+  }
 }
 
 class SBI extends Bank {
-    double getInterestRate() {
-        return 6.75;
-    }
+  double getInterestRate() {
+    return 6.75;
+  }
 }
 
 class HDFC extends Bank {
-    double getInterestRate() {
-        return 7.25;
-    }
+  double getInterestRate() {
+    return 7.25;
+  }
 }
 
 class ICICI extends Bank {
-    double getInterestRate() {
-        return 7.10;
-    }
+  double getInterestRate() {
+    return 7.10;
+  }
 }
 
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("=== Runtime Polymorphism: Method Overriding ===");
-        System.out.println("------------------------------------------");
+  public static void main(String[] args) {
+    System.out.println("=== Runtime Polymorphism: Method Overriding ===");
+    System.out.println("------------------------------------------");
 
-        Bank b1 = new SBI();
-        Bank b2 = new HDFC();
-        Bank b3 = new ICICI();
+    Bank b1 = new SBI();
+    Bank b2 = new HDFC();
+    Bank b3 = new ICICI();
 
-        System.out.println("SBI Bank Interest Rate   : " + b1.getInterestRate() + "% per annum");
-        System.out.println("HDFC Bank Interest Rate  : " + b2.getInterestRate() + "% per annum");
-        System.out.println("ICICI Bank Interest Rate : " + b3.getInterestRate() + "% per annum");
-        System.out.println("------------------------------------------");
-        System.out.println("✓ Subclasses overridden method invoked via parent references.");
-    }
+    System.out.println("SBI Bank Interest Rate   : " + b1.getInterestRate() + "% per annum");
+    System.out.println("HDFC Bank Interest Rate  : " + b2.getInterestRate() + "% per annum");
+    System.out.println("ICICI Bank Interest Rate : " + b3.getInterestRate() + "% per annum");
+    System.out.println("------------------------------------------");
+    System.out.println("✓ Subclasses overridden method invoked via parent references.");
+  }
 }
 `
     },
@@ -2440,61 +2440,61 @@ public class Main {
       code: `// Assignment 10: Write a Java Program to Demonstrate the Use of Interface in Java by Implementing Shape Area Calculation.
 // Course: TYBCA CA-315
 interface Shape {
-    double calculateArea();
-    void displayShape();
+  double calculateArea();
+  void displayShape();
 }
 
 class Rectangle implements Shape {
-    double length;
-    double breadth;
+  double length;
+  double breadth;
 
-    Rectangle(double l, double b) {
-        this.length = l;
-        this.breadth = b;
-    }
+  Rectangle(double l, double b) {
+    this.length = l;
+    this.breadth = b;
+  }
 
-    public double calculateArea() {
-        return length * breadth;
-    }
+  public double calculateArea() {
+    return length * breadth;
+  }
 
-    public void displayShape() {
-        System.out.println("Shape Type  : Rectangle");
-        System.out.println("Dimensions  : Length = " + length + ", Breadth = " + breadth);
-        System.out.println("Area        : " + calculateArea() + " sq. units");
-        System.out.println("------------------------------------------");
-    }
+  public void displayShape() {
+    System.out.println("Shape Type  : Rectangle");
+    System.out.println("Dimensions  : Length = " + length + ", Breadth = " + breadth);
+    System.out.println("Area        : " + calculateArea() + " sq. units");
+    System.out.println("------------------------------------------");
+  }
 }
 
 class Circle implements Shape {
-    double radius;
+  double radius;
 
-    Circle(double r) {
-        this.radius = r;
-    }
+  Circle(double r) {
+    this.radius = r;
+  }
 
-    public double calculateArea() {
-        return Math.PI * radius * radius;
-    }
+  public double calculateArea() {
+    return Math.PI * radius * radius;
+  }
 
-    public void displayShape() {
-        System.out.println("Shape Type  : Circle");
-        System.out.println("Radius      : " + radius);
-        System.out.printf("Area        : %.2f sq. units\\n", calculateArea());
-        System.out.println("------------------------------------------");
-    }
+  public void displayShape() {
+    System.out.println("Shape Type  : Circle");
+    System.out.println("Radius      : " + radius);
+    System.out.printf("Area        : %.2f sq. units\\n", calculateArea());
+    System.out.println("------------------------------------------");
+  }
 }
 
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("=== Interface Implementation in Java ===");
-        System.out.println("------------------------------------------");
+  public static void main(String[] args) {
+    System.out.println("=== Interface Implementation in Java ===");
+    System.out.println("------------------------------------------");
 
-        Shape rect = new Rectangle(12.0, 7.5);
-        Shape circ = new Circle(5.0);
+    Shape rect = new Rectangle(12.0, 7.5);
+    Shape circ = new Circle(5.0);
 
-        rect.displayShape();
-        circ.displayShape();
-    }
+    rect.displayShape();
+    circ.displayShape();
+  }
 }
 `
     },
@@ -2507,35 +2507,35 @@ public class Main {
       code: `// Assignment 11: Write a Java Program for String Manipulation Operations.
 // Course: TYBCA CA-315
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("=== String Manipulation Operations ===");
-        System.out.println("------------------------------------------");
+  public static void main(String[] args) {
+    System.out.println("=== String Manipulation Operations ===");
+    System.out.println("------------------------------------------");
 
-        String str1 = "InfoGalaxy Computers";
-        String str2 = "infogalaxy computers";
-        String str3 = "  Java Programming  ";
+    String str1 = "InfoGalaxy Computers";
+    String str2 = "infogalaxy computers";
+    String str3 = "  Java Programming  ";
 
-        System.out.println("Original String 1   : \\"" + str1 + "\\"");
-        System.out.println("Length of String 1  : " + str1.length);
-        System.out.println("Character at index 4: '" + str1.charAt(4) + "'");
-        System.out.println("Substring (0, 10)   : \\"" + str1.substring(0, 10) + "\\"");
-        System.out.println("To Uppercase        : \\"" + str1.toUpperCase() + "\\"");
-        System.out.println("To Lowercase        : \\"" + str1.toLowerCase() + "\\"");
-        System.out.println("Trimmed String 3    : \\"" + str3.trim() + "\\"");
-        System.out.println("Equals (Exact)      : " + str1.equals(str2));
-        System.out.println("Equals (Ignore Case): " + str1.equalsIgnoreCase(str2));
+    System.out.println("Original String 1   : \\"" + str1 + "\\"");
+    System.out.println("Length of String 1  : " + str1.length);
+    System.out.println("Character at index 4: '" + str1.charAt(4) + "'");
+    System.out.println("Substring (0, 10)   : \\"" + str1.substring(0, 10) + "\\"");
+    System.out.println("To Uppercase        : \\"" + str1.toUpperCase() + "\\"");
+    System.out.println("To Lowercase        : \\"" + str1.toLowerCase() + "\\"");
+    System.out.println("Trimmed String 3    : \\"" + str3.trim() + "\\"");
+    System.out.println("Equals (Exact)      : " + str1.equals(str2));
+    System.out.println("Equals (Ignore Case): " + str1.equalsIgnoreCase(str2));
 
-        System.out.println("\\n--- StringBuffer (Mutable String) ---");
-        StringBuffer sb = new StringBuffer("ThinkCode");
-        System.out.println("Initial Buffer      : " + sb.toString());
+    System.out.println("\\n--- StringBuffer (Mutable String) ---");
+    StringBuffer sb = new StringBuffer("ThinkCode");
+    System.out.println("Initial Buffer      : " + sb.toString());
 
-        sb.append(" Lab IDE");
-        System.out.println("After append()      : " + sb.toString());
+    sb.append(" Lab IDE");
+    System.out.println("After append()      : " + sb.toString());
 
-        sb.reverse();
-        System.out.println("After reverse()     : " + sb.toString());
-        System.out.println("Buffer Length       : " + sb.length);
-    }
+    sb.reverse();
+    System.out.println("After reverse()     : " + sb.toString());
+    System.out.println("Buffer Length       : " + sb.length);
+  }
 }
 `
     },
@@ -2550,30 +2550,30 @@ public class Main {
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+  public static void main(String[] args) {
+    Scanner sc = new Scanner(System.in);
 
-        System.out.println("=== Exception Handling (try-catch-finally) ===");
-        System.out.print("Enter Numerator (A)   : ");
-        int a = sc.nextInt();
+    System.out.println("=== Exception Handling (try-catch-finally) ===");
+    System.out.print("Enter Numerator (A)   : ");
+    int a = sc.nextInt();
 
-        System.out.print("Enter Denominator (B) : ");
-        int b = sc.nextInt();
+    System.out.print("Enter Denominator (B) : ");
+    int b = sc.nextInt();
 
-        try {
-            System.out.println("\\n[try block] Attempting division (" + a + " / " + b + ")...");
-            if (b == 0) {
-                throw new Exception("ArithmeticException: Division by zero is mathematically undefined!");
-            }
-            int result = a / b;
-            System.out.println("✓ Result: " + a + " / " + b + " = " + result);
-        } catch (Exception e) {
-            System.out.println("[catch block] ✗ Error Handled: " + e.getMessage());
-        } finally {
-            System.out.println("[finally block] Cleanup complete. Scanner resource safely closed.");
-            System.out.println("✓ Execution flow continues without crashing.");
-        }
+    try {
+      System.out.println("\\n[try block] Attempting division (" + a + " / " + b + ")...");
+      if (b == 0) {
+        throw new Exception("ArithmeticException: Division by zero is mathematically undefined!");
+      }
+      int result = a / b;
+      System.out.println("✓ Result: " + a + " / " + b + " = " + result);
+    } catch (Exception e) {
+      System.out.println("[catch block] ✗ Error Handled: " + e.getMessage());
+    } finally {
+      System.out.println("[finally block] Cleanup complete. Scanner resource safely closed.");
+      System.out.println("✓ Execution flow continues without crashing.");
     }
+  }
 }
 `
     },
@@ -2589,42 +2589,42 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Main {
-    public static void main(String[] args) {
-        // Create Swing Window
-        JFrame frame = new JFrame("Simple Calculator — ThinkCode Lab");
-        frame.setSize(350, 450);
-        frame.setLayout(new BorderLayout());
+  public static void main(String[] args) {
+    // Create Swing Window
+    JFrame frame = new JFrame("Simple Calculator — ThinkCode Lab");
+    frame.setSize(350, 450);
+    frame.setLayout(new BorderLayout());
 
-        // Display screen
-        JTextField display = new JTextField("0");
-        frame.add(display, BorderLayout.NORTH);
+    // Display screen
+    JTextField display = new JTextField("0");
+    frame.add(display, BorderLayout.NORTH);
 
-        // Buttons Panel with GridLayout
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(4, 4));
+    // Buttons Panel with GridLayout
+    JPanel panel = new JPanel();
+    panel.setLayout(new GridLayout(4, 4));
 
-        String[] buttons = {
-            "7", "8", "9", "/",
-            "4", "5", "6", "*",
-            "1", "2", "3", "-",
-            "C", "0", "=", "+"
-        };
+    String[] buttons = {
+      "7", "8", "9", "/",
+      "4", "5", "6", "*",
+      "1", "2", "3", "-",
+      "C", "0", "=", "+"
+    };
 
-        for (String label : buttons) {
-            JButton btn = new JButton(label);
-            panel.add(btn);
-        }
-
-        frame.add(panel, BorderLayout.CENTER);
-        frame.setVisible(true);
-
-        // Simulation demo calculation: 25 * 4 = 100
-        double n1 = 25.0, n2 = 4.0;
-        double prod = n1 * n2;
-        System.out.println("\\n[Swing Event Listener Triggered]");
-        System.out.println("User Input Simulation: " + n1 + " * " + n2);
-        System.out.println("Calculator Display Output: " + prod);
+    for (String label : buttons) {
+      JButton btn = new JButton(label);
+      panel.add(btn);
     }
+
+    frame.add(panel, BorderLayout.CENTER);
+    frame.setVisible(true);
+
+    // Simulation demo calculation: 25 * 4 = 100
+    double n1 = 25.0, n2 = 4.0;
+    double prod = n1 * n2;
+    System.out.println("\\n[Swing Event Listener Triggered]");
+    System.out.println("User Input Simulation: " + n1 + " * " + n2);
+    System.out.println("Calculator Display Output: " + prod);
+  }
 }
 `
     },
@@ -2640,42 +2640,42 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Main {
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("InfoGalaxy Computers — Student Portal Login");
-        frame.setSize(400, 260);
-        frame.setLayout(new GridLayout(4, 2));
+  public static void main(String[] args) {
+    JFrame frame = new JFrame("InfoGalaxy Computers — Student Portal Login");
+    frame.setSize(400, 260);
+    frame.setLayout(new GridLayout(4, 2));
 
-        JLabel userLabel = new JLabel("Username:");
-        JTextField userText = new JTextField(15);
+    JLabel userLabel = new JLabel("Username:");
+    JTextField userText = new JTextField(15);
 
-        JLabel passLabel = new JLabel("Password:");
-        JPasswordField passText = new JPasswordField(15);
+    JLabel passLabel = new JLabel("Password:");
+    JPasswordField passText = new JPasswordField(15);
 
-        JButton loginButton = new JButton("Login");
-        JButton resetButton = new JButton("Reset");
+    JButton loginButton = new JButton("Login");
+    JButton resetButton = new JButton("Reset");
 
-        frame.add(userLabel);
-        frame.add(userText);
-        frame.add(passLabel);
-        frame.add(passText);
-        frame.add(loginButton);
-        frame.add(resetButton);
+    frame.add(userLabel);
+    frame.add(userText);
+    frame.add(passLabel);
+    frame.add(passText);
+    frame.add(loginButton);
+    frame.add(resetButton);
 
-        frame.setVisible(true);
+    frame.setVisible(true);
 
-        // Credential validation simulation
-        String inputUser = "juned_khan";
-        String inputPass = "admin@123";
+    // Credential validation simulation
+    String inputUser = "juned_khan";
+    String inputPass = "admin@123";
 
-        System.out.println("\\n[Authentication Event Listener]");
-        System.out.println("Authenticating credentials for: " + inputUser);
+    System.out.println("\\n[Authentication Event Listener]");
+    System.out.println("Authenticating credentials for: " + inputUser);
 
-        if (inputUser.equals("juned_khan") && inputPass.equals("admin@123")) {
-            System.out.println("✓ Login Successful! Welcome to InfoGalaxy Student Portal.");
-        } else {
-            System.out.println("✗ Authentication Failed: Invalid credentials.");
-        }
+    if (inputUser.equals("juned_khan") && inputPass.equals("admin@123")) {
+      System.out.println("✓ Login Successful! Welcome to InfoGalaxy Student Portal.");
+    } else {
+      System.out.println("✗ Authentication Failed: Invalid credentials.");
     }
+  }
 }
 `
     },
@@ -2690,39 +2690,39 @@ public class Main {
 import java.sql.*;
 
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("==========================================");
-        System.out.println("   JDBC Database Connectivity Pipeline    ");
-        System.out.println("==========================================");
+  public static void main(String[] args) {
+    System.out.println("==========================================");
+    System.out.println("   JDBC Database Connectivity Pipeline    ");
+    System.out.println("==========================================");
 
-        String url = "jdbc:mysql://localhost:3306/infogalaxy_db";
-        String user = "root";
-        String pass = "mysql@2026";
+    String url = "jdbc:mysql://localhost:3306/infogalaxy_db";
+    String user = "root";
+    String pass = "mysql@2026";
 
-        try {
-            // Step 1: Register and load JDBC Driver
-            System.out.println("[Step 1] Loading JDBC Driver...");
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            System.out.println("✓ Driver loaded successfully.");
+    try {
+      // Step 1: Register and load JDBC Driver
+      System.out.println("[Step 1] Loading JDBC Driver...");
+      Class.forName("com.mysql.cj.jdbc.Driver");
+      System.out.println("✓ Driver loaded successfully.");
 
-            // Step 2: Establish Connection via DriverManager
-            System.out.println("\\n[Step 2] Establishing database connection...");
-            Connection conn = DriverManager.getConnection(url, user, pass);
-            System.out.println("✓ Connection established successfully!");
+      // Step 2: Establish Connection via DriverManager
+      System.out.println("\\n[Step 2] Establishing database connection...");
+      Connection conn = DriverManager.getConnection(url, user, pass);
+      System.out.println("✓ Connection established successfully!");
 
-            // Step 3: Verify Connection Status
-            System.out.println("\\n[Step 3] Checking connection metadata:");
-            System.out.println("Target Database URL : " + url);
-            System.out.println("Connected User      : " + user);
-            System.out.println("Connection State    : ACTIVE & READY FOR QUERIES");
+      // Step 3: Verify Connection Status
+      System.out.println("\\n[Step 3] Checking connection metadata:");
+      System.out.println("Target Database URL : " + url);
+      System.out.println("Connected User      : " + user);
+      System.out.println("Connection State    : ACTIVE & READY FOR QUERIES");
 
-            // Step 4: Close Connection
-            conn.close();
-            System.out.println("\\n✓ Database connection closed properly.");
-        } catch (Exception e) {
-            System.out.println("✗ Database Error: " + e.getMessage());
-        }
+      // Step 4: Close Connection
+      conn.close();
+      System.out.println("\\n✓ Database connection closed properly.");
+    } catch (Exception e) {
+      System.out.println("✗ Database Error: " + e.getMessage());
     }
+  }
 }
 `
     },
@@ -2737,49 +2737,49 @@ public class Main {
 import java.sql.*;
 
 public class Main {
-    public static void main(String[] args) {
-        System.out.println("=== JDBC DML Operations: INSERT, UPDATE, DELETE ===");
-        System.out.println("------------------------------------------");
+  public static void main(String[] args) {
+    System.out.println("=== JDBC DML Operations: INSERT, UPDATE, DELETE ===");
+    System.out.println("------------------------------------------");
 
-        String url = "jdbc:mysql://localhost:3306/college_db";
+    String url = "jdbc:mysql://localhost:3306/college_db";
 
-        try {
-            Connection conn = DriverManager.getConnection(url, "root", "root123");
-            Statement stmt = conn.createStatement();
+    try {
+      Connection conn = DriverManager.getConnection(url, "root", "root123");
+      Statement stmt = conn.createStatement();
 
-            // 1. INSERT Operation
-            String insertSql = "INSERT INTO students (roll_no, name, course, marks) VALUES (106, 'Juned Khan', 'TYBCA', 90)";
-            int inserted = stmt.executeUpdate(insertSql);
-            System.out.println("✓ INSERT Operation: " + inserted + " record(s) inserted.");
+      // 1. INSERT Operation
+      String insertSql = "INSERT INTO students (roll_no, name, course, marks) VALUES (106, 'Juned Khan', 'TYBCA', 90)";
+      int inserted = stmt.executeUpdate(insertSql);
+      System.out.println("✓ INSERT Operation: " + inserted + " record(s) inserted.");
 
-            // 2. UPDATE Operation
-            String updateSql = "UPDATE students SET marks = 95 WHERE roll_no = 101";
-            int updated = stmt.executeUpdate(updateSql);
-            System.out.println("✓ UPDATE Operation: " + updated + " record(s) updated.");
+      // 2. UPDATE Operation
+      String updateSql = "UPDATE students SET marks = 95 WHERE roll_no = 101";
+      int updated = stmt.executeUpdate(updateSql);
+      System.out.println("✓ UPDATE Operation: " + updated + " record(s) updated.");
 
-            // 3. DELETE Operation
-            String deleteSql = "DELETE FROM students WHERE roll_no = 999";
-            int deleted = stmt.executeUpdate(deleteSql);
-            System.out.println("✓ DELETE Operation: " + deleted + " record(s) removed.");
+      // 3. DELETE Operation
+      String deleteSql = "DELETE FROM students WHERE roll_no = 999";
+      int deleted = stmt.executeUpdate(deleteSql);
+      System.out.println("✓ DELETE Operation: " + deleted + " record(s) removed.");
 
-            // 4. SELECT Operation (Display Records)
-            System.out.println("\\n--- Current Student Records in Database ---");
-            ResultSet rs = stmt.executeQuery("SELECT roll_no, name, course, marks FROM students");
-            while (rs.next()) {
-                int roll = rs.getInt("roll_no");
-                String name = rs.getString("name");
-                String course = rs.getString("course");
-                int marks = rs.getInt("marks");
-                System.out.printf("Roll: %-4d | Name: %-15s | Course: %-6s | Marks: %d\\n", roll, name, course, marks);
-            }
+      // 4. SELECT Operation (Display Records)
+      System.out.println("\\n--- Current Student Records in Database ---");
+      ResultSet rs = stmt.executeQuery("SELECT roll_no, name, course, marks FROM students");
+      while (rs.next()) {
+        int roll = rs.getInt("roll_no");
+        String name = rs.getString("name");
+        String course = rs.getString("course");
+        int marks = rs.getInt("marks");
+        System.out.printf("Roll: %-4d | Name: %-15s | Course: %-6s | Marks: %d\\n", roll, name, course, marks);
+      }
 
-            conn.close();
-            System.out.println("------------------------------------------");
-            System.out.println("✓ All DML and Query operations completed successfully!");
-        } catch (Exception e) {
-            System.out.println("✗ SQL Execution Error: " + e.getMessage());
-        }
+      conn.close();
+      System.out.println("------------------------------------------");
+      System.out.println("✓ All DML and Query operations completed successfully!");
+    } catch (Exception e) {
+      System.out.println("✗ SQL Execution Error: " + e.getMessage());
     }
+  }
 }
 `
     }

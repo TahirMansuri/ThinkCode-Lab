@@ -1,0 +1,29 @@
+{
+  "hosting": {
+    "site": "thinkcode-lab",
+    "public": "dist",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "redirects": [
+      {
+        "source": "/ThinkCodeLab.apk",
+        "destination": "https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.2/ThinkCodeLab.apk",
+        "type": 302
+      },
+      {
+        "source": "/apk",
+        "destination": "https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.2/ThinkCodeLab.apk",
+        "type": 302
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "/download",
+        "destination": "/download.html"
+      }
+    ]
+  }
+}

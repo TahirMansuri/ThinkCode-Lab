@@ -1,0 +1,141 @@
+# 📝 ThinkCode Lab — Changelog & Completed Milestones
+
+> **Comprehensive chronological record of all versions, architectural updates, engine implementations, bug fixes, and user experience enhancements for ThinkCode Lab.**
+
+---
+
+## 🚀 Version 1.3.2 (Build 9) — Adaptive 80:20 Split Ratio & Universal 2-Space Indentation
+*Release Date: November 2026*
+
+### 📐 Adaptive Split Ratio & Automatic Run Expansion
+- **80% Code Editor : 20% Output Initial State**:
+  - Based on student usability feedback, mobile screens now default to an **80% Code Editor : 20% Output** vertical split (`--split: 80%`).
+  - Ensures full lines of code and nested practical algorithms are immediately visible without initial scrolling.
+  - Initial 80:20 ratio is maintained on app startup, practical selection, template reset, language tab change, and clicking **Clear**.
+- **Smooth Auto-Expansion to 65% Output on "Run"**:
+  - Tapping **Run** triggers a `0.25s cubic-bezier` transition expanding the Output Console to **65%** height (editor collapses to 35%).
+  - Provides generous vertical space for reviewing multi-line outputs, table grids, and interactive user prompts.
+- **Desktop Side-by-Side Isolation**:
+  - Viewports $\ge 900\text{px}$ continue to use independent horizontal split properties (`--split-desktop: 52%`), preserving side-by-side desktop productivity.
+
+### 📏 Universal 2-Space Indentation Across All 78 Practicals
+- **Syllabus Practical Conversion (1,181 Lines Re-indented)**:
+  - Formatted all 78 official university lab assignments in `src/practicals.js` and starter templates in `src/languages.js` from 4-space to **2-space indentation**.
+  - **Python (CA-214)**: Verified all 11 practicals using Python's `ast.parse()` syntax validator to guarantee zero `IndentationError` exceptions.
+  - **Java, C, C++, JavaScript, Web, SQL, Shell**: Clean 2-space indentation matching CodeMirror's `EditorState.tabSize.of(2)`.
+  - Dramatically improves readability on mobile screens by preventing awkward code line wrapping.
+
+### 🔍 Compact Dual Zoom Controls (`A−` / `A+`)
+- **Space-Optimized Toolbar**:
+  - Removed redundant percentage text in zoom controls to maximize horizontal header real estate on smaller phone screens.
+  - Added matching independent `A−` and `A+` zoom controls to the Output Console header, allowing students to scale output text independently from the code editor.
+
+---
+
+## 🚀 Version 1.3.1 (Build 8) — Production Minification Fixes & Firebase Hosting
+*Release Date: November 2026*
+
+### ☕ Java AWT / Swing Engine Hardening
+- **Production Minification Mangling Fix**:
+  - Resolved an issue in `src/engines/java.worker.js` where production bundler Terser mangled component constructors (`class X`, `class At`) into single-letter identifiers, causing AWT components to render as raw text labels.
+  - Added explicit `this.componentType` and `this.layoutType` property definitions across all components (`JFrame`, `JLabel`, `JTextField`, `JPasswordField`, `JButton`) and layout managers (`GridLayout`, `BorderLayout`, `FlowLayout`).
+- **Mobile Responsive Layout**:
+  - Added `@media (max-width: 600px)` styling for the Java desktop window modal, ensuring frames fit neatly on phone screens.
+- **Java GUI Floating Reopen Button Gating**:
+  - Added `hideJavaGui()` called on language tab switch, practical load, clear, stop, and reset, preventing the `[☕ Java GUI Frame]` button from leaking into other language tabs.
+
+### 🐘 PHP Header Badge Cleanup
+- Cleaned up the `#fileName` tag in PHP mode to display `index.php` (or `index.html` / `process.php`) with `white-space: nowrap; flex-shrink: 0;`, eliminating awkward two-line badge wrapping on mobile devices.
+
+### ☁️ Cloud Distribution & Live Web App
+- Deployed live Single-Page Application on Firebase Hosting at **[thinkcode-lab.web.app](https://thinkcode-lab.web.app)**.
+- Created dedicated web download portal at **[thinkcode-lab.web.app/download](https://thinkcode-lab.web.app/download)**.
+- Added 302 redirects for `/ThinkCodeLab.apk` and `/apk` streaming the signed 17.6MB release APK directly from GitHub releases with correct `application/vnd.android.package-archive` MIME type headers.
+
+---
+
+## 🚀 Version 1.3.0 (Build 7) — Offline Java JDK Engine, Swing/AWT Desktop Window & Editor Zoom
+*Release Date: November 2026*
+
+### ☕ 100% Offline Java Programming Engine (`src/engines/java.worker.js`)
+- **Full Offline JDK Simulation**:
+  - Standalone offline Java compiler and transpiler worker supporting core object-oriented features, classes, inheritance, interfaces, abstract classes, and standard Java library classes (`Scanner`, `System.out.println`, `System.out.printf`, `Arrays`, `ArrayList`, `Math`, `String`).
+- **Try-Catch-Finally Exception Handling**:
+  - Transpiles typed catch blocks and multiple catch clauses (`catch (ArithmeticException e)`, `catch (Exception ex)`) into clean polymorphic runtime catch blocks.
+  - Full Java exception hierarchy (`Throwable` ➔ `Exception` ➔ `RuntimeException` ➔ `ArithmeticException`, `NullPointerException`, `ArrayIndexOutOfBoundsException`, `NumberFormatException`, `SQLException`).
+- **Constructor & Method Overloading**:
+  - Overloaded constructors and methods with dynamic argument-length and runtime type dispatching.
+- **JDBC Database Simulation**:
+  - Simulated JDBC connectivity (`DriverManager`, `Connection`, `Statement`, `ResultSet`) for academic CRUD practicals.
+
+### 🖼️ Interactive Java AWT / Swing Desktop Window Frame
+- Simulated computer desktop window modal with title bar, minimize `—`, maximize `▢`, close `✕` buttons, and desktop menu bar.
+- Draggable title bar support for desktop and laptop users.
+- Interactive component DOM rendering for `JFrame`, `JPanel`, `JLabel`, `JTextField`, `JPasswordField`, `JButton`.
+- Layout Manager emulation for `BorderLayout`, `GridLayout` (e.g. 4x4 Calculator, 4x2 Login form), and `FlowLayout`.
+- Live interaction for **Assignment 13 (Simple Calculator)** and **Assignment 14 (Login Form)**.
+- Floating `[☕ Java GUI Frame]` reopen button when window is minimized or closed.
+
+### 📚 TYBCA Java Programming Syllabus Practicals (CA-313 / CA-315)
+- Embedded all 16 official TYBCA university assignments in `src/practicals.js`:
+  1. Display Student Information
+  2. Arithmetic Operations using Switch Case
+  3. Find Largest Element in an Array
+  4. Command Line Arguments
+  5. Accept User Input using Scanner
+  6. Constructors and Methods (Default & Parameterized)
+  7. Method Overloading (Square, Rectangle, Triangle, Circle)
+  8. Concept of Inheritance (Multilevel Employee-Developer hierarchy)
+  9. Method Overriding (Dynamic polymorphism)
+  10. Interface for Shape Area Calculation
+  11. String Manipulation Operations
+  12. Try-Catch-Finally Exception Handling
+  13. Simple Calculator Using AWT/Swing
+  14. Simple Login Form Using Swing
+  15. Demonstrate Database Connectivity (JDBC)
+  16. Perform Insert, Update, Delete (CRUD) on Database
+
+---
+
+## 🚀 Version 1.2.0 (Build 6) — C & C++ Lightweight Embedded Engines
+*Release Date: November 2026*
+
+### ⚙️ C (C99) Real WebAssembly Execution Engine (`src/engines/c.worker.js`)
+- Embedded PicoC ANSI/C99 interpreter compiled directly to WebAssembly (`public/picoc/picoc.js`).
+- Ultra-compact ~800 KB bundle preserving ThinkCode Lab's lightweight footprint.
+- Real pointer arithmetic, dynamic memory (`malloc`, `free`), structures (`struct`), unions, arrays, and standard headers (`<stdio.h>`, `<stdlib.h>`, `<string.h>`, `<math.h>`, `<ctype.h>`).
+- Interactive in-console `scanf` and `getchar` supported via `SharedArrayBuffer` (`Atomics.wait`).
+
+### ⚡ C++ Interactive & OOP Engine (`src/engines/cpp.worker.js`)
+- Hybrid execution: `JSCPP` for procedural evaluation + custom OOP Transpiler Runner for user-defined classes (`class`, access specifiers `public:`/`private:`, constructors, destructors, member methods, and objects).
+- Fixed C++ `cin >>` / `cout <<` execution order by removing premature load-time `stdio.drain()`.
+- Authentic `g++` compiler diagnostics with line, column, and visual caret (`^`) indicators.
+- Removed redundant raw STDIN "Program input" box from the Output tab across all languages.
+
+### 📚 Academic Practicals Drawer (`src/practicals.js`)
+- Dedicated `📚 Practicals` drawer button directly in the editor header.
+- Added 17 university assignments for C++ (CA-112, CA-113, CA-121, CA-123).
+- Added 10 Linux OS Shell practicals for CA-123.
+- Live text search, category filter chips, and one-click "Load into Editor" with automatic language switching.
+
+---
+
+## 🚀 Version 1.1.4 (Build 5) — Google Play Store Production Release
+*Release Date: November 2026*
+
+- Generated official release keystore (`thinkcode-lab.keystore`) with RSA 2048-bit encryption.
+- Built signed release APK (`ThinkCodeLab-release.apk`) and Android App Bundle (`ThinkCodeLab-release.aab`) targeting Android API 36 (`minSdkVersion 24`).
+- Packaged high-resolution store graphics: 512x512 app icon, 1024x500 feature graphic, phone/tablet screenshots, and educational privacy policy.
+- Full rollout submitted to Google Play Console under Application ID `com.igc.thinkcodelab`.
+
+---
+
+## 🚀 Version 1.0.0 – 1.1.0 — Core Multi-Language Platform
+*Release Date: October – November 2026*
+
+- **Python 3.12 Engine**: Pyodide 0.26.4 WebAssembly with interactive in-console `input()` and clean tracebacks.
+- **PHP 8.2 Engine**: WebAssembly runtime (`php.wasm`) with Dual-Section Split Editor (`index.html` + `process.php`) and client-side CGI form simulation.
+- **Oracle SQL Engine**: SQLite 3.46.0 WASM with custom Oracle PL/SQL translation layer (`NVL`, `DECODE`, `ROWNUM`, `SYSDATE`, `DUAL`, sequences) and 4 pre-seeded schemas (`SCOTT`, `UNIVERSITY`, `BANK`, `WORKSPACE`).
+- **Linux Shell Emulator**: 35+ UNIX commands, pipelines (`|`), redirections (`>`, `>>`), and persistent virtual filesystem in `localStorage`.
+- **Modern JavaScript & HTML/CSS**: Sandboxed execution with mobile touch-friendly `prompt()` / `alert()` modal and live iframe preview.
+- **UI Architecture**: Obsidian dark cyber theme with luminous glowing borders, CodeMirror 6 code editor, and responsive viewport manager.

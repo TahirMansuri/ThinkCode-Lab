@@ -22,13 +22,14 @@ let phpViewMode = store.get('cf.php.view_mode', 'split');
 // ---------- small helpers ----------
 const wide = () => matchMedia('(min-width: 900px)').matches;
 function setSplit(p) {
-  document.documentElement.style.setProperty('--split', Math.min(80, Math.max(20, p)) + '%');
+  const prop = wide() ? '--split-desktop' : '--split';
+  document.documentElement.style.setProperty(prop, Math.min(85, Math.max(15, p)) + '%');
 }
 function setOutputSmall() {
-  if (!wide()) setSplit(72);
+  if (!wide()) setSplit(80);
 }
 function setOutputLarge() {
-  if (!wide()) setSplit(38);
+  if (!wide()) setSplit(35);
 }
 let toastTimer;
 function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('on'), 2600); }
@@ -219,10 +220,7 @@ const sink = {
   },
   clear: () => {
     con.textContent = '';
-    const modal = $('guiWindowModal');
-    if (modal) modal.hidden = true;
-    const btnReopen = $('btnReopenGui');
-    if (btnReopen) btnReopen.hidden = true;
+    hideJavaGui();
   },
   preview: html => {
     preview.srcdoc = /<head[^>]*>/i.test(html) ? html.replace(/<head[^>]*>/i, m => m + HOOK) : HOOK + html;
@@ -355,18 +353,29 @@ function warm() {
     }
   });
 }
+function hideJavaGui() {
+  const modal = $('guiWindowModal');
+  if (modal) modal.hidden = true;
+  const btnReopen = $('btnReopenGui');
+  if (btnReopen) btnReopen.hidden = true;
+}
+
 function select(l) {
   if (!l.engine) return toast(`${l.name} — ${l.soon}`);
   if (l.id === cur.id) return;
   if (running) return toast('Stop the current run first.');
+  hideJavaGui();
   if (cur.input === 'stdin' && $('stdin')) store.set('cf.in.' + cur.id, $('stdin').value);
   cur = l; store.set('cf.lang', l.id);
   editor.set(store.get('cf.code.' + l.id, l.tpl), l.id);
   if ($('stdin')) $('stdin').value = l.input === 'stdin' ? store.get('cf.in.' + l.id, l.stdin || '') : '';
-  con.textContent = ''; applyLang(); warm();
+  con.textContent = ''; setOutputSmall(); applyLang(); warm();
 }
 let wasShell = false;
 function applyLang() {
+  if (cur.id !== 'java') {
+    hideJavaGui();
+  }
   const isPhp = cur.id === 'php';
   $('editor').hidden = isPhp;
   $('dualEditor').hidden = !isPhp;
@@ -398,6 +407,7 @@ function syncButtons() {
 }
 async function run(arg) {
   if (running || !cur.engine) return;
+  hideJavaGui();
   setOutputLarge();
   const eng = engines[cur.engine]; running = true; stopped = false; syncButtons();
   const opts = typeof arg === 'object' && arg !== null ? arg : null;
@@ -480,6 +490,7 @@ function stop() {
   stopped = true;
   running = false;
   syncButtons();
+  hideJavaGui();
   con.querySelector('.con-input')?.remove();
   closePromptModal(null);
   try { engines[cur.engine]?.stop(sink); } catch (_) {}
@@ -533,7 +544,7 @@ function previewHtmlDirect() {
 
 $('btnRun').onclick = () => run();
 $('btnStop').onclick = stop;
-$('btnClear').onclick = () => { con.textContent = ''; };
+$('btnClear').onclick = () => { con.textContent = ''; setOutputSmall(); };
 const stdinEl = $('stdin');
 if (stdinEl) stdinEl.oninput = e => store.set('cf.in.' + cur.id, e.target.value);
 window.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); run(); } });
@@ -868,7 +879,7 @@ grip.onpointerdown = e => {
   }, { once: true });
 };
 grip.onkeydown = e => {
-  const cs = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--split')) || 52;
+  const cs = parseFloat(getComputedStyle(document.documentElement).getPropertyValue(wide() ? '--split-desktop' : '--split')) || (wide() ? 52 : 80);
   if (/Arrow(Up|Left)/.test(e.key)) setSplit(cs - 3); if (/Arrow(Down|Right)/.test(e.key)) setSplit(cs + 3);
 };
 
@@ -969,51 +980,58 @@ function setPhpViewMode(mode) {
     b.classList.toggle('on', b.dataset.mode === mode);
   });
   if (mode === 'html') {
-    $('fileName').textContent = 'index.html (HTML Form)';
+    $('fileName').textContent = 'index.html';
   } else if (mode === 'php') {
-    $('fileName').textContent = 'process.php (PHP Script)';
+    $('fileName').textContent = 'process.php';
   } else {
-    $('fileName').textContent = 'PHP Lab (HTML + PHP Split)';
+    $('fileName').textContent = 'index.php';
   }
 }
 
-// ---------- Editor Zoom Controls ----------
+// ---------- Zoom Controls (Editor & Console Output) ----------
 let currentEditorFontSize = parseFloat(store.get('cf.editor_font_size') || '13.5');
 if (isNaN(currentEditorFontSize) || currentEditorFontSize < 9.5 || currentEditorFontSize > 26) {
   currentEditorFontSize = 13.5;
+}
+
+let currentOutFontSize = parseFloat(store.get('cf.output_font_size') || '13');
+if (isNaN(currentOutFontSize) || currentOutFontSize < 9.5 || currentOutFontSize > 26) {
+  currentOutFontSize = 13;
 }
 
 function applyEditorZoom(size) {
   currentEditorFontSize = Math.min(24, Math.max(9.5, Math.round(size * 10) / 10));
   document.documentElement.style.setProperty('--editor-font-size', `${currentEditorFontSize}px`);
   store.set('cf.editor_font_size', String(currentEditorFontSize));
-  const zoomPct = Math.round((currentEditorFontSize / 13.5) * 100);
-  const zoomLevelEl = $('zoomLevel');
-  if (zoomLevelEl) {
-    zoomLevelEl.textContent = `${zoomPct}%`;
-  }
+}
+
+function applyOutputZoom(size) {
+  currentOutFontSize = Math.min(24, Math.max(9.5, Math.round(size * 10) / 10));
+  document.documentElement.style.setProperty('--console-font-size', `${currentOutFontSize}px`);
+  store.set('cf.output_font_size', String(currentOutFontSize));
 }
 
 function initZoomControls() {
   applyEditorZoom(currentEditorFontSize);
+  applyOutputZoom(currentOutFontSize);
 
-  const btnZoomIn = $('btnZoomIn');
-  const btnZoomOut = $('btnZoomOut');
-  const btnZoomReset = $('btnZoomReset');
-
-  btnZoomIn?.addEventListener('click', () => {
+  // Editor zoom buttons (A-, A+)
+  $('btnZoomIn')?.addEventListener('click', () => {
     applyEditorZoom(currentEditorFontSize + 1);
   });
-
-  btnZoomOut?.addEventListener('click', () => {
+  $('btnZoomOut')?.addEventListener('click', () => {
     applyEditorZoom(currentEditorFontSize - 1);
   });
 
-  btnZoomReset?.addEventListener('click', () => {
-    applyEditorZoom(13.5);
-    toast('Editor Zoom Reset to 100%');
+  // Output zoom buttons (A-, A+)
+  $('btnOutZoomIn')?.addEventListener('click', () => {
+    applyOutputZoom(currentOutFontSize + 1);
+  });
+  $('btnOutZoomOut')?.addEventListener('click', () => {
+    applyOutputZoom(currentOutFontSize - 1);
   });
 
+  // Keyboard shortcuts: Ctrl/Cmd + / - (adjusts editor)
   window.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && !e.shiftKey && !e.altKey) {
       if (e.key === '=' || e.key === '+') {
@@ -1025,10 +1043,12 @@ function initZoomControls() {
       } else if (e.key === '0') {
         e.preventDefault();
         applyEditorZoom(13.5);
+        applyOutputZoom(13);
       }
     }
   });
 
+  // Touch pinch-to-zoom on editorPane for mobile
   const editorPane = $('editorPane');
   if (editorPane) {
     let initialPinchDist = 0;
@@ -1063,6 +1083,42 @@ function initZoomControls() {
       }
     }, { passive: true });
   }
+
+  // Touch pinch-to-zoom on output/console for mobile
+  const conEl = $('console');
+  if (conEl) {
+    let initialConPinchDist = 0;
+    let initialConFontSize = currentOutFontSize;
+
+    conEl.addEventListener('touchstart', e => {
+      if (e.touches.length === 2) {
+        initialConPinchDist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        initialConFontSize = currentOutFontSize;
+      }
+    }, { passive: true });
+
+    conEl.addEventListener('touchmove', e => {
+      if (e.touches.length === 2 && initialConPinchDist > 0) {
+        const dist = Math.hypot(
+          e.touches[0].clientX - e.touches[1].clientX,
+          e.touches[0].clientY - e.touches[1].clientY
+        );
+        const diff = dist - initialConPinchDist;
+        if (Math.abs(diff) > 15) {
+          applyOutputZoom(initialConFontSize + (diff / 25));
+        }
+      }
+    }, { passive: true });
+
+    conEl.addEventListener('touchend', e => {
+      if (e.touches.length < 2) {
+        initialConPinchDist = 0;
+      }
+    }, { passive: true });
+  }
 }
 
 // ---------- Java AWT / Swing Interactive Desktop Window Frame ----------
@@ -1085,8 +1141,14 @@ function renderJavaGuiWindow(winData) {
   if (statusEl) statusEl.textContent = `Active · Dimensions: ${winData.width || 400}x${winData.height || 300}`;
 
   win.classList.remove('maximized');
-  if (winData.width && winData.width >= 300 && winData.width <= 650) {
+  win.style.position = '';
+  win.style.left = '';
+  win.style.top = '';
+  win.style.margin = '';
+  if (winData.width && winData.width >= 300 && winData.width <= 650 && window.innerWidth > 600) {
     win.style.width = `${winData.width + 30}px`;
+  } else {
+    win.style.width = '';
   }
 
   contentEl.innerHTML = '';
@@ -1101,9 +1163,9 @@ function renderJavaGuiWindow(winData) {
 
 function buildGuiContainer(layout, components = []) {
   const container = document.createElement('div');
-  const lType = layout?.type || 'FlowLayout';
+  const rawType = (layout?.type || layout?.layoutType || '').toLowerCase();
 
-  if (lType === 'BorderLayout') {
+  if (rawType.includes('border')) {
     container.className = 'gui-layout-border';
     const northList = [];
     const centerList = [];
@@ -1141,7 +1203,7 @@ function buildGuiContainer(layout, components = []) {
     return container;
   }
 
-  if (lType === 'GridLayout') {
+  if (rawType.includes('grid')) {
     container.className = 'gui-layout-grid';
     const cols = layout.cols || 2;
     container.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
@@ -1159,41 +1221,47 @@ function buildGuiContainer(layout, components = []) {
 }
 
 function buildGuiComp(c) {
-  if (c.type === 'JPanel') {
+  const t = (c.type || '').toLowerCase();
+
+  if (t === 'jpanel' || t === 'panel') {
     const p = buildGuiContainer(c.layout, c.children || []);
     p.classList.add('gui-panel');
     return p;
   }
 
-  if (c.type === 'JTextField') {
+  if (t === 'jtextfield' || t === 'textfield') {
     const inp = document.createElement('input');
     inp.type = 'text';
     inp.className = 'gui-input';
     inp.value = c.text || '';
-    if (c.text === '0' || c.cols >= 10) {
+    if (c.text === '0' && c.pos && c.pos.toLowerCase().includes('north')) {
       inp.classList.add('calc-screen');
+      inp.readOnly = true;
+    } else {
+      inp.placeholder = 'Enter username';
     }
     inp.dataset.compId = 'textfield';
     return inp;
   }
 
-  if (c.type === 'JPasswordField') {
+  if (t === 'jpasswordfield' || t === 'passwordfield') {
     const inp = document.createElement('input');
     inp.type = 'password';
     inp.className = 'gui-input';
     inp.value = c.text || '';
+    inp.placeholder = 'Enter password';
     inp.dataset.compId = 'passwordfield';
     return inp;
   }
 
-  if (c.type === 'JLabel') {
+  if (t === 'jlabel' || t === 'label') {
     const lbl = document.createElement('label');
     lbl.className = 'gui-label';
     lbl.textContent = c.text;
     return lbl;
   }
 
-  if (c.type === 'JButton') {
+  if (t === 'jbutton' || t === 'button') {
     const btn = document.createElement('button');
     btn.type = 'button';
     btn.className = 'gui-btn';
@@ -1203,19 +1271,21 @@ function buildGuiComp(c) {
       btn.classList.add('calc-btn-op');
     } else if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(c.text)) {
       btn.classList.add('calc-btn-num');
-    } else if (c.text === 'C' || c.text === 'Clear' || c.text === 'Reset') {
+    } else if (c.text === 'C' || c.text === 'Clear') {
       btn.classList.add('calc-btn-clear');
     } else if (c.text === '=') {
       btn.classList.add('calc-btn-eq');
     } else if (c.text.toLowerCase().includes('login') || c.text.toLowerCase().includes('submit')) {
       btn.classList.add('btn-login-submit');
+    } else if (c.text.toLowerCase().includes('reset')) {
+      btn.classList.add('btn-login-reset');
     }
 
     btn.onclick = () => handleGuiButtonClick(c.text, btn);
     return btn;
   }
 
-  if (c.type === 'JCheckBox' || c.type === 'JRadioButton') {
+  if (t === 'jcheckbox' || t === 'checkbox' || t === 'jradiobutton' || t === 'radiobutton') {
     const wrap = document.createElement('label');
     wrap.className = 'gui-label';
     wrap.style.display = 'inline-flex';
@@ -1224,7 +1294,7 @@ function buildGuiComp(c) {
     wrap.style.cursor = 'pointer';
 
     const chk = document.createElement('input');
-    chk.type = c.type === 'JRadioButton' ? 'radio' : 'checkbox';
+    chk.type = t.includes('radio') ? 'radio' : 'checkbox';
     chk.checked = c.selected;
     chk.onchange = () => {
       print(`[Swing GUI] ${c.type} (${c.text}) toggled: ${chk.checked}\n`, 'sys');
@@ -1236,7 +1306,7 @@ function buildGuiComp(c) {
     return wrap;
   }
 
-  if (c.type === 'JComboBox' || c.type === 'Choice') {
+  if (t === 'jcombobox' || t === 'combobox' || t === 'choice') {
     const sel = document.createElement('select');
     sel.className = 'gui-input';
     (c.items || []).forEach(it => {
@@ -1251,12 +1321,25 @@ function buildGuiComp(c) {
     return sel;
   }
 
-  if (c.type === 'JTextArea') {
+  if (t === 'jtextarea' || t === 'textarea') {
     const ta = document.createElement('textarea');
     ta.className = 'gui-input';
     ta.rows = c.rows || 4;
     ta.value = c.text || '';
     return ta;
+  }
+
+  if (t === 'jlist' || t === 'list') {
+    const sel = document.createElement('select');
+    sel.className = 'gui-input';
+    sel.size = Math.max(2, (c.items || []).length);
+    (c.items || []).forEach(it => {
+      const opt = document.createElement('option');
+      opt.value = it;
+      opt.textContent = it;
+      sel.appendChild(opt);
+    });
+    return sel;
   }
 
   const d = document.createElement('div');
@@ -1308,32 +1391,42 @@ function handleGuiButtonClick(btnText, btnEl) {
 
   // Login Form (Assignment 14)
   if (btnText.toLowerCase().includes('login')) {
-    const userInp = contentEl?.querySelector('input[type="text"]');
+    const userInp = contentEl?.querySelector('input[type="text"]:not(.calc-screen)');
     const passInp = contentEl?.querySelector('input[type="password"]');
     const uVal = userInp?.value.trim() || '';
     const pVal = passInp?.value || '';
 
     print(`[Authentication Event Listener] Validating credentials for "${uVal}"...\n`, 'sys');
 
-    if ((uVal === 'juned_khan' && pVal === 'admin@123') || (uVal === 'admin' && pVal === 'admin') || (uVal && pVal)) {
-      if (statusText) statusText.textContent = `✓ Login Successful! Welcome ${uVal || 'Juned Khan'}`;
-      if (statusDot) statusDot.classList.remove('err');
-      print(`✓ Login Successful! Welcome to InfoGalaxy Student Portal.\n`, 'ok');
-      toast(`✓ Welcome ${uVal || 'Juned Khan'}! Login Successful.`);
-    } else {
-      if (statusText) statusText.textContent = `✗ Authentication Failed: Please enter valid credentials.`;
+    if (!uVal || !pVal) {
+      if (statusText) statusText.textContent = `✗ Please enter both Username and Password.`;
       if (statusDot) statusDot.classList.add('err');
-      print(`✗ Authentication Failed: Invalid credentials.\n`, 'err');
-      toast(`✗ Authentication Failed: Invalid credentials.`);
+      print(`✗ Authentication Failed: Both fields are required.\n`, 'err');
+      toast(`✗ Please enter both Username and Password.`);
+      return;
+    }
+
+    if ((uVal.toLowerCase() === 'juned_khan' && pVal === 'admin@123') || (uVal.toLowerCase() === 'admin' && pVal === 'admin')) {
+      if (statusText) statusText.textContent = `✓ Login Successful! Welcome ${uVal} (Admin)`;
+      if (statusDot) statusDot.classList.remove('err');
+      print(`✓ Login Successful! Welcome to InfoGalaxy Computers Student Portal.\n`, 'ok');
+      toast(`✓ Welcome ${uVal}! Login Successful.`);
+    } else {
+      if (statusText) statusText.textContent = `✓ Login Successful! Welcome ${uVal}`;
+      if (statusDot) statusDot.classList.remove('err');
+      print(`✓ Login Successful! Welcome "${uVal}" to Student Portal.\n`, 'ok');
+      toast(`✓ Welcome ${uVal}! Login Successful.`);
     }
     return;
   }
 
-  if (btnText.toLowerCase() === 'reset') {
+  if (btnText.toLowerCase().includes('reset')) {
     const inputs = contentEl?.querySelectorAll('input');
     inputs?.forEach(i => i.value = '');
-    if (statusText) statusText.textContent = 'Form reset.';
+    if (statusText) statusText.textContent = 'Form reset: inputs cleared.';
+    if (statusDot) statusDot.classList.remove('err');
     print(`[Swing GUI] Form inputs cleared.\n`, 'sys');
+    toast('Form reset');
     return;
   }
 
@@ -1351,13 +1444,13 @@ function initGuiWindowControls() {
 
   btnClose?.addEventListener('click', () => {
     modal.hidden = true;
-    if (btnReopen) btnReopen.hidden = false;
+    if (btnReopen && cur.id === 'java') btnReopen.hidden = false;
     print(`[GUI Window Closed]\n`, 'sys');
   });
 
   btnMin?.addEventListener('click', () => {
     modal.hidden = true;
-    if (btnReopen) btnReopen.hidden = false;
+    if (btnReopen && cur.id === 'java') btnReopen.hidden = false;
     toast('Window Minimized. Tap "☕ Java GUI Frame" to restore.');
   });
 
@@ -1371,9 +1464,9 @@ function initGuiWindowControls() {
   });
 
   modal?.addEventListener('click', e => {
-    if (e.target.dataset.closeGui !== undefined) {
+    if (e.target.dataset.closeGui !== undefined || e.target.classList.contains('gui-backdrop')) {
       modal.hidden = true;
-      if (btnReopen) btnReopen.hidden = false;
+      if (btnReopen && cur.id === 'java') btnReopen.hidden = false;
     }
   });
 
@@ -1382,6 +1475,7 @@ function initGuiWindowControls() {
     let startX = 0, startY = 0, initialLeft = 0, initialTop = 0;
 
     titlebar.addEventListener('mousedown', e => {
+      if (window.innerWidth <= 600) return; // Disabled on mobile to prevent accidental offscreen movement
       if (e.target.closest('.gui-win-controls')) return;
       isDragging = true;
       const rect = win.getBoundingClientRect();
@@ -1415,6 +1509,7 @@ shellui.init({ sh: engines.shell.sh, cmd: shellCmd });
 sqlui.init({ engine: engines.sql, editor, sink, run, toast, store, openSheet, closeSheet, saveFile, refreshTools: renderTools,
   busy: () => running, showText: t => { sink.clear(); showTab('console'); print(t, 'sys'); } });
 if ($('stdin')) $('stdin').value = cur.input === 'stdin' ? store.get('cf.in.' + cur.id, cur.stdin || '') : '';
+setOutputSmall();
 applyLang(); syncButtons();
 initZoomControls();
 initGuiWindowControls();

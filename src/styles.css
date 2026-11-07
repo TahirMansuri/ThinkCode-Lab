@@ -56,7 +56,8 @@
   --box-glow-hover: 0 0 24px -2px rgba(99, 179, 237, 0.26), 0 0 0 1px rgba(120, 190, 255, 0.3);
   --box-glow-focus: 0 0 26px -2px rgba(255, 176, 74, 0.32), 0 0 0 1px rgba(255, 176, 74, 0.5);
   
-  --split: 52%;
+  --split: 80%;
+  --split-desktop: 52%;
   --r: 16px;
   --r-sm: 10px;
   color-scheme: dark;
@@ -321,6 +322,27 @@ svg {
   gap: 4px;
 }
 
+.btn-app-dl {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(255, 176, 74, 0.12);
+  border: 1px solid var(--ember);
+  color: var(--ember);
+  font-size: 11.5px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+
+.btn-app-dl:hover {
+  background: var(--ember);
+  color: #111;
+}
+
 .icon {
   display: grid;
   place-items: center;
@@ -442,7 +464,7 @@ svg {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-rows: var(--split) 14px minmax(0, 1fr);
+  grid-template-rows: var(--split, 80%) 14px minmax(0, 1fr);
   padding: 10px 14px 0;
   gap: 0;
   transition: grid-template-rows 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -501,6 +523,8 @@ svg {
   color: var(--text);
   letter-spacing: -0.01em;
   box-shadow: 0 0 8px rgba(88, 166, 255, 0.08);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .mute {
@@ -1062,7 +1086,7 @@ svg {
   margin: 0;
   padding: 14px 16px;
   overflow: auto;
-  font: 13px/1.6 var(--mono);
+  font: var(--console-font-size, 13px)/1.6 var(--mono);
   white-space: pre-wrap;
   word-break: break-word;
   background: color-mix(in srgb, var(--panel) 92%, black);
@@ -1802,7 +1826,7 @@ td.null {
 @media (min-width: 900px) {
   .work {
     grid-template-rows: none;
-    grid-template-columns: var(--split) 14px minmax(0, 1fr);
+    grid-template-columns: var(--split-desktop, 52%) 14px minmax(0, 1fr);
     padding: 12px 16px 0;
     transition: grid-template-columns 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
@@ -2281,11 +2305,11 @@ td.null {
   transform: translateY(-1px);
 }
 
-/* --- Zoom Controls in Editor Head --- */
+/* --- Zoom Controls in Editor Head & Output Head --- */
 .head-right {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .zoom-bar {
@@ -2298,14 +2322,14 @@ td.null {
   gap: 1px;
 }
 
-.btn-zoom, .btn-zoom-reset {
+.btn-zoom {
   background: transparent;
   border: none;
   color: var(--mute);
   font-family: var(--mono);
   font-size: 11px;
-  font-weight: 600;
-  padding: 2px 6px;
+  font-weight: 700;
+  padding: 2px 7px;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -2313,16 +2337,13 @@ td.null {
   line-height: 1.2;
 }
 
-.btn-zoom:hover, .btn-zoom-reset:hover {
+.btn-zoom:hover {
   background: var(--raised);
   color: var(--ember);
 }
 
-.btn-zoom-reset {
-  min-width: 42px;
-  text-align: center;
-  font-size: 10.5px;
-  color: var(--text);
+.btn-zoom:active {
+  transform: scale(0.95);
 }
 
 /* --- Java AWT / Swing Interactive Desktop Window Frame --- */
@@ -2356,15 +2377,16 @@ td.null {
   border: 1px solid #334A64;
   border-radius: 12px;
   box-shadow: 0 24px 64px -8px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(100, 180, 255, 0.2);
-  width: 420px;
-  max-width: 95vw;
-  max-height: 90vh;
+  width: 100%;
+  max-width: 440px;
+  max-height: 86vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   color: #E2E8F0;
   transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
 }
 
 .gui-window.maximized {
@@ -2634,6 +2656,50 @@ td.null {
   background: linear-gradient(180deg, #2563EB 0%, #1D4ED8 100%);
   border-color: #3B82F6;
   color: #FFFFFF;
+  font-weight: 700;
+}
+
+.gui-btn.btn-login-submit:hover {
+  background: linear-gradient(180deg, #3B82F6 0%, #2563EB 100%);
+  border-color: #60A5FA;
+}
+
+.gui-btn.btn-login-reset {
+  background: linear-gradient(180deg, #374151 0%, #1F2937 100%);
+  border-color: #4B5563;
+  color: #E5E7EB;
+  font-weight: 600;
+}
+
+.gui-btn.btn-login-reset:hover {
+  background: linear-gradient(180deg, #4B5563 0%, #374151 100%);
+  border-color: #6B7280;
+  color: #FFFFFF;
+}
+
+@media (max-width: 600px) {
+  .gui-window-modal {
+    padding: 10px;
+  }
+  .gui-window {
+    width: 100% !important;
+    max-width: calc(100vw - 20px) !important;
+    max-height: 85vh;
+  }
+  .gui-win-body {
+    padding: 14px 12px;
+  }
+  .gui-layout-grid {
+    gap: 10px;
+  }
+  .gui-input {
+    font-size: 14px;
+    padding: 8px 10px;
+  }
+  .gui-btn {
+    min-height: 40px;
+    font-size: 13px;
+  }
 }
 
 /* Status Bar */

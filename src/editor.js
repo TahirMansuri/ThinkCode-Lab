@@ -1,7 +1,7 @@
 import { EditorState, Compartment } from '@codemirror/state';
 import { EditorView, keymap, lineNumbers, highlightActiveLine, highlightActiveLineGutter, drawSelection } from '@codemirror/view';
 import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands';
-import { syntaxHighlighting, HighlightStyle, indentOnInput, bracketMatching, StreamLanguage } from '@codemirror/language';
+import { syntaxHighlighting, HighlightStyle, indentOnInput, bracketMatching, StreamLanguage, indentUnit } from '@codemirror/language';
 import { closeBrackets, closeBracketsKeymap } from '@codemirror/autocomplete';
 import { tags as t } from '@lezer/highlight';
 import { javascript } from '@codemirror/lang-javascript';
@@ -48,6 +48,8 @@ export function createEditor(parent, { doc, lang, onChange, onRun }) {
     state: EditorState.create({
       doc,
       extensions: [
+        EditorState.tabSize.of(2),
+        indentUnit.of("  "),
         lineNumbers(), highlightActiveLine(), highlightActiveLineGutter(), drawSelection(), history(),
         indentOnInput(), bracketMatching(), closeBrackets(), syntaxHighlighting(style), theme, EditorView.lineWrapping,
         langC.of(LANG[lang] ? LANG[lang]() : []),

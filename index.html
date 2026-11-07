@@ -191,6 +191,10 @@
     </div>
   </div>
   <div class="top-actions">
+    <a href="/download" class="btn-app-dl" title="Download Android App (APK)" aria-label="Download Android App">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      <span>App</span>
+    </a>
     <button class="icon" id="btnDev" title="About Developer (Tahir Mansuri)" aria-label="About Developer"><svg><use href="#i-user"/></svg></button>
     <button class="icon" id="btnOpen" title="Open file" aria-label="Open file"><svg><use href="#i-up"/></svg></button>
     <button class="icon" id="btnExport" title="Save to device" aria-label="Save to device"><svg><use href="#i-down"/></svg></button>
@@ -218,10 +222,9 @@
         </div>
       </div>
       <div class="head-right">
-        <div class="zoom-bar" id="zoomBar" title="Adjust Editor Font Size (Zoom)">
-          <button type="button" id="btnZoomOut" class="btn-zoom" title="Zoom Out (Ctrl -)">A−</button>
-          <button type="button" id="btnZoomReset" class="btn-zoom-reset" title="Reset Zoom (Ctrl 0)"><span id="zoomLevel">100%</span></button>
-          <button type="button" id="btnZoomIn" class="btn-zoom" title="Zoom In (Ctrl +)">A+</button>
+        <div class="zoom-bar" id="zoomBar" title="Adjust Editor Font Size">
+          <button type="button" id="btnZoomOut" class="btn-zoom" title="Zoom Out Editor (Ctrl -)">A−</button>
+          <button type="button" id="btnZoomIn" class="btn-zoom" title="Zoom In Editor (Ctrl +)">A+</button>
         </div>
         <span id="saveState" class="mute">Saved</span>
       </div>
@@ -255,7 +258,13 @@
         <button role="tab" id="tabSchema" class="tab" hidden>Schema</button>
         <button role="tab" id="tabPreview" class="tab" hidden>Preview</button>
       </div>
-      <div id="tools" class="tools"></div>
+      <div class="head-right">
+        <div id="tools" class="tools"></div>
+        <div class="zoom-bar" id="outZoomBar" title="Adjust Output Font Size">
+          <button type="button" id="btnOutZoomOut" class="btn-zoom" title="Zoom Out Output">A−</button>
+          <button type="button" id="btnOutZoomIn" class="btn-zoom" title="Zoom In Output">A+</button>
+        </div>
+      </div>
     </div>
     <div id="tableStrip" class="strip" hidden></div>
     <div id="fileTree" class="ftree" hidden></div>

@@ -838,6 +838,7 @@ function createJavaEnvironment() {
   // --- AWT & Swing GUI Emulation (TYBCA Syllabus) ---
   class Component {
     constructor() {
+      this.componentType = 'Component';
       this.listeners = [];
       this.width = 0;
       this.height = 0;
@@ -859,7 +860,7 @@ function createJavaEnvironment() {
 
   function serializeComp(c) {
     if (!c) return null;
-    const type = c.constructor?.name || 'Component';
+    const type = c.componentType || c.constructor?.name || 'Component';
     const res = {
       type,
       text: c.text !== undefined ? String(c.text) : '',
@@ -871,7 +872,7 @@ function createJavaEnvironment() {
     };
     if (c.layout) {
       res.layout = {
-        type: c.layout.constructor?.name || 'FlowLayout',
+        type: c.layout.layoutType || c.layout.componentType || c.layout.constructor?.name || 'FlowLayout',
         rows: c.layout.rows,
         cols: c.layout.cols
       };
@@ -885,6 +886,7 @@ function createJavaEnvironment() {
   class JFrame extends Component {
     constructor(title = 'Java Application') {
       super();
+      this.componentType = 'JFrame';
       this.title = title;
       this.components = [];
       this.width = 400;
@@ -912,16 +914,18 @@ function createJavaEnvironment() {
     hide() { this.setVisible(false); }
     setVisible(b) {
       if (b) {
+        const layoutName = this.layout ? (this.layout.layoutType || this.layout.componentType || this.layout.constructor?.name) : 'FlowLayout';
         post('out', `\n╔══════════════════════════════════════════════════════╗\n`);
         post('out', `║ GUI Window: "${this.title || 'Java GUI Application'}"\n`);
-        post('out', `║ Dimensions: ${this.width} x ${this.height} | Layout: ${this.layout ? this.layout.constructor.name : 'Default'}\n`);
+        post('out', `║ Dimensions: ${this.width} x ${this.height} | Layout: ${layoutName}\n`);
         post('out', `╠══════════════════════════════════════════════════════╣\n`);
         if (this.components.length === 0) {
           post('out', `║ (No child components added yet)\n`);
         } else {
           for (const c of this.components) {
-            if (c && c.text !== undefined) post('out', `║  • [${c.constructor.name}: "${c.text}"]\n`);
-            else if (c && c.constructor) post('out', `║  • [${c.constructor.name}]\n`);
+            const compName = c.componentType || c.constructor?.name || 'Component';
+            if (c && c.text !== undefined && c.text !== '') post('out', `║  • [${compName}: "${c.text}"]\n`);
+            else if (c) post('out', `║  • [${compName}]\n`);
           }
         }
         post('out', `╚══════════════════════════════════════════════════════╝\n`);
@@ -932,7 +936,7 @@ function createJavaEnvironment() {
           width: this.width || 380,
           height: this.height || 280,
           layout: this.layout ? {
-            type: this.layout.constructor?.name || 'FlowLayout',
+            type: this.layout.layoutType || this.layout.componentType || this.layout.constructor?.name || 'FlowLayout',
             rows: this.layout.rows,
             cols: this.layout.cols
           } : { type: 'FlowLayout' },
@@ -948,6 +952,7 @@ function createJavaEnvironment() {
   class JPanel extends Component {
     constructor(layout) {
       super();
+      this.componentType = 'JPanel';
       this.components = [];
       this.layout = layout;
     }
@@ -962,7 +967,7 @@ function createJavaEnvironment() {
   const Panel = JPanel;
 
   class JLabel extends Component {
-    constructor(text = '') { super(); this.text = String(text); }
+    constructor(text = '') { super(); this.componentType = 'JLabel'; this.text = String(text); }
     setText(t) { this.text = String(t); }
     getText() { return this.text; }
   }
@@ -971,6 +976,7 @@ function createJavaEnvironment() {
   class JTextField extends Component {
     constructor(text = '', cols = 10) {
       super();
+      this.componentType = 'JTextField';
       this.text = typeof text === 'number' ? '' : String(text);
       this.cols = typeof text === 'number' ? text : cols;
     }
@@ -984,11 +990,15 @@ function createJavaEnvironment() {
   const TextField = JTextField;
 
   class JPasswordField extends JTextField {
+    constructor(text = '', cols = 10) {
+      super(text, cols);
+      this.componentType = 'JPasswordField';
+    }
     getPassword() { return (this.text || '').split(''); }
   }
 
   class JButton extends Component {
-    constructor(text = '') { super(); this.text = String(text); }
+    constructor(text = '') { super(); this.componentType = 'JButton'; this.text = String(text); }
     setText(t) { this.text = String(t); }
     getText() { return this.text; }
     setActionCommand(c) { this.cmd = c; }
@@ -1005,7 +1015,7 @@ function createJavaEnvironment() {
   const Button = JButton;
 
   class JCheckBox extends Component {
-    constructor(text = '', sel = false) { super(); this.text = String(text); this.selected = Boolean(sel); }
+    constructor(text = '', sel = false) { super(); this.componentType = 'JCheckBox'; this.text = String(text); this.selected = Boolean(sel); }
     isSelected() { return this.selected; }
     setSelected(s) { this.selected = Boolean(s); }
     getState() { return this.selected; }
@@ -1020,10 +1030,15 @@ function createJavaEnvironment() {
     getSelectedCheckbox() { return this.selected; }
   }
 
-  class JRadioButton extends JCheckBox {}
+  class JRadioButton extends JCheckBox {
+    constructor(text = '', sel = false) {
+      super(text, sel);
+      this.componentType = 'JRadioButton';
+    }
+  }
 
   class Choice extends Component {
-    constructor() { super(); this.items = []; }
+    constructor() { super(); this.componentType = 'JComboBox'; this.items = []; }
     add(i) { this.items.push(String(i)); }
     addItem(i) { this.add(i); }
     getSelectedItem() { return this.items[0] || ''; }
@@ -1032,7 +1047,7 @@ function createJavaEnvironment() {
   const JComboBox = Choice;
 
   class TextArea extends Component {
-    constructor(text = '', r = 5, c = 20) { super(); this.text = String(text); this.rows = r; this.cols = c; }
+    constructor(text = '', r = 5, c = 20) { super(); this.componentType = 'JTextArea'; this.text = String(text); this.rows = r; this.cols = c; }
     append(t) { this.text += String(t); }
     setText(t) { this.text = String(t); }
     getText() { return this.text; }
@@ -1040,7 +1055,7 @@ function createJavaEnvironment() {
   const JTextArea = TextArea;
 
   class JScrollPane extends Component {
-    constructor(comp) { super(); this.comp = comp; }
+    constructor(comp) { super(); this.componentType = 'JScrollPane'; this.comp = comp; }
   }
 
   class ButtonGroup {
@@ -1049,7 +1064,7 @@ function createJavaEnvironment() {
   }
 
   class JList extends Component {
-    constructor(items = []) { super(); this.items = items; }
+    constructor(items = []) { super(); this.componentType = 'JList'; this.items = items; }
     getSelectedValue() { return this.items[0] || ''; }
   }
   const List = JList;
@@ -1079,7 +1094,7 @@ function createJavaEnvironment() {
 
   class FlowLayout {
     static LEFT = 0; static CENTER = 1; static RIGHT = 2;
-    constructor(align = 1, hgap = 5, vgap = 5) { this.align = align; this.hgap = hgap; this.vgap = vgap; }
+    constructor(align = 1, hgap = 5, vgap = 5) { this.layoutType = 'FlowLayout'; this.align = align; this.hgap = hgap; this.vgap = vgap; }
   }
   class BorderLayout {
     static NORTH = 'North';
@@ -1087,13 +1102,13 @@ function createJavaEnvironment() {
     static EAST = 'East';
     static WEST = 'West';
     static CENTER = 'Center';
-    constructor(hgap = 0, vgap = 0) { this.hgap = hgap; this.vgap = vgap; }
+    constructor(hgap = 0, vgap = 0) { this.layoutType = 'BorderLayout'; this.hgap = hgap; this.vgap = vgap; }
   }
   class GridLayout {
-    constructor(r = 1, c = 1, hgap = 0, vgap = 0) { this.rows = r; this.cols = c; this.hgap = hgap; this.vgap = vgap; }
+    constructor(r = 1, c = 1, hgap = 0, vgap = 0) { this.layoutType = 'GridLayout'; this.rows = r; this.cols = c; this.hgap = hgap; this.vgap = vgap; }
   }
   class CardLayout {
-    constructor() {}
+    constructor() { this.layoutType = 'CardLayout'; }
     show(parent, name) {}
   }
 
