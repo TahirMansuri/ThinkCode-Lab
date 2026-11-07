@@ -1225,12 +1225,12 @@ svg {
 table {
   border-collapse: collapse;
   width: 100%;
-  font: 12.5px var(--mono);
+  font: var(--console-font-size, 12.5px)/1.5 var(--mono);
   white-space: nowrap;
 }
 
 th, td {
-  padding: 8px 14px;
+  padding: 0.5em 0.9em;
   text-align: left;
   border-bottom: 1px solid var(--line);
 }
@@ -1263,14 +1263,14 @@ tr:last-child td {
   color: var(--mute);
   text-align: right;
   user-select: none;
-  font-size: 11px;
+  font-size: 0.88em;
   opacity: 0.7;
 }
 
 td.null {
   color: var(--mute);
   font-style: italic;
-  font-size: 11px;
+  font-size: 0.88em;
 }
 
 /* Horizontal Table Strip */
@@ -1688,7 +1688,7 @@ td.null {
   grid-template-columns: minmax(70px, 1.1fr) 1fr 1.5fr;
   gap: 8px;
   padding: 5px 14px;
-  font: 12.5px var(--mono);
+  font: var(--console-font-size, 12.5px)/1.4 var(--mono);
 }
 
 .col:hover {
