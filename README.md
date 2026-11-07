@@ -1,21 +1,22 @@
 <div align="center">
 
-<img src="public/assets/icon.svg" width="96" height="96" alt="ThinkCode Lab Logo" style="border-radius:20px; box-shadow: 0 8px 24px rgba(255,176,74,0.3);" />
+<img src="docs/screenshots/feature-graphic.png" width="100%" alt="ThinkCode Lab Feature Banner" style="border-radius:16px; margin-bottom: 20px; box-shadow: 0 12px 32px rgba(0,0,0,0.5);" />
 
 # ⚡ ThinkCode Lab
 ### 100% Offline Multi-Language Code Playground & Mobile IDE for Students
 
 > **Write, Compile & Execute Anywhere — Zero Latency, Zero Backend.**  
-> Built for Computer Science and IT students to practice Java, Python, C, C++, PHP, Oracle SQL, JavaScript, HTML/CSS, and Linux Shell with true interactive runtime input and GUI window emulation directly on Web and Android.
+> Built by **Tahir Mansuri** for Computer Science and IT students to practice Java (with interactive AWT/Swing desktop windows), Python, C, C++, PHP, Oracle SQL, Linux Shell, JavaScript, and HTML/CSS directly on Web and Android.
 
 [![Parent Initiative: ThinkCode](https://img.shields.io/badge/Companion_To-ThinkCode_Visualizer-8e5bd6?style=for-the-badge&logo=googlechrome&logoColor=white)](https://thinkcode.infogalaxy.space/)
-[![Live Web App](https://img.shields.io/badge/Live_App-thinkcode--lab.web.app-FFB04A?style=for-the-badge&logo=firebase&logoColor=black)](https://thinkcode-lab.web.app)
-[![Android APK v1.3.2](https://img.shields.io/badge/Android-APK_v1.3.2_(17.6MB)-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://thinkcode-lab.web.app/download)
+[![Live Web App](https://img.shields.io/badge/Live_Web_App-thinkcode--lab.web.app-FFB04A?style=for-the-badge&logo=firebase&logoColor=black)](https://thinkcode-lab.web.app)
+[![Android APK v1.3.2](https://img.shields.io/badge/Android_APK-v1.3.2_(17.6MB)-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://thinkcode-lab.web.app/download)
+[![Author: Tahir Mansuri](https://img.shields.io/badge/Author-Tahir_Mansuri-blue?style=for-the-badge&logo=github&logoColor=white)](https://github.com/TahirMansuri)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
 <br>
 
-[✨ Key Features](#-key-features) • [🧩 Supported Languages](#-supported-languages-all-100-offline) • [📚 Syllabus Practicals](#-university-syllabus-practicals-library) • [🚀 Quick Start](#-quick-start) • [📱 Android App](#-android-app-apk) • [📖 Documentation](#-complete-documentation-directory) • [👤 Author](#-author) • [📄 License](#-license)
+[✨ Key Features](#-key-features) • [📱 App Screenshots](#-app-screenshots--visual-tour) • [🏛️ System Architecture](#-system-architecture) • [🧩 Supported Languages](#-supported-languages-all-100-offline) • [📚 Syllabus Practicals](#-university-syllabus-practicals-library-78-assignments) • [🚀 Quick Start](#-quick-start) • [📱 Android Build](#-android-app-apk) • [📖 Documentation](#-complete-documentation-directory) • [👤 Author](#-author--leadership) • [📄 License](#-license)
 
 ---
 
@@ -42,6 +43,78 @@ Most online code playgrounds and cloud IDEs rely on remote backend servers to sp
 | **Multi-Language Breadth** | Usually 1-2 | Usually 1 | **✅ 8 Runtimes (Java/Python/C/C++/PHP/SQL/JS/Shell)** |
 | **Native Android App** | ❌ Web-only | ⚠️ Heavy (>100 MB) | **✅ Ultra-compact APK (~17.6 MB)** |
 | **Zero Backend Cost** | ❌ Expensive cloud | ⚠️ Ads / Subscriptions | **✅ Open-Source & Self-Contained** |
+
+---
+
+## 📱 App Screenshots & Visual Tour
+
+<div align="center">
+
+| 🐍 Python 3.12 (Interactive In-Console) | 🗄️ Oracle SQL (Dark Schema Inspector) | 🐧 Linux Shell (Virtual VFS & Pipes) |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/phone-01-python.png" width="240px" alt="Python 3.12 Interactive Stdin" style="border-radius:12px; box-shadow: 0 4px 16px rgba(0,0,0,0.4);" /> | <img src="docs/screenshots/phone-02-sql_dark.png" width="240px" alt="Oracle SQL Schema Inspector" style="border-radius:12px; box-shadow: 0 4px 16px rgba(0,0,0,0.4);" /> | <img src="docs/screenshots/phone-03-shell.png" width="240px" alt="Linux Shell Terminal" style="border-radius:12px; box-shadow: 0 4px 16px rgba(0,0,0,0.4);" /> |
+
+| 🐘 PHP 8.2 (Dual HTML + PHP Split) | ⚡ Modern JS (Touch Modal Prompt) | 👤 About ThinkCode Lab (Tahir Mansuri) |
+| :---: | :---: | :---: |
+| <img src="docs/screenshots/phone-04-php.png" width="240px" alt="PHP Dual Section Split Editor" style="border-radius:12px; box-shadow: 0 4px 16px rgba(0,0,0,0.4);" /> | <img src="docs/screenshots/phone-05-js_prompt.png" width="240px" alt="JavaScript Touch Prompt Modal" style="border-radius:12px; box-shadow: 0 4px 16px rgba(0,0,0,0.4);" /> | <img src="docs/screenshots/phone-07-about.png" width="240px" alt="About ThinkCode Lab - Tahir Mansuri" style="border-radius:12px; box-shadow: 0 4px 16px rgba(0,0,0,0.4);" /> |
+
+</div>
+
+---
+
+## 🏛️ System Architecture
+
+ThinkCode Lab operates on a multi-threaded client architecture where the host UI coordinates with isolated Web Workers over zero-latency `SharedArrayBuffer` and `Atomics` memory bridges.
+
+```mermaid
+flowchart TD
+  subgraph UI["💻 Client UI Layer (Main Thread)"]
+    CM["CodeMirror 6 Editor\n• 2-Space Indentation\n• Syntax Highlighting\n• Dual Editor (HTML + PHP)"]
+    SM["Adaptive Split Manager\n• Initial 80% Code : 20% Output\n• Auto-Expand to 65% on Run\n• Draggable Touch Grip"]
+    GUI["Java AWT/Swing Frame\n• Interactive Desktop Window\n• Layouts: Grid / Border / Flow\n• Drag, Minimize, Maximize"]
+    ZM["Dual Zoom Toolbars\n• Editor Scale (A− / A+)\n• Output Scale (A− / A+)"]
+  end
+
+  subgraph Bridge["⚡ Communication & Sync Bridge"]
+    COORD["Multi-Engine Coordinator\n(src/engines/index.js)"]
+    SAB["SharedArrayBuffer & Atomics\n(Zero-latency blocking stdin)"]
+    MSG["MessagePort & Async Channel\n(Structured clone events)"]
+  end
+
+  subgraph Engines["⚙️ 100% Offline Execution Engines (Web Workers)"]
+    PY["🐍 Python 3.12 Engine\n(Pyodide CPython WASM)"]
+    JAVA["☕ Java JDK Engine\n(AST Transpiler & OOP Simulator)"]
+    C["⚙️ C (C99) Engine\n(PicoC WASM Real Pointers)"]
+    CPP["⚡ C++ Interactive Engine\n(JSCPP + OOP Transpiler)"]
+    PHP["🐘 PHP 8.2 Engine\n(php-wasm SAPI + CGI Bridge)"]
+    SQL["🗄️ Oracle SQL Engine\n(sql.js SQLite WASM + Translation)"]
+    SH["🐧 Linux Shell Emulator\n(UNIX VFS in localStorage)"]
+    WEB["🌐 Web & JS Sandbox\n(srcdoc iframe + AsyncWorker)"]
+  end
+
+  subgraph Native["📱 Native Mobile Wrapper"]
+    CAP["Capacitor 6 Android Runtime\n• Target API 36 / Min API 24\n• Self-Contained Offline Assets\n• Signed Release APK (~17.6MB)"]
+  end
+
+  CM --> COORD
+  SM --> COORD
+  COORD --> SAB
+  COORD --> MSG
+  GUI <--> COORD
+  ZM --> CM
+
+  SAB --> PY
+  SAB --> C
+  SAB --> CPP
+  MSG --> JAVA
+  MSG --> PHP
+  MSG --> SQL
+  MSG --> SH
+  MSG --> WEB
+
+  UI --> CAP
+  Engines --> CAP
+```
 
 ---
 
@@ -89,7 +162,7 @@ Most online code playgrounds and cloud IDEs rely on remote backend servers to sp
 
 ---
 
-## 📚 University Syllabus Practicals Library
+## 📚 University Syllabus Practicals Library (78 Assignments)
 
 ThinkCode Lab comes pre-loaded with **78 official university lab practicals** formatted with clean **2-space indentation** for instant 1-click loading:
 
@@ -172,24 +245,28 @@ All technical architecture guides, engine specifications, changelogs, roadmaps, 
 
 ---
 
-## 👤 Author
+## 👤 Author & Leadership
 
 <table style="border: none; background: transparent;">
   <tr>
-    <td width="100px" align="center" valign="middle">
-      <img src="https://github.com/TahirMansuri.png" width="90px" style="border-radius: 50%; box-shadow: 0 4px 12px rgba(255,176,74,0.3);" alt="Tahir Mansuri" />
+    <td width="110px" align="center" valign="middle">
+      <img src="docs/screenshots/tahir-mansuri.png" width="100px" style="border-radius: 50%; box-shadow: 0 4px 16px rgba(255,176,74,0.4);" alt="Tahir Mansuri" />
     </td>
     <td>
-      <h3 style="margin: 0;">Tahir Mansuri</h3>
+      <h3 style="margin: 0; color: #ffb04a;">Tahir Mansuri</h3>
       <p style="margin: 4px 0; color: #58a6ff; font-weight: 600;">
         Lead System Engineer &amp; HOD, IMRD College
       </p>
-      <p style="margin: 4px 0; color: #8b949e;">
-        Creator of <b>ThinkCode Lab</b> &amp; <b>ThinkCode</b> • 8+ Years of Experience in IT, Systems Engineering, and Software Development
+      <p style="margin: 4px 0; color: #c9d1d9;">
+        Creator of <b>ThinkCode Lab</b> &amp; <b>ThinkCode</b> • 8+ Years of Experience in IT, Systems Engineering, Education, and Software Architecture.
       </p>
       <p style="margin: 6px 0 0 0;">
         <a href="https://github.com/TahirMansuri">
           <img src="https://img.shields.io/badge/GitHub-TahirMansuri-181717?style=flat-square&logo=github" alt="GitHub Profile" />
+        </a>
+        &nbsp;
+        <a href="https://thinkcode.infogalaxy.space/">
+          <img src="https://img.shields.io/badge/Website-ThinkCode-8e5bd6?style=flat-square&logo=googlechrome&logoColor=white" alt="ThinkCode Portal" />
         </a>
       </p>
     </td>
