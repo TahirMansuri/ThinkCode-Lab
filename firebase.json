@@ -9,7 +9,7 @@
     ],
     "headers": [
       {
-        "source": "**",
+        "source": "/",
         "headers": [
           {
             "key": "Cross-Origin-Opener-Policy",
@@ -22,27 +22,119 @@
         ]
       },
       {
-        "source": "/ThinkCodeLab.apk",
+        "source": "/index.html",
         "headers": [
           {
-            "key": "Content-Type",
-            "value": "application/vnd.android.package-archive"
+            "key": "Cross-Origin-Opener-Policy",
+            "value": "same-origin"
           },
           {
-            "key": "Content-Disposition",
-            "value": "attachment; filename=\"ThinkCodeLab.apk\""
+            "key": "Cross-Origin-Embedder-Policy",
+            "value": "require-corp"
+          }
+        ]
+      },
+      {
+        "source": "/assets/**",
+        "headers": [
+          {
+            "key": "Cross-Origin-Opener-Policy",
+            "value": "same-origin"
           },
           {
-            "key": "Cross-Origin-Resource-Policy",
-            "value": "cross-origin"
+            "key": "Cross-Origin-Embedder-Policy",
+            "value": "require-corp"
+          }
+        ]
+      },
+      {
+        "source": "/coi-serviceworker.js",
+        "headers": [
+          {
+            "key": "Cross-Origin-Opener-Policy",
+            "value": "same-origin"
+          },
+          {
+            "key": "Cross-Origin-Embedder-Policy",
+            "value": "require-corp"
+          }
+        ]
+      },
+      {
+        "source": "/php/**",
+        "headers": [
+          {
+            "key": "Cross-Origin-Opener-Policy",
+            "value": "same-origin"
+          },
+          {
+            "key": "Cross-Origin-Embedder-Policy",
+            "value": "require-corp"
+          }
+        ]
+      },
+      {
+        "source": "/pyodide/**",
+        "headers": [
+          {
+            "key": "Cross-Origin-Opener-Policy",
+            "value": "same-origin"
+          },
+          {
+            "key": "Cross-Origin-Embedder-Policy",
+            "value": "require-corp"
+          }
+        ]
+      },
+      {
+        "source": "/sql/**",
+        "headers": [
+          {
+            "key": "Cross-Origin-Opener-Policy",
+            "value": "same-origin"
+          },
+          {
+            "key": "Cross-Origin-Embedder-Policy",
+            "value": "require-corp"
+          }
+        ]
+      },
+      {
+        "source": "/jscpp/**",
+        "headers": [
+          {
+            "key": "Cross-Origin-Opener-Policy",
+            "value": "same-origin"
+          },
+          {
+            "key": "Cross-Origin-Embedder-Policy",
+            "value": "require-corp"
+          }
+        ]
+      },
+      {
+        "source": "/picoc/**",
+        "headers": [
+          {
+            "key": "Cross-Origin-Opener-Policy",
+            "value": "same-origin"
+          },
+          {
+            "key": "Cross-Origin-Embedder-Policy",
+            "value": "require-corp"
           }
         ]
       }
     ],
     "redirects": [
       {
+        "source": "/ThinkCodeLab.apk",
+        "destination": "https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.2/ThinkCodeLab.apk",
+        "type": 302
+      },
+      {
         "source": "/apk",
-        "destination": "/ThinkCodeLab.apk",
+        "destination": "https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.2/ThinkCodeLab.apk",
         "type": 302
       }
     ],
