@@ -44,21 +44,29 @@
   - Added `padding-bottom: 64px !important;` to `.cm-content`, guaranteeing that student code text is never obscured under the floating button even when scrolled to the bottom of long files.
 
 ### ⌨️ Mobile Keyboard Quick-Symbol Strip (`#quickBar`)
-- **Friction-Free Touch Typing**:
-  - Pinned sticky quick-symbol horizontal toolbar immediately above the active editor for mobile viewports.
+- **Bottom-Pinned Touch Typing**:
+  - Relocated quick-symbol toolbar to the **bottom edge of the code editor box**, positioning it directly above mobile virtual keyboards where thumbs naturally rest.
   - 25 high-frequency tokens and programming brackets: `Tab`, `{ }`, `( )`, `[ ]`, `;`, `:`, `"`, `'`, `=`, `+`, `-`, `*`, `/`, `%`, `<`, `>`, `&`, `|`, `!`, `$`, `#`, `->`, `=>`, `//`, `_`.
   - Double brackets and quotes automatically place cursor inside pairs: e.g. `{ }` inserts `{}` and places cursor between the braces.
   - Implemented with `pointerdown` and `event.preventDefault()` to prevent Android / iOS soft keyboards from unfocusing or hiding during rapid symbol entry.
 
 ### 🪄 One-Tap Code Beautifier & Auto-Formatter (`src/formatter.js`)
-- **Zero-Dependency Multi-Language Engine**:
-  - Added `Beautify` button in editor pane header and universal keyboard shortcut `Shift+Alt+F`.
+- **Single-Line Micro-Toolbar & Zero-Dependency Formatter**:
+  - Compact icon-only wand button (`🪄`) in editor pane header and universal keyboard shortcut `Shift+Alt+F`.
+  - Compact design keeps `main.js`, `Practicals`, `🪄`, `A- A+`, and `Saved` strictly on **1 single row** across all mobile viewports without wrapping.
   - Built pure client-side formatter for all 8 supported languages: C, C++, Java, Python, PHP, Oracle SQL, HTML/Web, and Bash Shell.
   - Enforces uniform 2-space indentation, cleans up whitespace, aligns nested blocks, and capitalizes Oracle SQL keywords (`SELECT`, `INSERT INTO`, `WHERE`, `CREATE TABLE`).
 
+### 📱 Attached Zero-Waste IDE Layout
+- **Connected Native Mobile Ergonomics**:
+  - Eliminated floating card gaps, outer padding, and outer border radii between the language selector rail, code editor box, splitter divider, and output console.
+  - 8px attached precision splitter divider with glowing center grip connecting the editor directly to the console.
+  - Maximum active screen estate allocated directly to code writing and output review.
+
 ### 📱 Ultra-Slim Single-Row Header & Slide-Out Navigation Drawer (`#menuDrawer`)
 - **38px Single-Line Header (Maximized Vertical Screen Space)**:
-  - Collapsed previous multi-line 75px+ header into a clean 38px single-row bar with App Logo, bold title, compact runtime state pill, and a `[ ☰ Menu ]` button.
+  - Collapsed previous multi-line 75px+ header into a clean 38px single-row bar with App Logo, bold title, clickable `Dev By - Tahir Mansuri` profile pill, and a `[ ☰ Menu ]` button.
+  - Tapping `Dev By - Tahir Mansuri` immediately opens the developer bio, college leadership background, and architectural overview sheet.
   - Saves 35px+ of vertical height on mobile viewports, directly increasing visible code editor lines.
 - **Modern Slide-Out Options Drawer**:
   - Smooth 60fps off-canvas drawer with blurred backdrop (`backdrop-filter: blur(6px)`).

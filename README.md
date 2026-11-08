@@ -40,6 +40,9 @@ Most online code playgrounds and cloud IDEs rely on remote backend servers to sp
 | **Java Desktop Windows** | ❌ Headless / Text only | ❌ None | **✅ Simulated AWT/Swing Desktop Frame** |
 | **Oracle SQL Simulation** | ❌ Standard SQLite only | ❌ None | **✅ Live Schemas + Oracle Dialect** |
 | **PHP Form Practicals** | ❌ Requires Apache/XAMPP | ❌ None | **✅ Dual-Section Split Form Bridge** |
+| **Mobile Symbol Strip** | ❌ Standard keyboard only | ⚠️ Clunky / Top-heavy | **✅ Bottom-Pinned (Direct Thumb Reach)** |
+| **Code Beautifier / Formatter** | ⚠️ Online API or None | ❌ None | **✅ One-Tap Offline Formatter (🪄)** |
+| **Mobile Screen Ergonomics** | ❌ Fixed desktop ports | ⚠️ Bulky headers & gaps | **✅ Attached Zero-Waste IDE + Slim Header** |
 | **Multi-Language Breadth** | Usually 1-2 | Usually 1 | **✅ 8 Runtimes (Java/Python/C/C++/PHP/SQL/JS/Shell)** |
 | **Native Android App** | ❌ Web-only | ⚠️ Heavy (>100 MB) | **✅ Ultra-compact APK (~17.6 MB)** |
 | **Zero Backend Cost** | ❌ Expensive cloud | ⚠️ Ads / Subscriptions | **✅ Open-Source & Self-Contained** |
@@ -70,7 +73,10 @@ ThinkCode Lab operates on a multi-threaded client architecture where the host UI
 flowchart TD
   subgraph UI["💻 Client UI Layer (Main Thread)"]
     CM["CodeMirror 6 Editor\n• 2-Space Indentation\n• Syntax Highlighting\n• Dual Editor (HTML + PHP)"]
-    SM["Adaptive Split Manager\n• Initial 80% Code : 20% Output\n• Auto-Expand to 65% on Run\n• Draggable Touch Grip"]
+    QB["Quick-Symbol Strip\n• Bottom-Pinned for Thumbs\n• 25 Fast Syntax Tokens\n• Auto-Cursor Bracket Pairs"]
+    FMT["One-Tap Beautifier (🪄)\n• Offline Multi-Language Formatter\n• Uniform 2-Space Indentation"]
+    HDR["Ultra-Slim Header & Drawer\n• Dev By - Tahir Mansuri Pill\n• Slide-Out Options Drawer (☰)\n• Maximized Mobile Space"]
+    SM["Attached Adaptive Split Manager\n• Initial 80% Code : 20% Output\n• Auto-Expand to 65% on Run\n• Attached Precision Grip"]
     GUI["Java AWT/Swing Frame\n• Interactive Desktop Window\n• Layouts: Grid / Border / Flow\n• Drag, Minimize, Maximize"]
     ZM["Dual Zoom Toolbars\n• Editor Scale (A− / A+)\n• Output Scale (A− / A+)"]
   end
@@ -97,7 +103,10 @@ flowchart TD
   end
 
   CM --> COORD
+  QB --> CM
+  FMT --> CM
   SM --> COORD
+  HDR --> COORD
   COORD --> SAB
   COORD --> MSG
   GUI <--> COORD
@@ -139,6 +148,20 @@ flowchart TD
   - Transaction control (`COMMIT`, `ROLLBACK`, `SAVEPOINT`) and 1-click **Export to CSV / TSV**.
 - **🔍 Dual Compact Zoom Toolbars:**
   - Independent `A−` and `A+` zoom controls for both Code Editor and Output Console.
+- **⌨️ Mobile Keyboard Quick-Symbol Strip:**
+  - Pinned directly to the bottom of the code editor box, resting immediately above mobile virtual keyboards where thumbs naturally reach.
+  - 25 high-frequency syntax tokens: `Tab`, `{ }`, `( )`, `[ ]`, `;`, `:`, `"`, `'`, `=`, `+`, `-`, `*`, `/`, `%`, `<`, `>`, `&`, `|`, `!`, `$`, `#`, `->`, `=>`, `//`, `_`.
+  - Bracket pairs automatically place cursor inside, while `pointerdown` prevention stops soft keyboards from hiding during fast typing.
+- **🪄 One-Tap Code Beautifier & Auto-Formatter:**
+  - Zero-dependency client-side formatter (wand icon `🪄` or `Shift+Alt+F`) across all 8 languages: C, C++, Java, Python, PHP, SQL, HTML, and Shell.
+  - Enforces uniform 2-space indentation, balances brackets, cleans up whitespace, and capitalizes Oracle SQL syntax.
+  - Clean micro-toolbar fits `main.js`, `Practicals`, `🪄`, `A- A+`, and `Saved` onto a single row without wrapping.
+- **📐 Attached High-Density IDE Layout:**
+  - Language tab rail, editor box, 8px attached precision splitter divider, and output console form a seamless connected IDE with zero wasted card gaps or floating borders.
+- **☰ Ultra-Slim 1-Line Header & Slide-Out Options Drawer:**
+  - Collapses top controls into a clean 38px bar with a slide-out drawer (`☰ Menu`) holding File Save/Open, Reset, Theme Toggle, Share, and Developer info, freeing maximum vertical space for the active code editor.
+- **👤 Interactive Developer Profile Header Pill:**
+  - Dedicated `Dev By - Tahir Mansuri` header pill opens the developer leadership bio and architecture modal with a single tap.
 - **📏 Universal 2-Space Indentation:**
   - Clean 2-space tab indentation across all practical assignments and templates to prevent line wrapping on mobile.
 - **📱 Standalone Native Android App:**
@@ -242,6 +265,7 @@ All technical architecture guides, engine specifications, changelogs, roadmaps, 
 - 🗺️ [**docs/05_ROADMAP.md**](docs/05_ROADMAP.md) — Completed milestones, near-term enhancements (Multi-file manager, PL/SQL, ER diagrams), and future ecosystem plans.
 - 🚀 [**docs/06_PLAYSTORE_RELEASE.md**](docs/06_PLAYSTORE_RELEASE.md) — Keystore credentials, SHA-256 certificate fingerprints, Play Protect appeal guide, and Play Store submission details.
 - 🧠 [**docs/07_DEVELOPER_MEMORY.md**](docs/07_DEVELOPER_MEMORY.md) — Developer memory, strictly enforced rules (Web-only deployment, backup policy), and technical gotchas learned.
+- 🚀 [**docs/08_FUTURE_ENHANCEMENTS.md**](docs/08_FUTURE_ENHANCEMENTS.md) — Comprehensive technical specifications for upcoming features (Student Lab Journal PDF Generator, Dynamic SQL ER Diagrams, Viva Voce Cheat-Sheet, Serverless Sharing, Multi-File Projects, and Step-by-Step Execution Stepper).
 
 ---
 
