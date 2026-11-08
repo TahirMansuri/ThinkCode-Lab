@@ -16,6 +16,7 @@ Welcome to the comprehensive technical documentation for **ThinkCode Lab**. All 
 | **06** | [**Google Play Store & Android Distribution**](06_PLAYSTORE_RELEASE.md) | Production release keystore details, SHA-256 certificate fingerprints, Play Protect appeal guide, target API 36 compliance, and release build instructions. |
 | **07** | [**Developer Memory & Operational Rules**](07_DEVELOPER_MEMORY.md) | Critical developer memory, strictly enforced rules (Web-only deployment, backup policy), and essential gotchas learned during development. |
 | **08** | [**Future Enhancements & Feature Catalog**](08_FUTURE_ENHANCEMENTS.md) | In-depth specifications for upcoming enhancements: Lab Journal PDF generator, mobile quick-symbol strip, visual SQL ER diagram, viva voce prep, serverless sharing, and multi-file projects. |
+| **09** | [**Master Accounts, Keys & URLs Directory**](09_ACCOUNT_AND_DEPLOYMENT_INFO.md) | Complete directory of administrative accounts, Firebase project IDs, Android signing keystore passwords, SHA-256 certificate fingerprints, release URLs, and deployment commands. |
 
 ---
 
