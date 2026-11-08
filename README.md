@@ -266,7 +266,7 @@ All technical architecture guides, engine specifications, changelogs, roadmaps, 
 - 🚀 [**docs/06_PLAYSTORE_RELEASE.md**](docs/06_PLAYSTORE_RELEASE.md) — Keystore credentials, SHA-256 certificate fingerprints, Play Protect appeal guide, and Play Store submission details.
 - 🧠 [**docs/07_DEVELOPER_MEMORY.md**](docs/07_DEVELOPER_MEMORY.md) — Developer memory, strictly enforced rules (Web-only deployment, backup policy), and technical gotchas learned.
 - 🚀 [**docs/08_FUTURE_ENHANCEMENTS.md**](docs/08_FUTURE_ENHANCEMENTS.md) — Comprehensive technical specifications for upcoming features (Student Lab Journal PDF Generator, Dynamic SQL ER Diagrams, Viva Voce Cheat-Sheet, Serverless Sharing, Multi-File Projects, and Step-by-Step Execution Stepper).
-- 🔐 [**docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md**](docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md) — Master reference for administrative accounts, Firebase project configuration, Android signing keystore details, SHA-256 certificate fingerprints, release URLs, and deployment commands (also available as [`ACCOUNT_INFO.md`](ACCOUNT_INFO.md)).
+- 🔐 [**docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md**](docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md) — Master reference for administrative accounts, Firebase project configuration, Android signing keystore details, SHA-256 certificate fingerprints, release URLs, and deployment commands.
 
 ---
 

@@ -195,4 +195,4 @@ git checkout release/v1.3.2
 | **Firebase Target Mapping**| `.firebaserc` | Maps default project to `igcquiz-5d910` |
 | **Firebase Hosting Rules** | `firebase.json` | COOP/COEP headers and `/ThinkCodeLab.apk` redirects |
 | **Master Credentials Guide**| `docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md` | This document |
-| **Root Credentials Guide** | `ACCOUNT_INFO.md` | Quick access copy at repository root |
+
