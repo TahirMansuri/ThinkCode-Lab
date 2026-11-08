@@ -633,14 +633,15 @@ async function saveFile(name, data) {
     }
   } catch (e) { toast('Could not save: ' + (e.message || e)); }
 }
-$('btnExport').onclick = () => {
+function handleExportCode() {
   if (cur.id === 'php' && editorHtml && editorPhp) {
     if (phpViewMode === 'html') saveFile('index.html', editorHtml.get());
     else saveFile('process.php', editorPhp.get());
   } else {
     saveFile(cur.file, editor.get());
   }
-};
+}
+if ($('btnExport')) $('btnExport').onclick = handleExportCode;
 function openSheet(title, node) {
   $('sheetTitle').textContent = title;
   const b = $('sheetBody');
@@ -730,16 +731,13 @@ function showDevProfile() {
     </div>
 
     <div class="dev-meta">
-      <span>ThinkCode Lab v1.1.1 (Production Release) • 100% Offline WASM</span>
+      <span>ThinkCode Lab v1.3.2 (Production Release) • 100% Offline WASM</span>
     </div>
   `;
   openSheet('Developer & Architecture', card);
 }
 $('btnDev')?.addEventListener('click', showDevProfile);
 $('brandDev')?.addEventListener('click', showDevProfile);
-$('brandDev')?.addEventListener('keydown', e => {
-  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); showDevProfile(); }
-});
 
 function openPracticalsSheet() {
   const activeLang = cur.id;
@@ -886,12 +884,13 @@ function loadPracticalCode(item, langId) {
 }
 
 $('btnPracticals')?.addEventListener('click', openPracticalsSheet);
-$('btnOpen').onclick = () => $('filePick').click();
+if ($('btnOpen')) $('btnOpen').onclick = () => $('filePick')?.click();
 $('filePick').onchange = async e => {
   const f = e.target.files[0]; if (!f) return;
   editor.set(await f.text(), cur.id); toast('Opened ' + f.name); e.target.value = '';
 };
-$('btnReset').onclick = () => {
+
+function handleResetTemplate() {
   if (confirm('Replace your code with the starter template?')) {
     if (cur.id === 'php' && editorHtml && editorPhp) {
       editorHtml.set(DEFAULT_PHP_HTML, 'web');
@@ -906,13 +905,97 @@ $('btnReset').onclick = () => {
     setOutputSmall();
     toast('Template restored');
   }
-};
+}
+if ($('btnReset')) $('btnReset').onclick = handleResetTemplate;
+
+/* ==========================================================================
+   Slide-out Navigation Drawer / Options Slider
+   ========================================================================== */
+function openMenuDrawer() {
+  const d = $('menuDrawer');
+  if (!d) return;
+  d.hidden = false;
+  requestAnimationFrame(() => {
+    d.classList.add('open');
+  });
+  updateDrawerThemeStatus();
+}
+
+function closeMenuDrawer() {
+  const d = $('menuDrawer');
+  if (!d || d.hidden) return;
+  d.classList.remove('open');
+  setTimeout(() => {
+    if (!d.classList.contains('open')) d.hidden = true;
+  }, 280);
+}
+
+function updateDrawerThemeStatus() {
+  const currentTheme = document.documentElement.dataset.theme || store.get('cf.theme', 'dark');
+  const isDark = currentTheme === 'dark';
+  const icon = $('menuThemeIcon');
+  const title = $('menuThemeTitle');
+  const sub = $('menuThemeSub');
+  const pill = $('menuThemePill');
+  if (icon) icon.textContent = isDark ? '🌙' : '☀️';
+  if (title) title.textContent = isDark ? 'Theme: Dark Mode' : 'Theme: Light Mode';
+  if (sub) sub.textContent = isDark ? 'Tap to switch to Light mode' : 'Tap to switch to Dark mode';
+  if (pill) {
+    pill.textContent = isDark ? 'Dark' : 'Light';
+    pill.className = `d-badge ${isDark ? 'dark' : 'light'}`;
+  }
+}
+
+// Drawer openers & closers
+$('btnMenu')?.addEventListener('click', openMenuDrawer);
+$('brandLogo')?.addEventListener('click', openMenuDrawer);
+$('brandLogo')?.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') {
+    e.preventDefault();
+    openMenuDrawer();
+  }
+});
+$('btnCloseDrawer')?.addEventListener('click', closeMenuDrawer);
+$('menuDrawerBackdrop')?.addEventListener('click', closeMenuDrawer);
+document.querySelectorAll('[data-close-drawer]').forEach(el => {
+  el.addEventListener('click', closeMenuDrawer);
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !$('menuDrawer')?.hidden) {
+    closeMenuDrawer();
+  }
+});
+
+// Drawer menu item actions
+$('menuBtnOpen')?.addEventListener('click', () => {
+  closeMenuDrawer();
+  $('filePick')?.click();
+});
+$('menuBtnExport')?.addEventListener('click', () => {
+  closeMenuDrawer();
+  handleExportCode();
+});
+$('menuBtnReset')?.addEventListener('click', () => {
+  closeMenuDrawer();
+  handleResetTemplate();
+});
+$('menuBtnTheme')?.addEventListener('click', () => {
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  theme(next);
+});
+$('menuBtnDev')?.addEventListener('click', () => {
+  closeMenuDrawer();
+  showDevProfile();
+});
+
 function theme(t) {
   document.documentElement.dataset.theme = t; store.set('cf.theme', t);
-  document.querySelector('meta[name=theme-color]').content = t === 'dark' ? '#0C1720' : '#EEF2F5';
-  $('btnTheme').querySelector('use').setAttribute('href', t === 'dark' ? '#i-sun' : '#i-moon');
+  const meta = document.querySelector('meta[name=theme-color]');
+  if (meta) meta.content = t === 'dark' ? '#0C1720' : '#EEF2F5';
+  $('btnTheme')?.querySelector('use')?.setAttribute('href', t === 'dark' ? '#i-sun' : '#i-moon');
+  updateDrawerThemeStatus();
 }
-$('btnTheme').onclick = () => theme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+if ($('btnTheme')) $('btnTheme').onclick = () => theme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
 theme(store.get('cf.theme', 'dark'));
 
 const grip = $('grip'), work = $('work');

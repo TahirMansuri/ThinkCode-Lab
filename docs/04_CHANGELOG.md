@@ -43,6 +43,31 @@
 - **Collision-Free Editor Scrolling**:
   - Added `padding-bottom: 64px !important;` to `.cm-content`, guaranteeing that student code text is never obscured under the floating button even when scrolled to the bottom of long files.
 
+### ⌨️ Mobile Keyboard Quick-Symbol Strip (`#quickBar`)
+- **Friction-Free Touch Typing**:
+  - Pinned sticky quick-symbol horizontal toolbar immediately above the active editor for mobile viewports.
+  - 25 high-frequency tokens and programming brackets: `Tab`, `{ }`, `( )`, `[ ]`, `;`, `:`, `"`, `'`, `=`, `+`, `-`, `*`, `/`, `%`, `<`, `>`, `&`, `|`, `!`, `$`, `#`, `->`, `=>`, `//`, `_`.
+  - Double brackets and quotes automatically place cursor inside pairs: e.g. `{ }` inserts `{}` and places cursor between the braces.
+  - Implemented with `pointerdown` and `event.preventDefault()` to prevent Android / iOS soft keyboards from unfocusing or hiding during rapid symbol entry.
+
+### 🪄 One-Tap Code Beautifier & Auto-Formatter (`src/formatter.js`)
+- **Zero-Dependency Multi-Language Engine**:
+  - Added `Beautify` button in editor pane header and universal keyboard shortcut `Shift+Alt+F`.
+  - Built pure client-side formatter for all 8 supported languages: C, C++, Java, Python, PHP, Oracle SQL, HTML/Web, and Bash Shell.
+  - Enforces uniform 2-space indentation, cleans up whitespace, aligns nested blocks, and capitalizes Oracle SQL keywords (`SELECT`, `INSERT INTO`, `WHERE`, `CREATE TABLE`).
+
+### 📱 Ultra-Slim Single-Row Header & Slide-Out Navigation Drawer (`#menuDrawer`)
+- **38px Single-Line Header (Maximized Vertical Screen Space)**:
+  - Collapsed previous multi-line 75px+ header into a clean 38px single-row bar with App Logo, bold title, compact runtime state pill, and a `[ ☰ Menu ]` button.
+  - Saves 35px+ of vertical height on mobile viewports, directly increasing visible code editor lines.
+- **Modern Slide-Out Options Drawer**:
+  - Smooth 60fps off-canvas drawer with blurred backdrop (`backdrop-filter: blur(6px)`).
+  - **Android App Banner Card**: Distinctive card for downloading the offline APK (`/download`).
+  - **File & Project**: Open Local File, Save Code to Device, and Reset to Starter Template.
+  - **Appearance**: Live Theme toggle (Dark / Light mode) with real-time status pill.
+  - **About & Developer**: Developer profile for Tahir Mansuri and Privacy Policy link.
+  - Accessible via `[ ☰ Menu ]` tap, tapping brand logo, backdrop click, `✕` button, or `Escape` key.
+
 ---
 
 ## 🚀 Version 1.3.1 (Build 8) — Production Minification Fixes & Firebase Hosting

@@ -310,3 +310,4 @@ function formatShell(code) {
 
   return formatted.join('\n');
 }
+

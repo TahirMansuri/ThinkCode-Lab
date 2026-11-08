@@ -180,26 +180,20 @@
 </svg>
 
 <header class="top">
-  <div class="brand" id="brandDev" title="About Developer & Architecture (Tahir Mansuri)" role="button" tabindex="0">
-    <img class="mark" src="assets/icon.svg" width="34" height="34" alt="ThinkCode Lab Logo">
-    <div>
-      <b>ThinkCode Lab</b>
-      <div class="brand-sub">
-        <span id="runtimeState" class="state" data-s="idle">Offline code lab</span>
-        <span class="by-dev" title="Architected & Developed by Tahir Mansuri">by Tahir Mansuri</span>
-      </div>
-    </div>
+  <div class="brand" id="brandLogo" title="ThinkCode Lab — Tap for Menu" role="button" tabindex="0">
+    <img class="mark" src="assets/icon.svg" width="24" height="24" alt="ThinkCode Lab Logo">
+    <b class="brand-title">ThinkCode Lab</b>
+    <span id="runtimeState" class="state" data-s="idle" title="Runtime Status">offline</span>
   </div>
   <div class="top-actions">
-    <a href="/download" class="btn-app-dl" title="Download Android App (APK)" aria-label="Download Android App">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-      <span>App</span>
-    </a>
-    <button class="icon" id="btnDev" title="About Developer (Tahir Mansuri)" aria-label="About Developer"><svg><use href="#i-user"/></svg></button>
-    <button class="icon" id="btnOpen" title="Open file" aria-label="Open file"><svg><use href="#i-up"/></svg></button>
-    <button class="icon" id="btnExport" title="Save to device" aria-label="Save to device"><svg><use href="#i-down"/></svg></button>
-    <button class="icon" id="btnReset" title="Reset to template" aria-label="Reset to template"><svg><use href="#i-reset"/></svg></button>
-    <button class="icon" id="btnTheme" title="Toggle theme" aria-label="Toggle theme"><svg><use href="#i-sun"/></svg></button>
+    <button type="button" id="btnMenu" class="btn-menu" title="Menu & Options" aria-label="Open menu drawer">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+      <span class="btn-menu-label">Menu</span>
+    </button>
     <input type="file" id="filePick" hidden>
   </div>
 </header>
@@ -299,6 +293,95 @@
     </form>
   </section>
 </main>
+
+<!-- Slide-out Navigation Drawer -->
+<div id="menuDrawer" class="drawer" hidden>
+  <div class="drawer-backdrop" id="menuDrawerBackdrop" data-close-drawer></div>
+  <aside class="drawer-panel" role="dialog" aria-modal="true" aria-label="Application Menu">
+    <div class="drawer-header">
+      <div class="drawer-brand">
+        <img src="assets/icon.svg" width="34" height="34" alt="ThinkCode Logo">
+        <div>
+          <b>ThinkCode Lab</b>
+          <small>v1.3.2 • by Tahir Mansuri</small>
+        </div>
+      </div>
+      <button type="button" class="drawer-close" id="btnCloseDrawer" aria-label="Close menu">✕</button>
+    </div>
+
+    <div class="drawer-body">
+      <!-- App Download Banner -->
+      <a href="/download" class="drawer-dl-card">
+        <div class="ddl-icon">📱</div>
+        <div class="ddl-info">
+          <b>Download Android App</b>
+          <span>100% Offline APK (~17 MB)</span>
+        </div>
+        <div class="ddl-badge">Get APK</div>
+      </a>
+
+      <!-- File & Code Actions -->
+      <div class="drawer-group-title">File &amp; Project</div>
+      <button type="button" class="drawer-item" id="menuBtnOpen">
+        <span class="d-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
+        <div class="d-text">
+          <b>Open Local File</b>
+          <small>Load code file from your device</small>
+        </div>
+      </button>
+
+      <button type="button" class="drawer-item" id="menuBtnExport">
+        <span class="d-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+        <div class="d-text">
+          <b>Save Code to Device</b>
+          <small>Download active code as source file</small>
+        </div>
+      </button>
+
+      <button type="button" class="drawer-item" id="menuBtnReset">
+        <span class="d-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></span>
+        <div class="d-text">
+          <b>Reset to Template</b>
+          <small>Restore initial starter code</small>
+        </div>
+      </button>
+
+      <!-- Appearance -->
+      <div class="drawer-group-title">Appearance</div>
+      <button type="button" class="drawer-item" id="menuBtnTheme">
+        <span class="d-icon" id="menuThemeIcon">🌓</span>
+        <div class="d-text">
+          <b id="menuThemeTitle">Theme: Dark Mode</b>
+          <small id="menuThemeSub">Tap to switch to Light mode</small>
+        </div>
+        <span class="d-badge" id="menuThemePill">Dark</span>
+      </button>
+
+      <!-- About Developer -->
+      <div class="drawer-group-title">About &amp; Developer</div>
+      <button type="button" class="drawer-item" id="menuBtnDev">
+        <span class="d-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+        <div class="d-text">
+          <b>About Developer</b>
+          <small>Tahir Mansuri · InfoGalaxy Computers</small>
+        </div>
+      </button>
+
+      <a href="/privacy.html" class="drawer-item" target="_blank">
+        <span class="d-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+        <div class="d-text">
+          <b>Privacy Policy</b>
+          <small>100% Offline · Zero tracking guarantee</small>
+        </div>
+      </a>
+    </div>
+
+    <div class="drawer-footer">
+      <span>Built for BCA / BCS / BSc CS Students</span>
+      <small>© 2026 InfoGalaxy Computers, Shirpur</small>
+    </div>
+  </aside>
+</div>
 
 <div id="sheet" class="sheet" hidden>
   <div class="sheet-back" data-close></div>
