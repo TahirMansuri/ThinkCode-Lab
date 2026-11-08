@@ -737,6 +737,10 @@ function showDevProfile() {
   openSheet('Developer & Architecture', card);
 }
 $('btnDev')?.addEventListener('click', showDevProfile);
+$('btnDevHeader')?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  showDevProfile();
+});
 $('brandDev')?.addEventListener('click', showDevProfile);
 
 function openPracticalsSheet() {

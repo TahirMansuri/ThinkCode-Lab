@@ -180,10 +180,15 @@
 </svg>
 
 <header class="top">
-  <div class="brand" id="brandLogo" title="ThinkCode Lab — Tap for Menu" role="button" tabindex="0">
-    <img class="mark" src="assets/icon.svg" width="24" height="24" alt="ThinkCode Lab Logo">
-    <b class="brand-title">ThinkCode Lab</b>
-    <span id="runtimeState" class="state" data-s="idle" title="Runtime Status">offline</span>
+  <div class="brand-wrap">
+    <div class="brand" id="brandLogo" title="ThinkCode Lab — Tap for Menu" role="button" tabindex="0">
+      <img class="mark" src="assets/icon.svg" width="22" height="22" alt="ThinkCode Lab Logo">
+      <b class="brand-title">ThinkCode Lab</b>
+    </div>
+    <button type="button" id="btnDevHeader" class="btn-dev-lead" title="Lead & Developed by Tahir Mansuri — Tap for Profile" aria-label="About Developer Tahir Mansuri">
+      <span class="dev-lead-prefix">Lead &amp; Dev By -</span>
+      <span class="dev-lead-name">Tahir Mansuri</span>
+    </button>
   </div>
   <div class="top-actions">
     <button type="button" id="btnMenu" class="btn-menu" title="Menu & Options" aria-label="Open menu drawer">
@@ -303,7 +308,7 @@
         <img src="assets/icon.svg" width="34" height="34" alt="ThinkCode Logo">
         <div>
           <b>ThinkCode Lab</b>
-          <small>v1.3.2 • by Tahir Mansuri</small>
+          <small>v1.3.2 • <span id="runtimeState" class="state-drawer" data-s="idle">offline</span></small>
         </div>
       </div>
       <button type="button" class="drawer-close" id="btnCloseDrawer" aria-label="Close menu">✕</button>
