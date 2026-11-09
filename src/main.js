@@ -34,7 +34,7 @@ function setOutputLarge() {
 }
 let toastTimer;
 function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('on'), 2600); }
-function setState(s, text) { const e = $('runtimeState'); e.dataset.s = s; e.textContent = text; }
+function setState(s, text) { const e = $('runtimeState'); if (!e) return; e.dataset.s = s; e.textContent = text; }
 const stick = () => { con.scrollTop = con.scrollHeight; };
 function print(text, cls) {
   const last = con.lastChild;
@@ -331,9 +331,11 @@ function hideConsoleWarmNotice(label) {
 }
 
 function warm() {
-  const eng = engines[cur.engine], label = eng?.label || cur.name;
+  const target = cur;
+  const eng = engines[target.engine], label = eng?.label || target.name;
   if (!eng) return Promise.resolve();
-  const needsWarm = cur.id === 'python' || cur.id === 'sql' || cur.id === 'php' || cur.id === 'c' || cur.id === 'cpp' || cur.id === 'java';
+  stopped = false;
+  const needsWarm = target.id === 'python' || target.id === 'sql' || target.id === 'php' || target.id === 'c' || target.id === 'cpp' || target.id === 'java';
   if (needsWarm && !eng.isReady) {
     setState('loading', `Loading ${label}…`);
     if (!running && con.textContent.trim() === '') {
@@ -344,13 +346,13 @@ function warm() {
   }
 
   return eng.load(sink).then(() => {
-    if (!stopped) {
+    if (cur.id === target.id && !stopped) {
       setState('ready', `${label} · offline`);
       hideConsoleWarmNotice(label);
     }
-    if (cur.id === 'sql') sqlui.ensure().catch(e => { if (!stopped) print(String(e.message || e) + '\n', 'err'); });
+    if (target.id === 'sql' && cur.id === 'sql') sqlui.ensure().catch(e => { if (!stopped) print(String(e.message || e) + '\n', 'err'); });
   }).catch(e => {
-    if (!stopped && e?.message !== 'Stopped') {
+    if (cur.id === target.id && !stopped && e?.message !== 'Stopped') {
       setState('error', 'Runtime failed');
       print(String(e.message || e) + '\n', 'err');
     }
@@ -435,7 +437,7 @@ function syncButtons() {
   const bSec = $('btnRunPhpSec');
   if (bSec) bSec.disabled = running;
   if (!running) {
-    con.querySelector('.con-input')?.remove();
+    con.querySelector('.con-input-wrap, .con-input')?.remove();
     closePromptModal(null);
   }
 }
@@ -525,7 +527,7 @@ function stop() {
   running = false;
   syncButtons();
   hideJavaGui();
-  con.querySelector('.con-input')?.remove();
+  con.querySelector('.con-input-wrap, .con-input')?.remove();
   closePromptModal(null);
   try { engines[cur.engine]?.stop(sink); } catch (_) {}
   if (cur.id !== 'shell') $('promptbar').hidden = true;

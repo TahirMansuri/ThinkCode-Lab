@@ -66,15 +66,18 @@ To run C and C++ inside an offline-first mobile IDE without remote cloud compile
 | **RAM Footprint** | Extremely low (< 25 MB) | Moderate (~120–200 MB during LLVM compile) | Moderate (~120–200 MB during LLVM compile) |
 | **Academic Syllabus Fit** | **Covers 100% of BCA / CS lab practicals** | Advanced C++17/20 STL & Competitive Programming | Advanced C++17/20 STL & Competitive Programming |
 
-### 2.2 Active Implementation (Option 1)
+### 2.2 Active Implementation (Option 1 — Hardened Unified Engines)
 - **C Engine (`src/engines/c.worker.js`)**:
   - Embedded [PicoC](https://github.com/jpoirier/picoc) ANSI/C99 interpreter compiled directly to WebAssembly (`public/picoc/picoc.js`).
-  - Supports true pointers (`int *p = &x`, `**p`), `malloc()` and `free()`, structs, unions, arrays, and standard headers (`stdio.h`, `stdlib.h`, `string.h`, `math.h`).
-  - Interactive `scanf` and `getchar` bridge connected to `SharedArrayBuffer` / input queue.
+  - Spawns fresh, isolated pre-warmed PicoC WASM instances per execution (with Emscripten's `Module.then` stripped so Promises resolve cleanly without thenable recursion).
+  - Unbuffered `stdout` (`setbuf(stdout, 0)` auto-injected into `main()` and direct `stream_ops.write` streaming) + single-line-stop `stdin` (`b === 10`) over `SharedArrayBuffer` / `Atomics`, preventing EOF retry loops and ensuring prompts flush before blocking input.
+  - Supports true pointers (`int *p = &x`, `**p`), `malloc()` and `free()`, structs, unions, arrays, `long long`/`%lld` normalization, `<conio.h>` tolerance, and standard headers (`stdio.h`, `stdlib.h`, `string.h`, `math.h`).
 - **C++ Engine (`src/engines/cpp.worker.js`)**:
-  - Hybrid engine combining `JSCPP` for procedural logic with an OOP Transpiler Runner for classes, constructors, member methods, and inheritance.
-  - Authentic `g++` compiler diagnostics with line, column, and caret (`^`) indicators.
-  - On-demand `cin >>` input evaluation ensuring preceding `cout <<` outputs are displayed immediately.
+  - **Single Unified Pipeline** powered by patched `JSCPP` (`public/jscpp/jscpp.js` + `scripts/jscpp-string.js`), removing the legacy regex OOP split-brain runner.
+  - Token-aware validation and AST/lowering passes support full `std::string` (`getline`, `cin.ignore`, `substr`, `find`, `append`), `<iomanip>`, references (`&`), pointers & hex addresses, `struct`, shared-memory `union`, and OOP classes, constructors, overloading, and inheritance.
+  - Interactive on-demand `cin >>` input bridge ensuring preceding `cout <<` prompts stream before `Atomics.wait()`.
+- **Automated Regression Suite (`scripts/test-c-cpp.mjs`)**:
+  - Run `npm run test:ccpp` to verify `SharedArrayBuffer` streaming, all C/C++ templates and syllabus practicals, Beautify formatter round-trips, error recovery, and UI `setState()` null-guards.
 
 ### 2.3 Future Upgrade: Clang WASM Downloadable Pack (Option 2)
 When ThinkCode Lab expands to advanced competitive programming and full C++ Standard Template Library (`<vector>`, `<map>`, `<algorithm>`), Option 2 will be activated:

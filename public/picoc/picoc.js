@@ -5903,6 +5903,7 @@ var PicocModule = (function() {
 	}
 
 	Module['runc'] = runc;
+	Module['FS'] = FS;
 
 
 

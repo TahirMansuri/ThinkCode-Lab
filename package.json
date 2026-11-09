@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "prepare-runtimes": "node scripts/copy-runtimes.mjs",
+    "test:ccpp": "node scripts/test-c-cpp.mjs",
     "dev": "npm run prepare-runtimes && vite",
     "build": "npm run prepare-runtimes && vite build",
     "sync": "npm run build && npx cap sync android",

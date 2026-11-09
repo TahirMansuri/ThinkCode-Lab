@@ -65,6 +65,9 @@
 8. **Firebase Hosting Direct APK Downloads**:
    - Firebase Hosting on the free Spark plan rejects direct deployment of `.apk` binaries inside `dist/`.
    - **Solution:** Release APKs are uploaded to GitHub Releases (`TahirMansuri/ThinkCode-Lab`). `firebase.json` uses HTTP 302 redirects from `/ThinkCodeLab.apk` and `/apk` directly to the GitHub release asset URL.
+9. **C & C++ Worker Isolation, Emscripten `Module.then`, and Regression Testing**:
+   - Always delete `mod.then` on Emscripten `Picoc` modules before resolving a Promise with them; Emscripten defines `.then` on `Module` which causes infinite `PromiseResolveThenableJob` recursion.
+   - Always keep `stdin` reads stopping on `\n` (`b === 10`), flush `stdout` before `Atomics.wait()`, null-guard `#runtimeState` in `setState()`, and run `npm run test:ccpp` after any UI, formatter, or engine change.
 
 ---
 
@@ -73,6 +76,7 @@
 | Command | Action |
 | :--- | :--- |
 | `npm run dev` | Start local Vite development server |
+| `npm run test:ccpp` | Run automated C & C++ regression & `SharedArrayBuffer` suite |
 | `npm run build` | Prepare offline runtimes and build production `dist/` |
 | `firebase deploy --only hosting` | Deploy web application to `https://thinkcode-lab.web.app` |
 | `npx cap sync android` | Sync `dist/` web assets with the native Android project |

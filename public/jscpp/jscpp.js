@@ -1,4 +1,4 @@
-// JSCPP runtime wrapped for ThinkCode Lab offline C++ execution (with dynamic interactive stdin)
+// JSCPP runtime wrapped for ThinkCode Lab offline C++ execution (unified STL, OOP, pointer & interactive stdin support)
 (function(global) {
 "use strict";
 var JSCPP_EXPORT = (() => {
@@ -725,10 +725,10 @@ var JSCPP_EXPORT = (() => {
           }();
           var ctxClearTimeout = context.clearTimeout !== root.clearTimeout && context.clearTimeout, ctxNow = Date2 && Date2.now !== root.Date.now && Date2.now, ctxSetTimeout = context.setTimeout !== root.setTimeout && context.setTimeout;
           var nativeCeil = Math2.ceil, nativeFloor = Math2.floor, nativeGetSymbols = Object2.getOwnPropertySymbols, nativeIsBuffer = Buffer2 ? Buffer2.isBuffer : undefined2, nativeIsFinite = context.isFinite, nativeJoin = arrayProto.join, nativeKeys = overArg(Object2.keys, Object2), nativeMax = Math2.max, nativeMin = Math2.min, nativeNow = Date2.now, nativeParseInt = context.parseInt, nativeRandom = Math2.random, nativeReverse = arrayProto.reverse;
-          var DataView = getNative(context, "DataView"), Map = getNative(context, "Map"), Promise2 = getNative(context, "Promise"), Set2 = getNative(context, "Set"), WeakMap = getNative(context, "WeakMap"), nativeCreate = getNative(Object2, "create");
-          var metaMap = WeakMap && new WeakMap();
+          var DataView = getNative(context, "DataView"), Map = getNative(context, "Map"), Promise2 = getNative(context, "Promise"), Set2 = getNative(context, "Set"), WeakMap2 = getNative(context, "WeakMap"), nativeCreate = getNative(Object2, "create");
+          var metaMap = WeakMap2 && new WeakMap2();
           var realNames = {};
-          var dataViewCtorString = toSource(DataView), mapCtorString = toSource(Map), promiseCtorString = toSource(Promise2), setCtorString = toSource(Set2), weakMapCtorString = toSource(WeakMap);
+          var dataViewCtorString = toSource(DataView), mapCtorString = toSource(Map), promiseCtorString = toSource(Promise2), setCtorString = toSource(Set2), weakMapCtorString = toSource(WeakMap2);
           var symbolProto = Symbol2 ? Symbol2.prototype : undefined2, symbolValueOf = symbolProto ? symbolProto.valueOf : undefined2, symbolToString = symbolProto ? symbolProto.toString : undefined2;
           function lodash(value) {
             if (isObjectLike(value) && !isArray(value) && !(value instanceof LazyWrapper)) {
@@ -2795,7 +2795,7 @@ var JSCPP_EXPORT = (() => {
             return result2;
           };
           var getTag = baseGetTag;
-          if (DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag || Map && getTag(new Map()) != mapTag || Promise2 && getTag(Promise2.resolve()) != promiseTag || Set2 && getTag(new Set2()) != setTag || WeakMap && getTag(new WeakMap()) != weakMapTag) {
+          if (DataView && getTag(new DataView(new ArrayBuffer(1))) != dataViewTag || Map && getTag(new Map()) != mapTag || Promise2 && getTag(Promise2.resolve()) != promiseTag || Set2 && getTag(new Set2()) != setTag || WeakMap2 && getTag(new WeakMap2()) != weakMapTag) {
             getTag = function(value) {
               var result2 = baseGetTag(value), Ctor = result2 == objectTag ? value.constructor : undefined2, ctorString = Ctor ? toSource(Ctor) : "";
               if (ctorString) {
@@ -5750,7 +5750,12 @@ var JSCPP_EXPORT = (() => {
               if (r === void 0) {
                 return l;
               } else {
-                if (rt2.isArrayType(r)) {
+                if (rt2.isClassType(r.t) && r.t.name === "string" && rt2.isPrimitiveType(l)) {
+                  const st = rt2.simpleType("string");
+                  const prefix = rt2.isCharType(l.t) ? String.fromCharCode(l.v) : String(l.v);
+                  const rhs = r.v && Array.isArray(r.v._chars) ? r.v._chars.map((c2) => String.fromCharCode(c2.v)).join("") : r.v._raw || "";
+                  return rt2.val(st, { _raw: prefix + rhs, _chars: null, members: {} }, false);
+                } else if (rt2.isArrayType(r)) {
                   const i = rt2.cast(rt2.intTypeLiteral, l).v;
                   return rt2.val(r.t, rt2.makeArrayPointerValue(r.v.target, r.v.position + i));
                 } else if (!rt2.isNumericType(l) || !rt2.isNumericType(r)) {
@@ -6098,8 +6103,10 @@ var JSCPP_EXPORT = (() => {
           "o(==)": {
             default(rt2, l, r) {
               let ret2 = false;
-              if (rt2.isPointerType(l) && rt2.isPointerType(r)) {
-                if (rt2.isTypeEqualTo(l.t, r.t)) {
+              if (rt2.isPointerType(l) && rt2.isIntegerType(r) && r.v === 0) {
+                return rt2.val(rt2.boolTypeLiteral, l.v.target === null ? 1 : 0);
+              } else if (rt2.isPointerType(l) && rt2.isPointerType(r)) {
+                if (rt2.isTypeEqualTo(l.t, r.t) || rt2.isVoidType(r.t.targetType) && r.v.target === null || rt2.isVoidType(l.t.targetType) && l.v.target === null) {
                   if (rt2.isArrayType(l) && rt2.isArrayType(r)) {
                     ret2 = l.v.target === r.v.target && (l.v.target === null || l.v.position === r.v.position);
                   } else {
@@ -6107,7 +6114,7 @@ var JSCPP_EXPORT = (() => {
                   }
                 }
                 const rett = rt2.boolTypeLiteral;
-                return rt2.val(rett, ret2);
+                return rt2.val(rett, ret2 ? 1 : 0);
               } else {
                 rt2.raiseException(rt2.makeTypeString(l.t) + " does not support == on " + rt2.makeTypeString(r.t));
               }
@@ -6115,7 +6122,8 @@ var JSCPP_EXPORT = (() => {
           },
           "o(!=)": {
             default(rt2, l, r) {
-              return !rt2.types["pointer"].handlers["=="].default(rt2, l, r);
+              const eq = rt2.types["pointer"].handlers["o(==)"].default(rt2, l, r);
+              return rt2.val(rt2.boolTypeLiteral, eq.v ? 0 : 1);
             }
           },
           "o(,)": {
@@ -6341,7 +6349,11 @@ var JSCPP_EXPORT = (() => {
           },
           "o(+)": {
             default(rt2, l, r) {
-              if (rt2.isArrayType(l) && rt2.isNumericType(r)) {
+              if (rt2.isStringType(l) && rt2.isClassType(r.t) && r.t.name === "string") {
+                const st = rt2.simpleType("string");
+                const rhs = r.v && Array.isArray(r.v._chars) ? r.v._chars.map((c2) => String.fromCharCode(c2.v)).join("") : r.v._raw || "";
+                return rt2.val(st, { _raw: rt2.getStringFromCharArray(l) + rhs, _chars: null, members: {} }, false);
+              } else if (rt2.isArrayType(l) && rt2.isNumericType(r)) {
                 const i = rt2.cast(rt2.intTypeLiteral, r).v;
                 return rt2.val(l.t, rt2.makeArrayPointerValue(l.v.target, l.v.position + i));
               } else {
@@ -6352,13 +6364,13 @@ var JSCPP_EXPORT = (() => {
           "o(+=)": {
             default(rt2, l, r) {
               r = rt2.types["pointer_array"].handlers["o(+)"].default(rt2, l, r);
-              return rt2.types["pointer"].handlers["="].default(rt2, l, r);
+              return rt2.types["pointer"].handlers["o(=)"].default(rt2, l, r);
             }
           },
           "o(-=)": {
             default(rt2, l, r) {
               r = rt2.types["pointer_array"].handlers["o(-)"].default(rt2, l, r);
-              return rt2.types["pointer"].handlers["="].default(rt2, l, r);
+              return rt2.types["pointer"].handlers["o(=)"].default(rt2, l, r);
             }
           },
           "o(++)": {
@@ -6472,6 +6484,22 @@ var JSCPP_EXPORT = (() => {
             return this.config.limits["pointer"].bytes;
           } else if (this.isPrimitiveType(t)) {
             return this.config.limits[t.name].bytes;
+          } else if (this.isClassType(t)) {
+            const def = this.types[this.getTypeSignature(t)];
+            if (def && typeof def.sizeBytes === "number") return def.sizeBytes;
+            if (def && Array.isArray(def.members)) {
+              let total = 0;
+              for (const m of def.members) {
+                try {
+                  const dv = m.initialize ? m.initialize(this, { t, v: { members: {} }, left: false }) : this.defaultValue(m.type, true);
+                  total += this.getSize(dv);
+                } catch (_) {
+                  total += this.getSizeByType(m.type);
+                }
+              }
+              return Math.max(1, total);
+            }
+            return 1;
           } else {
             this.raiseException("not implemented");
           }
@@ -6573,15 +6601,16 @@ var JSCPP_EXPORT = (() => {
                   const regArgInfo = reg[signature];
                   const dts = regArgInfo.args;
                   let newDts;
-                  const { optionalArgs } = regArgInfo;
-                  if (dts[dts.length - 1] === "?" && dts.length - 1 <= ts.length) {
+                  const optionalArgs = regArgInfo.optionalArgs || [];
+                  const isVariadic = dts[dts.length - 1] === "?";
+                  if (isVariadic && dts.length - 1 <= ts.length) {
                     newTs = ts.slice(0, dts.length - 1);
                     newDts = dts.slice(0, -1);
                   } else {
                     newTs = ts;
                     newDts = dts;
                   }
-                  if (newDts.length <= newTs.length) {
+                  if (newDts.length <= newTs.length && (isVariadic || newTs.length <= newDts.length + optionalArgs.length)) {
                     let ok = true;
                     let i = 0;
                     while (ok && i < newDts.length) {
@@ -6988,8 +7017,13 @@ var JSCPP_EXPORT = (() => {
               return this.isPointerType(type2);
             }
             return !this.isFunctionType(type2);
-          } else if (this.isClassType(type1) || this.isClassType(type2)) {
-            this.raiseException("not implemented");
+          } else if (this.isClassType(type2)) {
+            const def = this.types[this.getTypeSignature(type2)];
+            if (def && typeof def.cCastable === "function") return def.cCastable(this, type1);
+            return false;
+          } else if (this.isClassType(type1)) {
+            const def = this.types[this.getTypeSignature(type1)];
+            return Boolean(def && def.handlers && def.handlers[this.makeOperatorFuncName(this.makeTypeString(type2))]);
           }
           return false;
         }
@@ -7063,9 +7097,15 @@ var JSCPP_EXPORT = (() => {
                 if (this.isNormalPointerType(value)) {
                   if (this.isTypeEqualTo(type.targetType, value.t.targetType)) {
                     return value;
+                  } else if (this.isVoidType(value.t.targetType) && value.v && value.v.target === null) {
+                    return this.val(type, this.makeNormalPointerValue(null));
+                  } else if (this.isVoidType(type.targetType)) {
+                    return value;
                   } else {
                     this.raiseException(this.makeTypeString(type.targetType) + " is not equal to " + this.makeTypeString(value.t.targetType));
                   }
+                } else if (this.isIntegerType(value) && value.v === 0) {
+                  return this.val(type, this.makeNormalPointerValue(null));
                 } else {
                   this.raiseException(this.makeTypeString(value.t) + " is not a normal porinter");
                 }
@@ -7090,7 +7130,11 @@ var JSCPP_EXPORT = (() => {
               this.raiseException("cannot cast a regular pointer to a function");
             }
           } else if (this.isClassType(type)) {
-            this.raiseException("not implemented");
+            const def = this.types[this.getTypeSignature(type)];
+            if (def && typeof def.cCast === "function") {
+              return def.cCast(this, value);
+            }
+            this.raiseException("cannot cast " + this.makeTypeString(value.t) + " to " + this.makeTypeString(type));
           } else if (this.isClassType(value.t)) {
             value = this.getCompatibleFunc(value.t, this.makeOperatorFuncName(type.name), [])(this, value);
             return value;
@@ -7099,6 +7143,12 @@ var JSCPP_EXPORT = (() => {
           }
         }
         clone(v, isInitializing) {
+          if (v && v.t && this.isClassType(v.t)) {
+            const def = this.types[this.getTypeSignature(v.t)];
+            if (def && typeof def.cClone === "function") {
+              return def.cClone(this, v, isInitializing);
+            }
+          }
           return this.val(v.t, v.v, false, isInitializing);
         }
         enterScope(scopename) {
@@ -7366,7 +7416,7 @@ var JSCPP_EXPORT = (() => {
           if (this.isStringType(element.t)) {
             const { target } = element.v;
             let result = "";
-            let i = 0;
+            let i = element.v.position || 0;
             while (i < target.length) {
               const charVal = target[i];
               if (charVal.v === 0) {
@@ -8164,14 +8214,16 @@ var JSCPP_EXPORT = (() => {
               let ret2 = yield* interp.visit(interp, s2.Expression, param);
               if (rt2.isPointerType(ret2.t) && !rt2.isFunctionType(ret2.t)) {
                 const { member } = s2;
-                ret2 = yield* rt2.getFunc(ret2.t, rt2.makeOperatorFuncName("->"), [])(rt2, ret2);
+                const _ptrRet = rt2.getFunc(ret2.t, rt2.makeOperatorFuncName("->"), [])(rt2, ret2);
+                ret2 = isGenerator(_ptrRet) ? yield* _ptrRet : _ptrRet;
                 return rt2.getMember(ret2, member);
               } else {
                 const member = yield* interp.visit(interp, {
                   type: "IdentifierExpression",
                   Identifier: s2.member
                 }, param);
-                ret2 = yield* rt2.getFunc(ret2.t, rt2.makeOperatorFuncName("->"), [member.t])(rt2, ret2);
+                const _ptrRet2 = rt2.getFunc(ret2.t, rt2.makeOperatorFuncName("->"), [member.t])(rt2, ret2);
+                ret2 = isGenerator(_ptrRet2) ? yield* _ptrRet2 : _ptrRet2;
                 return rt2.getMember(ret2, member);
               }
             },
@@ -26193,7 +26245,45 @@ var JSCPP_EXPORT = (() => {
   // node_modules/JSCPP/lib/includes/iostream.js
   var require_iostream = __commonJS({
     "node_modules/JSCPP/lib/includes/iostream.js"(exports2, module2) {
-      "use strict";
+      var _getSimAddr = function(rt2, ptrVal) {
+        if (!ptrVal || !ptrVal.v || ptrVal.v.target === null) return "0";
+        if (!rt2._ptrAddrs) {
+          rt2._ptrAddrs = /* @__PURE__ */ new WeakMap();
+          rt2._nextAddr = 140734799802368;
+        }
+        const tgt = ptrVal.v.target;
+        let base = rt2._ptrAddrs.get(tgt);
+        if (base === void 0) {
+          base = rt2._nextAddr;
+          rt2._nextAddr -= 64;
+          rt2._ptrAddrs.set(tgt, base);
+        }
+        const pos = ptrVal.v.position || 0;
+        let elemSize = 4;
+        if (rt2.isArrayType(ptrVal.t)) {
+          try {
+            elemSize = rt2.getSizeByType(ptrVal.t.eleType) || 4;
+          } catch (_) {
+          }
+        }
+        return "0x" + (base + pos * elemSize).toString(16);
+      };
+      var _ensureCinToken = function(_cin) {
+        let b2 = _cin.v.buf || "";
+        while (_skipSpace(b2).length === 0 && _cin.v.istream && typeof _cin.v.istream.drain === "function") {
+          const nextChunk = _cin.v.istream.drain();
+          if (nextChunk == null || nextChunk === "") break;
+          b2 = _cin.v.buf = b2 + nextChunk;
+        }
+        return b2;
+      };
+      var _ensureCinData = function(_cin) {
+        let b2 = _cin.v.buf || "";
+        if (b2.length === 0 && _cin.v.istream && typeof _cin.v.istream.drain === "function") {
+          b2 = _cin.v.buf = _cin.v.istream.drain() || "";
+        }
+        return b2;
+      };
       var _skipSpace = function(s2) {
         const r = /^\s*/.exec(s2);
         if (r && r.length > 0) {
@@ -26233,13 +26323,22 @@ var JSCPP_EXPORT = (() => {
                   if (!t.left) {
                     rt3.raiseException("only left value can be used as storage");
                   }
+                  if (rt3.isClassType(t.t) && t.t.name === "string") {
+                    let sb = _ensureCinToken(_cin);
+                    _cin.v.eofbit = sb.length === 0;
+                    sb = _skipSpace(sb);
+                    const sr = _read(rt3, /^\S*/, sb, t.t)[0];
+                    _cin.v.failbit = sr.length === 0;
+                    _cin.v.buf = sb.substring(sr.length);
+                    if (!t.v) t.v = { members: {} };
+                    t.v._raw = sr;
+                    t.v._chars = null;
+                    return _cin;
+                  }
                   if (!rt3.isPrimitiveType(t.t)) {
                     rt3.raiseException(">> operator in istream cannot accept " + rt3.makeTypeString(t.t));
                   }
-                  let b2 = _cin.v.buf;
-                  if ((!b2 || _skipSpace(b2).length === 0) && _cin.v.istream && typeof _cin.v.istream.drain === "function") {
-                    b2 = _cin.v.buf = _cin.v.istream.drain() || "";
-                  }
+                  let b2 = _ensureCinToken(_cin);
                   _cin.v.eofbit = b2.length === 0;
                   let r;
                   let v;
@@ -26306,10 +26405,7 @@ var JSCPP_EXPORT = (() => {
             if (!rt3.isStringType(t.t)) {
               rt3.raiseException("only a pointer to string can be used as storage");
             }
-            let b2 = _cin.v.buf;
-            if ((!b2 || _skipSpace(b2).length === 0) && _cin.v.istream && typeof _cin.v.istream.drain === "function") {
-              b2 = _cin.v.buf = _cin.v.istream.drain() || "";
-            }
+            let b2 = _ensureCinToken(_cin);
             _cin.v.eofbit = b2.length === 0;
             b2 = _skipSpace(b2);
             const r = _read(rt3, /^\S*/, b2, t.t)[0];
@@ -26334,10 +26430,7 @@ var JSCPP_EXPORT = (() => {
             }
             const limit = limitV.v;
             const delim = delimV != null ? String.fromCharCode(delimV.v) : "\n";
-            let b2 = _cin.v.buf;
-            if ((!b2 || _skipSpace(b2).length === 0) && _cin.v.istream && typeof _cin.v.istream.drain === "function") {
-              b2 = _cin.v.buf = _cin.v.istream.drain() || "";
-            }
+            const b2 = _ensureCinData(_cin);
             _cin.v.eofbit = b2.length === 0;
             let r = _read(rt3, new RegExp(`^[^${delim}]*`), b2, t.t)[0];
             if (r.length + 1 > limit) {
@@ -26364,10 +26457,7 @@ var JSCPP_EXPORT = (() => {
           rt2.regFunc(_getline, cin.t, "getline", [pchar2, rt2.intTypeLiteral, rt2.charTypeLiteral], cin.t);
           rt2.regFunc(_getline, cin.t, "getline", [pchar2, rt2.intTypeLiteral], cin.t);
           const _get = function(rt3, _cin) {
-            let b2 = _cin.v.buf;
-            if ((!b2 || _skipSpace(b2).length === 0) && _cin.v.istream && typeof _cin.v.istream.drain === "function") {
-              b2 = _cin.v.buf = _cin.v.istream.drain() || "";
-            }
+            const b2 = _ensureCinData(_cin);
             _cin.v.eofbit = b2.length === 0;
             if (_cin.v.eofbit) {
               return rt3.val(rt3.intTypeLiteral, -1);
@@ -26379,6 +26469,29 @@ var JSCPP_EXPORT = (() => {
             }
           };
           rt2.regFunc(_get, cin.t, "get", [], rt2.intTypeLiteral);
+          const _ignore = function(rt3, _cin, countV, delimV) {
+            let count = countV != null ? countV.v : 1;
+            const delim = delimV != null ? String.fromCharCode(delimV.v) : "\n";
+            let b2 = _ensureCinData(_cin);
+            let idx = 0;
+            while (idx < b2.length && idx < count) {
+              const ch = b2.charAt(idx);
+              idx++;
+              if (ch === delim) break;
+            }
+            _cin.v.buf = b2.substring(idx);
+            return _cin;
+          };
+          rt2.regFunc(_ignore, cin.t, "ignore", [], cin.t);
+          rt2.regFunc(_ignore, cin.t, "ignore", [rt2.intTypeLiteral], cin.t);
+          rt2.regFunc(_ignore, cin.t, "ignore", [rt2.intTypeLiteral, rt2.charTypeLiteral], cin.t);
+          rt2.regFunc((rt3, _cin) => {
+            _cin.v.failbit = false;
+            _cin.v.eofbit = false;
+            return rt3.val(rt3.voidTypeLiteral, void 0);
+          }, cin.t, "clear", [], rt2.voidTypeLiteral);
+          rt2.regFunc((rt3, _cin) => rt3.val(rt3.boolTypeLiteral, _cin.v.eofbit ? 1 : 0), cin.t, "eof", [], rt2.boolTypeLiteral);
+          rt2.regFunc((rt3, _cin) => rt3.val(rt3.boolTypeLiteral, _cin.v.failbit ? 1 : 0), cin.t, "fail", [], rt2.boolTypeLiteral);
           const _bool = (rt3, _cin) => rt3.val(rt3.boolTypeLiteral, !_cin.v.failbit);
           rt2.regOperator(_bool, cin.t, "bool", [], rt2.boolTypeLiteral);
           const coutType = rt2.newClass("ostream", []);
@@ -26410,6 +26523,13 @@ var JSCPP_EXPORT = (() => {
                     }
                   } else if (rt3.isStringType(t)) {
                     r = rt3.getStringFromCharArray(t);
+                  } else if (rt3.isClassType(t.t) && t.t.name === "string") {
+                    if (t.v && Array.isArray(t.v._chars)) {
+                      t.v._raw = t.v._chars.map((c2) => String.fromCharCode(c2.v)).join("");
+                    }
+                    r = t.v && typeof t.v._raw === "string" ? t.v._raw : "";
+                  } else if (rt3.isPointerType(t.t) && !rt3.isFunctionType(t.t)) {
+                    r = _getSimAddr(rt3, t);
                   } else {
                     rt3.raiseException("<< operator in ostream cannot accept " + rt3.makeTypeString(t.t));
                   }
@@ -26421,6 +26541,9 @@ var JSCPP_EXPORT = (() => {
           };
           const endl = rt2.val(rt2.charTypeLiteral, "\n".charCodeAt(0));
           rt2.scope[0].variables["endl"] = endl;
+          if (rt2.config.includes && rt2.config.includes.string && !rt2.config.loadedLibraries.includes("string")) {
+            rt2.include("string");
+          }
         }
       };
     }
@@ -28015,7 +28138,7 @@ var JSCPP_EXPORT = (() => {
                     }
                     if (!(rt3.isTypeEqualTo(o.t, rt3.charTypeLiteral) && (o.v === 10 || o.v === 13))) {
                       if (!tarStr) {
-                        tarStr = rt3.isPrimitiveType(o) ? o.t.name.indexOf("char") >= 0 ? String.fromCharCode(o.v) : o.t.name === "bool" ? o.v ? "1" : "0" : o.v.toString() : rt3.isStringType(o) ? rt3.getStringFromCharArray(o) : rt3.raiseException("<< operator in ostream cannot accept " + rt3.makeTypeString(o.t));
+                        tarStr = rt3.isPrimitiveType(o) ? o.t.name.indexOf("char") >= 0 ? String.fromCharCode(o.v) : o.t.name === "bool" ? o.v ? "1" : "0" : o.v.toString() : rt3.isStringType(o) ? rt3.getStringFromCharArray(o) : rt3.isClassType(o.t) && o.t.name === "string" ? o.v && Array.isArray(o.v._chars) ? o.v._chars.map((c2) => String.fromCharCode(c2.v)).join("") : o.v._raw || "" : rt3.raiseException("<< operator in ostream cannot accept " + rt3.makeTypeString(o.t));
                       }
                       for (let i = 0, end = this.config.setw - tarStr.length; i < end; i++) {
                         tarStr = fill + tarStr;
@@ -28036,6 +28159,330 @@ var JSCPP_EXPORT = (() => {
             return _cout;
           };
           rt2.regOperator(_addManipulator, oType, "<<", [type], oType);
+        }
+      };
+    }
+  });
+
+  // scripts/jscpp-string.js
+  var require_jscpp_string = __commonJS({
+    "scripts/jscpp-string.js"(exports2, module2) {
+      "use strict";
+      function getStr(val) {
+        if (!val || !val.v) return "";
+        if (Array.isArray(val.v._chars)) {
+          val.v._raw = val.v._chars.map((c2) => String.fromCharCode(c2.v)).join("");
+        }
+        return typeof val.v._raw === "string" ? val.v._raw : "";
+      }
+      function setStr(val, s2) {
+        if (!val.v) val.v = { members: {} };
+        val.v._raw = String(s2);
+        val.v._chars = null;
+      }
+      function isStdString(rt2, typeOrVal) {
+        const t = typeOrVal && "t" in typeOrVal ? typeOrVal.t : typeOrVal;
+        return Boolean(t && t.type === "class" && t.name === "string");
+      }
+      function isCharSeq(rt2, val) {
+        if (!val || !val.t) return false;
+        if (rt2.isStringType(val.t)) return true;
+        return rt2.isPointerType(val.t) && rt2.isCharType(val.t.targetType || val.t.eleType);
+      }
+      function isCharSeqType(rt2, t) {
+        if (!t) return false;
+        if (rt2.isStringType(t)) return true;
+        return rt2.isPointerType(t) && rt2.isCharType(t.targetType || t.eleType);
+      }
+      function anyToJsStr(rt2, x) {
+        if (isStdString(rt2, x)) return getStr(x);
+        if (isCharSeq(rt2, x)) return rt2.getStringFromCharArray(x);
+        if (rt2.isPrimitiveType(x) && rt2.isCharType(x.t)) return String.fromCharCode(x.v);
+        rt2.raiseException("cannot convert " + rt2.makeTypeString(x.t) + " to string");
+        return "";
+      }
+      module2.exports = {
+        getStr,
+        setStr,
+        isStdString,
+        load(rt2) {
+          const existingSig = rt2.getTypeSignature({ type: "class", name: "string" });
+          if (existingSig in rt2.types) {
+            return;
+          }
+          const stringType = rt2.newClass("string", []);
+          const sig = rt2.getTypeSignature(stringType);
+          const pchar2 = rt2.normalPointerType(rt2.charTypeLiteral);
+          const makeStrVal = (text2, left = false) => ({
+            t: stringType,
+            v: {
+              _raw: String(text2),
+              _chars: null,
+              members: {}
+            },
+            left
+          });
+          const def = rt2.types[sig];
+          def.sizeBytes = 32;
+          def.cConstructor = function(_rt, _this2) {
+            _this2.v._raw = "";
+            _this2.v._chars = null;
+            _this2.v.members = {};
+          };
+          def.cClone = function(_rt, v) {
+            return makeStrVal(getStr(v), false);
+          };
+          def.cCastable = function(_rt, fromType) {
+            if (isStdString(_rt, fromType)) return true;
+            if (isCharSeqType(_rt, fromType)) return true;
+            if (fromType && fromType.type === "primitive" && _rt.isCharType(fromType)) return true;
+            return false;
+          };
+          def.cCast = function(_rt, val) {
+            return makeStrVal(anyToJsStr(_rt, val), false);
+          };
+          const handlers = def.handlers;
+          handlers["o(=)"] = {
+            default(_rt, l, r) {
+              if (!l.left) _rt.raiseException(_rt.makeValString(l) + " is not a left value");
+              setStr(l, anyToJsStr(_rt, r));
+              return l;
+            }
+          };
+          handlers["o(+=)"] = {
+            default(_rt, l, r) {
+              if (!l.left) _rt.raiseException(_rt.makeValString(l) + " is not a left value");
+              setStr(l, getStr(l) + anyToJsStr(_rt, r));
+              return l;
+            }
+          };
+          handlers["o(+)"] = {
+            default(_rt, l, r) {
+              return makeStrVal(getStr(l) + anyToJsStr(_rt, r), false);
+            }
+          };
+          handlers["o(==)"] = {
+            default(_rt, l, r) {
+              return _rt.val(_rt.boolTypeLiteral, getStr(l) === anyToJsStr(_rt, r) ? 1 : 0);
+            }
+          };
+          handlers["o(!=)"] = {
+            default(_rt, l, r) {
+              return _rt.val(_rt.boolTypeLiteral, getStr(l) !== anyToJsStr(_rt, r) ? 1 : 0);
+            }
+          };
+          handlers["o(<)"] = {
+            default(_rt, l, r) {
+              return _rt.val(_rt.boolTypeLiteral, getStr(l) < anyToJsStr(_rt, r) ? 1 : 0);
+            }
+          };
+          handlers["o(<=)"] = {
+            default(_rt, l, r) {
+              return _rt.val(_rt.boolTypeLiteral, getStr(l) <= anyToJsStr(_rt, r) ? 1 : 0);
+            }
+          };
+          handlers["o(>)"] = {
+            default(_rt, l, r) {
+              return _rt.val(_rt.boolTypeLiteral, getStr(l) > anyToJsStr(_rt, r) ? 1 : 0);
+            }
+          };
+          handlers["o(>=)"] = {
+            default(_rt, l, r) {
+              return _rt.val(_rt.boolTypeLiteral, getStr(l) >= anyToJsStr(_rt, r) ? 1 : 0);
+            }
+          };
+          handlers["o(&)"] = {
+            default(_rt, l) {
+              if ("array" in l) {
+                return _rt.val(_rt.arrayPointerType(l.t, l.array.length), _rt.makeArrayPointerValue(l.array, l.arrayIndex));
+              }
+              return _rt.val(_rt.normalPointerType(l.t), _rt.makeNormalPointerValue(l));
+            }
+          };
+          handlers["o([])"] = {
+            default(_rt, l, idx) {
+              const s2 = getStr(l);
+              const i = _rt.cast(_rt.intTypeLiteral, idx).v;
+              if (i < 0 || i >= s2.length) {
+                _rt.raiseException(`string index out of range: ${i} (length ${s2.length})`);
+              }
+              if (!Array.isArray(l.v._chars)) {
+                l.v._chars = s2.split("").map((ch) => _rt.val(_rt.charTypeLiteral, ch.charCodeAt(0), true));
+              }
+              return l.v._chars[i];
+            }
+          };
+          const lenFn = (_rt, _this2) => _rt.val(_rt.intTypeLiteral, getStr(_this2).length);
+          rt2.regFunc(lenFn, stringType, "length", [], rt2.intTypeLiteral);
+          rt2.regFunc(lenFn, stringType, "size", [], rt2.intTypeLiteral);
+          const emptyFn = (_rt, _this2) => _rt.val(_rt.boolTypeLiteral, getStr(_this2).length === 0 ? 1 : 0);
+          rt2.regFunc(emptyFn, stringType, "empty", [], rt2.boolTypeLiteral);
+          const clearFn = (_rt, _this2) => {
+            setStr(_this2, "");
+            return _rt.val(_rt.voidTypeLiteral, void 0);
+          };
+          rt2.regFunc(clearFn, stringType, "clear", [], rt2.voidTypeLiteral);
+          const pushBackFn = (_rt, _this2, ch) => {
+            const c2 = String.fromCharCode(_rt.cast(_rt.charTypeLiteral, ch).v);
+            setStr(_this2, getStr(_this2) + c2);
+            return _rt.val(_rt.voidTypeLiteral, void 0);
+          };
+          rt2.regFunc(pushBackFn, stringType, "push_back", [rt2.charTypeLiteral], rt2.voidTypeLiteral);
+          const popBackFn = (_rt, _this2) => {
+            const s2 = getStr(_this2);
+            if (s2.length > 0) setStr(_this2, s2.slice(0, -1));
+            return _rt.val(_rt.voidTypeLiteral, void 0);
+          };
+          rt2.regFunc(popBackFn, stringType, "pop_back", [], rt2.voidTypeLiteral);
+          const atFn = (_rt, _this2, idx) => {
+            const s2 = getStr(_this2);
+            const i = _rt.cast(_rt.intTypeLiteral, idx).v;
+            if (i < 0 || i >= s2.length) {
+              _rt.raiseException(`string::at index out of range: ${i}`);
+            }
+            return _rt.val(_rt.charTypeLiteral, s2.charCodeAt(i));
+          };
+          rt2.regFunc(atFn, stringType, "at", [rt2.intTypeLiteral], rt2.charTypeLiteral);
+          const substr1Fn = (_rt, _this2, pos) => {
+            const s2 = getStr(_this2);
+            const p = _rt.cast(_rt.intTypeLiteral, pos).v;
+            if (p < 0 || p > s2.length) _rt.raiseException(`string::substr out of range: ${p}`);
+            return makeStrVal(s2.slice(p), false);
+          };
+          const substr2Fn = (_rt, _this2, pos, len) => {
+            const s2 = getStr(_this2);
+            const p = _rt.cast(_rt.intTypeLiteral, pos).v;
+            const n = _rt.cast(_rt.intTypeLiteral, len).v;
+            if (p < 0 || p > s2.length) _rt.raiseException(`string::substr out of range: ${p}`);
+            return makeStrVal(n < 0 ? s2.slice(p) : s2.slice(p, p + n), false);
+          };
+          rt2.regFunc(substr1Fn, stringType, "substr", [rt2.intTypeLiteral], stringType);
+          rt2.regFunc(substr2Fn, stringType, "substr", [rt2.intTypeLiteral, rt2.intTypeLiteral], stringType);
+          const appendFn = (_rt, _this2, other) => {
+            setStr(_this2, getStr(_this2) + anyToJsStr(_rt, other));
+            return _this2;
+          };
+          rt2.regFunc(appendFn, stringType, "append", [stringType], stringType);
+          rt2.regFunc(appendFn, stringType, "append", [pchar2], stringType);
+          const find1Fn = (_rt, _this2, needle) => {
+            const s2 = getStr(_this2);
+            const n = anyToJsStr(_rt, needle);
+            return _rt.val(_rt.intTypeLiteral, s2.indexOf(n));
+          };
+          const find2Fn = (_rt, _this2, needle, pos) => {
+            const s2 = getStr(_this2);
+            const n = anyToJsStr(_rt, needle);
+            const p = Math.max(0, _rt.cast(_rt.intTypeLiteral, pos).v);
+            return _rt.val(_rt.intTypeLiteral, s2.indexOf(n, p));
+          };
+          rt2.regFunc(find1Fn, stringType, "find", [stringType], rt2.intTypeLiteral);
+          rt2.regFunc(find1Fn, stringType, "find", [pchar2], rt2.intTypeLiteral);
+          rt2.regFunc(find1Fn, stringType, "find", [rt2.charTypeLiteral], rt2.intTypeLiteral);
+          rt2.regFunc(find2Fn, stringType, "find", [stringType, rt2.intTypeLiteral], rt2.intTypeLiteral);
+          rt2.regFunc(find2Fn, stringType, "find", [pchar2, rt2.intTypeLiteral], rt2.intTypeLiteral);
+          rt2.regFunc(find2Fn, stringType, "find", [rt2.charTypeLiteral, rt2.intTypeLiteral], rt2.intTypeLiteral);
+          const compareFn = (_rt, _this2, other) => {
+            const a2 = getStr(_this2);
+            const b2 = anyToJsStr(_rt, other);
+            return _rt.val(_rt.intTypeLiteral, a2 === b2 ? 0 : a2 < b2 ? -1 : 1);
+          };
+          rt2.regFunc(compareFn, stringType, "compare", [stringType], rt2.intTypeLiteral);
+          rt2.regFunc(compareFn, stringType, "compare", [pchar2], rt2.intTypeLiteral);
+          const cstrFn = (_rt, _this2) => _rt.makeCharArrayFromString(getStr(_this2));
+          rt2.regFunc(cstrFn, stringType, "c_str", [], pchar2);
+          const frontFn = (_rt, _this2) => {
+            const s2 = getStr(_this2);
+            if (!s2.length) _rt.raiseException("string::front on empty string");
+            return _rt.val(_rt.charTypeLiteral, s2.charCodeAt(0));
+          };
+          const backFn = (_rt, _this2) => {
+            const s2 = getStr(_this2);
+            if (!s2.length) _rt.raiseException("string::back on empty string");
+            return _rt.val(_rt.charTypeLiteral, s2.charCodeAt(s2.length - 1));
+          };
+          rt2.regFunc(frontFn, stringType, "front", [], rt2.charTypeLiteral);
+          rt2.regFunc(backFn, stringType, "back", [], rt2.charTypeLiteral);
+          const erase1Fn = (_rt, _this2, pos) => {
+            const s2 = getStr(_this2);
+            const p = Math.max(0, Math.min(s2.length, _rt.cast(_rt.intTypeLiteral, pos).v));
+            setStr(_this2, s2.slice(0, p));
+            return _this2;
+          };
+          const erase2Fn = (_rt, _this2, pos, len) => {
+            const s2 = getStr(_this2);
+            const p = Math.max(0, Math.min(s2.length, _rt.cast(_rt.intTypeLiteral, pos).v));
+            const n = Math.max(0, _rt.cast(_rt.intTypeLiteral, len).v);
+            setStr(_this2, s2.slice(0, p) + s2.slice(p + n));
+            return _this2;
+          };
+          rt2.regFunc(erase1Fn, stringType, "erase", [rt2.intTypeLiteral], stringType);
+          rt2.regFunc(erase2Fn, stringType, "erase", [rt2.intTypeLiteral, rt2.intTypeLiteral], stringType);
+          const insertFn = (_rt, _this2, pos, ins) => {
+            const s2 = getStr(_this2);
+            const p = Math.max(0, Math.min(s2.length, _rt.cast(_rt.intTypeLiteral, pos).v));
+            const sub = anyToJsStr(_rt, ins);
+            setStr(_this2, s2.slice(0, p) + sub + s2.slice(p));
+            return _this2;
+          };
+          rt2.regFunc(insertFn, stringType, "insert", [rt2.intTypeLiteral, stringType], stringType);
+          rt2.regFunc(insertFn, stringType, "insert", [rt2.intTypeLiteral, pchar2], stringType);
+          const replaceFn = (_rt, _this2, pos, len, rep) => {
+            const s2 = getStr(_this2);
+            const p = Math.max(0, Math.min(s2.length, _rt.cast(_rt.intTypeLiteral, pos).v));
+            const n = Math.max(0, _rt.cast(_rt.intTypeLiteral, len).v);
+            const sub = anyToJsStr(_rt, rep);
+            setStr(_this2, s2.slice(0, p) + sub + s2.slice(p + n));
+            return _this2;
+          };
+          rt2.regFunc(replaceFn, stringType, "replace", [rt2.intTypeLiteral, rt2.intTypeLiteral, stringType], stringType);
+          rt2.regFunc(replaceFn, stringType, "replace", [rt2.intTypeLiteral, rt2.intTypeLiteral, pchar2], stringType);
+          const toStrNum = (_rt, _this2, x) => makeStrVal(String(x.v), false);
+          rt2.regFunc(toStrNum, "global", "to_string", [rt2.intTypeLiteral], stringType);
+          rt2.regFunc(toStrNum, "global", "to_string", [rt2.longTypeLiteral], stringType);
+          rt2.regFunc(toStrNum, "global", "to_string", [rt2.floatTypeLiteral], stringType);
+          rt2.regFunc(toStrNum, "global", "to_string", [rt2.doubleTypeLiteral], stringType);
+          rt2.regFunc((_rt, _this2, s2) => {
+            const n = parseInt(getStr(s2), 10);
+            if (Number.isNaN(n)) _rt.raiseException("stoi: invalid argument");
+            return _rt.val(_rt.intTypeLiteral, n);
+          }, "global", "stoi", [stringType], rt2.intTypeLiteral);
+          rt2.regFunc((_rt, _this2, s2) => {
+            const n = parseFloat(getStr(s2));
+            if (Number.isNaN(n)) _rt.raiseException("stod: invalid argument");
+            return _rt.val(_rt.doubleTypeLiteral, n);
+          }, "global", "stod", [stringType], rt2.doubleTypeLiteral);
+          rt2.regFunc((_rt, _this2, s2) => {
+            const n = parseFloat(getStr(s2));
+            if (Number.isNaN(n)) _rt.raiseException("stof: invalid argument");
+            return _rt.val(_rt.floatTypeLiteral, n);
+          }, "global", "stof", [stringType], rt2.floatTypeLiteral);
+          const istreamSig = rt2.getTypeSignature({ type: "class", name: "istream" });
+          if (istreamSig in rt2.types) {
+            const istreamType = { type: "class", name: "istream" };
+            const getlineStr = (_rt, _this2, _cin, outStr, delimV) => {
+              const delim = delimV != null ? String.fromCharCode(delimV.v) : "\n";
+              let b2 = _cin.v.buf || "";
+              if (b2.length === 0 && _cin.v.istream && typeof _cin.v.istream.drain === "function") {
+                b2 = _cin.v.buf = _cin.v.istream.drain() || "";
+              }
+              _cin.v.eofbit = b2.length === 0;
+              const idx = b2.indexOf(delim);
+              let line;
+              if (idx === -1) {
+                line = b2;
+                _cin.v.buf = "";
+                _cin.v.failbit = line.length === 0;
+              } else {
+                line = b2.slice(0, idx);
+                _cin.v.buf = b2.slice(idx + 1);
+                _cin.v.failbit = false;
+              }
+              setStr(outStr, line);
+              return _cin;
+            };
+            rt2.regFunc(getlineStr, "global", "getline", [istreamType, stringType], istreamType);
+            rt2.regFunc(getlineStr, "global", "getline", [istreamType, stringType, rt2.charTypeLiteral], istreamType);
+          }
         }
       };
     }
@@ -28094,6 +28541,7 @@ var JSCPP_EXPORT = (() => {
         cstdlib: require_cstdlib(),
         ctime: require_ctime(),
         iomanip: require_iomanip(),
+        string: require_jscpp_string(),
         foo: require_dummy_class_foo()
       };
       var headerAlias = {
@@ -28127,6 +28575,9 @@ var JSCPP_EXPORT = (() => {
         };
         rt_1.mergeConfig(_config, config);
         const rt2 = new rt_1.CRuntime(_config);
+        if (typeof _config.registerTypes === "function") {
+          _config.registerTypes(rt2);
+        }
         code = code.toString();
         const oldCode = code;
         code = preprocessor.parse(rt2, code);
