@@ -10,9 +10,20 @@
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16x16.png">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
   <script>
-    if (!window.crossOriginIsolated && 'serviceWorker' in navigator) {
-      const s = document.createElement('script'); s.src = './coi-serviceworker.js'; document.head.appendChild(s);
-    }
+    (function () {
+      const isNativeCap = Boolean(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+      if (isNativeCap) {
+        if ('serviceWorker' in navigator && navigator.serviceWorker.getRegistrations) {
+          navigator.serviceWorker.getRegistrations().then(function (regs) {
+            regs.forEach(function (r) { r.unregister(); });
+          }).catch(function () {});
+        }
+        return;
+      }
+      if (!window.crossOriginIsolated && 'serviceWorker' in navigator) {
+        const s = document.createElement('script'); s.src = './coi-serviceworker.js'; document.head.appendChild(s);
+      }
+    })();
   </script>
   <style id="critical-splash-css">
     /* Critical Instant Reset: Prevent unstyled content flash on slow networks */
@@ -307,7 +318,7 @@
         <img src="assets/icon.svg" width="34" height="34" alt="ThinkCode Logo">
         <div>
           <b>ThinkCode Lab</b>
-          <small>v1.3.2 • <span id="runtimeState" class="state-drawer" data-s="idle">offline</span></small>
+          <small>v1.3.3 (Build 10) • <span id="runtimeState" class="state-drawer" data-s="idle">offline</span></small>
         </div>
       </div>
       <button type="button" class="drawer-close" id="btnCloseDrawer" aria-label="Close menu">✕</button>
@@ -318,8 +329,8 @@
       <a href="/download" class="drawer-dl-card">
         <div class="ddl-icon">📱</div>
         <div class="ddl-info">
-          <b>Download Android App</b>
-          <span>100% Offline APK (~17 MB)</span>
+          <b>Download Android App (v1.3.3)</b>
+          <span>ThinkCodeLab-v1.3.3.apk (~17.7 MB)</span>
         </div>
         <div class="ddl-badge">Get APK</div>
       </a>

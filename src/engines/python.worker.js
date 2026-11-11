@@ -1,13 +1,30 @@
 // Classic worker: real CPython 3.12 (Pyodide) running fully offline with runtime interactive input.
 let py = null, base = '', queue = [];
 let status = null, dataLen = null, dataBuf = null;
+let nativeStdin = false;
 const post = (t, s) => postMessage({ t, s });
 const dec = new TextDecoder();
 const clean = m => { const i = m.indexOf('  File "<exec>"'); return i > 0 ? 'Traceback (most recent call last):\n' + m.slice(i) : m; };
 
+function readNativeStdinSync() {
+  post('need_input');
+  try {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', base + '__native_stdin?ts=' + Date.now(), false);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send('{}');
+    if (xhr.status === 200 && xhr.responseText) {
+      const res = JSON.parse(xhr.responseText);
+      if (!res.cancelled) return String(res.text ?? '');
+    }
+  } catch (_) {}
+  return null;
+}
+
 onmessage = async ({ data }) => {
   if (data.type === 'init') {
     base = data.base;
+    nativeStdin = Boolean(data.nativeStdin);
     if (data.sharedCtrl && data.sharedData) {
       status = new Int32Array(data.sharedCtrl, 0, 1);
       dataLen = new Int32Array(data.sharedCtrl, 4, 1);
@@ -38,7 +55,12 @@ onmessage = async ({ data }) => {
             Atomics.store(status, 0, 0);
             return null;
           }
-          // Fallback only if SharedArrayBuffer unavailable
+          // Priority 2: Android WebView Native Stdin Bridge
+          if (nativeStdin) {
+            const val = readNativeStdinSync();
+            return val === null ? null : val + '\n';
+          }
+          // Fallback only if SharedArrayBuffer and Native Stdin Bridge are unavailable
           if (queue.length > 0) return queue.shift() + '\n';
           return null;
         }

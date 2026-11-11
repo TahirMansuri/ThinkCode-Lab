@@ -57,7 +57,8 @@ class WorkerEngine {
         type: 'init',
         base: BASE,
         sharedCtrl,
-        sharedData
+        sharedData,
+        nativeStdin: Boolean(!sharedCtrl && typeof window !== 'undefined' && window.ThinkCodeNativeStdin)
       });
     });
     this.ready.catch(() => { this.isReady = false; });
@@ -68,6 +69,9 @@ class WorkerEngine {
     return this.chain(async () => {
       this.cb = sink;
       await this.load(sink);
+      if (!sharedCtrl && typeof window !== 'undefined' && window.ThinkCodeNativeStdin) {
+        try { window.ThinkCodeNativeStdin.reset(); } catch (_) {}
+      }
       return new Promise(res => {
         this.finish = res;
         this.w?.postMessage({ type: 'run', code, stdin, opts });
@@ -82,6 +86,8 @@ class WorkerEngine {
       Atomics.store(ctrl, 1, enc.length);
       Atomics.store(ctrl, 0, 2); // 2 = INPUT_READY
       Atomics.notify(ctrl, 0, 1);
+    } else if (typeof window !== 'undefined' && window.ThinkCodeNativeStdin) {
+      try { window.ThinkCodeNativeStdin.submit(String(text ?? '')); } catch (_) {}
     }
   }
   sendPromptResponse(value) {
@@ -117,6 +123,8 @@ class WorkerEngine {
       const ctrl = new Int32Array(sharedCtrl);
       Atomics.store(ctrl, 0, 3); // 3 = CANCEL / STOP
       Atomics.notify(ctrl, 0, 1);
+    } else if (typeof window !== 'undefined' && window.ThinkCodeNativeStdin) {
+      try { window.ThinkCodeNativeStdin.cancel(); } catch (_) {}
     }
     const worker = this.w;
     this.w = null;

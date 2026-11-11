@@ -9,7 +9,7 @@
 - **Author:** Tahir Mansuri (Lead System Engineer & HOD, IMRD College).
 - **Core Purpose:** Standalone, 100% OFFLINE multi-language coding playground and mobile IDE for computer science students.
 - **Companion Project:** [ThinkCode Interactive Visualizer & Code Tracer](https://thinkcode.infogalaxy.space/).
-- **Current Version:** **v1.3.2 (Build 9)**.
+- **Current Version:** **v1.3.3 (Build 10)**.
 
 ---
 
@@ -63,11 +63,15 @@
    - All 78 syllabus practicals and language templates use **2-space indentation**.
    - Python code indentation must be validated using `ast.parse()` to avoid indentation errors.
 8. **Firebase Hosting Direct APK Downloads**:
-   - Firebase Hosting on the free Spark plan rejects direct deployment of `.apk` binaries inside `dist/`.
-   - **Solution:** Release APKs are uploaded to GitHub Releases (`TahirMansuri/ThinkCode-Lab`). `firebase.json` uses HTTP 302 redirects from `/ThinkCodeLab.apk` and `/apk` directly to the GitHub release asset URL.
+   - Firebase Hosting on the free Spark plan rejects direct deployment of `.apk` binaries inside `dist/` (`Executable files are forbidden on the Spark billing plan`).
+   - **Solution:** Versioned release APKs (e.g., `ThinkCodeLab-v1.3.3.apk`) are uploaded to GitHub Releases (`TahirMansuri/ThinkCode-Lab`). `firebase.json` uses HTTP 302 redirects from `/ThinkCodeLab-v1.3.3.apk`, `/ThinkCodeLab.apk`, and `/apk` directly to the versioned GitHub release asset URL so Chrome/Android saves the file with the app name and version.
 9. **C & C++ Worker Isolation, Emscripten `Module.then`, and Regression Testing**:
    - Always delete `mod.then` on Emscripten `Picoc` modules before resolving a Promise with them; Emscripten defines `.then` on `Module` which causes infinite `PromiseResolveThenableJob` recursion.
    - Always keep `stdin` reads stopping on `\n` (`b === 10`), flush `stdout` before `Atomics.wait()`, null-guard `#runtimeState` in `setState()`, and run `npm run test:ccpp` after any UI, formatter, or engine change.
+10. **Android WebView `NativeStdinBridge` & `POST /__native_stdin`**:
+   - Android System WebView forces `window.crossOriginIsolated === false` and disables `SharedArrayBuffer` even when COOP/COEP headers are returned.
+   - Interactive `stdin` in Android APKs relies on `NativeStdinBridge` (`MainActivity.java`) + synchronous worker `POST /__native_stdin` XHR interception (`BridgeWebViewClient` & `ServiceWorkerClient`).
+   - Never register `coi-serviceworker.js` when `window.Capacitor?.isNativePlatform?.()` is true, and always ensure `public/coi-serviceworker.js` bypasses non-GET requests and `/__native_stdin`.
 
 ---
 
@@ -80,5 +84,5 @@
 | `npm run build` | Prepare offline runtimes and build production `dist/` |
 | `firebase deploy --only hosting` | Deploy web application to `https://thinkcode-lab.web.app` |
 | `npx cap sync android` | Sync `dist/` web assets with the native Android project |
-| `cd android && ./gradlew assembleRelease` | Build signed release APK (`ThinkCodeLab.apk`) |
+| `cd android && ./gradlew assembleRelease` | Build signed release APK (`ThinkCodeLab-v1.3.3.apk`) |
 | `cd android && ./gradlew bundleRelease` | Build signed Google Play Bundle (`ThinkCodeLab-release.aab`) |

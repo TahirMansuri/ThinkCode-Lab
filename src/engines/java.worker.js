@@ -1,8 +1,24 @@
 // Java (JDK) Worker: 100% offline Java runtime supporting OOP, Scanner, inheritance, arrays, and standard libraries.
 let base = '', queue = [];
 let status = null, dataLen = null, dataBuf = null;
+let nativeStdin = false;
 const dec = new TextDecoder();
 const post = (t, s) => postMessage({ t, s });
+
+function readNativeStdinSync() {
+  post('need_input');
+  try {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', base + '__native_stdin?ts=' + Date.now(), false);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send('{}');
+    if (xhr.status === 200 && xhr.responseText) {
+      const res = JSON.parse(xhr.responseText);
+      if (!res.cancelled) return String(res.text ?? '');
+    }
+  } catch (_) {}
+  return null;
+}
 
 function requestInputFromConsole() {
   // Priority 1: Interactive in-console stdin via SharedArrayBuffer
@@ -20,6 +36,11 @@ function requestInputFromConsole() {
     }
     Atomics.store(status, 0, 0);
     return '\n';
+  }
+  // Priority 2: Android WebView Native Stdin Bridge
+  if (nativeStdin) {
+    const val = readNativeStdinSync();
+    return val === null ? '\n' : val + '\n';
   }
   // Fallback: Pre-buffered input queue
   if (queue.length > 0) {
@@ -1322,6 +1343,7 @@ function createJavaEnvironment() {
 onmessage = async ({ data }) => {
   if (data.type === 'init') {
     base = data.base;
+    nativeStdin = Boolean(data.nativeStdin);
     if (data.sharedCtrl && data.sharedData) {
       status = new Int32Array(data.sharedCtrl, 0, 1);
       dataLen = new Int32Array(data.sharedCtrl, 4, 1);

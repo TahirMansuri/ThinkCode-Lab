@@ -141,11 +141,14 @@ ThinkCode Lab supports true interactive runtime input via a dual-mode communicat
 ```
 
 1. **High-Performance Path (SharedArrayBuffer + Atomics):**
-   - Active when `crossOriginIsolated` is enabled (`Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: require-corp`).
+   - Active on desktop/mobile web browsers where `crossOriginIsolated` is enabled (`Cross-Origin-Opener-Policy: same-origin` and `Cross-Origin-Embedder-Policy: require-corp`).
    - The worker executes `Atomics.wait(int32Array, 0, 0)` to enter a zero-overhead native sleep.
    - The main thread prompts the user, writes the string into the shared memory buffer, and calls `Atomics.notify(int32Array, 0, 1)`.
-2. **Fallback Path (Promise / Async Transform):**
-   - In environments where `SharedArrayBuffer` is unavailable (e.g. older WebViews or non-isolated web contexts), user code with prompt calls is transformed to async/await promises resolved by the `#promptModal`.
+2. **Android WebView Native Stdin Bridge (`POST /__native_stdin` + `@JavascriptInterface`):**
+   - Android System WebView forces `window.crossOriginIsolated === false` and disables `SharedArrayBuffer` even when native response headers are injected.
+   - In `android/app/src/main/java/com/igc/thinkcodelab/MainActivity.java`, ThinkCode Lab registers `@JavascriptInterface` (`ThinkCodeNativeStdin` with `submit()`, `cancel()`, `reset()`) and intercepts synchronous `POST /__native_stdin` XHR requests from Web Workers inside `BridgeWebViewClient` and `ServiceWorkerClient`, blocking the worker thread cleanly on `StdinSlot` until the student enters input in `#console`.
+3. **Fallback Path (Promise / Async Transform):**
+   - In JavaScript runs or non-isolated web contexts where neither `SharedArrayBuffer` nor the Capacitor native bridge is present, `prompt()` calls resolve asynchronously via `#promptModal`.
 
 ---
 
@@ -168,14 +171,14 @@ ThinkCode Lab supports true interactive runtime input via a dual-mode communicat
 
 ## 📱 5. Native Android Architecture (Capacitor 6)
 
-- **Native Runtime Wrapper:** Powered by [Capacitor](https://capacitorjs.com/) v6.0.4.
+- **Native Runtime Wrapper:** Powered by [Capacitor](https://capacitorjs.com/) v6.1.2 (`MainActivity.java` adds `NativeStdinBridge` and `COOP`/`COEP` response headers).
 - **Android Target Compliance:**
   - `compileSdkVersion = 36` (Android 16 / Latest API).
   - `targetSdkVersion = 36`.
   - `minSdkVersion = 24` (Android 7.0 Nougat+, meeting Google Play Automatic App Protection requirements).
 - **Security & Signing:**
   - Dedicated production RSA 2048-bit release keystore (`thinkcode-lab.keystore`).
-  - Signed using APK Signature Scheme v2 and v1 (JAR signing).
+  - Signed using APK Signature Scheme v2 (`v2SigningEnabled = true` on `minSdkVersion 24+`).
 - **Asset Packaging:**
   - All WebAssembly modules, fonts, and worker scripts are bundled inside `android/app/src/main/assets/public/` for 100% offline access.
   - Built-in aapt rule excludes unnecessary development files.

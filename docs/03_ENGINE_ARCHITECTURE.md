@@ -70,12 +70,12 @@ To run C and C++ inside an offline-first mobile IDE without remote cloud compile
 - **C Engine (`src/engines/c.worker.js`)**:
   - Embedded [PicoC](https://github.com/jpoirier/picoc) ANSI/C99 interpreter compiled directly to WebAssembly (`public/picoc/picoc.js`).
   - Spawns fresh, isolated pre-warmed PicoC WASM instances per execution (with Emscripten's `Module.then` stripped so Promises resolve cleanly without thenable recursion).
-  - Unbuffered `stdout` (`setbuf(stdout, 0)` auto-injected into `main()` and direct `stream_ops.write` streaming) + single-line-stop `stdin` (`b === 10`) over `SharedArrayBuffer` / `Atomics`, preventing EOF retry loops and ensuring prompts flush before blocking input.
+  - Unbuffered `stdout` (`setbuf(stdout, 0)` auto-injected into `main()` and direct `stream_ops.write` streaming) + single-line-stop `stdin` (`b === 10`) over `SharedArrayBuffer` / `Atomics` on Web or the synchronous `POST /__native_stdin` `NativeStdinBridge` on Android WebView, preventing EOF retry loops and ensuring prompts flush before blocking input.
   - Supports true pointers (`int *p = &x`, `**p`), `malloc()` and `free()`, structs, unions, arrays, `long long`/`%lld` normalization, `<conio.h>` tolerance, and standard headers (`stdio.h`, `stdlib.h`, `string.h`, `math.h`).
 - **C++ Engine (`src/engines/cpp.worker.js`)**:
   - **Single Unified Pipeline** powered by patched `JSCPP` (`public/jscpp/jscpp.js` + `scripts/jscpp-string.js`), removing the legacy regex OOP split-brain runner.
   - Token-aware validation and AST/lowering passes support full `std::string` (`getline`, `cin.ignore`, `substr`, `find`, `append`), `<iomanip>`, references (`&`), pointers & hex addresses, `struct`, shared-memory `union`, and OOP classes, constructors, overloading, and inheritance.
-  - Interactive on-demand `cin >>` input bridge ensuring preceding `cout <<` prompts stream before `Atomics.wait()`.
+  - Interactive on-demand `cin >>` input bridge (via `SharedArrayBuffer` or `NativeStdinBridge` on Android) ensuring preceding `cout <<` prompts stream before blocking for input.
 - **Automated Regression Suite (`scripts/test-c-cpp.mjs`)**:
   - Run `npm run test:ccpp` to verify `SharedArrayBuffer` streaming, all C/C++ templates and syllabus practicals, Beautify formatter round-trips, error recovery, and UI `setState()` null-guards.
 
@@ -171,5 +171,5 @@ The Python engine (`src/engines/python.worker.js`) leverages Pyodide v0.26.4 (CP
    - All runtime files (`pyodide.js`, `pyodide.asm.wasm`, `pyodide.asm.js`, and `python_stdlib.zip`) reside in `public/pyodide/`.
    - Operates 100% offline without accessing external CDNs.
 2. **Interactive In-Console `input()`**:
-   - Overrides `sys.stdin.readline` to invoke `Atomics.wait()` on a `SharedArrayBuffer`.
-   - The main thread injects an inline `<input>` field into `#console`, captures student typing, and writes the string to shared memory, resuming CPython instantly.
+   - Overrides `sys.stdin.readline` to invoke `Atomics.wait()` on a `SharedArrayBuffer` on Web, or `readNativeStdinSync()` via `POST /__native_stdin` on Android WebView.
+   - The main thread injects an inline `<input>` field into `#console`, captures student typing, and writes the string to shared memory (or the native bridge slot), resuming CPython instantly.

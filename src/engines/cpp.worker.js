@@ -4,8 +4,24 @@
 
 let base = '', queue = [];
 let status = null, dataLen = null, dataBuf = null;
+let nativeStdin = false;
 const dec = new TextDecoder();
 const post = (t, s) => postMessage({ t, s });
+
+function readNativeStdinSync() {
+  post('need_input');
+  try {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', base + '__native_stdin?ts=' + Date.now(), false);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.send('{}');
+    if (xhr.status === 200 && xhr.responseText) {
+      const res = JSON.parse(xhr.responseText);
+      if (!res.cancelled) return String(res.text ?? '');
+    }
+  } catch (_) {}
+  return null;
+}
 
 function requestInputFromConsole() {
   if (status) {
@@ -21,6 +37,10 @@ function requestInputFromConsole() {
       return dec.decode(copy) + '\n';
     }
     return ''; // Cancelled / Stopped -> end wait loop cleanly
+  }
+  if (nativeStdin) {
+    const val = readNativeStdinSync();
+    return val === null ? '' : val + '\n';
   }
   if (queue.length > 0) {
     return queue.shift() + '\n';
@@ -1938,6 +1958,7 @@ function formatRuntimeError(e) {
 onmessage = async ({ data }) => {
   if (data.type === 'init') {
     base = data.base;
+    nativeStdin = Boolean(data.nativeStdin);
     if (data.sharedCtrl && data.sharedData) {
       status = new Int32Array(data.sharedCtrl, 0, 1);
       dataLen = new Int32Array(data.sharedCtrl, 4, 1);

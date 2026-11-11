@@ -733,7 +733,7 @@ function showDevProfile() {
     </div>
 
     <div class="dev-meta">
-      <span>ThinkCode Lab v1.3.2 (Production Release) • 100% Offline WASM</span>
+      <span>ThinkCode Lab v1.3.3 (Production Release) • 100% Offline WASM</span>
     </div>
   `;
   openSheet('Developer & Architecture', card);

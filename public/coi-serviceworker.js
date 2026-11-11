@@ -5,6 +5,7 @@ if (typeof window === 'undefined') {
   self.addEventListener('activate', (event) => event.waitUntil(self.clients.claim()));
   self.addEventListener('fetch', function (event) {
     const { request } = event;
+    if (request.method !== 'GET' || new URL(request.url).pathname === '/__native_stdin') return;
     if (request.cache === 'only-if-cached' && request.mode !== 'same-origin') return;
     event.respondWith(
       fetch(request).then((response) => {

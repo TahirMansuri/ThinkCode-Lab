@@ -4,6 +4,31 @@
 
 ---
 
+## 🚀 Version 1.3.3 (Build 10) — Native Android Interactive Stdin Bridge & Hardened C/C++ Engines
+*Release Date: November 2026*
+
+### 📱 Native Android WebView Stdin Bridge (`MainActivity.java` & Workers)
+- **Solved Missing `SharedArrayBuffer` on Android WebView**:
+  - Android System WebView forces `window.crossOriginIsolated === false` even when native COOP/COEP headers are present, disabling `SharedArrayBuffer` for blocking terminal input.
+  - Built `NativeStdinBridge` inside `android/app/src/main/java/com/igc/thinkcodelab/MainActivity.java` with `@JavascriptInterface` (`ThinkCodeNativeStdin`: `submit`, `cancel`, `reset`), thread-safe `StdinSlot` synchronization, and request interception for `POST /__native_stdin` across both `BridgeWebViewClient` and `ServiceWorkerClient`.
+  - Updated `src/engines/index.js`, `c.worker.js`, `cpp.worker.js`, `python.worker.js`, and `java.worker.js` with `readNativeStdinSync()` synchronous XHR fallback so interactive `scanf`, `cin >>`, `input()`, and `Scanner` work identically across Web and Android APK.
+  - Disabled `coi-serviceworker.js` registration inside native Capacitor shells and excluded `/__native_stdin` and non-GET requests from service worker interception (`public/coi-serviceworker.js`), eliminating WebView reload loops.
+
+### ⚙️ Hardened C & C++ Engines + Regression Suite (`scripts/test-c-cpp.mjs`)
+- **C Engine (`src/engines/c.worker.js`)**:
+  - Isolated per-run PicoC WASM instances with Emscripten `Module.then` stripped, unbuffered `stdout` (`setbuf(stdout, 0)`), and single-line-stop `stdin` (`b === 10`), ensuring prompts appear before `scanf`/`getchar`/`fgets`.
+- **C++ Engine (`src/engines/cpp.worker.js`)**:
+  - Unified JSCPP pipeline supporting full `std::string`, `<iomanip>`, pointers, references, structs, unions, constructors, overloading, and inheritance with on-demand `cin >>` streaming.
+- **Automated Verification**:
+  - Added `npm run test:ccpp` (**47/47** checks passing) and verified end-to-end interactive execution across C, C++, Python 3.12, and Java inside a real Android API 36 emulator WebView.
+
+### 📦 Versioned APK Distribution & Download Portal (`public/download.html`)
+- **Explicit Version Metadata & Filename**:
+  - Built signed release APK (`versionName "1.3.3"`, `versionCode 10`, ~17.7 MB) packaged as **`ThinkCodeLab-v1.3.3.apk`** so downloaded filenames clearly reflect app name and version on student devices.
+  - Updated `/download` portal, drawer banner (`v1.3.3 (Build 10)`), Developer Profile modal, and Firebase Hosting 302 redirects (`/ThinkCodeLab-v1.3.3.apk`, `/ThinkCodeLab.apk`, `/apk`).
+
+---
+
 ## 🚀 Version 1.3.2 (Build 9) — Adaptive 80:20 Split Ratio & Universal 2-Space Indentation
 *Release Date: November 2026*
 
