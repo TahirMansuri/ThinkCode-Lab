@@ -4,6 +4,23 @@
 
 ---
 
+## 🚀 Version 1.3.4 (Build 11) — Native Android Edge-to-Edge Header Alignment & Dynamic System Bar Contrast
+*Release Date: November 2026*
+
+### 📱 Fixed Top Header Misalignment & Android 15/16 Edge-to-Edge Collision
+- **Root Cause Fixed**: On Android 15/16 (`targetSdkVersion = 36`, `EDGE_TO_EDGE_ENFORCED`), Capacitor 6 `BridgeActivity` placed the WebView underneath the translucent status bar (`env(safe-area-inset-top) > 0`), while `.top` in `src/styles.css` enforced a rigid `height: 40px;` (`box-sizing: border-box`), leaving only ~12px inner height for 22–32px header controls and causing header buttons to crowd the status bar and spill onto the language tab rail.
+- **Native `WindowInsets` Handling (`MainActivity.java`)**:
+  - Enabled explicit `WindowCompat.setDecorFitsSystemWindows(window, false)` with `ViewCompat.setOnApplyWindowInsetsListener` on `android.R.id.content` covering `systemBars() | displayCutout() | ime()` and returning `WindowInsetsCompat.CONSUMED` so WebView sits strictly between system bars/notch and soft keyboard without CSS double-padding.
+  - Added `@JavascriptInterface` `SystemUiBridge` (`ThinkCodeSystemUI.setTheme(isLight)`) called from `src/main.js` (`theme()`) after splash dismissal to dynamically update system bar backgrounds (`#0E1622` dark / `#FFFFFF` light) and `WindowInsetsControllerCompat` light/dark status & navigation icon appearance.
+- **Responsive Header & Navigation Drawer Polish (`src/styles.css`, `index.html`)**:
+  - Replaced rigid `height: 40px;` on `.top` with flexible `min-height: calc(46px + env(safe-area-inset-top, 0px)); height: auto; padding: calc(env(safe-area-inset-top, 0px) + 5px) 12px 5px;`, centered `.brand`, `.btn-dev-lead`, and `.btn-menu` along one horizontal midline, defined `--hover`, and added `body { padding-bottom: env(safe-area-inset-bottom, 0px); }`.
+  - Fixed Android Chromium compositor tile overlap and long runtime-status text truncation inside `#menuDrawer` (`contain: layout paint;`, solid `.drawer-header`/`.drawer-body`, `flex-shrink: 0;` header/footer), and tightened console ready-banner margins (`margin: 4px auto`) so status notices fit inside the 20% initial Output pane.
+- **Verified & Packaged (`ThinkCodeLab-v1.3.4.apk`)**:
+  - Verified visually on an Android API 36 emulator (`Pixel_3a_API_36`) in Dark Mode, Drawer Open, and Light Mode plus `47/47` automated C/C++ runtime checks (`npm run test:ccpp`).
+  - Updated version metadata to **`v1.3.4 (Build 11)`** across `android/app/build.gradle`, `index.html`, `public/download.html`, and Firebase 302 redirects (`/ThinkCodeLab-v1.3.4.apk`, `/ThinkCodeLab.apk`, `/apk`).
+
+---
+
 ## 🚀 Version 1.3.3 (Build 10) — Native Android Interactive Stdin Bridge & Hardened C/C++ Engines
 *Release Date: November 2026*
 

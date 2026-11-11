@@ -10,7 +10,7 @@
 
 [![Parent Initiative: ThinkCode](https://img.shields.io/badge/Companion_To-ThinkCode_Visualizer-8e5bd6?style=for-the-badge&logo=googlechrome&logoColor=white)](https://thinkcode.infogalaxy.space/)
 [![Live Web App](https://img.shields.io/badge/Live_Web_App-thinkcode--lab.web.app-FFB04A?style=for-the-badge&logo=firebase&logoColor=black)](https://thinkcode-lab.web.app)
-[![Android APK v1.3.3](https://img.shields.io/badge/Android_APK-v1.3.3_Build_10_(17.7MB)-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://thinkcode-lab.web.app/download)
+[![Android APK v1.3.4](https://img.shields.io/badge/Android_APK-v1.3.4_Build_11_(17.7MB)-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://thinkcode-lab.web.app/download)
 [![Author: Tahir Mansuri](https://img.shields.io/badge/Author-Tahir_Mansuri-blue?style=for-the-badge&logo=github&logoColor=white)](https://github.com/TahirMansuri)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
@@ -99,7 +99,7 @@ flowchart TD
   end
 
   subgraph Native["📱 Native Mobile Wrapper"]
-    CAP["Capacitor 6 Android Runtime\n• Target API 36 / Min API 24\n• NativeStdinBridge (/__native_stdin)\n• Self-Contained Offline Assets\n• Signed Release APK v1.3.3 (~17.7MB)"]
+    CAP["Capacitor 6 Android Runtime\n• Target API 36 / Min API 24\n• Edge-to-Edge WindowInsets + Theme Sync\n• NativeStdinBridge (/__native_stdin)\n• Signed Release APK v1.3.4 (~17.7MB)"]
   end
 
   CM --> COORD
@@ -237,7 +237,7 @@ firebase deploy --only hosting
 
 ## 📱 Android App (Release APK)
 
-ThinkCode Lab compiles into a standalone, 100% offline native Android application (**v1.3.3 / Build 10**, ~17.7 MB) with all WASM runtimes embedded:
+ThinkCode Lab compiles into a standalone, 100% offline native Android application (**v1.3.4 / Build 11**, ~17.7 MB) with all WASM runtimes embedded:
 
 ```bash
 # 1. Build and sync web assets to Android
@@ -248,9 +248,9 @@ npx cap sync android
 cd android
 ./gradlew assembleRelease
 ```
-- **Compiled Release APK:** `ThinkCodeLab-v1.3.3.apk` (Version Code `10`, ~17.7 MB)
+- **Compiled Release APK:** `ThinkCodeLab-v1.3.4.apk` (Version Code `11`, ~17.7 MB)
 - **Target API:** API 36 (Android 16) | **Min API:** API 24 (Android 7.0+)
-- **Download Portal:** **[thinkcode-lab.web.app/download](https://thinkcode-lab.web.app/download)** (or direct **[ThinkCodeLab-v1.3.3.apk](https://thinkcode-lab.web.app/ThinkCodeLab-v1.3.3.apk)**)
+- **Download Portal:** **[thinkcode-lab.web.app/download](https://thinkcode-lab.web.app/download)** (or direct **[ThinkCodeLab-v1.3.4.apk](https://thinkcode-lab.web.app/ThinkCodeLab-v1.3.4.apk)**)
 
 ---
 
@@ -261,7 +261,7 @@ All technical architecture guides, engine specifications, changelogs, roadmaps, 
 - 📘 [**docs/01_PROJECT_OVERVIEW.md**](docs/01_PROJECT_OVERVIEW.md) — Vision, problem statement, core value proposition, and target audience.
 - 🛠️ [**docs/02_TECH_STACK.md**](docs/02_TECH_STACK.md) — Technical architecture, threading model, and runtime protocols.
 - ⚙️ [**docs/03_ENGINE_ARCHITECTURE.md**](docs/03_ENGINE_ARCHITECTURE.md) — Deep dive into Java AST/Swing emulation, C/C++ PicoC/JSCPP, Clang upgrade path, PHP CGI bridge, and Oracle SQL layer.
-- 📝 [**docs/04_CHANGELOG.md**](docs/04_CHANGELOG.md) — Comprehensive version history from v1.0.0 through **v1.3.3 (Build 10)**.
+- 📝 [**docs/04_CHANGELOG.md**](docs/04_CHANGELOG.md) — Comprehensive version history from v1.0.0 through **v1.3.4 (Build 11)**.
 - 🗺️ [**docs/05_ROADMAP.md**](docs/05_ROADMAP.md) — Completed milestones, near-term enhancements (Multi-file manager, PL/SQL, ER diagrams), and future ecosystem plans.
 - 🚀 [**docs/06_PLAYSTORE_RELEASE.md**](docs/06_PLAYSTORE_RELEASE.md) — Keystore credentials, SHA-256 certificate fingerprints, Play Protect appeal guide, and Play Store submission details.
 - 🧠 [**docs/07_DEVELOPER_MEMORY.md**](docs/07_DEVELOPER_MEMORY.md) — Developer memory, strictly enforced rules (Web-only deployment, backup policy), and technical gotchas learned.

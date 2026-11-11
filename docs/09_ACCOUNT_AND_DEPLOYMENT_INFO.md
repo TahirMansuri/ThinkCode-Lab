@@ -11,8 +11,8 @@
 | :--- | :--- | :--- |
 | **Application Title** | `ThinkCode Lab` | Former development codename: *CodeForge* |
 | **Android Application ID** | `com.igc.thinkcodelab` | Immutable package identifier on Google Play |
-| **Current Production Version** | `v1.3.3` | Semantic release version |
-| **Current Version Code** | `10` | Integer build counter for Android package |
+| **Current Production Version** | `v1.3.4` | Semantic release version |
+| **Current Version Code** | `11` | Integer build counter for Android package |
 | **Lead Developer / Architect** | **Tahir Mansuri** | Lead System Engineer & HOD, IMRD College |
 | **Organization / Agency** | **InfoGalaxy Computers** | Shirpur, Maharashtra, India |
 | **Developer Email** | `tprocks786@gmail.com` | Primary Git author and developer contact |
@@ -28,10 +28,10 @@
 | :--- | :--- | :--- |
 | **Production Web App (Primary)** | [https://thinkcode-lab.web.app](https://thinkcode-lab.web.app) | Live 100% offline-ready web IDE |
 | **Production Web App (Secondary)** | [https://thinkcode-lab.firebaseapp.com](https://thinkcode-lab.firebaseapp.com) | Alternate Firebase SSL domain |
-| **APK Web Download Portal** | [https://thinkcode-lab.web.app/download](https://thinkcode-lab.web.app/download) | Direct mobile-optimized installer page (`v1.3.3`, Build `10`) |
-| **Versioned APK Download URL (Redirect)** | [https://thinkcode-lab.web.app/ThinkCodeLab-v1.3.3.apk](https://thinkcode-lab.web.app/ThinkCodeLab-v1.3.3.apk) | 302 redirect saving `ThinkCodeLab-v1.3.3.apk` |
-| **Direct APK Download URL (Redirect)** | [https://thinkcode-lab.web.app/ThinkCodeLab.apk](https://thinkcode-lab.web.app/ThinkCodeLab.apk) | 302 redirect directly to latest GitHub release binary (`ThinkCodeLab-v1.3.3.apk`) |
-| **Short APK Download Link** | [https://thinkcode-lab.web.app/apk](https://thinkcode-lab.web.app/apk) | Quick short URL for student sharing (`ThinkCodeLab-v1.3.3.apk`) |
+| **APK Web Download Portal** | [https://thinkcode-lab.web.app/download](https://thinkcode-lab.web.app/download) | Direct mobile-optimized installer page (`v1.3.4`, Build `11`) |
+| **Versioned APK Download URL (Redirect)** | [https://thinkcode-lab.web.app/ThinkCodeLab-v1.3.4.apk](https://thinkcode-lab.web.app/ThinkCodeLab-v1.3.4.apk) | 302 redirect saving `ThinkCodeLab-v1.3.4.apk` |
+| **Direct APK Download URL (Redirect)** | [https://thinkcode-lab.web.app/ThinkCodeLab.apk](https://thinkcode-lab.web.app/ThinkCodeLab.apk) | 302 redirect directly to latest GitHub release binary (`ThinkCodeLab-v1.3.4.apk`) |
+| **Short APK Download Link** | [https://thinkcode-lab.web.app/apk](https://thinkcode-lab.web.app/apk) | Quick short URL for student sharing (`ThinkCodeLab-v1.3.4.apk`) |
 | **Privacy Policy Portal** | [https://thinkcode-lab.web.app/privacy.html](https://thinkcode-lab.web.app/privacy.html) | Live privacy policy for Google Play compliance |
 | **Companion Visualization Portal** | [https://thinkcode.infogalaxy.space/](https://thinkcode.infogalaxy.space/) | ThinkCode algorithm visualizer and tracing tool |
 
@@ -75,8 +75,8 @@ For `SharedArrayBuffer` and `Atomics` multi-threaded stdin execution in the brow
 | **Default Branch** | `main` | Production-ready main branch |
 | **Active Release Branch** | `release/v1.3.2` | Feature development and release branch |
 | **GitHub Releases Page** | [github.com/TahirMansuri/ThinkCode-Lab/releases](https://github.com/TahirMansuri/ThinkCode-Lab/releases) | Versioned binary distribution page |
-| **Latest Release Tag** | `v1.3.3` | Tag containing `ThinkCodeLab-v1.3.3.apk` asset (`versionCode 10`) |
-| **Release APK Direct CDN** | [github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.3/ThinkCodeLab-v1.3.3.apk](https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.3/ThinkCodeLab-v1.3.3.apk) | GitHub release asset binary download |
+| **Latest Release Tag** | `v1.3.4` | Tag containing `ThinkCodeLab-v1.3.4.apk` asset (`versionCode 11`) |
+| **Release APK Direct CDN** | [github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.4/ThinkCodeLab-v1.3.4.apk](https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.4/ThinkCodeLab-v1.3.4.apk) | GitHub release asset binary download |
 | **Git User Config** | Name: `TahirMansuri`<br>Email: `tprocks786@gmail.com` | Configured git identity |
 
 ---
@@ -113,11 +113,12 @@ For `SharedArrayBuffer` and `Atomics` multi-threaded stdin execution in the brow
 56:86:1D:2C:E4:67:30:8E:D6:30:94:89:20:F0:E1:FD:CC:4D:E2:CB
 ```
 
-#### 3. v1.3.3 Release APK Binary SHA-256 File Hash
-*(Exact 64-character lowercase hex hash of `ThinkCodeLab-v1.3.3.apk` [Build 10] for Google Play Protect Appeal forms)*
+#### 3. v1.3.4 Release APK Binary SHA-256 File Hash
+*(Exact 64-character lowercase hex hash of `ThinkCodeLab-v1.3.4.apk` [Build 11] for Google Play Protect Appeal forms)*
 ```text
-6f5dbdb720c9df0c81ff4edbb6061b21ad7066cd4f47a8a1627232f50b53447e
+879856e091aa8e0244f7125de596dd76a6596e1e2cf1eec8c32419d0
 ```
+- *(Previous `v1.3.3` Build 10 hash: `6f5dbdb720c9df0c81ff4edbb6061b21ad7066cd4f47a8a1627232f50b53447e`)*
 - *(Previous `v1.3.2` Build 9 hash: `d01bf35bc3c077f02c5861da2df58898425a99e08f8d60c89801bd7232267566`)*
 
 ---
@@ -134,7 +135,7 @@ For `SharedArrayBuffer` and `Atomics` multi-threaded stdin execution in the brow
 | **Play Console Category** | **Education / Developer Tools** | App Store classification |
 | **Content Rating** | **Everyone (PEGI 3)** | Clean educational coding environment |
 | **Data Safety Declaration** | **Zero Data Collected** | 100% offline client-side code execution |
-| **Release Artifact (Sideload)** | `ThinkCodeLab-v1.3.3.apk` (~17.7 MB, Build 10) | Standalone APK with all WASM runtimes embedded |
+| **Release Artifact (Sideload)** | `ThinkCodeLab-v1.3.4.apk` (~17.7 MB, Build 11) | Standalone APK with all WASM runtimes embedded |
 | **Release Artifact (Store)** | `ThinkCodeLab-release.aab` (~16.2 MB) | Google Play Android App Bundle |
 
 ---
@@ -195,6 +196,6 @@ git checkout release/v1.3.2
 | **Gradle Signing Config** | `android/app/build.gradle` | Connects release build to keystore |
 | **Android SDK Variables** | `android/variables.gradle` | Defines `targetSdkVersion = 36`, `minSdkVersion = 24` |
 | **Firebase Target Mapping**| `.firebaserc` | Maps default project to `igcquiz-5d910` |
-| **Firebase Hosting Rules** | `firebase.json` | COOP/COEP headers and `/ThinkCodeLab-v1.3.3.apk`, `/ThinkCodeLab.apk`, `/apk` redirects |
+| **Firebase Hosting Rules** | `firebase.json` | COOP/COEP headers and `/ThinkCodeLab-v1.3.4.apk`, `/ThinkCodeLab.apk`, `/apk` redirects |
 | **Master Credentials Guide**| `docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md` | This document |
 

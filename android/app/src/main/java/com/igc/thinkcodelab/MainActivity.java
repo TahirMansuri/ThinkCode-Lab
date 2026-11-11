@@ -1,12 +1,22 @@
 package com.igc.thinkcodelab;
 
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
 import android.webkit.JavascriptInterface;
 import android.webkit.ServiceWorkerClient;
 import android.webkit.ServiceWorkerController;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import com.getcapacitor.BridgeActivity;
 import com.getcapacitor.BridgeWebViewClient;
 import java.io.ByteArrayInputStream;
@@ -18,6 +28,12 @@ import org.json.JSONObject;
 public class MainActivity extends BridgeActivity {
 
     private static final String NATIVE_STDIN_PATH = "/__native_stdin";
+    private static final int SPLASH_SYSTEM_BG = Color.parseColor("#080C14");
+    private static final int DARK_SYSTEM_BG = Color.parseColor("#0E1622");
+    private static final int LIGHT_SYSTEM_BG = Color.parseColor("#FFFFFF");
+
+    private boolean currentLightSystemBars = false;
+    private boolean appReadyApplied = false;
 
     private static final class StdinSlot {
         boolean done = false;
@@ -73,6 +89,87 @@ public class MainActivity extends BridgeActivity {
         }
     }
 
+    private final class SystemUiBridge {
+        @JavascriptInterface
+        public void setTheme(boolean isLight) {
+            runOnUiThread(() -> {
+                appReadyApplied = true;
+                applySystemBarAppearance(isLight, true);
+            });
+        }
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setupEdgeToEdgeInsets();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        applySystemBarAppearance(currentLightSystemBars, appReadyApplied);
+    }
+
+    private void setupEdgeToEdgeInsets() {
+        Window window = getWindow();
+        if (window == null) return;
+
+        WindowCompat.setDecorFitsSystemWindows(window, false);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.setStatusBarContrastEnforced(false);
+            window.setNavigationBarContrastEnforced(false);
+        }
+
+        View contentView = findViewById(android.R.id.content);
+        if (contentView != null) {
+            contentView.setBackgroundColor(SPLASH_SYSTEM_BG);
+            ViewCompat.setOnApplyWindowInsetsListener(contentView, (v, windowInsets) -> {
+                Insets bars = windowInsets.getInsets(
+                    WindowInsetsCompat.Type.systemBars() | WindowInsetsCompat.Type.displayCutout()
+                );
+                Insets ime = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
+                int bottom = Math.max(bars.bottom, ime.bottom);
+                v.setPadding(bars.left, bars.top, bars.right, bottom);
+                return WindowInsetsCompat.CONSUMED;
+            });
+            ViewCompat.requestApplyInsets(contentView);
+        }
+
+        applySystemBarAppearance(false, false);
+    }
+
+    @SuppressWarnings("deprecation")
+    private void applySystemBarAppearance(boolean isLight, boolean isAppReady) {
+        currentLightSystemBars = isLight;
+        Window window = getWindow();
+        if (window == null) return;
+
+        int barBg = !isAppReady ? SPLASH_SYSTEM_BG : (isLight ? LIGHT_SYSTEM_BG : DARK_SYSTEM_BG);
+        View contentView = findViewById(android.R.id.content);
+        if (contentView != null) {
+            contentView.setBackgroundColor(barBg);
+        }
+
+        if (Build.VERSION.SDK_INT < 35) {
+            window.setStatusBarColor(Color.TRANSPARENT);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                window.setNavigationBarColor(Color.TRANSPARENT);
+            } else {
+                // API 24-25 lack light navigation bar icons; keep dark scrim for legible 3-button icons
+                window.setNavigationBarColor(DARK_SYSTEM_BG);
+            }
+        }
+
+        WindowInsetsControllerCompat controller =
+            WindowCompat.getInsetsController(window, window.getDecorView());
+        if (controller != null) {
+            controller.setAppearanceLightStatusBars(isLight && isAppReady);
+            controller.setAppearanceLightNavigationBars(isLight && isAppReady);
+        }
+    }
+
     @Override
     protected void load() {
         super.load();
@@ -80,6 +177,7 @@ public class MainActivity extends BridgeActivity {
 
         if (this.bridge.getWebView() != null) {
             this.bridge.getWebView().addJavascriptInterface(new NativeStdinBridge(), "ThinkCodeNativeStdin");
+            this.bridge.getWebView().addJavascriptInterface(new SystemUiBridge(), "ThinkCodeSystemUI");
         }
 
         ServiceWorkerController.getInstance().setServiceWorkerClient(new ServiceWorkerClient() {

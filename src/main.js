@@ -733,7 +733,7 @@ function showDevProfile() {
     </div>
 
     <div class="dev-meta">
-      <span>ThinkCode Lab v1.3.3 (Production Release) • 100% Offline WASM</span>
+      <span>ThinkCode Lab v1.3.4 (Production Release) • 100% Offline WASM</span>
     </div>
   `;
   openSheet('Developer & Architecture', card);
@@ -994,12 +994,20 @@ $('menuBtnDev')?.addEventListener('click', () => {
   showDevProfile();
 });
 
+function syncNativeSystemBars(t) {
+  if (!document.body.classList.contains('app-ready')) return;
+  try {
+    window.ThinkCodeSystemUI?.setTheme?.(t === 'light');
+  } catch (_) {}
+}
+
 function theme(t) {
   document.documentElement.dataset.theme = t; store.set('cf.theme', t);
   const meta = document.querySelector('meta[name=theme-color]');
-  if (meta) meta.content = t === 'dark' ? '#0C1720' : '#EEF2F5';
+  if (meta) meta.content = t === 'dark' ? '#0E1622' : '#FFFFFF';
   $('btnTheme')?.querySelector('use')?.setAttribute('href', t === 'dark' ? '#i-sun' : '#i-moon');
   updateDrawerThemeStatus();
+  syncNativeSystemBars(t);
 }
 if ($('btnTheme')) $('btnTheme').onclick = () => theme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
 theme(store.get('cf.theme', 'dark'));
@@ -1785,6 +1793,7 @@ Promise.all([
 ]).then(() => {
   requestAnimationFrame(() => {
     document.body.classList.add('app-ready');
+    syncNativeSystemBars(document.documentElement.dataset.theme || store.get('cf.theme', 'dark'));
     const splash = $('app-splash');
     if (splash) {
       const caption = splash.querySelector('.splash-caption');

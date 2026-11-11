@@ -171,7 +171,10 @@ ThinkCode Lab supports true interactive runtime input via a dual-mode communicat
 
 ## 📱 5. Native Android Architecture (Capacitor 6)
 
-- **Native Runtime Wrapper:** Powered by [Capacitor](https://capacitorjs.com/) v6.1.2 (`MainActivity.java` adds `NativeStdinBridge` and `COOP`/`COEP` response headers).
+- **Native Runtime Wrapper:** Powered by [Capacitor](https://capacitorjs.com/) v6.1.2 (`MainActivity.java` adds `NativeStdinBridge`, `SystemUiBridge` (`ThinkCodeSystemUI`), `WindowInsetsCompat` Edge-to-Edge inset consumption, and `COOP`/`COEP` response headers).
+- **Android 15/16 Edge-to-Edge & Dynamic Bar Contrast:**
+  - Consumes `WindowInsetsCompat.Type.systemBars() | displayCutout() | ime()` cleanly on `android.R.id.content` (`WindowInsetsCompat.CONSUMED`) so WebView never overlaps status/navigation bars or double-pads CSS `env(safe-area-inset-*)`.
+  - Syncs system bar backgrounds and light/dark status & navigation bar icon contrast (`WindowInsetsControllerCompat`) dynamically via `ThinkCodeSystemUI.setTheme(isLight)` when switching Dark/Light themes.
 - **Android Target Compliance:**
   - `compileSdkVersion = 36` (Android 16 / Latest API).
   - `targetSdkVersion = 36`.
