@@ -358,6 +358,7 @@ svg {
 }
 
 .btn-menu {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -4329,4 +4330,429 @@ dialog::backdrop {
   .jp-sql-table tr {
     break-inside: avoid;
   }
+
+  #updateDialog,
+  #updateDialog::backdrop,
+  #updateToastRegion {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   Silent In-App APK Update Checker (Badge, Non-Blocking Popover & Dialog)
+   ========================================================================== */
+.menu-dot {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ember);
+  border: 2px solid var(--panel);
+  box-shadow: 0 0 8px var(--ember-glow);
+  pointer-events: none;
+}
+
+.menu-dot[hidden] {
+  display: none;
+}
+
+.d-badge.update-new {
+  background: var(--ember);
+  border-color: var(--ember);
+  color: var(--ember-ink);
+  font-weight: 800;
+}
+
+/* Persistent Non-Blocking Update Toast (popover="manual") */
+.update-toast-region {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 950;
+}
+
+.update-toast {
+  display: none;
+  position: fixed;
+  inset: auto;
+  right: 12px;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+  margin: 0;
+  max-width: min(420px, calc(100vw - 24px));
+  max-height: 44dvh;
+  overflow-y: auto;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  padding: 9px 10px 9px 12px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, var(--ember) 55%, var(--line-light));
+  background: var(--raised);
+  color: var(--text);
+  box-shadow: var(--shadow-lg), 0 0 22px rgba(255, 176, 74, 0.24);
+  pointer-events: auto;
+  z-index: 950;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.22s ease, transform 0.22s ease, display 0.22s ease, overlay 0.22s ease;
+  transition-behavior: allow-discrete;
+}
+
+.update-toast:is(:popover-open, .is-open) {
+  display: flex;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@starting-style {
+  .update-toast:is(:popover-open, .is-open) {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+[data-theme='light'] .update-toast {
+  background: #ffffff;
+  border-color: #d97706;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.16);
+}
+
+.ut-icon {
+  font-size: 1.15rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.ut-copy {
+  flex: 1 1 135px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.ut-copy b {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.25;
+}
+
+.ut-copy small {
+  font-size: 0.76rem;
+  color: var(--mute);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.ut-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.ut-btn-open {
+  min-height: 36px;
+  padding: 6px 11px;
+  border-radius: 9px;
+  background: var(--ember);
+  color: var(--ember-ink);
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background 0.14s ease, transform 0.12s ease;
+}
+
+.ut-btn-open:hover {
+  background: var(--ember-hover);
+}
+
+.ut-btn-open:active {
+  transform: scale(0.96);
+}
+
+.ut-btn-dismiss {
+  min-width: 36px;
+  min-height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 9px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--mute);
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: all 0.14s ease;
+}
+
+.ut-btn-dismiss:hover {
+  border-color: var(--ember);
+  color: var(--text);
+}
+
+@media (max-width: 560px) {
+  .update-toast {
+    left: 10px;
+    right: 10px;
+    max-width: none;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .update-toast {
+    transition: none;
+    transform: none;
+  }
+  @starting-style {
+    .update-toast:is(:popover-open, .is-open) {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* Update Details Modal Dialog (scoped with [open] via .journal-dialog[open]) */
+.update-dialog {
+  width: min(560px, calc(100vw - 20px));
+}
+
+.ud-body {
+  gap: 12px;
+}
+
+.ud-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 55%, var(--panel));
+}
+
+.ud-banner[data-state='available'] {
+  background: color-mix(in srgb, var(--ember) 12%, var(--panel));
+  border-color: color-mix(in srgb, var(--ember) 55%, transparent);
+}
+
+.ud-banner[data-state='latest'] {
+  background: color-mix(in srgb, var(--ok) 12%, var(--panel));
+  border-color: color-mix(in srgb, var(--ok) 45%, transparent);
+}
+
+.ud-banner[data-state='offline'] {
+  background: color-mix(in srgb, var(--warn) 10%, var(--panel));
+  border-color: color-mix(in srgb, var(--warn) 40%, transparent);
+}
+
+.ud-banner-icon {
+  font-size: 1.55rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.ud-banner-text {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ud-banner-text b {
+  font-size: 0.96rem;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.ud-banner-text small {
+  font-size: 0.8rem;
+  color: var(--mute);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.ud-compare {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+}
+
+@media (max-width: 440px) {
+  .ud-compare {
+    grid-template-columns: 1fr;
+  }
+  .ud-ver-arrow {
+    display: none;
+  }
+}
+
+.ud-ver-box {
+  padding: 11px 13px;
+  border-radius: 11px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 55%, var(--panel));
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ud-ver-box-latest.has-update {
+  border-color: var(--ember);
+  background: color-mix(in srgb, var(--ember) 10%, var(--panel));
+}
+
+.ud-ver-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--mute);
+}
+
+.ud-ver-num {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.ud-ver-box-latest.has-update .ud-ver-num {
+  color: var(--ember);
+}
+
+.ud-ver-meta {
+  font-size: 0.76rem;
+  color: var(--mute);
+}
+
+.ud-ver-arrow {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--mute);
+}
+
+.ud-meta-grid {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+@media (max-width: 480px) {
+  .ud-meta-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ud-meta-item {
+  padding: 9px 11px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 50%, var(--panel));
+}
+
+.ud-meta-item dt {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--mute);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
+}
+
+.ud-meta-item dd {
+  margin: 0;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.ud-meta-item dd code {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--text);
+}
+
+.ud-notes-card {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: color-mix(in srgb, var(--bg) 55%, var(--panel));
+}
+
+.ud-notes-card h3 {
+  margin: 0 0 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--ember);
+}
+
+.ud-notes-list {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.45;
+}
+
+.ud-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.ud-actions .jf-btn-sec {
+  margin-right: auto;
+}
+
+.ud-btn-dl {
+  text-decoration: none;
+}
+
+@media (max-width: 480px) {
+  .ud-actions .jf-btn-sec,
+  .ud-actions .ud-btn-dl {
+    margin-right: 0;
+    flex: 1 1 100%;
+  }
+}
+
+.ud-demo-row[hidden] {
+  display: none;
+}
+
+.ud-demo-row {
+  display: flex;
+  justify-content: center;
+  padding-top: 2px;
+}
+
+.ud-demo-btn {
+  min-height: 36px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px dashed var(--line-light);
+  color: var(--mute);
+  font-size: 0.78rem;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+
+.ud-demo-btn:hover {
+  border-color: var(--ember);
+  color: var(--ember);
+  background: var(--ember-subtle);
 }

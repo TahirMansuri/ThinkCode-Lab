@@ -17,6 +17,20 @@ import {
   buildJournalHtml,
   renderJournalPdfBytes
 } from './lab-journal.js';
+import {
+  APP_META,
+  UPDATE_STORAGE_KEYS,
+  SNOOZE_DURATION_MS,
+  getInstalledAppVersion,
+  normalizeManifest,
+  isUpdateAvailable,
+  shouldRunSilentCheck,
+  shouldShowUpdateToast,
+  createSimulatedManifest,
+  fetchLatestManifest,
+  formatReleaseDate,
+  formatShortChecksum
+} from './update-checker.js';
 
 const $ = id => document.getElementById(id);
 const store = {
@@ -152,6 +166,7 @@ function closePromptModal(result = null) {
     currentPromptCb = null;
     cb(result);
   }
+  window.dispatchEvent(new CustomEvent('cf:overlay-closed'));
 }
 
 const sink = {
@@ -603,7 +618,7 @@ if (bClr) bClr.onclick = () => { con.textContent = ''; setOutputSmall(); };
 const stdinEl = $('stdin');
 if (stdinEl) stdinEl.oninput = e => store.set('cf.in.' + cur.id, e.target.value);
 window.addEventListener('keydown', e => {
-  if ($('journalDialog')?.open) return;
+  if ($('journalDialog')?.open || $('updateDialog')?.open) return;
   if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
     e.preventDefault();
     if (running) stop();
@@ -675,7 +690,10 @@ function openSheet(title, node) {
   else b.append(node);
   $('sheet').hidden = false;
 }
-function closeSheet() { $('sheet').hidden = true; }
+function closeSheet() {
+  $('sheet').hidden = true;
+  window.dispatchEvent(new CustomEvent('cf:overlay-closed'));
+}
 document.querySelectorAll('[data-close]').forEach(e => (e.onclick = closeSheet));
 
 const pmForm = $('pmForm');
@@ -702,6 +720,7 @@ window.addEventListener('keydown', e => {
 });
 
 function showDevProfile() {
+  const ver = getInstalledAppVersion();
   const card = document.createElement('div');
   card.className = 'dev-card';
   card.innerHTML = `
@@ -756,7 +775,7 @@ function showDevProfile() {
     </div>
 
     <div class="dev-meta">
-      <span>ThinkCode Lab v1.3.4 (Production Release) • 100% Offline WASM</span>
+      <span>ThinkCode Lab v${ver.versionName} (Build ${ver.versionCode} • Production Release) • 100% Offline WASM</span>
     </div>
   `;
   openSheet('Developer & Architecture', card);
@@ -963,7 +982,10 @@ function closeMenuDrawer() {
   if (!d || d.hidden) return;
   d.classList.remove('open');
   setTimeout(() => {
-    if (!d.classList.contains('open')) d.hidden = true;
+    if (!d.classList.contains('open')) {
+      d.hidden = true;
+      window.dispatchEvent(new CustomEvent('cf:overlay-closed'));
+    }
   }, 280);
 }
 
@@ -1624,12 +1646,14 @@ function initGuiWindowControls() {
     modal.hidden = true;
     if (btnReopen && cur.id === 'java') btnReopen.hidden = false;
     print(`[GUI Window Closed]\n`, 'sys');
+    window.dispatchEvent(new CustomEvent('cf:overlay-closed'));
   });
 
   btnMin?.addEventListener('click', () => {
     modal.hidden = true;
     if (btnReopen && cur.id === 'java') btnReopen.hidden = false;
     toast('Window Minimized. Tap "☕ Java GUI Frame" to restore.');
+    window.dispatchEvent(new CustomEvent('cf:overlay-closed'));
   });
 
   btnMax?.addEventListener('click', () => {
@@ -1645,6 +1669,7 @@ function initGuiWindowControls() {
     if (e.target.dataset.closeGui !== undefined || e.target.classList.contains('gui-backdrop')) {
       modal.hidden = true;
       if (btnReopen && cur.id === 'java') btnReopen.hidden = false;
+      window.dispatchEvent(new CustomEvent('cf:overlay-closed'));
     }
   });
 
@@ -2004,6 +2029,7 @@ function initLabJournal() {
     clearTimeout(previewTimer);
     document.title = originalDocTitle;
     if (printRoot) printRoot.innerHTML = '';
+    window.dispatchEvent(new CustomEvent('cf:overlay-closed'));
   });
 
   // Validation timing: clear errors while typing on input; validate on blur only if edited
@@ -2123,6 +2149,589 @@ function initLabJournal() {
   });
 }
 
+// ==========================================
+// Silent In-App APK Update Checker
+// ==========================================
+function initUpdateChecker() {
+  const installed = getInstalledAppVersion();
+  const dialog = $('updateDialog');
+  const toastEl = $('updateToast');
+  const liveEl = $('updateAriaLive');
+
+  const btnMenu = $('btnMenu');
+  const menuDot = $('menuUpdateDot');
+  const drawerVerLabel = $('drawerVerLabel');
+  const drawerDlCard = $('drawerDlCard');
+  const drawerDlTitle = $('drawerDlTitle');
+  const drawerDlMeta = $('drawerDlMeta');
+  const drawerDlBadge = $('drawerDlBadge');
+  const menuBtnCheckUpdate = $('menuBtnCheckUpdate');
+  const menuUpdateSub = $('menuUpdateSub');
+  const menuUpdateBadge = $('menuUpdateBadge');
+
+  const toastTitle = $('updateToastTitle');
+  const toastSub = $('updateToastSub');
+  const btnToastOpen = $('btnUpdateToastOpen');
+  const btnToastDismiss = $('btnUpdateToastDismiss');
+
+  const btnClose = $('btnUpdateClose');
+  const headerBadge = $('udHeaderBadge');
+  const bannerCard = $('udBannerCard');
+  const bannerIcon = $('udBannerIcon');
+  const bannerTitle = $('udBannerTitle');
+  const bannerSub = $('udBannerSub');
+  const installedVerEl = $('udInstalledVer');
+  const installedMetaEl = $('udInstalledMeta');
+  const latestBoxEl = $('udLatestBox');
+  const latestVerEl = $('udLatestVer');
+  const latestMetaEl = $('udLatestMeta');
+  const apkFileEl = $('udApkFile');
+  const apkSizeEl = $('udApkSize');
+  const releaseDateEl = $('udReleaseDate');
+  const sha256El = $('udSha256');
+  const notesListEl = $('updateNotesList');
+  const checkStatusEl = $('updateCheckStatus');
+  const btnCheckNow = $('btnUpdateCheckNow');
+  const btnDownload = $('btnUpdateDownload');
+  const demoRow = $('udDemoRow');
+  const btnSimulate = $('btnUpdateSimulate');
+
+  const hasNativePopover = Boolean(
+    toastEl &&
+    Object.hasOwn(HTMLElement.prototype, 'popover') &&
+    typeof toastEl.showPopover === 'function'
+  );
+
+  const fallbackManifest = normalizeManifest({
+    appId: APP_META.appId,
+    appName: APP_META.appName,
+    versionName: APP_META.versionName,
+    versionCode: APP_META.versionCode,
+    releaseDate: APP_META.releaseDate,
+    apkFilename: APP_META.apkFilename,
+    apkSize: APP_META.apkSize,
+    apkUrl: APP_META.defaultApkUrl,
+    fallbackUrl: APP_META.fallbackApkUrl,
+    downloadPageUrl: APP_META.downloadPageUrl,
+    sha256: APP_META.sha256,
+    minAndroidVersion: APP_META.minAndroidVersion,
+    releaseNotes: [...APP_META.defaultReleaseNotes]
+  });
+
+  let cachedManifest = null;
+  try {
+    const storedJson = store.get(UPDATE_STORAGE_KEYS.lastManifest, '');
+    if (storedJson) cachedManifest = normalizeManifest(JSON.parse(storedJson));
+  } catch {}
+
+  let currentManifest = cachedManifest || fallbackManifest;
+  let simulatedManifest = null;
+  let checking = false;
+  let lastSource = cachedManifest ? 'cached' : 'bundled';
+  let lastErrorReason = '';
+  let pendingToastManifest = null;
+  let activeToastManifest = null;
+  let dismissReason = 'user';
+  let toastHadKeyboardFocus = false;
+  let pointerDownInToast = false;
+  let priorFocusBeforeToast = null;
+
+  const isAnyOverlayOpen = () => (
+    !document.body.classList.contains('app-ready') ||
+    Boolean($('journalDialog')?.open) ||
+    Boolean(dialog?.open) ||
+    Boolean($('sheet') && !$('sheet').hidden) ||
+    Boolean($('promptModal') && !$('promptModal').hidden) ||
+    Boolean($('guiWindowModal') && !$('guiWindowModal').hidden) ||
+    Boolean($('menuDrawer') && !$('menuDrawer').hidden)
+  );
+
+  const isToastVisible = () => {
+    if (!toastEl) return false;
+    return hasNativePopover ? toastEl.matches(':popover-open') : toastEl.classList.contains('is-open');
+  };
+
+  const announceUpdate = (msg) => {
+    if (!msg) return;
+    if (typeof document.ariaNotify === 'function') {
+      try {
+        document.ariaNotify(msg);
+        return;
+      } catch {}
+    }
+    if (liveEl) {
+      liveEl.textContent = '';
+      requestAnimationFrame(() => {
+        liveEl.textContent = msg;
+      });
+    }
+  };
+
+  const openApkUrlExternally = (url) => {
+    if (!url) return;
+    if (installed.isNative && window.ThinkCodeSystemUI?.openExternalUrl) {
+      try {
+        const launched = window.ThinkCodeSystemUI.openExternalUrl(url);
+        if (launched) {
+          toast('Opening Android APK installer link…');
+          return;
+        }
+      } catch {}
+    }
+    const opened = window.open(url, '_blank', 'noopener');
+    if (!opened) location.href = url;
+  };
+
+  const finalizeToastClosed = () => {
+    const dismissedManifest = activeToastManifest;
+    const reason = dismissReason;
+    const shouldRestoreFocus = toastHadKeyboardFocus;
+    const focusTarget = priorFocusBeforeToast;
+
+    activeToastManifest = null;
+    dismissReason = 'user';
+    toastHadKeyboardFocus = false;
+    pointerDownInToast = false;
+    priorFocusBeforeToast = null;
+
+    if (reason === 'user' && dismissedManifest && !dismissedManifest.isSimulated) {
+      store.set(UPDATE_STORAGE_KEYS.snoozedCode, String(dismissedManifest.versionCode));
+      store.set(UPDATE_STORAGE_KEYS.snoozedUntil, String(Date.now() + SNOOZE_DURATION_MS));
+    }
+
+    if (reason === 'user' && shouldRestoreFocus) {
+      if (focusTarget && focusTarget.isConnected && typeof focusTarget.focus === 'function') {
+        try { focusTarget.focus(); return; } catch {}
+      }
+      try { btnMenu?.focus(); } catch {}
+    }
+  };
+
+  const hideUpdateToast = (reason = 'suppress') => {
+    if (!toastEl || !isToastVisible()) return;
+    dismissReason = reason;
+    if (hasNativePopover && typeof toastEl.hidePopover === 'function') {
+      try { toastEl.hidePopover(); } catch {
+        toastEl.classList.remove('is-open');
+        finalizeToastClosed();
+      }
+    } else {
+      toastEl.classList.remove('is-open');
+      finalizeToastClosed();
+    }
+  };
+
+  const showUpdateToast = (manifest) => {
+    if (!toastEl || !manifest) return;
+    if (isAnyOverlayOpen()) {
+      pendingToastManifest = manifest;
+      return;
+    }
+
+    pendingToastManifest = null;
+    activeToastManifest = manifest;
+    dismissReason = 'user';
+
+    if (toastTitle) {
+      toastTitle.textContent = manifest.isSimulated
+        ? `Preview: v${manifest.versionName} Update`
+        : `Update v${manifest.versionName} Ready`;
+    }
+    if (toastSub) {
+      const sizeStr = manifest.apkSize ? ` (${manifest.apkSize})` : '';
+      toastSub.textContent = `${manifest.apkFilename}${sizeStr}`;
+    }
+
+    if (hasNativePopover) {
+      if (!toastEl.matches(':popover-open')) {
+        toastEl.showPopover();
+      }
+    } else {
+      toastEl.classList.add('is-open');
+    }
+
+    const announcement = `${APP_META.appName} v${manifest.versionName} APK update is ready. Actions available.`;
+    announceUpdate(announcement);
+  };
+
+  const flushPendingUpdateToast = () => {
+    if (pendingToastManifest && !isAnyOverlayOpen()) {
+      const m = pendingToastManifest;
+      pendingToastManifest = null;
+      showUpdateToast(m);
+    }
+  };
+
+  const getDisplayManifest = () => simulatedManifest || currentManifest || fallbackManifest;
+
+  const syncAllUpdateUI = () => {
+    const manifest = getDisplayManifest();
+    const hasUpdate = isUpdateAvailable(installed, manifest);
+    const isOfflineErr = lastErrorReason && lastSource !== 'network' && !manifest.isSimulated;
+
+    // 1. Header Menu dot & accessible label
+    if (menuDot) menuDot.hidden = !hasUpdate;
+    if (btnMenu) {
+      btnMenu.setAttribute(
+        'aria-label',
+        hasUpdate ? `Open menu drawer (App update v${manifest.versionName} available)` : 'Open menu drawer'
+      );
+    }
+
+    // 2. Drawer version label, download card & update item
+    if (drawerVerLabel) {
+      drawerVerLabel.textContent = `v${installed.versionName} (Build ${installed.versionCode})`;
+    }
+    if (drawerDlTitle) {
+      drawerDlTitle.textContent = installed.isNative
+        ? (hasUpdate ? `Update App to v${manifest.versionName}` : `Android App Portal (v${manifest.versionName})`)
+        : `Download Android App (v${manifest.versionName})`;
+    }
+    if (drawerDlMeta) {
+      const sz = manifest.apkSize ? ` (${manifest.apkSize})` : '';
+      drawerDlMeta.textContent = `${manifest.apkFilename}${sz}`;
+    }
+    if (drawerDlBadge) {
+      drawerDlBadge.textContent = hasUpdate ? 'Update' : (installed.isNative ? 'Details' : 'Get APK');
+    }
+    if (menuUpdateSub) {
+      menuUpdateSub.textContent = hasUpdate
+        ? `Installed v${installed.versionName} → v${manifest.versionName} available!`
+        : `Installed: v${installed.versionName} (Build ${installed.versionCode}) · Up to date`;
+    }
+    if (menuUpdateBadge) {
+      menuUpdateBadge.textContent = hasUpdate ? 'NEW' : `v${installed.versionName}`;
+      menuUpdateBadge.className = hasUpdate ? 'd-badge update-new' : 'd-badge';
+    }
+
+    // 3. Update Modal Dialog content
+    if (headerBadge) {
+      headerBadge.textContent = manifest.isSimulated ? 'DEMO' : (hasUpdate ? `v${manifest.versionName}` : 'APK');
+    }
+    if (installedVerEl) installedVerEl.textContent = `v${installed.versionName}`;
+    if (installedMetaEl) {
+      const runtimeLabel = installed.isNative ? 'Android APK' : 'Web IDE';
+      installedMetaEl.textContent = `Build ${installed.versionCode} · ${runtimeLabel}`;
+    }
+
+    if (latestBoxEl) latestBoxEl.classList.toggle('has-update', hasUpdate);
+    if (latestVerEl) latestVerEl.textContent = `v${manifest.versionName}`;
+    if (latestMetaEl) {
+      const buildTag = `Build ${manifest.versionCode}`;
+      const srcTag = manifest.isSimulated
+        ? 'Simulated Demo'
+        : (lastSource === 'network' ? 'Live Server' : (lastSource === 'cached' ? 'Cached Check' : 'Bundled Info'));
+      latestMetaEl.textContent = `${buildTag} · ${srcTag}`;
+    }
+
+    if (bannerCard && bannerIcon && bannerTitle && bannerSub) {
+      if (hasUpdate) {
+        bannerCard.dataset.state = 'available';
+        bannerIcon.textContent = manifest.isSimulated ? '🧪' : '🚀';
+        bannerTitle.textContent = manifest.isSimulated
+          ? `Demo Preview: v${manifest.versionName} Update Alert`
+          : `ThinkCode Lab v${manifest.versionName} is ready!`;
+        bannerSub.textContent = manifest.isSimulated
+          ? 'Previewing how sideloaded students see the silent update toast and changelog.'
+          : 'Tap Download APK below to install the latest build over your current app.';
+      } else if (checking) {
+        bannerCard.dataset.state = 'idle';
+        bannerIcon.textContent = '⏳';
+        bannerTitle.textContent = 'Checking for Android APK updates…';
+        bannerSub.textContent = 'Connecting silently to https://thinkcode-lab.web.app/version.json';
+      } else if (isOfflineErr) {
+        bannerCard.dataset.state = 'offline';
+        bannerIcon.textContent = '📡';
+        bannerTitle.textContent = 'Offline mode — update check skipped';
+        bannerSub.textContent = 'No internet connection needed for coding. Re-check anytime when online.';
+      } else {
+        bannerCard.dataset.state = 'latest';
+        bannerIcon.textContent = '✅';
+        bannerTitle.textContent = installed.isNative
+          ? 'Your ThinkCode Lab APK is up to date'
+          : 'Running latest release build';
+        bannerSub.textContent = `Build ${manifest.versionCode} matches the newest published APK (${manifest.apkFilename}).`;
+      }
+    }
+
+    if (apkFileEl) apkFileEl.textContent = manifest.apkFilename;
+    if (apkSizeEl) apkSizeEl.textContent = manifest.apkSize || '~17.7 MB';
+    if (releaseDateEl) releaseDateEl.textContent = formatReleaseDate(manifest.releaseDate);
+    if (sha256El) sha256El.textContent = formatShortChecksum(manifest.sha256);
+
+    if (notesListEl) {
+      notesListEl.textContent = '';
+      const notes = manifest.releaseNotes?.length ? manifest.releaseNotes : APP_META.defaultReleaseNotes;
+      notes.forEach(note => {
+        const li = document.createElement('li');
+        li.textContent = note;
+        notesListEl.appendChild(li);
+      });
+    }
+
+    if (btnDownload) {
+      const targetHref = (hasUpdate || installed.isNative)
+        ? (manifest.apkUrl || manifest.fallbackUrl || manifest.downloadPageUrl)
+        : (manifest.downloadPageUrl || manifest.apkUrl);
+      btnDownload.href = targetHref;
+      btnDownload.textContent = hasUpdate
+        ? `⬇ Download v${manifest.versionName} APK`
+        : (installed.isNative ? `⬇ Re-download v${manifest.versionName} APK` : `⬇ Download APK Page (v${manifest.versionName})`);
+    }
+
+    if (demoRow) {
+      demoRow.hidden = installed.isNative;
+    }
+    if (btnSimulate) {
+      btnSimulate.textContent = simulatedManifest
+        ? '↺ Clear Demo Preview & Re-sync Real Version'
+        : `🧪 Preview Student APK Update Banner (Simulate v${createSimulatedManifest(installed).versionName})`;
+    }
+  };
+
+  const setDialogStatus = (msg, state = '') => {
+    if (!checkStatusEl) return;
+    checkStatusEl.textContent = msg || '';
+    checkStatusEl.dataset.state = state;
+  };
+
+  const runUpdateCheck = async ({ manual = false, respectCooldown = true } = {}) => {
+    if (checking) return null;
+
+    const nowMs = Date.now();
+    const lastCheckMs = Number(store.get(UPDATE_STORAGE_KEYS.lastCheckAt, '0'));
+    const isOnline = typeof navigator === 'undefined' || navigator.onLine !== false;
+
+    if (respectCooldown && !manual && !shouldRunSilentCheck({ lastCheckMs, nowMs, isOnline })) {
+      if (cachedManifest && isUpdateAvailable(installed, cachedManifest)) {
+        const dismissedCode = Number(store.get(UPDATE_STORAGE_KEYS.snoozedCode, '0'));
+        const snoozedUntilMs = Number(store.get(UPDATE_STORAGE_KEYS.snoozedUntil, '0'));
+        if (shouldShowUpdateToast({ installed, remote: cachedManifest, dismissedVersionCode: dismissedCode, snoozedUntilMs, nowMs })) {
+          showUpdateToast(cachedManifest);
+        }
+      }
+      return { ok: true, skipped: true, manifest: currentManifest };
+    }
+
+    if (!isOnline) {
+      lastErrorReason = 'offline';
+      syncAllUpdateUI();
+      if (manual) setDialogStatus('You appear to be offline. Connect to Wi-Fi/Mobile data and try again.', 'err');
+      return { ok: false, reason: 'offline', manifest: null };
+    }
+
+    checking = true;
+    lastErrorReason = '';
+    if (manual) {
+      if (btnCheckNow) {
+        btnCheckNow.disabled = true;
+        btnCheckNow.textContent = '⏳ Checking…';
+      }
+      setDialogStatus('Checking latest release manifest…', 'busy');
+      syncAllUpdateUI();
+    }
+
+    const urls = installed.isNative ? APP_META.nativeManifestUrls : APP_META.webManifestUrls;
+    const res = await fetchLatestManifest({ urls, timeoutMs: 5000 });
+    checking = false;
+
+    if (btnCheckNow) {
+      btnCheckNow.disabled = false;
+      btnCheckNow.textContent = '↻ Check Now';
+    }
+
+    if (res.ok && res.manifest) {
+      currentManifest = res.manifest;
+      lastSource = 'network';
+      lastErrorReason = '';
+      store.set(UPDATE_STORAGE_KEYS.lastCheckAt, String(Date.now()));
+      store.set(UPDATE_STORAGE_KEYS.lastManifest, JSON.stringify(res.manifest));
+
+      const hasUpdate = isUpdateAvailable(installed, res.manifest);
+      syncAllUpdateUI();
+
+      if (manual) {
+        setDialogStatus(
+          hasUpdate
+            ? `✓ Update found: v${res.manifest.versionName} (Build ${res.manifest.versionCode}).`
+            : `✓ Verified latest release v${res.manifest.versionName} (Build ${res.manifest.versionCode}).`,
+          'ok'
+        );
+      }
+
+      if (hasUpdate && !manual) {
+        const dismissedCode = Number(store.get(UPDATE_STORAGE_KEYS.snoozedCode, '0'));
+        const snoozedUntilMs = Number(store.get(UPDATE_STORAGE_KEYS.snoozedUntil, '0'));
+        if (shouldShowUpdateToast({
+          installed,
+          remote: res.manifest,
+          dismissedVersionCode: dismissedCode,
+          snoozedUntilMs,
+          nowMs: Date.now()
+        })) {
+          showUpdateToast(res.manifest);
+        }
+      }
+    } else {
+      lastErrorReason = res.reason || 'network-error';
+      syncAllUpdateUI();
+      if (manual) {
+        setDialogStatus('Could not reach update server right now. Offline IDE works normally.', 'err');
+      }
+    }
+
+    return res;
+  };
+
+  const openUpdateDialog = () => {
+    if (!dialog || dialog.open) return;
+    hideUpdateToast('open-dialog');
+    setDialogStatus('');
+    syncAllUpdateUI();
+    dialog.showModal();
+    const udBody = dialog.querySelector('.ud-body');
+    if (udBody) udBody.scrollTop = 0;
+
+    // Trigger background refresh silently if online & stale while dialog is open
+    if (!simulatedManifest) {
+      runUpdateCheck({ manual: false, respectCooldown: true });
+    }
+  };
+
+  const triggerSimulatedUpdate = () => {
+    simulatedManifest = createSimulatedManifest(installed, currentManifest);
+    syncAllUpdateUI();
+    showUpdateToast(simulatedManifest);
+  };
+
+  // Focus & dismiss tracking for popover="manual" toast
+  toastEl?.addEventListener('pointerdown', () => {
+    pointerDownInToast = true;
+    toastHadKeyboardFocus = false;
+  });
+  toastEl?.addEventListener('focusin', e => {
+    if (pointerDownInToast) {
+      pointerDownInToast = false;
+      toastHadKeyboardFocus = false;
+      return;
+    }
+    if (!toastHadKeyboardFocus && e.relatedTarget && !toastEl.contains(e.relatedTarget)) {
+      priorFocusBeforeToast = e.relatedTarget;
+    }
+    toastHadKeyboardFocus = true;
+  });
+  toastEl?.addEventListener('focusout', e => {
+    if (e.relatedTarget && !toastEl.contains(e.relatedTarget)) {
+      toastHadKeyboardFocus = false;
+    }
+  });
+  toastEl?.addEventListener('toggle', e => {
+    if (e.newState === 'closed') {
+      finalizeToastClosed();
+    }
+  });
+
+  btnToastDismiss?.addEventListener('click', () => {
+    dismissReason = 'user';
+    if (!hasNativePopover) {
+      toastEl?.classList.remove('is-open');
+      finalizeToastClosed();
+    }
+  });
+  btnToastOpen?.addEventListener('click', () => {
+    openUpdateDialog();
+  });
+
+  menuBtnCheckUpdate?.addEventListener('click', () => {
+    closeMenuDrawer();
+    openUpdateDialog();
+  });
+
+  drawerDlCard?.addEventListener('click', e => {
+    if (installed.isNative) {
+      e.preventDefault();
+      closeMenuDrawer();
+      openUpdateDialog();
+    }
+  });
+
+  btnClose?.addEventListener('click', () => dialog?.close('cancel'));
+
+  if (dialog && !('closedBy' in HTMLDialogElement.prototype)) {
+    const isOutsideDialog = (e, dlg) => {
+      const r = dlg.getBoundingClientRect();
+      return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+    };
+    let pressedOutside = false;
+    dialog.addEventListener('pointerdown', e => {
+      pressedOutside = dialog.open && isOutsideDialog(e, dialog);
+    });
+    dialog.addEventListener('pointerup', e => {
+      if (pressedOutside && dialog.open && isOutsideDialog(e, dialog)) {
+        dialog.close('backdrop');
+      }
+      pressedOutside = false;
+    });
+  }
+
+  dialog?.addEventListener('close', () => {
+    void dialog.returnValue;
+    dialog.returnValue = '';
+    setTimeout(flushPendingUpdateToast, 120);
+  });
+
+  btnCheckNow?.addEventListener('click', () => {
+    simulatedManifest = null;
+    runUpdateCheck({ manual: true, respectCooldown: false });
+  });
+
+  btnDownload?.addEventListener('click', e => {
+    if (installed.isNative && btnDownload.href) {
+      e.preventDefault();
+      openApkUrlExternally(btnDownload.href);
+    }
+  });
+
+  btnSimulate?.addEventListener('click', () => {
+    if (simulatedManifest) {
+      simulatedManifest = null;
+      hideUpdateToast('suppress');
+      syncAllUpdateUI();
+      setDialogStatus('Returned to live version status.', 'ok');
+    } else {
+      dialog?.close('simulate');
+      setTimeout(triggerSimulatedUpdate, 140);
+    }
+  });
+
+  window.addEventListener('cf:overlay-closed', () => {
+    setTimeout(flushPendingUpdateToast, 80);
+  });
+
+  // Initial UI render from installed build + cached manifest (zero network blocking!)
+  syncAllUpdateUI();
+
+  const startSilentChecks = () => {
+    const params = new URLSearchParams(location.search);
+    if (params.get('checkUpdate') === 'simulate') {
+      setTimeout(triggerSimulatedUpdate, 700);
+      return;
+    }
+    // Check silently ~3.5s after app becomes ready so launch remains instant & offline-first
+    setTimeout(() => {
+      runUpdateCheck({ manual: false, respectCooldown: true });
+    }, 3500);
+  };
+
+  return {
+    installed,
+    startSilentChecks,
+    checkNow: () => runUpdateCheck({ manual: true, respectCooldown: false }),
+    simulate: triggerSimulatedUpdate,
+    state: () => ({ installed, currentManifest: getDisplayManifest(), lastSource, lastErrorReason })
+  };
+}
+
 // ---------- boot ----------
 function shellCmd(line) { print(`${engines.shell.sh.prompt} ${line}\n`, 'cmd'); engines.shell.exec(line, sink); $('promptLabel').textContent = engines.shell.sh.prompt; }
 shellui.init({ sh: engines.shell.sh, cmd: shellCmd });
@@ -2136,8 +2745,9 @@ initGuiWindowControls();
 initQuickSymbolBar();
 initCodeFormatter();
 initLabJournal();
+const updateController = initUpdateChecker();
 const warmPromise = warm();
-window.__app = { run, stop, engines, cur: () => cur, editorPhp: () => editorPhp, editorHtml: () => editorHtml, running: () => running };
+window.__app = { run, stop, engines, cur: () => cur, editorPhp: () => editorPhp, editorHtml: () => editorHtml, running: () => running, updates: updateController };
 
 // ---------- compulsory 2.5s splash screen + component loading ----------
 const splashMinTimer = new Promise(resolve => setTimeout(resolve, 2500));
@@ -2154,6 +2764,7 @@ Promise.all([
   requestAnimationFrame(() => {
     document.body.classList.add('app-ready');
     syncNativeSystemBars(document.documentElement.dataset.theme || store.get('cf.theme', 'dark'));
+    updateController.startSilentChecks();
     const splash = $('app-splash');
     if (splash) {
       const caption = splash.querySelector('.splash-caption');
@@ -2162,6 +2773,7 @@ Promise.all([
       setTimeout(() => {
         splash.remove();
         $('critical-splash-css')?.remove();
+        window.dispatchEvent(new CustomEvent('cf:overlay-closed'));
       }, 450);
     }
   });

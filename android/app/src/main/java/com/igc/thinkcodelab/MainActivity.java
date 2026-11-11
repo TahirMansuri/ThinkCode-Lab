@@ -1,6 +1,9 @@
 package com.igc.thinkcodelab;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -118,6 +121,46 @@ public class MainActivity extends BridgeActivity {
                     .build();
                 pm.print(title, adapter, attrs);
             });
+        }
+
+        @JavascriptInterface
+        @SuppressWarnings("deprecation")
+        public String getAppVersion() {
+            try {
+                PackageManager pm = getPackageManager();
+                if (pm == null) return "";
+                PackageInfo info = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                    ? pm.getPackageInfo(getPackageName(), PackageManager.PackageInfoFlags.of(0))
+                    : pm.getPackageInfo(getPackageName(), 0);
+                long code = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+                    ? info.getLongVersionCode()
+                    : info.versionCode;
+                JSONObject obj = new JSONObject();
+                obj.put("versionName", info.versionName != null ? info.versionName : "");
+                obj.put("versionCode", code);
+                obj.put("packageName", getPackageName());
+                return obj.toString();
+            } catch (Exception e) {
+                return "";
+            }
+        }
+
+        @JavascriptInterface
+        public boolean openExternalUrl(String url) {
+            if (url == null) return false;
+            String clean = url.trim();
+            if (!clean.startsWith("https://") && !clean.startsWith("http://")) {
+                return false;
+            }
+            try {
+                Uri uri = Uri.parse(clean);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                return true;
+            } catch (Exception e) {
+                return false;
+            }
         }
     }
 

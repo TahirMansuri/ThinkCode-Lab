@@ -207,6 +207,7 @@
         <line x1="3" y1="18" x2="21" y2="18"></line>
       </svg>
       <span class="btn-menu-label">Menu</span>
+      <span id="menuUpdateDot" class="menu-dot" hidden aria-hidden="true"></span>
     </button>
     <input type="file" id="filePick" hidden>
   </div>
@@ -319,7 +320,7 @@
         <img src="assets/icon.svg" width="34" height="34" alt="ThinkCode Logo">
         <div>
           <b>ThinkCode Lab</b>
-          <small>v1.3.4 (Build 11) • <span id="runtimeState" class="state-drawer" data-s="idle">offline</span></small>
+          <small><span id="drawerVerLabel">v1.3.4 (Build 11)</span> • <span id="runtimeState" class="state-drawer" data-s="idle">offline</span></small>
         </div>
       </div>
       <button type="button" class="drawer-close" id="btnCloseDrawer" aria-label="Close menu">✕</button>
@@ -327,13 +328,13 @@
 
     <div class="drawer-body">
       <!-- App Download Banner -->
-      <a href="/download" class="drawer-dl-card">
+      <a href="/download" id="drawerDlCard" class="drawer-dl-card">
         <div class="ddl-icon">📱</div>
         <div class="ddl-info">
-          <b>Download Android App (v1.3.4)</b>
-          <span>ThinkCodeLab-v1.3.4.apk (~17.7 MB)</span>
+          <b id="drawerDlTitle">Download Android App (v1.3.4)</b>
+          <span id="drawerDlMeta">ThinkCodeLab-v1.3.4.apk (~17.7 MB)</span>
         </div>
-        <div class="ddl-badge">Get APK</div>
+        <div class="ddl-badge" id="drawerDlBadge">Get APK</div>
       </a>
 
       <!-- File & Code Actions -->
@@ -384,6 +385,15 @@
 
       <!-- About Developer -->
       <div class="drawer-group-title">About &amp; Developer</div>
+      <button type="button" class="drawer-item" id="menuBtnCheckUpdate">
+        <span class="d-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 8v6"/><path d="m9 11 3 3 3-3"/></svg></span>
+        <div class="d-text">
+          <b>App Updates</b>
+          <small id="menuUpdateSub">v1.3.4 (Build 11) · Check for latest APK</small>
+        </div>
+        <span class="d-badge" id="menuUpdateBadge">v1.3.4</span>
+      </button>
+
       <button type="button" class="drawer-item" id="menuBtnDev">
         <span class="d-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
         <div class="d-text">
@@ -590,6 +600,95 @@
 </dialog>
 
 <div id="journalPrintRoot" class="journal-print-root" aria-hidden="true"></div>
+
+<!-- App Updates & Release Info Dialog -->
+<dialog id="updateDialog" class="journal-dialog update-dialog" aria-labelledby="updateDialogTitle" closedby="any">
+  <div class="jd-shell">
+    <div class="jd-head">
+      <div class="jd-head-title">
+        <span class="jd-badge" id="udHeaderBadge">APK</span>
+        <h2 id="updateDialogTitle">ThinkCode Lab App Updates</h2>
+      </div>
+      <button type="button" id="btnUpdateClose" class="drawer-close" aria-label="Close dialog" autofocus>✕</button>
+    </div>
+
+    <div class="jd-body ud-body">
+      <div id="udBannerCard" class="ud-banner" data-state="idle">
+        <div class="ud-banner-icon" id="udBannerIcon" aria-hidden="true">📱</div>
+        <div class="ud-banner-text">
+          <b id="udBannerTitle">Ready to check for updates</b>
+          <small id="udBannerSub">Checks https://thinkcode-lab.web.app cleanly without tracking.</small>
+        </div>
+      </div>
+
+      <div class="ud-compare" aria-label="Version comparison">
+        <div class="ud-ver-box">
+          <span class="ud-ver-label">Installed App</span>
+          <b class="ud-ver-num" id="udInstalledVer">v1.3.4</b>
+          <small class="ud-ver-meta" id="udInstalledMeta">Build 11 · Web IDE</small>
+        </div>
+        <div class="ud-ver-arrow" aria-hidden="true">→</div>
+        <div class="ud-ver-box ud-ver-box-latest" id="udLatestBox">
+          <span class="ud-ver-label">Latest APK Release</span>
+          <b class="ud-ver-num" id="udLatestVer">v1.3.4</b>
+          <small class="ud-ver-meta" id="udLatestMeta">Build 11 · Local cache</small>
+        </div>
+      </div>
+
+      <dl class="ud-meta-grid">
+        <div class="ud-meta-item">
+          <dt>Package File</dt>
+          <dd id="udApkFile">ThinkCodeLab-v1.3.4.apk</dd>
+        </div>
+        <div class="ud-meta-item">
+          <dt>Download Size</dt>
+          <dd id="udApkSize">~17.7 MB</dd>
+        </div>
+        <div class="ud-meta-item">
+          <dt>Release Date</dt>
+          <dd id="udReleaseDate">11 Nov 2026</dd>
+        </div>
+        <div class="ud-meta-item">
+          <dt>SHA-256 Checksum</dt>
+          <dd><code id="udSha256">879856e091aa…8c32419d0</code></dd>
+        </div>
+      </dl>
+
+      <section class="ud-notes-card" aria-labelledby="udNotesHeading">
+        <h3 id="udNotesHeading">What’s New in Release</h3>
+        <ul id="updateNotesList" class="ud-notes-list"></ul>
+      </section>
+
+      <div id="updateCheckStatus" class="jf-status" role="status" aria-live="polite"></div>
+
+      <div class="ud-actions">
+        <button type="button" id="btnUpdateCheckNow" class="jf-btn jf-btn-sec">↻ Check Now</button>
+        <a id="btnUpdateDownload" href="https://thinkcode-lab.web.app/download" target="_blank" rel="noopener" class="jf-btn jf-btn-pri ud-btn-dl">⬇ Get Android APK</a>
+      </div>
+
+      <div id="udDemoRow" class="ud-demo-row" hidden>
+        <button type="button" id="btnUpdateSimulate" class="ud-demo-btn">🧪 Preview Student APK Update Banner (Simulate v1.3.5)</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<!-- Persistent Non-Blocking Update Notification Region -->
+<div id="updateToastRegion" class="update-toast-region" role="region" aria-label="App Update Notifications">
+  <p class="sr-only">Screen reader update notifications</p>
+  <div id="updateAriaLive" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <div id="updateToast" class="update-toast" popover="manual" aria-labelledby="updateToastTitle" aria-describedby="updateToastSub">
+    <span class="ut-icon" aria-hidden="true">🚀</span>
+    <div class="ut-copy">
+      <b id="updateToastTitle">Update Available</b>
+      <small id="updateToastSub">ThinkCode Lab APK ready</small>
+    </div>
+    <div class="ut-actions">
+      <button type="button" id="btnUpdateToastOpen" class="ut-btn-open">What’s New</button>
+      <button type="button" id="btnUpdateToastDismiss" class="ut-btn-dismiss" popovertarget="updateToast" popovertargetaction="hide" aria-label="Dismiss update notification">✕</button>
+    </div>
+  </div>
+</div>
 
 <div id="toast" class="toast" role="status"></div>
 <script type="module" src="/src/main.js"></script>

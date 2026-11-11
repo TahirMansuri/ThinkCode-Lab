@@ -1,0 +1,22 @@
+{
+  "appId": "com.igc.thinkcodelab",
+  "appName": "ThinkCode Lab",
+  "versionName": "1.3.4",
+  "versionCode": 11,
+  "releaseDate": "2026-11-11",
+  "apkFilename": "ThinkCodeLab-v1.3.4.apk",
+  "apkSize": "~17.7 MB",
+  "apkSizeBytes": 17701346,
+  "apkUrl": "https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.4/ThinkCodeLab-v1.3.4.apk",
+  "fallbackUrl": "https://thinkcode-lab.web.app/ThinkCodeLab.apk",
+  "downloadPageUrl": "https://thinkcode-lab.web.app/download",
+  "sha256": "879856e091aa8e0244f7125de596dd76a65328e9c6596e1e2cf1eec8c32419d0",
+  "minAndroidVersion": "7.0",
+  "minSdk": 24,
+  "releaseNotes": [
+    "Fixed Android 15/16 Edge-to-Edge header safe-area alignment and slide-out drawer layout",
+    "Dynamic Dark & Light mode status bar and navigation bar contrast synchronization",
+    "Native Android stdin input bridge for smooth interactive C, C++, Python, and Java programs",
+    "Hardened offline PicoC & unified JSCPP WebAssembly execution engines"
+  ]
+}

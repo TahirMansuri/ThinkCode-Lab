@@ -151,6 +151,29 @@
       padding: 18px;
       margin-top: 10px;
     }
+    .release-notes {
+      text-align: left;
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-top: 12px;
+      font-size: 13px;
+      color: #CBD5E1;
+    }
+    .release-notes summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: #E2E8F0;
+      font-size: 13px;
+    }
+    .release-notes ul {
+      margin: 10px 0 2px 18px;
+      color: #94A3B8;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
     .guide-title {
       font-size: 13.5px;
       font-weight: 700;
@@ -208,8 +231,8 @@
 
     <div class="badge-bar">
       <span class="badge green">✓ Safe &amp; Verified</span>
-      <span class="badge">v1.3.4 (Build 11)</span>
-      <span class="badge">~17.7 MB</span>
+      <span class="badge" id="dlVersionBadge">v1.3.4 (Build 11)</span>
+      <span class="badge" id="dlSizeBadge">~17.7 MB</span>
       <span class="badge">100% Offline</span>
     </div>
 
@@ -219,10 +242,10 @@
         <polyline points="7 10 12 15 17 10"></polyline>
         <line x1="12" y1="15" x2="12" y2="3"></line>
       </svg>
-      <span>Download ThinkCode Lab v1.3.4 (APK)</span>
+      <span id="downloadBtnText">Download ThinkCode Lab v1.3.4 (APK)</span>
     </a>
-    <div style="font-size: 12px; color: #94A3B8; margin: -6px 0 16px;">
-      File: <strong style="color:#E2E8F0;">ThinkCodeLab-v1.3.4.apk</strong> &middot; Version Code: <strong style="color:#E2E8F0;">11</strong> &middot; Android 7.0+
+    <div id="dlFileMeta" style="font-size: 12px; color: #94A3B8; margin: -6px 0 16px;">
+      File: <strong style="color:#E2E8F0;" id="dlFilename">ThinkCodeLab-v1.3.4.apk</strong> &middot; Version Code: <strong style="color:#E2E8F0;" id="dlBuildNum">11</strong> &middot; Android <span id="dlMinAndroid">7.0+</span>
     </div>
 
     <a href="/" class="btn-web">
@@ -262,12 +285,73 @@
         </div>
       </div>
     </div>
+
+    <details class="release-notes" id="dlReleaseNotes" hidden>
+      <summary id="dlNotesSummary">What’s New in v1.3.4</summary>
+      <ul id="dlNotesList"></ul>
+    </details>
   </div>
 
   <footer>
     &copy; 2026 InfoGalaxy Computers · Shirpur, Maharashtra<br>
     <a href="/privacy.html">Privacy Policy</a> · Built for BCA / BCS Students
   </footer>
+
+  <script>
+    (function () {
+      function safeHttpsUrl(url) {
+        try {
+          const parsed = new URL(String(url || ''), location.origin);
+          return parsed.protocol === 'https:' ? parsed.toString() : '';
+        } catch (_) {
+          return '';
+        }
+      }
+      fetch('/version.json', { cache: 'no-store' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (m) {
+          if (!m || !m.versionName || !m.versionCode) return;
+          var ver = String(m.versionName).replace(/^v/i, '');
+          var code = Number(m.versionCode);
+          document.title = 'Download ThinkCode Lab v' + ver + ' APK — InfoGalaxy Computers';
+          var vb = document.getElementById('dlVersionBadge');
+          var sb = document.getElementById('dlSizeBadge');
+          var bt = document.getElementById('downloadBtnText');
+          var btn = document.getElementById('downloadBtn');
+          var fn = document.getElementById('dlFilename');
+          var bn = document.getElementById('dlBuildNum');
+          var ma = document.getElementById('dlMinAndroid');
+          if (vb) vb.textContent = 'v' + ver + ' (Build ' + code + ')';
+          if (sb && m.apkSize) sb.textContent = String(m.apkSize);
+          if (bt) bt.textContent = 'Download ThinkCode Lab v' + ver + ' (APK)';
+          var apkName = String(m.apkFilename || ('ThinkCodeLab-v' + ver + '.apk'));
+          if (fn) fn.textContent = apkName;
+          if (bn) bn.textContent = String(code);
+          if (ma && m.minAndroidVersion) ma.textContent = String(m.minAndroidVersion).replace(/\+*$/, '') + '+';
+          var href = safeHttpsUrl(m.apkUrl || m.fallbackUrl);
+          if (btn && href) {
+            btn.href = href;
+            btn.setAttribute('download', apkName);
+          }
+          if (Array.isArray(m.releaseNotes) && m.releaseNotes.length) {
+            var details = document.getElementById('dlReleaseNotes');
+            var sum = document.getElementById('dlNotesSummary');
+            var ul = document.getElementById('dlNotesList');
+            if (details && sum && ul) {
+              sum.textContent = 'What’s New in v' + ver + (m.releaseDate ? ' (' + m.releaseDate + ')' : '');
+              ul.textContent = '';
+              m.releaseNotes.forEach(function (note) {
+                var li = document.createElement('li');
+                li.textContent = String(note);
+                ul.appendChild(li);
+              });
+              details.hidden = false;
+            }
+          }
+        })
+        .catch(function () {});
+    })();
+  </script>
 </body>
 </html>
 
