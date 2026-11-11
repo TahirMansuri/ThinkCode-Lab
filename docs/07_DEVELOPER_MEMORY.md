@@ -33,6 +33,12 @@
 > **Never store `.apk` or `.aab` binaries inside the `public/` folder.**
 > Vite copies everything from `public/` into `dist/`. Capacitor then copies `dist/` into Android's asset bundle (`android/app/src/main/assets/public/`). If an APK is placed in `public/`, Gradle will bundle the APK inside itself, doubling the APK size from 17 MB to 34 MB!
 
+### Rule 4: Never Start Android Emulator / VDI Automatically
+> [!IMPORTANT]
+> **Do NOT launch an Android Virtual Device (VDI / emulator) for autonomous UI or APK testing unless the user explicitly asks.**
+> - Starting the Android emulator consumes significant time, RAM, and CPU resources.
+> - Instead, run fast automated/CLI checks (`npm run test:ccpp`, `npm run build`), deploy web or provide the APK when requested, and ask the user to test manually on Web or APK and share feedback.
+
 ---
 
 ## 💡 3. Critical Technical Gotchas Learned

@@ -38,6 +38,9 @@ BackUp/
 *.zip
 *.tar.gz
 
+# Firebase local CLI cache
+.firebase/
+
 # System files & logs
 .DS_Store
 Thumbs.db
