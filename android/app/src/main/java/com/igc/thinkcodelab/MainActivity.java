@@ -1,9 +1,13 @@
 package com.igc.thinkcodelab;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.print.PrintAttributes;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintManager;
 import android.view.View;
 import android.view.Window;
 import android.webkit.JavascriptInterface;
@@ -95,6 +99,24 @@ public class MainActivity extends BridgeActivity {
             runOnUiThread(() -> {
                 appReadyApplied = true;
                 applySystemBarAppearance(isLight, true);
+            });
+        }
+
+        @JavascriptInterface
+        public void printDocument(String jobName) {
+            runOnUiThread(() -> {
+                if (bridge == null || bridge.getWebView() == null) return;
+                PrintManager pm = (PrintManager) getSystemService(Context.PRINT_SERVICE);
+                if (pm == null) return;
+                String title = (jobName != null && !jobName.trim().isEmpty())
+                    ? jobName.trim()
+                    : "ThinkCodeLab-LabJournal";
+                PrintDocumentAdapter adapter = bridge.getWebView().createPrintDocumentAdapter(title);
+                PrintAttributes attrs = new PrintAttributes.Builder()
+                    .setMediaSize(PrintAttributes.MediaSize.ISO_A4)
+                    .setMinMargins(PrintAttributes.Margins.NO_MARGINS)
+                    .build();
+                pm.print(title, adapter, attrs);
             });
         }
     }

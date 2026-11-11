@@ -8,6 +8,15 @@ import { formatCode } from './formatter.js';
 import { sqlui } from './sql-ui.js';
 import { shellui } from './shell-ui.js';
 import { PRACTICALS } from './practicals.js';
+import {
+  loadJournalProfile,
+  saveJournalProfile,
+  todayIsoDate,
+  sanitizePdfFilename,
+  collectJournalSnapshot,
+  buildJournalHtml,
+  renderJournalPdfBytes
+} from './lab-journal.js';
 
 const $ = id => document.getElementById(id);
 const store = {
@@ -19,6 +28,7 @@ let cur = LANGS.find(l => l.id === store.get('cf.lang') && l.engine) || LANGS[0]
 let running = false, stopped = false, saveTimer = 0;
 let editorHtml = null, editorPhp = null, lastFocusedEditor = null;
 let phpViewMode = store.get('cf.php.view_mode', 'split');
+let activePracticalMeta = null;
 
 // ---------- small helpers ----------
 const wide = () => matchMedia('(min-width: 900px)').matches;
@@ -370,6 +380,7 @@ function select(l) {
   if (l.id === cur.id) return;
   if (running) return toast('Stop the current run first.');
   hideJavaGui();
+  activePracticalMeta = null;
   if (cur.input === 'stdin' && $('stdin')) store.set('cf.in.' + cur.id, $('stdin').value);
   cur = l; store.set('cf.lang', l.id);
   editor.set(store.get('cf.code.' + l.id, l.tpl), l.id);
@@ -592,6 +603,7 @@ if (bClr) bClr.onclick = () => { con.textContent = ''; setOutputSmall(); };
 const stdinEl = $('stdin');
 if (stdinEl) stdinEl.oninput = e => store.set('cf.in.' + cur.id, e.target.value);
 window.addEventListener('keydown', e => {
+  if ($('journalDialog')?.open) return;
   if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
     e.preventDefault();
     if (running) stop();
@@ -629,11 +641,22 @@ async function saveFile(name, data) {
         ? { path: name, data, directory: Directory.Cache, encoding: Encoding.UTF8 }
         : { path: name, data: btoa(b), directory: Directory.Cache });
       await Share.share({ title: name, url: r.uri, dialogTitle: 'Save or share ' + name });
+      return true;
     } else {
-      const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob([data])), download: name });
-      a.click(); URL.revokeObjectURL(a.href); toast('Saved ' + name);
+      const mime = name.endsWith('.pdf') ? 'application/pdf' : 'application/octet-stream';
+      const url = URL.createObjectURL(new Blob([data], { type: mime }));
+      const a = Object.assign(document.createElement('a'), { href: url, download: name });
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+      toast('Saved ' + name);
+      return true;
     }
-  } catch (e) { toast('Could not save: ' + (e.message || e)); }
+  } catch (e) {
+    const msg = String(e?.message || e);
+    if (/cancel/i.test(msg)) return false;
+    toast('Could not save: ' + msg);
+    return false;
+  }
 }
 function handleExportCode() {
   if (cur.id === 'php' && editorHtml && editorPhp) {
@@ -873,6 +896,13 @@ function loadPracticalCode(item, langId) {
   if (cur.id !== langId) {
     select(targetLang);
   }
+  activePracticalMeta = {
+    langId,
+    num: item.num,
+    cat: item.cat,
+    title: item.title,
+    desc: item.desc
+  };
   editor.set(item.code, langId);
   store.set('cf.code.' + langId, item.code);
 
@@ -898,6 +928,7 @@ $('filePick').onchange = async e => {
 
 function handleResetTemplate() {
   if (confirm('Replace your code with the starter template?')) {
+    activePracticalMeta = null;
     if (cur.id === 'php' && editorHtml && editorPhp) {
       editorHtml.set(DEFAULT_PHP_HTML, 'web');
       editorPhp.set(DEFAULT_PHP_SCRIPT, 'php');
@@ -1764,6 +1795,334 @@ function initCodeFormatter() {
   });
 }
 
+// ==========================================
+// 1-Tap Student Lab Journal & PDF Export
+// ==========================================
+function initLabJournal() {
+  const dialog = $('journalDialog');
+  const form = $('journalForm');
+  if (!dialog || !form) return;
+
+  const btnOut = $('btnJournalOut');
+  const btnMenu = $('menuBtnJournal');
+  const btnClose = $('btnJournalClose');
+  const noticeEl = $('journalOutNotice');
+  const statusEl = $('journalStatus');
+  const previewWrap = $('journalPreviewWrap');
+  const previewStage = $('journalPreviewStage');
+  const printRoot = $('journalPrintRoot');
+  const btnPreviewToggle = $('btnJournalPreviewToggle');
+  const btnPrint = $('btnJournalPrint');
+  const btnDownload = $('btnJournalDownload');
+
+  const fPracticalNo = $('jfPracticalNo');
+  const fDate = $('jfDate');
+  const fTitle = $('jfTitle');
+  const fTitleErr = $('jfTitleError');
+  const fSubject = $('jfSubject');
+  const fAim = $('jfAim');
+  const fInstitute = $('jfInstitute');
+  const fDepartment = $('jfDepartment');
+  const fStudentName = $('jfStudentName');
+  const fRollNo = $('jfRollNo');
+  const fClassName = $('jfClassName');
+  const fAcademicYear = $('jfAcademicYear');
+  const fIncCode = $('jfIncCode');
+  const fIncOutput = $('jfIncOutput');
+  const fIncSig = $('jfIncSig');
+
+  let snapshot = null;
+  let lastSuggestKey = '';
+  let titleEdited = false;
+  let previewOpen = false;
+  let exporting = false;
+  let previewTimer = 0;
+  const originalDocTitle = document.title;
+
+  const getSnapshot = () => collectJournalSnapshot({
+    cur,
+    editor,
+    editorHtml,
+    editorPhp,
+    phpViewMode,
+    defaultPhpHtml: DEFAULT_PHP_HTML,
+    consoleEl: con,
+    previewEl: preview,
+    activeGuiWinData,
+    guiWinContentEl: $('guiWinContent'),
+    guiStatusTextEl: $('guiStatusText'),
+    activePractical: activePracticalMeta
+  });
+
+  const readFormMeta = () => ({
+    practicalNo: fPracticalNo?.value || '',
+    date: fDate?.value || todayIsoDate(),
+    title: fTitle?.value || '',
+    subject: fSubject?.value || '',
+    aim: fAim?.value || '',
+    institute: fInstitute?.value || '',
+    department: fDepartment?.value || '',
+    studentName: fStudentName?.value || '',
+    rollNo: fRollNo?.value || '',
+    className: fClassName?.value || '',
+    academicYear: fAcademicYear?.value || ''
+  });
+
+  const readOptions = () => ({
+    includeCode: fIncCode ? fIncCode.checked : true,
+    includeOutput: fIncOutput ? fIncOutput.checked : true,
+    includeSignature: fIncSig ? fIncSig.checked : true
+  });
+
+  const clearTitleError = () => {
+    if (!fTitle) return;
+    fTitle.setCustomValidity('');
+    fTitle.removeAttribute('aria-invalid');
+    if (fTitleErr) fTitleErr.textContent = '';
+  };
+
+  const validateTitle = (showError = true) => {
+    if (!fTitle) return true;
+    const trimmed = fTitle.value.trim();
+    fTitle.setCustomValidity('');
+    let msg = '';
+    if (!trimmed) {
+      msg = 'Please enter a practical title before exporting.';
+    } else if (trimmed.length < 2) {
+      msg = 'Practical title must be at least 2 characters.';
+    }
+    if (msg) {
+      fTitle.setCustomValidity(msg);
+      if (showError) {
+        fTitle.setAttribute('aria-invalid', 'true');
+        if (fTitleErr) fTitleErr.textContent = `⚠ ${msg}`;
+      }
+      return false;
+    }
+    clearTitleError();
+    return true;
+  };
+
+  const refreshPreview = () => {
+    if (!previewOpen || !previewStage || !snapshot) return;
+    previewStage.innerHTML = buildJournalHtml(readFormMeta(), snapshot, readOptions());
+  };
+
+  const schedulePreviewRefresh = () => {
+    if (!previewOpen) return;
+    clearTimeout(previewTimer);
+    previewTimer = setTimeout(refreshPreview, 90);
+  };
+
+  const setStatus = (msg, kind = '') => {
+    if (!statusEl) return;
+    statusEl.textContent = msg || '';
+    statusEl.dataset.state = kind;
+  };
+
+  const populateFieldsOnOpen = () => {
+    snapshot = getSnapshot();
+    const profile = loadJournalProfile();
+    if (fInstitute) fInstitute.value = profile.institute;
+    if (fDepartment) fDepartment.value = profile.department;
+    if (fStudentName) fStudentName.value = profile.studentName;
+    if (fRollNo) fRollNo.value = profile.rollNo;
+    if (fClassName) fClassName.value = profile.className;
+    if (fAcademicYear) fAcademicYear.value = profile.academicYear;
+    if (fDate && !fDate.value) fDate.value = todayIsoDate();
+
+    const pracKey = activePracticalMeta && activePracticalMeta.langId === snapshot.langId
+      ? `${snapshot.langId}|${activePracticalMeta.num}|${activePracticalMeta.title}`
+      : `${snapshot.langId}|custom|${(snapshot.codeFiles[0]?.code || '').slice(0, 140)}`;
+
+    if (pracKey !== lastSuggestKey || !fTitle?.value.trim()) {
+      if (fPracticalNo) fPracticalNo.value = snapshot.suggested.practicalNo;
+      if (fSubject) fSubject.value = snapshot.suggested.subject;
+      if (fTitle) fTitle.value = snapshot.suggested.title;
+      if (fAim) fAim.value = snapshot.suggested.aim;
+      lastSuggestKey = pracKey;
+    }
+
+    if (noticeEl) {
+      if (!snapshot.hasOutput) {
+        noticeEl.hidden = false;
+        noticeEl.textContent = 'Tip: No program output is captured yet. Tap ▶ Run before exporting to attach execution output, or export Source Code only.';
+      } else {
+        noticeEl.hidden = true;
+        noticeEl.textContent = '';
+      }
+    }
+
+    titleEdited = false;
+    clearTitleError();
+    setStatus('');
+    previewOpen = false;
+    if (previewWrap) previewWrap.hidden = true;
+    if (btnPreviewToggle) {
+      btnPreviewToggle.setAttribute('aria-expanded', 'false');
+      btnPreviewToggle.textContent = '👁 Preview';
+    }
+  };
+
+  const openJournalDialog = () => {
+    if (dialog.open) return;
+    populateFieldsOnOpen();
+    dialog.showModal();
+    const jdBody = dialog.querySelector('.jd-body');
+    if (jdBody) jdBody.scrollTop = 0;
+  };
+
+  btnOut?.addEventListener('click', openJournalDialog);
+  btnMenu?.addEventListener('click', () => {
+    closeMenuDrawer();
+    openJournalDialog();
+  });
+  btnClose?.addEventListener('click', () => dialog.close('cancel'));
+
+  // Safari fallback for closedby="any" light dismiss (requires press AND release outside dialog bounds)
+  if (!('closedBy' in HTMLDialogElement.prototype)) {
+    const isOutsideDialog = (e, dlg) => {
+      const r = dlg.getBoundingClientRect();
+      return e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+    };
+    let pressedOutside = false;
+    dialog.addEventListener('pointerdown', e => {
+      pressedOutside = dialog.open && isOutsideDialog(e, dialog);
+    });
+    dialog.addEventListener('pointerup', e => {
+      if (pressedOutside && dialog.open && isOutsideDialog(e, dialog)) {
+        dialog.close('backdrop');
+      }
+      pressedOutside = false;
+    });
+  }
+
+  dialog.addEventListener('close', () => {
+    // Always reset dialog.returnValue on close so stale button values cannot leak
+    void dialog.returnValue;
+    dialog.returnValue = '';
+    clearTimeout(previewTimer);
+    document.title = originalDocTitle;
+    if (printRoot) printRoot.innerHTML = '';
+  });
+
+  // Validation timing: clear errors while typing on input; validate on blur only if edited
+  fTitle?.addEventListener('input', () => {
+    titleEdited = true;
+    clearTitleError();
+    schedulePreviewRefresh();
+  });
+  fTitle?.addEventListener('blur', () => {
+    if (titleEdited) validateTitle(true);
+  });
+
+  // Persist profile fields & keep preview live when toggled open
+  [fInstitute, fDepartment, fStudentName, fRollNo, fClassName, fAcademicYear].forEach(el => {
+    el?.addEventListener('input', () => {
+      saveJournalProfile(readFormMeta());
+      schedulePreviewRefresh();
+    });
+  });
+
+  [fPracticalNo, fDate, fSubject, fAim].forEach(el => {
+    el?.addEventListener('input', schedulePreviewRefresh);
+  });
+
+  [fIncCode, fIncOutput, fIncSig].forEach(el => {
+    el?.addEventListener('change', () => {
+      if (previewOpen) refreshPreview();
+    });
+  });
+
+  btnPreviewToggle?.addEventListener('click', () => {
+    previewOpen = !previewOpen;
+    if (previewWrap) previewWrap.hidden = !previewOpen;
+    btnPreviewToggle.setAttribute('aria-expanded', String(previewOpen));
+    btnPreviewToggle.textContent = previewOpen ? '🙈 Hide Preview' : '👁 Preview';
+    if (previewOpen) {
+      snapshot = getSnapshot();
+      refreshPreview();
+      previewWrap?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  });
+
+  window.addEventListener('afterprint', () => {
+    document.title = originalDocTitle;
+  });
+
+  btnPrint?.addEventListener('click', () => {
+    if (!validateTitle(true)) {
+      fTitle?.focus();
+      return;
+    }
+    const meta = readFormMeta();
+    saveJournalProfile(meta);
+    snapshot = getSnapshot();
+    const opts = readOptions();
+    const jobTitle = sanitizePdfFilename(meta, snapshot.langId).replace(/\.pdf$/i, '');
+
+    if (printRoot) {
+      printRoot.innerHTML = buildJournalHtml(meta, snapshot, opts);
+    }
+    document.title = jobTitle;
+    setStatus('Opening system print / Save as PDF dialog…', 'ok');
+
+    if (window.Capacitor?.isNativePlatform?.() && window.ThinkCodeSystemUI?.printDocument) {
+      try {
+        window.ThinkCodeSystemUI.printDocument(jobTitle);
+        return;
+      } catch (_) {}
+    }
+    window.print();
+    setTimeout(() => { document.title = originalDocTitle; }, 1200);
+  });
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (exporting) return;
+    if (!validateTitle(true)) {
+      fTitle?.focus();
+      return;
+    }
+
+    exporting = true;
+    const origBtnHtml = btnDownload ? btnDownload.textContent : '⬇ Download PDF';
+    if (btnDownload) {
+      btnDownload.disabled = true;
+      btnDownload.textContent = '⏳ Generating PDF…';
+    }
+    setStatus('Building offline A4 PDF sheet…', 'busy');
+
+    try {
+      const meta = readFormMeta();
+      saveJournalProfile(meta);
+      snapshot = getSnapshot();
+      const opts = readOptions();
+      const filename = sanitizePdfFilename(meta, snapshot.langId);
+
+      // Yield a frame so disabled state & status message paint smoothly
+      await new Promise(r => requestAnimationFrame(() => r()));
+      const pdfBytes = await renderJournalPdfBytes(meta, snapshot, opts);
+      const ok = await saveFile(filename, pdfBytes);
+      if (ok) {
+        setStatus(`✓ Ready: ${filename}`, 'ok');
+      } else {
+        setStatus('PDF export cancelled.', '');
+      }
+    } catch (err) {
+      const msg = String(err?.message || err);
+      setStatus(`⚠ Export failed: ${msg}`, 'err');
+      toast('Could not generate PDF: ' + msg);
+    } finally {
+      exporting = false;
+      if (btnDownload) {
+        btnDownload.disabled = false;
+        btnDownload.textContent = origBtnHtml;
+      }
+    }
+  });
+}
+
 // ---------- boot ----------
 function shellCmd(line) { print(`${engines.shell.sh.prompt} ${line}\n`, 'cmd'); engines.shell.exec(line, sink); $('promptLabel').textContent = engines.shell.sh.prompt; }
 shellui.init({ sh: engines.shell.sh, cmd: shellCmd });
@@ -1776,6 +2135,7 @@ initZoomControls();
 initGuiWindowControls();
 initQuickSymbolBar();
 initCodeFormatter();
+initLabJournal();
 const warmPromise = warm();
 window.__app = { run, stop, engines, cur: () => cur, editorPhp: () => editorPhp, editorHtml: () => editorHtml, running: () => running };
 

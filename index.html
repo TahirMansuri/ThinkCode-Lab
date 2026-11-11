@@ -290,6 +290,9 @@
           <button type="button" id="btnOutZoomOut" class="btn-zoom" title="Zoom Out Output">A−</button>
           <button type="button" id="btnOutZoomIn" class="btn-zoom" title="Zoom In Output">A+</button>
         </div>
+        <button type="button" id="btnJournalOut" class="btn-journal-out" title="Export Lab Journal / Assignment PDF" aria-label="Export Lab Journal PDF">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        </button>
         <button type="button" id="btnClear" class="btn-clear-out" title="Clear output (Restores 80:20 split)" aria-label="Clear output">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
         </button>
@@ -349,6 +352,15 @@
           <b>Save Code to Device</b>
           <small>Download active code as source file</small>
         </div>
+      </button>
+
+      <button type="button" class="drawer-item" id="menuBtnJournal">
+        <span class="d-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span>
+        <div class="d-text">
+          <b>Lab Journal / Export PDF</b>
+          <small>Generate A4 assignment sheet with code &amp; output</small>
+        </div>
+        <span class="d-badge">PDF</span>
       </button>
 
       <button type="button" class="drawer-item" id="menuBtnReset">
@@ -453,6 +465,131 @@
   <span class="reopen-icon">☕</span>
   <span class="reopen-text">Java GUI Frame</span>
 </button>
+
+<!-- 1-Tap Student Lab Journal / Assignment PDF Export Dialog -->
+<dialog id="journalDialog" class="journal-dialog" aria-labelledby="journalDialogTitle" closedby="any">
+  <div class="jd-shell">
+    <div class="jd-head">
+      <div class="jd-head-title">
+        <span class="jd-badge">A4 PDF</span>
+        <h2 id="journalDialogTitle">Lab Journal / Assignment Export</h2>
+      </div>
+      <button type="button" id="btnJournalClose" class="drawer-close" aria-label="Close dialog">✕</button>
+    </div>
+
+    <div class="jd-body">
+      <div id="journalOutNotice" class="jd-notice" hidden role="status"></div>
+
+      <form id="journalForm" class="journal-form" novalidate>
+        <fieldset class="jf-group">
+          <legend>Practical Assignment Details</legend>
+          <div class="jf-grid-2">
+            <div class="jf-field">
+              <label for="jfPracticalNo">Practical / Assignment No.</label>
+              <input type="text" id="jfPracticalNo" name="practicalNo" placeholder="Practical #01" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next">
+            </div>
+            <div class="jf-field">
+              <label for="jfDate">Submission Date</label>
+              <input type="date" id="jfDate" name="date" enterkeyhint="next">
+            </div>
+          </div>
+
+          <div class="jf-field">
+            <label for="jfTitle">Practical Title <span aria-hidden="true">*</span></label>
+            <input type="text" id="jfTitle" name="title" required minlength="2" maxlength="120" placeholder="e.g. Inheritance &amp; Method Overriding" aria-describedby="jfTitleError" enterkeyhint="next" autofocus>
+            <span id="jfTitleError" class="jf-error" role="alert"></span>
+          </div>
+
+          <div class="jf-field">
+            <label for="jfSubject">Subject / Course Code</label>
+            <input type="text" id="jfSubject" name="subject" placeholder="e.g. Object Oriented Programming (C++)" enterkeyhint="next">
+          </div>
+
+          <div class="jf-field">
+            <label for="jfAim">Aim / Problem Statement (Optional)</label>
+            <textarea id="jfAim" name="aim" rows="2" maxlength="360" placeholder="Short objective printed above source code…" enterkeyhint="next"></textarea>
+          </div>
+        </fieldset>
+
+        <fieldset class="jf-group">
+          <legend>Student &amp; Institute Profile (Saved Locally)</legend>
+          <div class="jf-field">
+            <label for="jfInstitute">College / Institute Name</label>
+            <input type="text" id="jfInstitute" name="institute" autocomplete="organization" placeholder="InfoGalaxy Computers, Shirpur" enterkeyhint="next">
+          </div>
+          <div class="jf-field">
+            <label for="jfDepartment">Department / University (Optional)</label>
+            <input type="text" id="jfDepartment" name="department" placeholder="Department of Computer Applications" enterkeyhint="next">
+          </div>
+          <div class="jf-grid-2">
+            <div class="jf-field">
+              <label for="jfStudentName">Student Name</label>
+              <input type="text" id="jfStudentName" name="studentName" autocomplete="name" placeholder="e.g. Rohan Patil" enterkeyhint="next">
+            </div>
+            <div class="jf-field">
+              <label for="jfRollNo">Roll No.</label>
+              <input type="text" id="jfRollNo" name="rollNo" placeholder="e.g. 24" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="next">
+            </div>
+          </div>
+          <div class="jf-grid-2">
+            <div class="jf-field">
+              <label for="jfClassName">Class / Batch</label>
+              <input type="text" id="jfClassName" name="className" list="jfClassSuggestions" placeholder="e.g. SYBCA / TYBCA" enterkeyhint="next">
+              <datalist id="jfClassSuggestions">
+                <option value="FYBCA"></option>
+                <option value="SYBCA"></option>
+                <option value="TYBCA"></option>
+                <option value="FYBCS"></option>
+                <option value="SYBCS"></option>
+                <option value="TYBCS"></option>
+                <option value="B.Sc. CS"></option>
+                <option value="MCA"></option>
+              </datalist>
+            </div>
+            <div class="jf-field">
+              <label for="jfAcademicYear">Academic Year</label>
+              <input type="text" id="jfAcademicYear" name="academicYear" placeholder="2026-27" autocorrect="off" autocapitalize="none" spellcheck="false" enterkeyhint="done">
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="jf-group jf-options">
+          <legend>Sections Included</legend>
+          <div class="jf-check-row">
+            <input type="checkbox" id="jfIncCode" name="includeCode" checked>
+            <label for="jfIncCode">Source Code (with line numbers)</label>
+          </div>
+          <div class="jf-check-row">
+            <input type="checkbox" id="jfIncOutput" name="includeOutput" checked>
+            <label for="jfIncOutput">Execution Output, SQL Tables &amp; GUI</label>
+          </div>
+          <div class="jf-check-row">
+            <input type="checkbox" id="jfIncSig" name="includeSignature" checked>
+            <label for="jfIncSig">Examiner Signature &amp; Marks Footer</label>
+          </div>
+        </fieldset>
+
+        <div id="journalPreviewWrap" class="jf-preview-wrap" hidden>
+          <div class="jf-preview-bar">
+            <span>A4 Sheet Preview</span>
+            <small>Exact formatted print layout</small>
+          </div>
+          <div id="journalPreviewStage" class="jf-preview-stage"></div>
+        </div>
+
+        <div id="journalStatus" class="jf-status" role="status" aria-live="polite"></div>
+
+        <div class="jf-actions">
+          <button type="button" id="btnJournalPreviewToggle" class="jf-btn jf-btn-ghost" aria-expanded="false" aria-controls="journalPreviewWrap">👁 Preview</button>
+          <button type="button" id="btnJournalPrint" class="jf-btn jf-btn-sec">🖨 Print / System PDF</button>
+          <button type="submit" id="btnJournalDownload" class="jf-btn jf-btn-pri">⬇ Download PDF</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</dialog>
+
+<div id="journalPrintRoot" class="journal-print-root" aria-hidden="true"></div>
 
 <div id="toast" class="toast" role="status"></div>
 <script type="module" src="/src/main.js"></script>
