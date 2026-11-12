@@ -11,8 +11,8 @@
 | :--- | :--- | :--- |
 | **Application Title** | `ThinkCode Lab` | Former development codename: *CodeForge* |
 | **Android Application ID** | `com.igc.thinkcodelab` | Immutable package identifier on Google Play |
-| **Current Production Version** | `v1.3.4` | Semantic release version |
-| **Current Version Code** | `11` | Integer build counter for Android package |
+| **Current Production APK** | `v1.3.4` (`versionCode: 11`) | Signed release APK (`ThinkCodeLab-v1.3.4.apk`, ~17.7 MB) |
+| **Active Web / Feature Branch** | `feature/v1.3.5` | Web-deployed enhancements staged for upcoming `v1.3.5` (Build `12`) APK |
 | **Lead Developer / Architect** | **Tahir Mansuri** | Lead System Engineer & HOD, IMRD College |
 | **Organization / Agency** | **InfoGalaxy Computers** | Shirpur, Maharashtra, India |
 | **Developer Email** | `tprocks786@gmail.com` | Primary Git author and developer contact |
@@ -28,7 +28,8 @@
 | :--- | :--- | :--- |
 | **Production Web App (Primary)** | [https://thinkcode-lab.web.app](https://thinkcode-lab.web.app) | Live 100% offline-ready web IDE |
 | **Production Web App (Secondary)** | [https://thinkcode-lab.firebaseapp.com](https://thinkcode-lab.firebaseapp.com) | Alternate Firebase SSL domain |
-| **APK Web Download Portal** | [https://thinkcode-lab.web.app/download](https://thinkcode-lab.web.app/download) | Direct mobile-optimized installer page (`v1.3.4`, Build `11`) |
+| **APK Web Download Portal** | [https://thinkcode-lab.web.app/download](https://thinkcode-lab.web.app/download) | Auto-hydrating installer page reading `/version.json` (`v1.3.4`, Build `11`) |
+| **Live App Update Manifest** | [https://thinkcode-lab.web.app/version.json](https://thinkcode-lab.web.app/version.json) | Public JSON manifest (`CORS`, `CORP: cross-origin`, `no-store`) consumed by in-app updater |
 | **Versioned APK Download URL (Redirect)** | [https://thinkcode-lab.web.app/ThinkCodeLab-v1.3.4.apk](https://thinkcode-lab.web.app/ThinkCodeLab-v1.3.4.apk) | 302 redirect saving `ThinkCodeLab-v1.3.4.apk` |
 | **Direct APK Download URL (Redirect)** | [https://thinkcode-lab.web.app/ThinkCodeLab.apk](https://thinkcode-lab.web.app/ThinkCodeLab.apk) | 302 redirect directly to latest GitHub release binary (`ThinkCodeLab-v1.3.4.apk`) |
 | **Short APK Download Link** | [https://thinkcode-lab.web.app/apk](https://thinkcode-lab.web.app/apk) | Quick short URL for student sharing (`ThinkCodeLab-v1.3.4.apk`) |
@@ -51,7 +52,7 @@
 | **Local Config Files** | `.firebaserc` and `firebase.json` | Project binding and HTTP header rules |
 
 ### Critical HTTP Headers in `firebase.json`:
-For `SharedArrayBuffer` and `Atomics` multi-threaded stdin execution in the browser:
+For `SharedArrayBuffer` and `Atomics` multi-threaded stdin execution on app routes (scoped away from `/download` and `/ThinkCodeLab*.apk` redirects so mobile APK downloads work cleanly):
 ```json
 {
   "key": "Cross-Origin-Opener-Policy",
@@ -60,6 +61,21 @@ For `SharedArrayBuffer` and `Atomics` multi-threaded stdin execution in the brow
 {
   "key": "Cross-Origin-Embedder-Policy",
   "value": "require-corp"
+}
+```
+And on `/version.json` for cross-origin update checks from Capacitor Android WebView and fresh cache invalidation:
+```json
+{
+  "key": "Access-Control-Allow-Origin",
+  "value": "*"
+},
+{
+  "key": "Cross-Origin-Resource-Policy",
+  "value": "cross-origin"
+},
+{
+  "key": "Cache-Control",
+  "value": "no-cache, no-store, must-revalidate"
 }
 ```
 
@@ -72,8 +88,8 @@ For `SharedArrayBuffer` and `Atomics` multi-threaded stdin execution in the brow
 | **Repository URL** | [https://github.com/TahirMansuri/ThinkCode-Lab](https://github.com/TahirMansuri/ThinkCode-Lab) | Public open-source repository |
 | **Git Clone SSH** | `git@github.com:TahirMansuri/ThinkCode-Lab.git` | SSH protocol clone link |
 | **Git Clone HTTPS** | `https://github.com/TahirMansuri/ThinkCode-Lab.git` | HTTPS protocol clone link |
-| **Default Branch** | `main` | Production-ready main branch |
-| **Active Release Branch** | `release/v1.3.2` | Feature development and release branch |
+| **Default Branch** | `main` | Production-ready main branch (`v1.3.4`) |
+| **Active Feature Branch** | `feature/v1.3.5` | Current web development & upcoming Build 12 release branch |
 | **GitHub Releases Page** | [github.com/TahirMansuri/ThinkCode-Lab/releases](https://github.com/TahirMansuri/ThinkCode-Lab/releases) | Versioned binary distribution page |
 | **Latest Release Tag** | `v1.3.4` | Tag containing `ThinkCodeLab-v1.3.4.apk` asset (`versionCode 11`) |
 | **Release APK Direct CDN** | [github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.4/ThinkCodeLab-v1.3.4.apk](https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.4/ThinkCodeLab-v1.3.4.apk) | GitHub release asset binary download |
@@ -114,9 +130,9 @@ For `SharedArrayBuffer` and `Atomics` multi-threaded stdin execution in the brow
 ```
 
 #### 3. v1.3.4 Release APK Binary SHA-256 File Hash
-*(Exact 64-character lowercase hex hash of `ThinkCodeLab-v1.3.4.apk` [Build 11] for Google Play Protect Appeal forms)*
+*(Exact 64-character lowercase hex hash of `ThinkCodeLab-v1.3.4.apk` [Build 11] for Google Play Protect Appeal forms & `public/version.json`)*
 ```text
-879856e091aa8e0244f7125de596dd76a6596e1e2cf1eec8c32419d0
+879856e091aa8e0244f7125de596dd76a65328e9c6596e1e2cf1eec8c32419d0
 ```
 - *(Previous `v1.3.3` Build 10 hash: `6f5dbdb720c9df0c81ff4edbb6061b21ad7066cd4f47a8a1627232f50b53447e`)*
 - *(Previous `v1.3.2` Build 9 hash: `d01bf35bc3c077f02c5861da2df58898425a99e08f8d60c89801bd7232267566`)*
@@ -144,20 +160,25 @@ For `SharedArrayBuffer` and `Atomics` multi-threaded stdin execution in the brow
 
 ```bash
 # -------------------------------------------------------------
-# 🌐 WEB DEVELOPMENT & FIREBASE DEPLOYMENT
+# 🌐 WEB DEVELOPMENT, VERIFICATION & FIREBASE DEPLOYMENT
 # -------------------------------------------------------------
 # 1. Start local Vite preview server
 npm run dev
 
-# 2. Compile production web distribution (outputs to dist/)
+# 2. Run automated verification suites (67 checks total)
+npm run test:ccpp
+node scripts/test-journal.mjs
+node scripts/test-update-checker.mjs
+
+# 3. Compile production web distribution (outputs to dist/)
 npm run build
 
-# 3. Deploy web application live to Firebase Hosting
+# 4. Deploy web application live to Firebase Hosting
 npx firebase deploy --only hosting
 
 
 # -------------------------------------------------------------
-# 📱 ANDROID BUILD & RELEASE COMPILATION
+# 📱 ANDROID BUILD & RELEASE COMPILATION (ONLY ON EXPLICIT REQUEST)
 # -------------------------------------------------------------
 # 1. Sync compiled web assets with Capacitor Android wrapper
 npm run build
@@ -168,7 +189,10 @@ cd android
 ./gradlew assembleRelease
 # Output: android/app/build/outputs/apk/release/app-release.apk
 
-# 3. Compile signed production Google Play Bundle (AAB)
+# 3. Verify 64-character APK SHA-256 hash & sync /version.json
+shasum -a 256 android/app/build/outputs/apk/release/app-release.apk
+
+# 4. Compile signed production Google Play Bundle (AAB)
 cd android
 ./gradlew bundleRelease
 # Output: android/app/build/outputs/bundle/release/app-release.aab
@@ -177,25 +201,27 @@ cd android
 # -------------------------------------------------------------
 # 🐙 GIT SYNCHRONIZATION COMMANDS
 # -------------------------------------------------------------
-# Sync both release branch and main on GitHub
-git push origin release/v1.3.2
-git checkout main
-git merge --ff-only release/v1.3.2
-git push origin main
-git checkout release/v1.3.2
+# Push active feature branch (or merge fast-forward into main upon release)
+git push origin feature/v1.3.5
 ```
 
 ---
 
-## 📂 8. Project Credentials File Locations
+## 📂 8. Project Credentials, Release & Utility File Locations
 
 | File | Project Location | Purpose |
 | :--- | :--- | :--- |
 | **Production Keystore** | `android/app/thinkcode-lab.keystore` | Android signing certificate |
 | **Keystore Root Backup** | `thinkcode-lab.keystore` | Project root safety copy |
-| **Gradle Signing Config** | `android/app/build.gradle` | Connects release build to keystore |
+| **Gradle Signing Config** | `android/app/build.gradle` | Connects release build to keystore & defines `versionCode`/`versionName` |
+| **Native Android Activity** | `android/app/src/main/java/com/igc/thinkcodelab/MainActivity.java` | `NativeStdinBridge`, `SystemUiBridge` (`setTheme`, `printDocument`, `getAppVersion`, `openExternalUrl`), Edge-to-Edge insets |
 | **Android SDK Variables** | `android/variables.gradle` | Defines `targetSdkVersion = 36`, `minSdkVersion = 24` |
+| **Live Update Manifest** | `public/version.json` | Single source of truth for current APK metadata, notes, and 64-char SHA-256 |
+| **Web Download Portal** | `public/download.html` | Progressive-enhanced `/download` page hydrating live metadata from `/version.json` |
+| **In-App Update Checker** | `src/update-checker.js` | Zero-telemetry semver/`versionCode` evaluator, throttling, and snooze persistence |
+| **Lab Journal PDF Exporter**| `src/lab-journal.js` | Pure-JS offline A4 JPEG-in-PDF 1.4 generator & student profile manager |
 | **Firebase Target Mapping**| `.firebaserc` | Maps default project to `igcquiz-5d910` |
-| **Firebase Hosting Rules** | `firebase.json` | COOP/COEP headers and `/ThinkCodeLab-v1.3.4.apk`, `/ThinkCodeLab.apk`, `/apk` redirects |
+| **Firebase Hosting Rules** | `firebase.json` | COOP/COEP app rules, `/version.json` CORS/CORP/`no-store` headers, and APK 302 redirects |
+| **Automated Test Suites** | `scripts/test-c-cpp.mjs`, `scripts/test-journal.mjs`, `scripts/test-update-checker.mjs` | Automated runtime, PDF binary structure, and update manifest tests |
 | **Master Credentials Guide**| `docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md` | This document |
 

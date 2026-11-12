@@ -9,7 +9,8 @@
 - **Author:** Tahir Mansuri (Lead System Engineer & HOD, IMRD College).
 - **Core Purpose:** Standalone, 100% OFFLINE multi-language coding playground and mobile IDE for computer science students.
 - **Companion Project:** [ThinkCode Interactive Visualizer & Code Tracer](https://thinkcode.infogalaxy.space/).
-- **Current Version:** **v1.3.4 (Build 11)**.
+- **Released Android APK:** **v1.3.4 (Build 11)** on GitHub Releases & `/download`.
+- **Active Development Branch:** **`feature/v1.3.5`** (Web IDE live at `https://thinkcode-lab.web.app`, staging features for upcoming Build 12 APK).
 
 ---
 
@@ -82,6 +83,18 @@
    - Never give `.top` a fixed `height` (always use `min-height` with `env(safe-area-inset-top, 0px)` fallback + `height: auto`).
    - `MainActivity.java` consumes `systemBars() | displayCutout() | ime()` on `android.R.id.content` and returns `WindowInsetsCompat.CONSUMED` so WebView stays clear of notches/status/nav bars/IME without CSS double-padding; keep `ThinkCodeSystemUI.setTheme(isLight)` synced in `theme()` and splash completion.
    - Avoid combining parent `opacity` + child `backdrop-filter` + sibling `transform: translateX(...)` in `.drawer` (causes Chromium WebView surface tile artifacts).
+12. **In-App APK Update Manifest Sync (`/version.json` & `APP_META`)**:
+   - Whenever compiling and publishing a new APK build (e.g. `v1.3.5` / `Build 12`), keep these 6 places in lockstep:
+     1. `android/app/build.gradle` (`versionCode` & `versionName`)
+     2. `public/version.json` (`versionName`, `versionCode`, `releaseDate`, `apkFilename`, `apkSize`, `apkSizeBytes`, `apkUrl`, 64-char `sha256`, `releaseNotes`)
+     3. `APP_META` in `src/update-checker.js`
+     4. `firebase.json` 302 redirects (`/ThinkCodeLab-vX.Y.Z.apk`, `/ThinkCodeLab.apk`, `/apk`)
+     5. GitHub Release asset matching `apkFilename`
+     6. `docs/06_PLAYSTORE_RELEASE.md` & `docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md` (with verified 64-char `shasum -a 256`)
+   - Never strip `Access-Control-Allow-Origin: *`, `Cross-Origin-Resource-Policy: cross-origin`, or `Cache-Control: no-cache, no-store, must-revalidate` from `/version.json` in `firebase.json`, otherwise COOP/COEP browsers or stale caches block or miss update checks.
+13. **Offline Lab Journal PDF & Top-Layer Popover Ordering**:
+   - `src/lab-journal.js` uses a zero-dependency pure-JS JPEG-in-PDF 1.4 binary writer alongside Canvas 2D A4 pagination; never break 20-byte `xref` entry formatting or `@media print` semantic markup, and run `node scripts/test-journal.mjs` after edits.
+   - `#updateToast` uses native `popover="manual"` — keep `isAnyModalOrDrawerOpen()` gating active so top-layer toasts never cover open `<dialog>` sheets (`#journalDialog`, `#updateDialog`, etc.) or `#menuDrawer`.
 
 ---
 
@@ -90,7 +103,9 @@
 | Command | Action |
 | :--- | :--- |
 | `npm run dev` | Start local Vite development server |
-| `npm run test:ccpp` | Run automated C & C++ regression & `SharedArrayBuffer` suite |
+| `npm run test:ccpp` | Run automated 47-check C & C++ regression & `SharedArrayBuffer` suite |
+| `node scripts/test-journal.mjs` | Run automated 10-check Lab Journal & A4 PDF 1.4 suite |
+| `node scripts/test-update-checker.mjs` | Run automated 10-check Silent APK Update Checker & `version.json` suite |
 | `npm run build` | Prepare offline runtimes and build production `dist/` |
 | `firebase deploy --only hosting` | Deploy web application to `https://thinkcode-lab.web.app` |
 | `npx cap sync android` | Sync `dist/` web assets with the native Android project |

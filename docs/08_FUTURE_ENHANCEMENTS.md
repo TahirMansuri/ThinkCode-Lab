@@ -9,15 +9,19 @@
 
 - [1. Executive Summary & Educational Mission](#1-executive-summary--educational-mission)
 - [2. Feature Catalog & Technical Specifications](#2-feature-catalog--technical-specifications)
-  - [Feature 1: Student Lab Journal / Manual PDF Generator](#feature-1-student-lab-journal--manual-pdf-generator)
-  - [Feature 2: Mobile Keyboard Quick-Symbol Strip](#feature-2-mobile-keyboard-quick-symbol-strip)
+  - [Feature 1: Student Lab Journal / Manual PDF Generator *(COMPLETED — Web Live)*](#feature-1-student-lab-journal--manual-pdf-generator-completed)
+  - [Feature 2: Mobile Keyboard Quick-Symbol Strip *(COMPLETED)*](#feature-2-mobile-keyboard-quick-symbol-strip-completed)
   - [Feature 3: Dynamic SQL Visual ER Diagram & Schema Explorer](#feature-3-dynamic-sql-visual-er-diagram--schema-explorer)
   - [Feature 4: Viva Voce Prep & Lab Exam Cheat-Sheet Drawer](#feature-4-viva-voce-prep--lab-exam-cheat-sheet-drawer)
   - [Feature 5: Serverless Code Sharing via URL Hash & QR Code](#feature-5-serverless-code-sharing-via-url-hash--qr-code)
   - [Feature 6: Multi-File Project Workspace & ZIP Manager](#feature-6-multi-file-project-workspace--zip-manager)
-  - [Feature 7: One-Tap Code Beautifier & Auto-Formatter](#feature-7-one-tap-code-beautifier--auto-formatter)
+  - [Feature 7: One-Tap Code Beautifier & Auto-Formatter *(COMPLETED)*](#feature-7-one-tap-code-beautifier--auto-formatter-completed)
   - [Feature 8: Step-by-Step Execution & Variable Trace Visualizer](#feature-8-step-by-step-execution--variable-trace-visualizer)
-  - [Feature 9: Unified App Menu & Options Drawer (Clean Header Overhaul)](#feature-9-unified-app-menu--options-drawer-clean-header-overhaul)
+  - [Feature 9: Unified App Menu & Options Drawer *(COMPLETED)*](#feature-9-unified-app-menu--options-drawer-completed)
+  - [Feature 10: Silent In-App APK Update Check *(COMPLETED — Web Live)*](#feature-10-silent-in-app-apk-update-check-completed)
+  - [Feature 11: My Saved Programs (IndexedDB) + Undo-Safe Practical Loading *(QUEUED)*](#feature-11-my-saved-programs-indexeddb--undo-safe-practical-loading-queued)
+  - [Feature 12: Classroom Auto-Graded Test / Challenge Links *(QUEUED)*](#feature-12-classroom-auto-graded-test--challenge-links-queued)
+  - [Feature 13: Replay Last Input Presets & Student-Friendly Error Hints *(QUEUED)*](#feature-13-replay-last-input-presets--student-friendly-error-hints-queued)
 - [3. Prioritization & Feasibility Matrix](#3-prioritization--feasibility-matrix)
 - [4. Implementation Architecture & Zero-Server Guarantee](#4-implementation-architecture--zero-server-guarantee)
 
@@ -39,35 +43,31 @@ As the platform matures from a compiler/interpreter tool into a complete academi
 
 ---
 
-### Feature 1: Student Lab Journal / Manual PDF Generator
+### Feature 1: Student Lab Journal / Manual PDF Generator *(COMPLETED)*
+
+> **Implementation Status:** **Completed & Web Live (`feature/v1.3.5`, commit `e281f4f`)** — Implemented in `src/lab-journal.js`, `<dialog id="journalDialog">` in `index.html`, `SystemUiBridge.printDocument()` in `MainActivity.java`, and verified with 10/10 checks in `scripts/test-journal.mjs`.
 
 #### 📌 Problem Statement
 University students spend countless hours every semester manually copying code and output into MS Word or handwriting lab record books for practical assignments.
 
-#### 💡 Feature Overview
-A single click on **"Generate Lab Journal PDF"** generates an official, print-ready, beautifully styled PDF lab record sheet directly on the user's device.
+#### 💡 Delivered Implementation
+A 1-click **"Lab Journal PDF"** workflow (`#btnJournal` / Drawer) generates print-ready multi-page A4 assignment PDFs 100% offline with zero external libraries or cloud APIs.
 
-#### 🛠️ Key Components
-- **Configurable Header**:
-  - College / Institute Name (e.g. *InfoGalaxy Computers, Shirpur* / University Name)
-  - Student Details: Name, Roll No., Class (e.g., *TYBCA / SYBCS*), Academic Year, Subject
-- **Practical Metadata**:
-  - Practical Assignment Number (e.g., *Java Practical #04*)
-  - Objective / Problem Statement
-- **Formatted Source Code**:
-  - Syntax-highlighted code block with line numbering in a clean monospace font (`JetBrains Mono`).
-- **Actual Execution Output**:
-  - Captures terminal text output, ASCII Oracle tables, or rendered Swing/AWT desktop window screenshot.
-- **Academic Footer**:
-  - Submission Date, Marks awarded, and Faculty / Examiner signature line.
-
-#### 🏗️ Technical Architecture
-- **Library**: Bundled lightweight client-side PDF generator (e.g., `jspdf` or HTML5 `window.print()` with `@media print` CSS template).
-- **Execution**: 100% offline in browser memory; produces an instant `.pdf` download via Blob URL.
+#### 🛠️ Implemented Components
+- **Persistent Student Profile (`localStorage` key `cf.journal.profile`)**:
+  - Institute / College Name, Department, Student Name, Roll No., Class, and auto-computed Academic Year.
+- **Smart Practical Metadata**:
+  - Auto-infers active Subject Course (e.g. `CA-214`, `TYBCA`) and Assignment Title from code headers or practical metadata.
+- **Formatted Source Code & Output Capture**:
+  - Syntax-colored monospace code block with line numbers plus live capture of console output, Oracle SQL result tables, HTML preview summary, or Java Swing/AWT component state.
+- **Pure-JS PDF 1.4 Engine + Native Print**:
+  - Multi-page Canvas 2D A4 layout serialized via an embedded pure-JS JPEG-in-PDF 1.4 writer (`application/pdf` Blob download on Web; `@capacitor/filesystem` + share or `SystemUiBridge.printDocument()` native Android `PrintManager` on Android).
 
 ---
 
-### Feature 2: Mobile Keyboard Quick-Symbol Strip
+### Feature 2: Mobile Keyboard Quick-Symbol Strip *(COMPLETED)*
+
+> **Implementation Status:** **Completed (`v1.3.2`)** — Bottom-pinned `#quickBar` directly above mobile virtual keyboards using `pointerdown` prevention and smart cursor pair placement across 25 syntax tokens.
 
 #### 📌 Problem Statement
 Typing source code on Android mobile keyboards (Gboard, Samsung Keyboard) is slow and frustrating because common programming tokens (`{`, `}`, `(`, `)`, `;`, `:`, `"`, `'`, `<`, `>`, `/`, `\`, `=`, `!`, `&`, `|`, `->`, `$`) are buried behind multiple symbol pages.
@@ -182,18 +182,15 @@ A collapsible multi-file sidebar tab allowing users to organize projects into mu
 
 ---
 
-### Feature 7: One-Tap Code Beautifier & Auto-Formatter
+### Feature 7: One-Tap Code Beautifier & Auto-Formatter *(COMPLETED)*
+
+> **Implementation Status:** **Completed (`v1.3.2`)** — Implemented in `src/formatter.js` (zero-dependency offline formatter via wand icon `🪄` and `Shift+Alt+F`).
 
 #### 📌 Problem Statement
 Code typed on mobile keyboards frequently suffers from uneven indentation, mismatched braces, and inconsistent spacing, making debugging difficult.
 
 #### 💡 Feature Overview
-A **"Format Code"** button (wand icon `🪄` or shortcut `⌥ + Shift + F`) that instantly beautifies and reformats the active file to conform with standard 2-space indentation.
-
-#### 🛠️ Key Components
-- Universal support across C, C++, Java, Python, PHP, SQL, HTML/CSS, and Shell.
-- Normalizes indentation, wraps long lines cleanly, and balances brackets.
-- Completely offline via lightweight AST/regex formatting routines.
+A **"Format Code"** button (wand icon `🪄` or shortcut `⌥ + Shift + F`) that instantly beautifies and reformats the active file to conform with standard 2-space indentation across C, C++, Java, Python, PHP, SQL, HTML/CSS, and Shell.
 
 ---
 
@@ -212,46 +209,60 @@ A visual **"Trace / Step Mode"** (inspired by Python Tutor) that allows students
 
 ---
 
-### Feature 9: Unified App Menu & Options Drawer (Clean Header Overhaul)
+### Feature 9: Unified App Menu & Options Drawer *(COMPLETED)*
 
-#### 📌 Problem Statement
-As features accumulate, the top navigation header becomes crowded with individual action buttons (Download App, Developer Profile, Open File, Save Code, Reset Code, Theme Toggle). On compact mobile viewports, this forces buttons to cram together and reduces horizontal space for the branding and engine runtime indicators.
+> **Implementation Status:** **Completed (`v1.3.2`–`v1.3.4`)** — Ultra-slim header with `Dev By - Tahir Mansuri` pill and off-canvas `#menuDrawer` housing File Save/Open, Lab Journal PDF, Reset, Dark/Light Theme Toggle, App Updates, Android Download banner, About, and Privacy Policy.
 
-#### 💡 Feature Overview
-A clean, modern **3-dots action menu (`⋮`)** or **slide-out navigation drawer (`☰`)** in the top header. Consolidates secondary utilities into a polished, high-contrast sheet or dropdown menu, leaving the top header minimal, elegant, and focused.
+---
 
-#### 🛠️ Key Components & Menu Actions
-- **Header Structure**:
-  - Left: App Icon + `ThinkCode Lab` + Runtime Status Indicator (`PHP 8.2 • offline`).
-  - Right: `App` Download pill (compact) + **Menu Button (`⋮` or `☰`)**.
-- **Consolidated Menu / Drawer Items**:
-  1. 💾 **Save Code to Device** (`Export file / project`)
-  2. 📂 **Open Code from Device** (`Import local source file`)
-  3. 🪄 **Format & Beautify Code** (`Auto-indent & clean code`)
-  4. 🔄 **Reset to Syllabus Template** (`Clear edits to original template`)
-  5. 🌓 **Toggle Theme** (`Switch between Dark and Light mode`)
-  6. 📲 **Share App / Code** (`Share via link or WhatsApp`)
-  7. 👤 **About Developer & Architecture** (`Tahir Mansuri / InfoGalaxy Computers`)
-  8. 📜 **Privacy Policy & Offline Guarantee**
+### Feature 10: Silent In-App APK Update Check *(COMPLETED)*
 
-#### 🏗️ Technical Architecture
-- Pure CSS & accessible modal/sheet dropdown using existing dialog/sheet architecture with backdrop blur and smooth sliding animation.
+> **Implementation Status:** **Completed & Web Live (`feature/v1.3.5`, commit `fb71435`)** — Zero-telemetry HTTPS checker reading [`public/version.json`](../public/version.json) via [`src/update-checker.js`](../src/update-checker.js), verified with 10/10 automated checks in `scripts/test-update-checker.mjs`.
+
+- **Zero-Telemetry Manifest (`/version.json`)**: Served with `Access-Control-Allow-Origin: *`, `Cross-Origin-Resource-Policy: cross-origin`, and `Cache-Control: no-cache, no-store, must-revalidate` so sideloaded Android WebViews and COOP/COEP-isolated browsers can inspect release metadata cleanly.
+- **Native Bridges (`MainActivity.java`)**: `ThinkCodeSystemUI.getAppVersion()` retrieves the true installed `PackageInfo` version name/code, and `ThinkCodeSystemUI.openExternalUrl()` opens validated HTTPS GitHub/Firebase release downloads externally.
+- **Non-Intrusive Top-Layer UX**: Includes `#menuUpdateDot` badge, `#menuBtnCheckUpdate` drawer action, `popover="manual"` `#updateToast` (deferred while dialogs/drawer are open; 24-hour snooze), `<dialog id="updateDialog" closedby="any">` release-notes modal, progressive hydration of `/download`, and Web preview mode (`?checkUpdate=simulate`).
+
+---
+
+### Feature 11: My Saved Programs (IndexedDB) + Undo-Safe Practical Loading *(QUEUED)*
+
+- **Problem**: Currently code persists in a single per-language `localStorage` draft; students overwriting code with a syllabus practical can lose custom edits.
+- **Planned Scope**: Dedicated personal program repository backed by `IndexedDB` allowing students to save named scripts, browse/search/delete/restore saved sketches offline, and receive automatic snapshot protection / one-click undo before loading any syllabus practical.
+
+---
+
+### Feature 12: Classroom Auto-Graded Test / Challenge Links *(QUEUED)*
+
+- **Problem**: Faculty conducting timed lab tests or assignments lack a lightweight way to distribute coding problems with automated verification without maintaining a backend server.
+- **Planned Scope**: Zero-backend teacher generator encoding problem statement, starter template, language, and stdin/expected-stdout test cases into a shareable URL hash that runs and scores student solutions 100% locally on device.
+
+---
+
+### Feature 13: Replay Last Input Presets & Student-Friendly Error Hints *(QUEUED)*
+
+- **Problem**: Students debugging interactive loops must manually re-type `scanf`/`cin`/`input()` values on every run and often get confused by raw compiler/trace diagnostics.
+- **Planned Scope**: One-tap replay of previous stdin answers / custom presets alongside friendly contextual explanations below common C/C++/Python/Java/SQL syntax and runtime errors.
 
 ---
 
 ## 3. Prioritization & Feasibility Matrix
 
-| Feature | Student Impact | Implementation Effort | Recommended Order |
+| Feature | Student Impact | Implementation Effort | Status / Order |
 | :--- | :---: | :---: | :---: |
-| **2. Mobile Quick-Symbol Strip** | 🔥 High | 🟢 Low (1–2 days) | **Phase 6.1 (Active)** |
-| **7. One-Tap Code Auto-Formatter** | ⚡ High | 🟡 Medium (2–3 days) | **Phase 6.2 (Active)** |
-| **9. Unified App Menu / Options Drawer** | 💎 High | 🟢 Low (1–2 days) | **Phase 6.3** |
-| **4. Viva Voce & Cheat-Sheet Drawer** | 🔥 High | 🟢 Low (2–3 days) | **Phase 6.4** |
-| **5. Serverless Code Sharing (QR / Hash)** | ⚡ High | 🟢 Low (1–2 days) | **Phase 6.5** |
-| **1. Lab Journal / Manual PDF Generator** | 💎 Exceptional | 🟡 Medium (3–4 days) | **Phase 6.6** |
-| **3. SQL Visual ER Diagram** | 💎 Exceptional | 🟡 Medium (3–5 days) | **Phase 6.7** |
-| **6. Multi-File Project Workspace** | 🌟 Moderate | 🔴 High (5–7 days) | **Phase 7.0** |
-| **8. Step-by-Step Execution Visualizer** | 🌟 High | 🔴 High (7–10 days) | **Phase 7.1** |
+| **2. Mobile Quick-Symbol Strip** | 🔥 High | 🟢 Low | ✅ **Completed (`v1.3.2`)** |
+| **7. One-Tap Code Auto-Formatter** | ⚡ High | 🟡 Medium | ✅ **Completed (`v1.3.2`)** |
+| **9. Unified App Menu / Options Drawer** | 💎 High | 🟢 Low | ✅ **Completed (`v1.3.2`–`v1.3.4`)** |
+| **1. Lab Journal / Manual PDF Generator** | 💎 Exceptional | 🟡 Medium | ✅ **Completed (`feature/v1.3.5`)** |
+| **10. Silent In-App APK Update Check** | 💎 High | 🟡 Medium | ✅ **Completed (`feature/v1.3.5`)** |
+| **11. My Saved Programs (IndexedDB) + Undo-Safe Loading** | 🔥 High | 🟡 Medium | 🔜 **Next Approved** |
+| **12. Classroom Auto-Graded Challenge Links** | 💎 Exceptional | 🟡 Medium | 🔜 **Approved Queue** |
+| **13. Replay Input Presets & Friendly Error Hints** | 🔥 High | 🟢 Low | 🔜 **Approved Queue** |
+| **4. Viva Voce & Cheat-Sheet Drawer** | 🔥 High | 🟢 Low | 📋 **Backlog** |
+| **5. Serverless Code Sharing (QR / Hash)** | ⚡ High | 🟢 Low | 📋 **Backlog** |
+| **3. SQL Visual ER Diagram** | 💎 Exceptional | 🟡 Medium | 📋 **Backlog** |
+| **6. Multi-File Project Workspace** | 🌟 Moderate | 🔴 High | 📋 **Phase 7.0** |
+| **8. Step-by-Step Execution Visualizer** | 🌟 High | 🔴 High | 📋 **Phase 7.1** |
 
 ---
 

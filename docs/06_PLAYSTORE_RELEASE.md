@@ -39,7 +39,7 @@
 When appealing Play Protect warnings or filing developer verification forms:
 - **Certificate Fingerprint Field**: Requires the colon-separated SHA-256 (`49:03:53:9B:E9:...`)
 - **APK SHA-256 File Hash Field**: Requires the exact 64-character lowercase hexadecimal hash of the APK binary itself without colons:
-  - **v1.3.4 APK File Hash**: `879856e091aa8e0244f7125de596dd76a6596e1e2cf1eec8c32419d0`
+  - **v1.3.4 APK File Hash**: `879856e091aa8e0244f7125de596dd76a65328e9c6596e1e2cf1eec8c32419d0`
   - **v1.3.3 APK File Hash**: `6f5dbdb720c9df0c81ff4edbb6061b21ad7066cd4f47a8a1627232f50b53447e`
   - **v1.3.2 APK File Hash**: `d01bf35bc3c077f02c5861da2df58898425a99e08f8d60c89801bd7232267566`
 
@@ -89,9 +89,14 @@ When appealing Play Protect warnings or filing developer verification forms:
 
 ## 🛠️ 6. How to Build Release Artifacts
 
-### 1. Build Standalone Release APK
+### 1. Build Standalone Release APK & Sync Update Manifest
+1. Bump `versionCode` and `versionName` in `android/app/build.gradle`.
+2. Build and compile signed APK:
 ```bash
-# 1. Build web distribution
+# 1. Build web distribution & run automated suites
+npm run test:ccpp
+node scripts/test-journal.mjs
+node scripts/test-update-checker.mjs
 npm run build
 
 # 2. Sync web assets with Capacitor
@@ -101,9 +106,12 @@ npx cap sync android
 cd android
 ./gradlew assembleRelease
 
-# 4. Resulting APK location:
+# 4. Resulting APK location & exact SHA-256 verification:
 # android/app/build/outputs/apk/release/app-release.apk
+shasum -a 256 android/app/build/outputs/apk/release/app-release.apk
 ```
+3. Publish renamed binary `ThinkCodeLab-vX.Y.Z.apk` to GitHub Releases.
+4. Update [`public/version.json`](../public/version.json), `APP_META` in [`src/update-checker.js`](../src/update-checker.js), 302 redirects in [`firebase.json`](../firebase.json), and [`docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md`](09_ACCOUNT_AND_DEPLOYMENT_INFO.md) with the exact 64-char SHA-256 hash and deploy Web Hosting (`npx firebase deploy --only hosting`).
 
 ### 2. Build Google Play Android App Bundle (AAB)
 ```bash

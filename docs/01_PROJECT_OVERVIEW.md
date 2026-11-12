@@ -31,7 +31,10 @@ While ThinkCode focuses on visual algorithm tracing and step-by-step memory insp
 | **Java Desktop Window Emulation** | Java AWT/Swing graphical applications open directly inside an interactive, draggable desktop window frame with title bar, minimize, maximize, close, and DOM layout managers. |
 | **University Syllabus Practicals** | 78 official university lab assignments (FYBCA, SYBCA, TYBCA) preloaded with clean 2-space indentation and 1-click loading. |
 | **Adaptive Split Pane** | Student-optimized vertical split: starts at **80% Code : 20% Output** for comfortable code viewing on mobile screens, and auto-expands to **65% Output** upon pressing **Run**. |
-| **Cross-Platform Flexibility** | Runs as a responsive Single-Page Application (SPA) on desktop and mobile browsers, and as a native Android APK packaged via Capacitor 6. |
+| **Mobile Coding Ergonomics** | Bottom-pinned 25-token Quick-Symbol Strip (`#quickBar`), 1-tap Offline Code Beautifier (`🪄`), ultra-slim 1-line header + slide-out drawer (`☰ Menu`), and compact dual `A−`/`A+` zoom controls. |
+| **1-Tap Lab Journal PDF Export** | Generates clean, print-ready A4 assignment PDFs offline (`src/lab-journal.js`) with sticky Student Profile, practical metadata, syntax-colored source code, captured console/SQL/Swing output, and faculty signature block. |
+| **Silent In-App APK Update Check** | Zero-telemetry HTTPS manifest checker (`src/update-checker.js` + `/version.json`) notifies sideloaded Android students cleanly via non-blocking toast, menu badge, and details modal with 24h snooze. |
+| **Cross-Platform Flexibility** | Runs as a responsive Single-Page Application (SPA) on desktop and mobile browsers (`https://thinkcode-lab.web.app`), and as a native Android APK (`v1.3.4 / Build 11`, API 36) packaged via Capacitor 6. |
 
 ---
 
@@ -92,7 +95,52 @@ ThinkCode Lab features 8 fully independent execution engines running in isolated
 
 ---
 
-## 👥 4. Target Audience & Educational Impact
+## 👥 4. Key Offline Academic Utilities
+
+Beyond compilation, ThinkCode Lab ships built-in academic workflow tools requiring zero cloud servers:
+
+- **📄 1-Tap Offline Lab Journal / Assignment A4 PDF Export (`src/lab-journal.js`)**:
+  - Generates print-ready, multi-page A4 PDF lab records directly on the client device using a zero-dependency pure-JS JPEG-in-PDF 1.4 encoder (`#btnJournal` / `☰ Menu`).
+  - Remembers student metadata (**Institute**, **Department**, **Student Name**, **Roll No.**, **Class**, **Academic Year**) in `localStorage`, auto-infers subject and practical title, renders syntax-colored code with line numbers, captures live console/SQL table/HTML preview/Java Swing GUI output, and prints an academic faculty signature footer.
+  - Works seamlessly on desktop/mobile Web (`application/pdf` Blob download + native print) and native Android (`SystemUiBridge.printDocument()` / `@capacitor/filesystem`).
+- **🔔 Silent In-App APK Update Checker (`src/update-checker.js` + `/version.json`)**:
+  - Zero-telemetry HTTPS manifest check notifying sideloaded Android students (`#menuUpdateDot`, non-blocking `popover="manual"` `#updateToast`, and `<dialog id="updateDialog">`) whenever a newer signed APK build is released, with 24-hour snooze and interactive Web demo mode (`?checkUpdate=simulate`).
+  - Dynamically hydrates [`public/download.html`](public/download.html) with live version badges, release notes, APK file size, and SHA-256 checksum.
+
+---
+
+## 📦 5. Core Repository Structure
+
+```text
+thinkcode-lab/
+├── index.html                  # App shell, dialogs (#journalDialog, #updateDialog), popover toast
+├── src/
+│   ├── main.js                 # UI orchestration, split panes, theme sync, print/update wiring
+│   ├── editor.js               # CodeMirror 6 wrapper (2-space indentation, zoom)
+│   ├── formatter.js            # One-tap offline multi-language code beautifier
+│   ├── lab-journal.js          # Pure-JS A4 PDF 1.4 generator & student lab journal modal
+│   ├── update-checker.js       # Zero-telemetry /version.json update checker & UI state
+│   ├── practicals.js / languages.js / sql-data.js / sql-ui.js / shell-ui.js
+│   ├── styles.css              # Edge-to-edge mobile-first styles, dark/light themes, drawer
+│   └── engines/                # Web Worker runtimes (python, java, c, cpp, php, sql, js, shell)
+├── public/
+│   ├── version.json            # Live APK metadata manifest (CORS + CORP + no-store)
+│   ├── download.html           # Progressive-enhanced APK download portal (/download)
+│   ├── coi-serviceworker.js    # COOP/COEP Web isolation SW (disabled inside Capacitor APK)
+│   └── pyodide/, php/, sql/, jscpp/, picoc/   # Self-hosted offline WASM runtimes
+├── android/app/src/main/java/com/igc/thinkcodelab/MainActivity.java
+│                               # Edge-to-edge insets, NativeStdinBridge, SystemUiBridge
+├── scripts/
+│   ├── copy-runtimes.mjs       # Build-time WASM sync + JSCPP patches (jscpp-string.js)
+│   ├── test-c-cpp.mjs          # 47-check C/C++ & SharedArrayBuffer regression suite
+│   ├── test-journal.mjs        # 10-check Lab Journal PDF generation & structure suite
+│   └── test-update-checker.mjs # 10-check semver, snooze, & manifest validation suite
+└── docs/                       # Technical architecture, changelog, roadmap, release & key docs
+```
+
+---
+
+## 👥 6. Target Audience & Educational Impact
 
 - **BCA, B.Sc. (IT/CS), B.Tech, and MCA Students:** Practicing programming assignments, lab practicals, database queries, and web design directly from budget laptops or mobile phones.
 - **Computer Science Educators:** Conducting interactive classroom demonstrations without relying on campus internet firewalls or server maintenance.
@@ -100,7 +148,7 @@ ThinkCode Lab features 8 fully independent execution engines running in isolated
 
 ---
 
-## 👤 5. Leadership & Credits
+## 👤 7. Leadership & Credits
 
 - **Author & Lead System Architect:** **Tahir Mansuri** (Lead System Engineer & HOD, IMRD College)
 - **Parent Initiative:** [ThinkCode — Interactive DSA Visualizer & Code Tracer](https://thinkcode.infogalaxy.space/)

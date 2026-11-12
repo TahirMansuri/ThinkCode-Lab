@@ -11,6 +11,7 @@
 [![Parent Initiative: ThinkCode](https://img.shields.io/badge/Companion_To-ThinkCode_Visualizer-8e5bd6?style=for-the-badge&logo=googlechrome&logoColor=white)](https://thinkcode.infogalaxy.space/)
 [![Live Web App](https://img.shields.io/badge/Live_Web_App-thinkcode--lab.web.app-FFB04A?style=for-the-badge&logo=firebase&logoColor=black)](https://thinkcode-lab.web.app)
 [![Android APK v1.3.4](https://img.shields.io/badge/Android_APK-v1.3.4_Build_11_(17.7MB)-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://thinkcode-lab.web.app/download)
+[![Feature Branch v1.3.5](https://img.shields.io/badge/Web_Dev-feature%2Fv1.3.5-58A6FF?style=for-the-badge&logo=git&logoColor=white)](docs/04_CHANGELOG.md)
 [![Author: Tahir Mansuri](https://img.shields.io/badge/Author-Tahir_Mansuri-blue?style=for-the-badge&logo=github&logoColor=white)](https://github.com/TahirMansuri)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
@@ -43,6 +44,8 @@ Most online code playgrounds and cloud IDEs rely on remote backend servers to sp
 | **Mobile Symbol Strip** | ❌ Standard keyboard only | ⚠️ Clunky / Top-heavy | **✅ Bottom-Pinned (Direct Thumb Reach)** |
 | **Code Beautifier / Formatter** | ⚠️ Online API or None | ❌ None | **✅ One-Tap Offline Formatter (🪄)** |
 | **Mobile Screen Ergonomics** | ❌ Fixed desktop ports | ⚠️ Bulky headers & gaps | **✅ Attached Zero-Waste IDE + Slim Header** |
+| **Lab Journal PDF Export** | ❌ Copy-paste to Word | ❌ None | **✅ 1-Tap Offline A4 Assignment PDF** |
+| **In-App APK Updates** | ❌ Manual re-check | ❌ Stale sideloads | **✅ Silent `/version.json` Notifier** |
 | **Multi-Language Breadth** | Usually 1-2 | Usually 1 | **✅ 8 Runtimes (Java/Python/C/C++/PHP/SQL/JS/Shell)** |
 | **Native Android App** | ❌ Web-only | ⚠️ Heavy (>100 MB) | **✅ Ultra-compact APK (~17.7 MB)** |
 | **Zero Backend Cost** | ❌ Expensive cloud | ⚠️ Ads / Subscriptions | **✅ Open-Source & Self-Contained** |
@@ -75,10 +78,11 @@ flowchart TD
     CM["CodeMirror 6 Editor\n• 2-Space Indentation\n• Syntax Highlighting\n• Dual Editor (HTML + PHP)"]
     QB["Quick-Symbol Strip\n• Bottom-Pinned for Thumbs\n• 25 Fast Syntax Tokens\n• Auto-Cursor Bracket Pairs"]
     FMT["One-Tap Beautifier (🪄)\n• Offline Multi-Language Formatter\n• Uniform 2-Space Indentation"]
-    HDR["Ultra-Slim Header & Drawer\n• Dev By - Tahir Mansuri Pill\n• Slide-Out Options Drawer (☰)\n• Maximized Mobile Space"]
+    HDR["Ultra-Slim Header & Drawer\n• Dev By - Tahir Mansuri Pill\n• Slide-Out Options Drawer (☰)\n• App Updates & Journal Actions"]
+    PDF["Lab Journal PDF Exporter\n• Pure-JS A4 PDF 1.4 Writer\n• Sticky Student Profile & Output\n• Offline Download + Native Print"]
+    UPD["Silent APK Update Checker\n• Zero-Telemetry /version.json\n• Non-Blocking Toast & Dialog\n• 24h Snooze + Auto-Hydrate"]
     SM["Attached Adaptive Split Manager\n• Initial 80% Code : 20% Output\n• Auto-Expand to 65% on Run\n• Attached Precision Grip"]
     GUI["Java AWT/Swing Frame\n• Interactive Desktop Window\n• Layouts: Grid / Border / Flow\n• Drag, Minimize, Maximize"]
-    ZM["Dual Zoom Toolbars\n• Editor Scale (A− / A+)\n• Output Scale (A− / A+)"]
   end
 
   subgraph Bridge["⚡ Communication & Sync Bridge"]
@@ -91,7 +95,7 @@ flowchart TD
     PY["🐍 Python 3.12 Engine\n(Pyodide CPython WASM)"]
     JAVA["☕ Java JDK Engine\n(AST Transpiler & OOP Simulator)"]
     C["⚙️ C (C99) Engine\n(PicoC WASM Real Pointers)"]
-    CPP["⚡ C++ Interactive Engine\n(JSCPP + OOP Transpiler)"]
+    CPP["⚡ C++ Unified Engine\n(Patched JSCPP + std::string)"]
     PHP["🐘 PHP 8.2 Engine\n(php-wasm SAPI + CGI Bridge)"]
     SQL["🗄️ Oracle SQL Engine\n(sql.js SQLite WASM + Translation)"]
     SH["🐧 Linux Shell Emulator\n(UNIX VFS in localStorage)"]
@@ -99,7 +103,7 @@ flowchart TD
   end
 
   subgraph Native["📱 Native Mobile Wrapper"]
-    CAP["Capacitor 6 Android Runtime\n• Target API 36 / Min API 24\n• Edge-to-Edge WindowInsets + Theme Sync\n• NativeStdinBridge (/__native_stdin)\n• Signed Release APK v1.3.4 (~17.7MB)"]
+    CAP["Capacitor 6 Android Runtime\n• Target API 36 / Min API 24\n• Edge-to-Edge WindowInsets + Theme Sync\n• NativeStdinBridge + SystemUiBridge\n• Signed Release APK v1.3.4 (~17.7MB)"]
   end
 
   CM --> COORD
@@ -107,10 +111,11 @@ flowchart TD
   FMT --> CM
   SM --> COORD
   HDR --> COORD
+  HDR --> PDF
+  HDR --> UPD
   COORD --> SAB
   COORD --> MSG
   GUI <--> COORD
-  ZM --> CM
 
   SAB --> PY
   SAB --> C
@@ -159,13 +164,18 @@ flowchart TD
 - **📐 Attached High-Density IDE Layout:**
   - Language tab rail, editor box, 8px attached precision splitter divider, and output console form a seamless connected IDE with zero wasted card gaps or floating borders.
 - **☰ Ultra-Slim 1-Line Header & Slide-Out Options Drawer:**
-  - Collapses top controls into a clean 38px bar with a slide-out drawer (`☰ Menu`) holding File Save/Open, Reset, Theme Toggle, Share, and Developer info, freeing maximum vertical space for the active code editor.
+  - Collapses top controls into a clean bar with a slide-out drawer (`☰ Menu`) holding File Save/Open, **Export Lab Journal PDF**, Reset, Theme Toggle, **App Updates**, Share, and Developer info, freeing maximum vertical space for the active code editor.
+- **📄 1-Tap Offline Lab Journal & Assignment A4 PDF Export (`src/lab-journal.js`):**
+  - Generates print-ready multi-page A4 assignment PDFs 100% offline via an embedded Canvas 2D + pure-JS JPEG-in-PDF 1.4 writer (plus Android native `PrintManager` bridge).
+  - Remembers student details (`Institute`, `Department`, `Name`, `Roll No.`, `Class`, `Year`), auto-infers subject & title, syntax-colors source code with line numbers, captures execution output / SQL tables / Swing frames, and renders a faculty signature footer.
+- **🔔 Silent In-App APK Update Checker (`src/update-checker.js` + `/version.json`):**
+  - Zero-telemetry HTTPS update manifest (`CORS` + `CORP` + `no-store`) informing sideloaded Android students of newer APK builds via non-blocking toast, menu dot badge, release-notes dialog, and 24-hour snooze, while dynamically hydrating **[thinkcode-lab.web.app/download](https://thinkcode-lab.web.app/download)**.
 - **👤 Interactive Developer Profile Header Pill:**
   - Dedicated `Dev By - Tahir Mansuri` header pill opens the developer leadership bio and architecture modal with a single tap.
 - **📏 Universal 2-Space Indentation:**
   - Clean 2-space tab indentation across all practical assignments and templates to prevent line wrapping on mobile.
 - **📱 Standalone Native Android App:**
-  - Built with Capacitor 6, targeting Android API 36 (`minSdkVersion 24`), signed with production keystore.
+  - Built with Capacitor 6, targeting Android API 36 (`minSdkVersion 24`), Edge-to-Edge WindowInsets + dynamic Light/Dark bar contrast, `NativeStdinBridge`, and signed with production keystore.
 
 ---
 
@@ -176,7 +186,7 @@ flowchart TD
 | **Java (JDK)** | AST Transpiler & Swing Runner | Web Worker | Classes, Overloading, Overriding, Interfaces, `try-catch-finally`, `Scanner`, AWT/Swing GUI Window Frame, simulated JDBC |
 | **Python 3.12** | Pyodide 0.26.4 (CPython WASM) | Web Worker | Full stdlib, interactive in-console `input()`, clean tracebacks |
 | **C (C99)** | PicoC WebAssembly (WASM) | Web Worker | Real pointers, `malloc`/`free`, `struct`, unions, arrays, `stdio.h`, interactive `scanf` |
-| **C++** | JSCPP + OOP Transpiler | Web Worker | `iostream` (`cin`/`cout`), `cmath`, classes, constructors, methods, inheritance, sequential input |
+| **C++** | Patched JSCPP Unified Pipeline | Web Worker | `std::string`, `iostream` (`cin`/`cout`), `<iomanip>`, `<cmath>`, classes, constructors, references, pointers, unions |
 | **PHP 8.2** | php-wasm (PHP 8.2.11 WASM) | Web Worker | Dual-Section Split workspace, client-side CGI bridge (`$_POST`/`$_GET`), instant HTML preview |
 | **Oracle SQL** | sql.js (SQLite WASM) + Oracle Layer | Web Worker | SCOTT/UNIVERSITY schemas, Oracle functions (`NVL`, `ROWNUM`, `SYSDATE`), transactions, CSV export |
 | **Linux Shell** | Virtual UNIX Bash Emulator | Main Thread | 35+ commands, persistent virtual FS (`localStorage`), stream pipes (`\|`), redirections |
@@ -222,15 +232,22 @@ npm run dev
 ```
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-### 3. Build Production Web Distribution
+### 3. Run Automated Verification Suites
+```bash
+npm run test:ccpp                  # 47 checks: PicoC C99, unified JSCPP C++, SAB stdin, formatter
+node scripts/test-journal.mjs      # 10 checks: Student Lab Journal & A4 PDF 1.4 structure
+node scripts/test-update-checker.mjs # 10 checks: Semver, snooze, URL validation & version.json
+```
+
+### 4. Build Production Web Distribution
 ```bash
 npm run build
 ```
-Optimized static assets will be output to `dist/`.
+Optimized static assets and WASM runtimes will be output to `dist/`.
 
-### 4. Deploy Live to Firebase Hosting
+### 5. Deploy Live to Firebase Hosting
 ```bash
-firebase deploy --only hosting
+npx firebase deploy --only hosting
 ```
 
 ---
@@ -250,7 +267,7 @@ cd android
 ```
 - **Compiled Release APK:** `ThinkCodeLab-v1.3.4.apk` (Version Code `11`, ~17.7 MB)
 - **Target API:** API 36 (Android 16) | **Min API:** API 24 (Android 7.0+)
-- **Download Portal:** **[thinkcode-lab.web.app/download](https://thinkcode-lab.web.app/download)** (or direct **[ThinkCodeLab-v1.3.4.apk](https://thinkcode-lab.web.app/ThinkCodeLab-v1.3.4.apk)**)
+- **Download Portal:** **[thinkcode-lab.web.app/download](https://thinkcode-lab.web.app/download)** (auto-hydrates from **[/version.json](https://thinkcode-lab.web.app/version.json)**; direct **[ThinkCodeLab-v1.3.4.apk](https://thinkcode-lab.web.app/ThinkCodeLab-v1.3.4.apk)**)
 
 ---
 
@@ -258,15 +275,15 @@ cd android
 
 All technical architecture guides, engine specifications, changelogs, roadmaps, and developer memory files are systematically organized inside the [`docs/`](docs/) directory:
 
-- 📘 [**docs/01_PROJECT_OVERVIEW.md**](docs/01_PROJECT_OVERVIEW.md) — Vision, problem statement, core value proposition, and target audience.
-- 🛠️ [**docs/02_TECH_STACK.md**](docs/02_TECH_STACK.md) — Technical architecture, threading model, and runtime protocols.
-- ⚙️ [**docs/03_ENGINE_ARCHITECTURE.md**](docs/03_ENGINE_ARCHITECTURE.md) — Deep dive into Java AST/Swing emulation, C/C++ PicoC/JSCPP, Clang upgrade path, PHP CGI bridge, and Oracle SQL layer.
-- 📝 [**docs/04_CHANGELOG.md**](docs/04_CHANGELOG.md) — Comprehensive version history from v1.0.0 through **v1.3.4 (Build 11)**.
-- 🗺️ [**docs/05_ROADMAP.md**](docs/05_ROADMAP.md) — Completed milestones, near-term enhancements (Multi-file manager, PL/SQL, ER diagrams), and future ecosystem plans.
-- 🚀 [**docs/06_PLAYSTORE_RELEASE.md**](docs/06_PLAYSTORE_RELEASE.md) — Keystore credentials, SHA-256 certificate fingerprints, Play Protect appeal guide, and Play Store submission details.
-- 🧠 [**docs/07_DEVELOPER_MEMORY.md**](docs/07_DEVELOPER_MEMORY.md) — Developer memory, strictly enforced rules (Web-only deployment, backup policy), and technical gotchas learned.
-- 🚀 [**docs/08_FUTURE_ENHANCEMENTS.md**](docs/08_FUTURE_ENHANCEMENTS.md) — Comprehensive technical specifications for upcoming features (Student Lab Journal PDF Generator, Dynamic SQL ER Diagrams, Viva Voce Cheat-Sheet, Serverless Sharing, Multi-File Projects, and Step-by-Step Execution Stepper).
-- 🔐 [**docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md**](docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md) — Master reference for administrative accounts, Firebase project configuration, Android signing keystore details, SHA-256 certificate fingerprints, release URLs, and deployment commands.
+- 📘 [**docs/01_PROJECT_OVERVIEW.md**](docs/01_PROJECT_OVERVIEW.md) — Vision, problem statement, core value proposition, academic utilities, and repository structure.
+- 🛠️ [**docs/02_TECH_STACK.md**](docs/02_TECH_STACK.md) — Technical architecture, threading model, `NativeStdinBridge`, `SystemUiBridge`, pure-JS PDF 1.4, and automated test suites.
+- ⚙️ [**docs/03_ENGINE_ARCHITECTURE.md**](docs/03_ENGINE_ARCHITECTURE.md) — Deep dive into Java AST/Swing emulation, C/C++ PicoC/JSCPP, Clang upgrade path, PHP CGI bridge, Oracle SQL, Lab Journal PDF, and silent updater.
+- 📝 [**docs/04_CHANGELOG.md**](docs/04_CHANGELOG.md) — Comprehensive version history from v1.0.0 through **v1.3.4 (Build 11 APK)** and active **`feature/v1.3.5`** enhancements.
+- 🗺️ [**docs/05_ROADMAP.md**](docs/05_ROADMAP.md) — Completed phases 1–6, approved upcoming queue (#2 Saved Programs, #3 Classroom Auto-Graded Links, #5 Error Hints & Input Replay), and longer-term plans.
+- 🚀 [**docs/06_PLAYSTORE_RELEASE.md**](docs/06_PLAYSTORE_RELEASE.md) — Keystore credentials, SHA-256 fingerprints & binary hashes, Play Protect appeal guide, `version.json` checklist, and Play Store details.
+- 🧠 [**docs/07_DEVELOPER_MEMORY.md**](docs/07_DEVELOPER_MEMORY.md) — Developer memory, strictly enforced operational rules (Web-only deployment, no unrequested APK/VDI runs, backup policy), and technical gotchas learned.
+- 🚀 [**docs/08_FUTURE_ENHANCEMENTS.md**](docs/08_FUTURE_ENHANCEMENTS.md) — Feature catalog tracking completed items (Quick-Symbol Strip, Beautifier, Drawer, Lab Journal PDF, Update Checker) and upcoming specifications.
+- 🔐 [**docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md**](docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md) — Master reference for administrative accounts, Firebase configuration, `/version.json` rules, Android signing keystore, SHA-256 hashes, and deployment commands.
 
 ---
 

@@ -13,23 +13,23 @@
 │                 │     │                 │     │                 │     │                 │
 │ • Python 3.12   │     │ • PHP 8.2 WASM  │     │ • C (C99) PicoC │     │ • Java JDK AST  │
 │ • Oracle SQL    │     │   Runtime       │     │   WASM Engine   │     │   Transpiler    │
-│ • JavaScript    │     │ • Dual Split    │     │ • C++ Engine    │     │ • Swing/AWT GUI │
-│ • HTML/CSS Web  │     │   Editor        │     │ • OOP Classes   │     │   Window Frame  │
+│ • JavaScript    │     │ • Dual Split    │     │ • Unified JSCPP │     │ • Swing/AWT GUI │
+│ • HTML/CSS Web  │     │   Editor        │     │ • 47-Test Suite │     │   Window Frame  │
 │ • Bash Shell    │     │ • CGI Form      │     │ • 17 Practicals │     │ • 16 Practicals │
 │ • CodeMirror 6  │     │   Bridge        │     │ • Clang Guide   │     │ • Try-Catch-Fin │
 └─────────────────┘     └─────────────────┘     └─────────────────┘     └─────────────────┘
                                                                                  │
                                                                                  ▼
-                                                        ┌─────────────────────────────────┐
-                                                        │         PHASES 5 & 6            │
-                                                        │       [IN DEVELOPMENT]          │
-                                                        │                                 │
-                                                        │ • Adaptive 80:20 Split [DONE]   │
-                                                        │ • 2-Space Indentation  [DONE]   │
-                                                        │ • Multi-File Project Manager    │
-                                                        │ • PL/SQL Blocks & ER Diagrams   │
-                                                        │ • Clang WASM Downloadable Pack  │
-                                                        └─────────────────────────────────┘
+┌─────────────────────────────────────────┐     ┌─────────────────────────────────────────┐
+│               PHASE 5                   │     │           PHASE 6 (feature/v1.3.5)      │
+│             [COMPLETED]                 │ ──▶ │         [WEB LIVE / IN PROGRESS]        │
+│                                         │     │                                         │
+│ • Adaptive 80:20 Split & Attached UI    │     │ • 1-Tap Lab Journal A4 PDF [DONE]       │
+│ • Quick-Symbol Strip & Beautifier       │     │ • Silent APK Update Checker [DONE]      │
+│ • Slim Header & Slide-Out Drawer        │     │ • My Saved Programs (IndexedDB) [NEXT]  │
+│ • Native Android Stdin & Edge-to-Edge   │     │ • Classroom Auto-Graded Links [QUEUED]  │
+│ • v1.3.4 Build 11 APK Released          │     │ • Input Replay + Error Hints [QUEUED]   │
+└─────────────────────────────────────────┘     └─────────────────────────────────────────┘
 ```
 
 ---
@@ -62,15 +62,33 @@
 - Interactive AWT / Swing desktop window frame emulation (`JFrame`, `JLabel`, `JTextField`, `JPasswordField`, `JButton`, `GridLayout`, `BorderLayout`, `FlowLayout`) with draggable titlebar, minimize/maximize/close, and modal reopening.
 - 16 TYBCA university syllabus assignments preloaded.
 
-### 5. Phase 5: Student Ergonomics & Responsive UI (v1.3.2)
-- Adaptive **80% Code Editor : 20% Output** initial split ratio on mobile devices.
-- Auto-expansion to **65% Output / 35% Editor** upon clicking **Run**.
+### 5. Phase 5: Student Ergonomics, Hardened Engines & Android API 36 Polish (`v1.3.2` – `v1.3.4`)
+- Adaptive **80% Code Editor : 20% Output** initial split ratio on mobile devices with auto-expansion to **65% Output** on **Run** and attached zero-waste IDE framing.
+- Bottom-pinned 25-token Mobile Quick-Symbol Strip (`#quickBar`), One-Tap Offline Code Beautifier (`🪄` / `Shift+Alt+F`), ultra-slim 1-line header + slide-out drawer, and compact dual `A−`/`A+` zoom controls.
 - Universal **2-space indentation** applied across all 78 syllabus practicals.
-- Dual compact zoom toolbars (`A−` / `A+`) for both Editor and Output consoles.
+- Hardened PicoC C99 & unified patched `JSCPP` C++ engines backed by the 47-check `npm run test:ccpp` suite.
+- Native Android `NativeStdinBridge` (`/__native_stdin`), Edge-to-Edge `WindowInsets` alignment, dynamic Light/Dark system bar contrast, and versioned APK downloads (`ThinkCodeLab-v1.3.4.apk`, Build 11).
+
+### 6. Phase 6: Academic Productivity & Sideload Update Workflow (`feature/v1.3.5`)
+- ✅ **1-Tap Student Lab Journal / Assignment A4 PDF Export**: Offline pure-JS JPEG-in-PDF 1.4 generator (`src/lab-journal.js`), sticky Student Profile, live preview modal, Android native print adapter, and 10-check verification (`scripts/test-journal.mjs`).
+- ✅ **Silent In-App APK Update Check**: Zero-telemetry `/version.json` manifest with CORS/CORP/`no-store` headers, auto-hydrating `/download` portal, Menu dot badge, `popover="manual"` toast + 24h snooze, native `getAppVersion()`/`openExternalUrl()` bridges, and 10-check verification (`scripts/test-update-checker.mjs`).
 
 ---
 
-## 🚀 Near-Term Roadmap (Phase 6)
+## 🔜 Approved Next Queue (Shortlisted for `v1.3.5+`)
+
+### 💾 1. My Saved Programs (IndexedDB) + Undo-Safe Practical Loading
+- Dedicated personal sketch/program notebook stored locally in `IndexedDB`, allowing students to name, bookmark, filter, and switch programs across sessions while preserving undo/backup safety whenever loading a syllabus practical over unsaved edits.
+
+### 🎓 2. Classroom Auto-Graded Test / Challenge Links (Zero-Backend Teacher Tool)
+- Serverless challenge link builder enabling teachers to encode assignment prompts, starter code, and hidden stdin/stdout test cases into a shareable URL hash that grades student solutions 100% locally on device.
+
+### 🔁 3. "Replay Last Input" Presets + Student-Friendly Error Hints
+- One-tap replay of recent runtime stdin answers so students debugging `scanf`/`cin`/`input()` loops don't re-type test inputs repeatedly, paired with plain-English diagnostic hints beneath cryptic compiler/runtime errors.
+
+---
+
+## 🚀 Longer-Term Roadmap (Phase 7+)
 
 ### 📁 1. Multi-File Project Workspace
 - Collapsible file tree sidebar to create, rename, delete, and switch between project files (`main.py`, `utils.py`, `data.csv`, `styles.css`).
@@ -88,4 +106,4 @@
 ### 📱 4. Google Play Store & Ecosystem Expansions
 - Monitor Google Play Console production review for rollout in target regions.
 - Implement Play Asset Delivery (PAD) for seamless on-demand packaging of optional runtime modules.
-- Add code snippet sharing via web URLs (compressed hash parameters).
+- Add Viva Voce quick-reference drawer and serverless QR code sharing.

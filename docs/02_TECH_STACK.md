@@ -80,12 +80,12 @@ ThinkCode Lab is architected as an **offline-first, zero-backend, multi-threaded
   - Interactive `scanf` and `getchar` via `SharedArrayBuffer` / input queue.
 
 ### ⚡ 4. C++ Interactive & OOP Engine (`src/engines/cpp.worker.js`)
-- **Technology:** Hybrid execution combining `JSCPP` (procedural logic) with a custom OOP Transpiler Runner.
+- **Technology:** Single unified pipeline powered by patched `JSCPP` (`public/jscpp/jscpp.js`, patched at build time by `scripts/copy-runtimes.mjs` + `scripts/jscpp-string.js`).
 - **Key Capabilities:**
-  - `<iostream>` (`std::cin`, `std::cout`, `std::endl`), `<iomanip>`, `<cmath>`, `<cstring>`.
-  - Multi-dimensional arrays, recursion, reference variables (`int &ref = x`), and function overloading.
-  - User-defined classes (`class`), constructors, destructors, access specifiers (`public:`, `private:`), member methods, and object lifecycles.
-  - Authentic `g++` compiler diagnostic formatting with line, column, and caret indicators (`^`).
+  - Full `std::string` (`getline`, `cin.ignore`, `.substr`, `.find`, `.append`, comparisons), `<iostream>` (`std::cin`, `std::cout`, `std::endl`), `<iomanip>`, `<cmath>`, `<cstring>`.
+  - Multi-dimensional arrays, recursion, reference variables (`int &ref = x`), pointer arithmetic & hex address display, `struct`, shared-memory `union`, and function overloading.
+  - User-defined classes (`class`), constructors, destructors, access specifiers (`public:`/`private:`), member methods, inheritance, and object lifecycles unified cleanly inside JSCPP AST lowering.
+  - Interactive on-demand `cin >>` streaming over `SharedArrayBuffer` (Web) or `NativeStdinBridge` (Android) with authentic `g++` compiler diagnostics (`line:col` and caret `^`).
 
 ### 🐘 5. PHP 8.2 WebAssembly Engine (`src/engines/php.worker.js`)
 - **Technology:** Standalone PHP 8.2.11 compiled to WebAssembly (via `@php-wasm/web`).
@@ -155,16 +155,26 @@ ThinkCode Lab supports true interactive runtime input via a dual-mode communicat
 ## 🎨 4. User Interface Architecture
 
 - **Code Editor Core:** Powered by **CodeMirror 6**, configured with 2-space tab indentation (`EditorState.tabSize.of(2)` and `indentUnit.of("  ")`), line wrapping, bracket matching, syntax highlighting, and active line glow.
+- **Mobile Quick-Symbol Strip (`#quickBar`) & Beautifier (`src/formatter.js`):**
+  - 25 high-frequency tokens pinned directly above mobile soft keyboards with `pointerdown` prevention so Android/iOS keyboards remain open while inserting `{ }`, `( )`, `[ ]`, `->`, `=>`, etc.
+  - Zero-dependency one-tap offline code formatter (`🪄` / `Shift+Alt+F`) across all 8 languages.
+- **Ultra-Slim Header & Slide-Out Drawer (`#menuDrawer`):**
+  - Minimal 1-row top header (`min-height: calc(46px + env(safe-area-inset-top, 0px))`) featuring brand identity, `Dev By - Tahir Mansuri` clickable profile pill, and drawer trigger (`☰`).
+  - Off-canvas drawer consolidating File Open/Save, **Export Lab Journal PDF**, Template Reset, Dark/Light Theme toggle, **App Updates** (`#menuBtnCheckUpdate`), Download Banner (`#drawerDlCard`), and About/Privacy links.
 - **Adaptive Split Manager:**
   - CSS custom properties `--split: 80%` (mobile vertical) and `--split-desktop: 52%` (desktop side-by-side).
   - Initial load, practical selection, template reset, and output clearing set the editor to **80%** height and the output pane to **20%**.
   - Tapping **Run** triggers a smooth `0.25s cubic-bezier` transition expanding the output pane to **65%** height.
-- **Dual Zoom Controls:**
-  - Independent zoom toolbars (`A-` and `A+`) for both the Code Editor and Output Console.
-  - Scale ranges dynamically from 70% to 178% via CSS scroller variables.
+- **Dual Zoom Controls (`A−` / `A+`):**
+  - Independent zoom toolbars for both Code Editor and Output Console, scaling console text, SQL output tables, and SQL Schema Inspector via `--console-font-size`.
+- **1-Tap Lab Journal PDF Modal (`<dialog id="journalDialog">` & `src/lab-journal.js`):**
+  - Zero-dependency pure-JS JPEG-in-PDF 1.4 encoder paired with Canvas 2D A4 rasterization + semantic `@media print` HTML fallback (`SystemUiBridge.printDocument()`).
+  - Sticky student profile in `localStorage` (`cf.journal.profile`), live A4 sheet preview, automatic subject/title inference, and faculty signature block.
+- **Silent In-App APK Update Checker (`src/update-checker.js` + `/version.json`):**
+  - Uses top-layer native `<dialog id="updateDialog" closedby="any">` and non-blocking Popover API (`#updateToast` with `popover="manual"`, `@starting-style` + `allow-discrete` transitions) suppressed automatically whenever other modals or the drawer are open.
+  - Announces availability to screen readers via an `aria-live` polite region, supports 24-hour snooze dismissal (`cf.update.snoozed_*`), and includes a Web-only `?checkUpdate=simulate` / `#btnUpdateSimulate` demo preview.
 - **Interactive Java Desktop Frame:**
-  - Floating `#guiWindowModal` with draggable title bar, minimize, maximize, and close controls.
-  - Floating action button (`[☕ Java GUI Frame]`) to restore minimized frames.
+  - Floating `#guiWindowModal` with draggable title bar, minimize, maximize, and close controls, plus floating reopen button (`[☕ Java GUI Frame]`).
 - **Practicals Drawer:** Slide-over modal containing 78 curated university assignments searchable by title, assignment number, or topic.
 
 ---
@@ -172,16 +182,29 @@ ThinkCode Lab supports true interactive runtime input via a dual-mode communicat
 ## 📱 5. Native Android Architecture (Capacitor 6)
 
 - **Native Runtime Wrapper:** Powered by [Capacitor](https://capacitorjs.com/) v6.1.2 (`MainActivity.java` adds `NativeStdinBridge`, `SystemUiBridge` (`ThinkCodeSystemUI`), `WindowInsetsCompat` Edge-to-Edge inset consumption, and `COOP`/`COEP` response headers).
+- **`SystemUiBridge` (`ThinkCodeSystemUI` `@JavascriptInterface`):**
+  - `setTheme(isLight)`: dynamically updates system status/navigation bar backgrounds (`#0E1622` dark / `#FFFFFF` light) and `WindowInsetsControllerCompat` icon contrast when switching themes.
+  - `printDocument(title)`: invokes Android's native `PrintManager` WebView print adapter for system PDF saving/printing.
+  - `getAppVersion()`: returns runtime `PackageInfo` (`versionName` and `PackageInfoCompat.getLongVersionCode`) as JSON so the in-app updater checks the real installed APK build accurately.
+  - `openExternalUrl(url)`: launches validated `https://` release/download URLs cleanly into Android's external browser (`ACTION_VIEW`) for one-tap APK downloading.
 - **Android 15/16 Edge-to-Edge & Dynamic Bar Contrast:**
   - Consumes `WindowInsetsCompat.Type.systemBars() | displayCutout() | ime()` cleanly on `android.R.id.content` (`WindowInsetsCompat.CONSUMED`) so WebView never overlaps status/navigation bars or double-pads CSS `env(safe-area-inset-*)`.
-  - Syncs system bar backgrounds and light/dark status & navigation bar icon contrast (`WindowInsetsControllerCompat`) dynamically via `ThinkCodeSystemUI.setTheme(isLight)` when switching Dark/Light themes.
 - **Android Target Compliance:**
   - `compileSdkVersion = 36` (Android 16 / Latest API).
   - `targetSdkVersion = 36`.
   - `minSdkVersion = 24` (Android 7.0 Nougat+, meeting Google Play Automatic App Protection requirements).
 - **Security & Signing:**
   - Dedicated production RSA 2048-bit release keystore (`thinkcode-lab.keystore`).
-  - Signed using APK Signature Scheme v2 (`v2SigningEnabled = true` on `minSdkVersion 24+`).
+  - Signed using APK Signature Scheme v1 + v2 (`v1SigningEnabled = true`, `v2SigningEnabled = true`).
 - **Asset Packaging:**
   - All WebAssembly modules, fonts, and worker scripts are bundled inside `android/app/src/main/assets/public/` for 100% offline access.
-  - Built-in aapt rule excludes unnecessary development files.
+
+---
+
+## 🧪 6. Automated Verification & Regression Suites
+
+| Script / Command | Coverage | Checks |
+| :--- | :--- | :---: |
+| `npm run test:ccpp` (`scripts/test-c-cpp.mjs`) | PicoC C99 & unified JSCPP C++ engines, `SharedArrayBuffer` stdin streaming, all C/C++ syllabus practicals, formatter round-trips, `setState()` null-guards | **47 Checks** |
+| `node scripts/test-journal.mjs` (`scripts/test-journal.mjs`) | Student profile persistence, title/subject inference, syntax tokenization, multi-page A4 pagination, valid PDF 1.4 xref byte offsets & structure | **10 Checks** |
+| `node scripts/test-update-checker.mjs` (`scripts/test-update-checker.mjs`) | Semver & `versionCode` comparisons, HTTPS-only URL sanitization, 4h auto-throttle, 24h snooze, live `public/version.json` integrity | **10 Checks** |

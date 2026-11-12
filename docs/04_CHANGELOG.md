@@ -4,6 +4,37 @@
 
 ---
 
+## 🚀 Version 1.3.5 (In Progress on `feature/v1.3.5` — Live on Web IDE)
+*Development Window: November 2026 (Staged for Build 12 APK)*
+
+### 🔔 Silent In-App APK Update Checker & Dynamic Manifest (`src/update-checker.js`, `public/version.json`)
+- **Zero-Telemetry Update Manifest (`/version.json`)**:
+  - Published structured metadata manifest in [`public/version.json`](../public/version.json) (`versionName`, `versionCode`, `releaseDate`, `apkFilename`, `apkSize`, `apkSizeBytes`, `apkUrl`, `fallbackUrl`, `sha256`, `minSdk`, and `releaseNotes`).
+  - Configured explicit headers in `firebase.json` (`Access-Control-Allow-Origin: *`, `Cross-Origin-Resource-Policy: cross-origin`, `Cache-Control: no-cache, no-store, must-revalidate`) so both isolated Web contexts and native Android WebViews read fresh version metadata reliably.
+- **Native Android Version & External Browser Bridges (`MainActivity.java`)**:
+  - Extended `SystemUiBridge` (`ThinkCodeSystemUI`) with `getAppVersion()` (exposing true `PackageInfo` `versionName` + `versionCode`) and `openExternalUrl(url)` (launching validated `https://` APK downloads cleanly in Android's system browser).
+- **Non-Intrusive Update UX (`index.html`, `src/main.js`, `src/styles.css`)**:
+  - Added silent background update checks on startup and resume (throttled to 4 hours), a pulsing badge indicator (`#menuUpdateDot`), slide-out Drawer `App Updates` item (`#menuBtnCheckUpdate`) with live version badge (`#drawerVerLabel`), a top-layer `popover="manual"` `#updateToast` (automatically deferred while any modal/drawer is open, with 24h snooze dismissal), and `<dialog id="updateDialog" closedby="any">` release-notes modal with **Download APK** / **Open Download Page** actions and a Web demo trigger (`?checkUpdate=simulate`).
+- **Auto-Hydrating Download Portal (`public/download.html`)**:
+  - Upgraded `/download` to progressively fetch `/version.json`, dynamically updating version pills, APK filename/size cards, direct download URLs, and a collapsible `<details>` "What's New" release notes list.
+- **Automated Verification (`scripts/test-update-checker.mjs`)**:
+  - Added **10** automated unit checks covering `parseSemver`, `compareSemver`, `evaluateUpdateStatus` (`versionCode` + semver precedence), `sanitizeHttpUrl`, throttling, 24h snooze logic, and `public/version.json` integrity.
+
+### 📄 1-Tap Offline Student Lab Journal & Assignment A4 PDF Export (`src/lab-journal.js`)
+- **Zero-Dependency Pure-JS A4 PDF 1.4 Writer**:
+  - Built [`src/lab-journal.js`](../src/lab-journal.js) combining high-DPI multi-page Canvas 2D A4 rendering with an embedded JPEG-in-PDF 1.4 binary writer + semantic `@media print` HTML export, working **100% offline** with zero cloud APIs or external heavy PDF libraries.
+- **Academic Format & Sticky Student Profile (`<dialog id="journalDialog">`)**:
+  - Added accessible trigger buttons (`#btnJournal` and Drawer item) opening a live A4 preview dialog with persistent Student Profile fields (`Institute`, `Department`, `Student Name`, `Roll No.`, `Class`, `Academic Year` in `cf.journal.profile`), auto-inferred subject and practical title, optional source code + line numbers, captured execution output (console text, SQL table results, Web iframe text, or Java Swing component snapshot), and faculty/examiner signature footer.
+- **Native Android Print Adapter (`MainActivity.java`)**:
+  - Added `ThinkCodeSystemUI.printDocument(title)` invoking Android `PrintManager` alongside `@capacitor/filesystem` / Web Blob `.pdf` export.
+- **Automated Verification (`scripts/test-journal.mjs`)**:
+  - Added **10** automated checks validating profile persistence, title/subject inference, language keyword tokenization, multi-page A4 pagination, and strict PDF 1.4 `xref` byte-offset validity.
+
+### 🗂️ Workflow & Repository Hygiene (`f5ad090`)
+- Created dedicated feature branch `feature/v1.3.5` for clean incremental releases, added `.firebase/` hosting cache to `.gitignore`, organized Play Store promotional assets, and codified the no-VDI / manual-testing workflow rule in `docs/07_DEVELOPER_MEMORY.md`.
+
+---
+
 ## 🚀 Version 1.3.4 (Build 11) — Native Android Edge-to-Edge Header Alignment & Dynamic System Bar Contrast
 *Release Date: November 2026*
 

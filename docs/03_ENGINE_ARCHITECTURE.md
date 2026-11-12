@@ -77,7 +77,7 @@ To run C and C++ inside an offline-first mobile IDE without remote cloud compile
   - Token-aware validation and AST/lowering passes support full `std::string` (`getline`, `cin.ignore`, `substr`, `find`, `append`), `<iomanip>`, references (`&`), pointers & hex addresses, `struct`, shared-memory `union`, and OOP classes, constructors, overloading, and inheritance.
   - Interactive on-demand `cin >>` input bridge (via `SharedArrayBuffer` or `NativeStdinBridge` on Android) ensuring preceding `cout <<` prompts stream before blocking for input.
 - **Automated Regression Suite (`scripts/test-c-cpp.mjs`)**:
-  - Run `npm run test:ccpp` to verify `SharedArrayBuffer` streaming, all C/C++ templates and syllabus practicals, Beautify formatter round-trips, error recovery, and UI `setState()` null-guards.
+  - Run `npm run test:ccpp` (47 automated checks) to verify `SharedArrayBuffer` streaming, all C/C++ templates and syllabus practicals, Beautify formatter round-trips, error recovery, and UI `setState()` null-guards.
 
 ### 2.3 Future Upgrade: Clang WASM Downloadable Pack (Option 2)
 When ThinkCode Lab expands to advanced competitive programming and full C++ Standard Template Library (`<vector>`, `<map>`, `<algorithm>`), Option 2 will be activated:
@@ -173,3 +173,33 @@ The Python engine (`src/engines/python.worker.js`) leverages Pyodide v0.26.4 (CP
 2. **Interactive In-Console `input()`**:
    - Overrides `sys.stdin.readline` to invoke `Atomics.wait()` on a `SharedArrayBuffer` on Web, or `readNativeStdinSync()` via `POST /__native_stdin` on Android WebView.
    - The main thread injects an inline `<input>` field into `#console`, captures student typing, and writes the string to shared memory (or the native bridge slot), resuming CPython instantly.
+
+---
+
+## 📄 7. Offline Academic Utilities & Native Bridge Subsystems
+
+### 7.1 1-Tap Lab Journal / Assignment PDF Pipeline (`src/lab-journal.js`)
+```plaintext
+Active Workspace (Code + Execution Output / SQL Grid / Web Frame / Swing GUI)
+       │
+       ▼
+[Metadata & Profile Collector]
+   ├── Sticky Student Profile in localStorage (Institute, Dept, Name, Roll No, Class, Year)
+   └── Auto-inferred Language Subject & Practical Assignment Title
+       │
+       ▼
+[Dual Offline Export Strategy]
+   ├── Path A (Direct A4 PDF): Canvas 2D high-DPI pagination (syntax colors + line numbers
+   │   + terminal/table/preview snapshot + examiner footer) ──▶ Pure-JS JPEG-in-PDF 1.4 binary writer
+   │   ──▶ Instant Blob download (Web) or @capacitor/filesystem + Share (Android)
+   └── Path B (System Print Sheet): Semantic @media print HTML ──▶ window.print() (Web)
+       or ThinkCodeSystemUI.printDocument() -> Android PrintManager (Native)
+```
+
+### 7.2 Silent In-App APK Update Checker (`src/update-checker.js` + `public/version.json`)
+- **Manifest Delivery (`public/version.json`)**:
+  - Served on Firebase Hosting with `Access-Control-Allow-Origin: *`, `Cross-Origin-Resource-Policy: cross-origin` (essential so COOP/COEP-isolated browsers can read it safely), and `Cache-Control: no-cache, no-store, must-revalidate`.
+  - Also dynamically hydrates `public/download.html` so `/download` always displays current version tags, APK size, SHA-256 hash, and collapsible release notes.
+- **Version Evaluation & UX (`src/update-checker.js`)**:
+  - Queries installed APK version via `ThinkCodeSystemUI.getAppVersion()` (or `APP_META` fallback on Web), compares numeric `versionCode` and semantic `versionName` (`compareSemver()`), throttles silent background checks to every 4 hours, and persists 24-hour user dismissals in `localStorage`.
+  - Surfaces updates non-intrusively via `#menuUpdateDot`, top-layer `popover="manual"` `#updateToast` (deferred whenever modals/drawer are open), and `<dialog id="updateDialog" closedby="any">`, launching GitHub Release downloads externally via `ThinkCodeSystemUI.openExternalUrl()` with strict HTTPS URL sanitization.
