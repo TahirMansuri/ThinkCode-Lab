@@ -72,6 +72,7 @@
 ### 6. Phase 6: Academic Productivity & Sideload Update Workflow (`feature/v1.3.5`)
 - ✅ **1-Tap Student Lab Journal / Assignment A4 PDF Export**: Offline pure-JS JPEG-in-PDF 1.4 generator (`src/lab-journal.js`), sticky Student Profile, live preview modal, Android native print adapter, and 10-check verification (`scripts/test-journal.mjs`).
 - ✅ **Silent In-App APK Update Check**: Zero-telemetry `/version.json` manifest with CORS/CORP/`no-store` headers, auto-hydrating `/download` portal, Menu dot badge, `popover="manual"` toast + 24h snooze, native `getAppVersion()`/`openExternalUrl()` bridges, and 10-check verification (`scripts/test-update-checker.mjs`).
+- ✅ **Python Data Science & Scientific Suite**: On-demand package manager for NumPy, Pandas, Matplotlib, Scikit-learn, Seaborn + openpyxl (`src/python-tools.js`, `<dialog id="pyPkgDialog">`), client-side VFS CSV/Excel file uploader (`<dialog id="pyDataFilesDialog">`), pre-seeded sample datasets (`students.csv`, `iris.csv`, `sales.csv`), inline Matplotlib plot visualizer with copy/download PNG, 5 new Unit 4 practicals (83 total), and 7-check verification (`scripts/test-python-datascience.mjs`).
 
 ---
 

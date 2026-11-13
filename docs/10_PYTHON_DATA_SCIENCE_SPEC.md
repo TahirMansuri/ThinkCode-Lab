@@ -94,45 +94,47 @@ In desktop Python, `plt.show()` creates a desktop GUI window (via Tkinter/Qt), w
 ## 🗺️ 5. Implementation Roadmap & Task Breakdown
 
 ### Phase 1: Engine & Package Loader Extension (`python.worker.js`)
-- [ ] Add `load_package` message handler in `src/engines/python.worker.js` calling `py.loadPackage(name)` or `micropip.install(name)`.
-- [ ] Add real-time download progress and status reporting (`post('status', 'Downloading numpy (14 MB)...')`).
-- [ ] Configure IndexedDB / CacheStorage persistence for loaded Pyodide packages.
+- [x] Add `load_package` message handler in `src/engines/python.worker.js` calling `py.loadPackage(name)` or `micropip.install(name)`.
+- [x] Add real-time download progress and status reporting (`post('status', 'Downloading numpy (14 MB)...')`).
+- [x] Configure IndexedDB / CacheStorage persistence for loaded Pyodide packages (`thinkcode-pyodide-packages`).
 
 ### Phase 2: Virtual Filesystem (VFS) & Data File Manager
-- [ ] Add `mount_file` message handler in `python.worker.js` calling `py.FS.writeFile(filename, data)`.
-- [ ] Pre-mount the 3 academic datasets (`students.csv`, `iris.csv`, `sales.csv`) into `/home/pyodide/`.
-- [ ] Add a **[📁 Data Files]** button in the Python editor sub-bar allowing users to upload `.csv`, `.xlsx`, `.json`, and `.txt` files.
-- [ ] Display an active files chip-strip showing mounted filenames with a 1-tap `[×]` remove action.
+- [x] Add `mount_file` message handler in `python.worker.js` calling `py.FS.writeFile(filename, data)`.
+- [x] Pre-mount the 3 academic datasets (`students.csv`, `iris.csv`, `sales.csv`) into `/home/pyodide/`.
+- [x] Add a **[📁 Data]** button in the Python editor sub-bar allowing users to upload `.csv`, `.xlsx`, `.json`, and `.txt` files.
+- [x] Display an active files dialog showing mounted filenames with a 1-tap `[×]` remove action and `[Use in Code]` snippet insert.
 
 ### Phase 3: Inline Plot Visualizer (Matplotlib & Seaborn)
-- [ ] Inject custom `plt.show()` interceptor into the Pyodide runtime before code execution.
-- [ ] Add `#console` renderer for plot images with high-DPI scaling, dark/light border contrast, and download action.
-- [ ] Ensure `plt.savefig('myplot.png')` writes to VFS and can be downloaded by the student.
+- [x] Inject custom `plt.show()` interceptor into the Pyodide runtime before code execution.
+- [x] Add `#console` renderer for plot images with high-DPI scaling, dark/light border contrast, and download/copy action.
+- [x] Auto-flush unclosed plots when execution finishes so students who omit `plt.show()` still see their generated graphs.
 
 ### Phase 4: UI Package Manager Modal (`#pyPkgDialog`)
-- [ ] Build a sleek, accessible `<dialog id="pyPkgDialog">` listing the 5 supported scientific packages:
+- [x] Build a sleek, accessible `<dialog id="pyPkgDialog">` listing the 5 supported scientific packages:
   - 🔢 **NumPy** (`~14 MB`)
   - 🐼 **Pandas** (`~18 MB`)
   - 📊 **Matplotlib** (`~10 MB`)
   - 🤖 **Scikit-learn + SciPy** (`~35 MB`)
   - 📈 **Seaborn** (`~5 MB`)
-- [ ] Show individual **[Install]** buttons, download progress bars, and **[✓ Installed / Offline Ready]** badges.
-- [ ] Automatically detect `import numpy`, `import pandas`, etc. in student code and offer a 1-tap "Install missing libraries" prompt if uninstalled.
+- [x] Show individual **[Install]** buttons, download progress bars, and **[✓ Active in Runtime]** / **[⚡ Cached Offline]** badges.
+- [x] Automatically detect `import numpy`, `import pandas`, etc. in student code via `pyodide.loadPackagesFromImports` and `preparePythonImports`.
 
 ### Phase 5: New University Syllabus Practicals
-- [ ] Add **Unit 4 Practicals** in `src/practicals.js`:
-  1. *NumPy Arrays & Matrix Operations* (Multiplication, Transpose, Determinant)
-  2. *Pandas DataFrame Operations on `students.csv`* (Filtering, Sorting, GroupBy, Averages)
-  3. *Matplotlib 2D Data Visualization* (Bar Graph & Line Plot with Labels/Legends)
-  4. *Seaborn Statistical Plots on `iris.csv`* (Heatmap & Scatter Plot)
-  5. *Scikit-learn Machine Learning Model* (Simple Linear Regression / Iris KNN Classification)
+- [x] Add **Unit 4 Practicals** in `src/practicals.js`:
+  1. *NumPy Arrays & Matrix Operations* (`py-12`: Multiplication, Transpose, Determinant)
+  2. *Pandas DataFrame Operations on `students.csv`* (`py-13`: Filtering, Sorting, GroupBy, Averages)
+  3. *Matplotlib 2D Data Visualization* (`py-14`: Bar Graph with Labels/Legends & Inline Rendering)
+  4. *Seaborn Statistical Plots on `iris.csv`* (`py-15`: Pairwise/Scatter Distribution)
+  5. *Scikit-learn Machine Learning Model* (`py-16`: Linear Regression on Sales Data)
 
 ### Phase 6: Automated Verification & Unit Tests
-- [ ] Create `scripts/test-python-datascience.mjs` verifying:
-  - Virtual filesystem mount integrity.
-  - Matplotlib plot sentinel string generation and Base64 decoding.
-  - Safe handling of missing packages.
-  - Dataset schemas (`students.csv`, `iris.csv`, `sales.csv`).
+- [x] Create `scripts/test-python-datascience.mjs` verifying:
+  - Pre-seeded dataset schemas (`students.csv`, `iris.csv`, `sales.csv`).
+  - RFC 4180 parsing conformance.
+  - Scientific packages catalog integrity.
+  - Practicals extension (83 global practicals, 16 Python practicals).
+  - Pyodide runtime CDN fallback & CacheStorage patch.
+  - Integrated into `npm run test` command.
 
 ---
 
@@ -145,3 +147,4 @@ In desktop Python, `plt.show()` creates a desktop GUI window (via Tkinter/Qt), w
 ---
 
 *Authored by: **Tahir Mansuri** · InfoGalaxy Computers · ThinkCode Lab Architecture Group*
+

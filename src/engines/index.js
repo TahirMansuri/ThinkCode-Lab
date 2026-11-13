@@ -47,6 +47,12 @@ class WorkerEngine {
         else if (d.t === 'need_input') (this.cb || sink).need_input?.(d.s);
         else if (d.t === 'prompt_modal') (this.cb || sink).prompt_modal?.(d.s, d);
         else if (d.t === 'alert_modal') (this.cb || sink).alert_modal?.(d.s, d);
+        else if (d.t === 'plot') (this.cb || sink).plot?.(d.b64);
+        else if (d.t === 'file_mounted') (this.cb || sink).file_mounted?.(d);
+        else if (d.t === 'file_unmounted') (this.cb || sink).file_unmounted?.(d);
+        else if (d.t === 'file_list') (this.cb || sink).file_list?.(d.files);
+        else if (d.t === 'package_loaded') (this.cb || sink).package_loaded?.(d);
+        else if (d.t === 'package_failed') (this.cb || sink).package_failed?.(d);
         else (this.cb || sink)[d.t]?.(d.s);
       };
       this.w.onerror = e => {
@@ -116,6 +122,26 @@ class WorkerEngine {
         this.w?.postMessage({ type, ...payload });
       });
     });
+  }
+  async mountFile(name, content, size, sink) {
+    if (!this.w) await this.load(sink);
+    else await this.ready;
+    this.w?.postMessage({ type: 'mount_file', name, content, size });
+  }
+  async unmountFile(name, sink) {
+    if (!this.w) await this.load(sink);
+    else await this.ready;
+    this.w?.postMessage({ type: 'unmount_file', name });
+  }
+  async listFiles(sink) {
+    if (!this.w) await this.load(sink);
+    else await this.ready;
+    this.w?.postMessage({ type: 'list_files' });
+  }
+  async loadPackage(name, sink) {
+    if (!this.w) await this.load(sink);
+    else await this.ready;
+    this.w?.postMessage({ type: 'load_package', name });
   }
   stop(sink) {
     if (!this.w) return;

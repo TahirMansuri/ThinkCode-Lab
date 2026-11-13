@@ -319,6 +319,159 @@ print("=== Employee Record (Inheritance Demo) ===")
 emp = Employee("Sandesh Marathe", 24, "EMP-204", 48000)
 emp.show_info()
 `
+    },
+    {
+      id: 'py-12',
+      num: 'Assignment 12',
+      cat: 'Data Science & NumPy',
+      title: 'NumPy — Array Math & Matrix Operations',
+      desc: 'Demonstrates NumPy 2D array creation, matrix multiplication (dot product), transpose, and determinant.',
+      code: `# Practical 12: NumPy Arrays and Matrix Operations
+import numpy as np
+
+print("=== NumPy Matrix & Array Operations ===")
+A = np.array([[2, 4], [6, 8]], dtype=float)
+B = np.array([[1, 3], [5, 7]], dtype=float)
+
+print("Matrix A:\\n", A)
+print("\\nMatrix B:\\n", B)
+print("\\nMatrix Addition (A + B):\\n", A + B)
+print("\\nMatrix Multiplication (A @ B):\\n", np.dot(A, B))
+print("\\nTranspose of Matrix A (A.T):\\n", A.T)
+print(f"\\nDeterminant of A: {np.linalg.det(A):.2f}")
+print(f"Mean of all elements in A: {np.mean(A):.2f}")
+`
+    },
+    {
+      id: 'py-13',
+      num: 'Assignment 13',
+      cat: 'Data Science & Pandas',
+      title: 'Pandas — Student Academic Data Analysis',
+      desc: 'Loads students.csv dataset into a DataFrame, filters high scorers, and computes descriptive statistics.',
+      code: `# Practical 13: Pandas DataFrame and Data Analysis
+import pandas as pd
+
+print("=== Loading Student Academic Dataset ===")
+df = pd.read_csv("students.csv")
+print("First 5 Student Records:")
+print(df.head())
+
+print("\\n--- Summary Statistics ---")
+print(df[["marks_python", "marks_dbms", "attendance"]].describe())
+
+print("\\n--- Top Performers (Python Marks >= 80) ---")
+top = df[df["marks_python"] >= 80][["roll_no", "name", "marks_python", "grade"]]
+print(top.to_string(index=False))
+
+print("\\n--- Average Marks by Gender ---")
+avg = df.groupby("gender")[["marks_python", "marks_dbms"]].mean()
+print(avg)
+`
+    },
+    {
+      id: 'py-14',
+      num: 'Assignment 14',
+      cat: 'Data Visualization',
+      title: 'Matplotlib — Student Marks Bar Chart',
+      desc: 'Generates a 2D comparative bar chart of student marks with titles, labels, and legends.',
+      code: `# Practical 14: Data Visualization using Matplotlib
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# Load dataset and select top 5 students
+df = pd.read_csv("students.csv").head(5)
+names = df["name"].str.split().str[0]  # First names
+
+plt.figure(figsize=(7, 4))
+x = range(len(names))
+width = 0.35
+
+plt.bar([i - width/2 for i in x], df["marks_python"], width=width, label="Python", color="#FFB04A")
+plt.bar([i + width/2 for i in x], df["marks_dbms"], width=width, label="DBMS", color="#58A6FF")
+
+plt.xlabel("Student Name")
+plt.ylabel("Marks Awarded (Out of 100)")
+plt.title("Comparative Subject Marks — Unit 4 Lab")
+plt.xticks(x, names)
+plt.ylim(0, 110)
+plt.legend()
+plt.grid(axis="y", linestyle="--", alpha=0.5)
+
+# Render plot inline
+plt.show()
+print("✓ Matplotlib bar chart generated successfully!")
+`
+    },
+    {
+      id: 'py-15',
+      num: 'Assignment 15',
+      cat: 'Data Visualization',
+      title: 'Seaborn — Iris Statistical Heatmap & Scatter',
+      desc: 'Loads iris.csv, plots feature correlation heatmap, and generates species scatter plot using Seaborn.',
+      code: `# Practical 15: Statistical Visualization with Seaborn
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+
+print("=== Loading Iris Dataset for Statistical Plotting ===")
+df = pd.read_csv("iris.csv")
+print(df.head(3))
+
+# 1. Feature Correlation Matrix
+numeric_cols = ["sepal_length", "sepal_width", "petal_length", "petal_width"]
+corr = df[numeric_cols].corr()
+
+plt.figure(figsize=(6, 4))
+sns.heatmap(corr, annot=True, cmap="YlGnBu", fmt=".2f", cbar=True)
+plt.title("Iris Feature Correlation Heatmap")
+plt.show()
+
+# 2. Petal Length vs Petal Width Scatter Plot
+plt.figure(figsize=(6, 4))
+sns.scatterplot(data=df, x="petal_length", y="petal_width", hue="species", s=80, palette="viridis")
+plt.title("Iris Petal Dimensions by Species")
+plt.grid(True, linestyle="--", alpha=0.5)
+plt.show()
+
+print("✓ Seaborn correlation heatmap & scatter plot generated!")
+`
+    },
+    {
+      id: 'py-16',
+      num: 'Assignment 16',
+      cat: 'Machine Learning',
+      title: 'Scikit-learn — Linear Regression Model',
+      desc: 'Trains a simple Linear Regression model on study hours vs exam scores and predicts outcomes for new students.',
+      code: `# Practical 16: Linear Regression using Scikit-learn
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
+# Training Data: Study Hours per Week vs Exam Score
+hours = np.array([2, 3, 4, 5, 6, 7, 8, 9, 10, 11]).reshape(-1, 1)
+scores = np.array([35, 42, 50, 58, 65, 72, 80, 85, 91, 98])
+
+# 1. Train Model
+model = LinearRegression()
+model.fit(hours, scores)
+
+print("=== Trained Linear Regression Model ===")
+print(f"Slope (Coefficient): {model.coef_[0]:.2f}")
+print(f"Intercept: {model.intercept_:.2f}")
+
+# 2. Predict on Training Set
+pred = model.predict(hours)
+print(f"R² Score (Accuracy): {r2_score(scores, pred) * 100:.1f}%")
+print(f"Mean Squared Error: {mean_squared_error(scores, pred):.2f}")
+
+# 3. Predict for New Test Cases
+test_hours = np.array([[3.5], [6.5], [8.5]])
+test_pred = model.predict(test_hours)
+
+print("\\n--- Predictions for New Students ---")
+for h, p in zip(test_hours.flatten(), test_pred):
+  print(f"Study: {h} hrs/week  -->  Predicted Score: {p:.1f}/100")
+`
     }
   ],
 

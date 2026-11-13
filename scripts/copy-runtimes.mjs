@@ -32,6 +32,18 @@ for (const [src, dst, files] of jobs) {
   }
 }
 
+// Patch public/pyodide/pyodide.asm.js for on-demand CDN fallback & CacheStorage in browser/worker
+const pyodideAsmPath = 'public/pyodide/pyodide.asm.js';
+if (existsSync(pyodideAsmPath)) {
+  let asm = readFileSync(pyodideAsmPath, 'utf8');
+  const targetSnippet = "try{return await me(o,a)}catch(l){if(!g||r.channel!==ge)throw l}console.log(`Didn't find package ${n} locally, attempting to load from ${Ge}`);let s=await me(Ge+n);return console.log(`Package ${n} loaded from ${Ge}, caching the wheel in node_modules for future use.`),await K.writeFile(o,s),s";
+  const replacementSnippet = "try{return await me(o,a)}catch(l){if(r.channel!==ge)throw l}console.log(`Didn't find package ${n} locally, attempting to load from ${Ge}`);let s;if(typeof caches!=='undefined'){try{const _c=await caches.open('thinkcode-pyodide-packages');const _m=await _c.match(Ge+n);if(_m){s=new Uint8Array(await _m.arrayBuffer())}else{s=await me(Ge+n);try{await _c.put(Ge+n,new Response(s))}catch(_){}}}catch(_){s=await me(Ge+n)}}else{s=await me(Ge+n)}if(g&&typeof K!=='undefined'&&K.writeFile){try{await K.writeFile(o,s)}catch(_){}}return s";
+  if (asm.includes(targetSnippet)) {
+    asm = asm.replace(targetSnippet, replacementSnippet);
+    writeFileSync(pyodideAsmPath, asm);
+  }
+}
+
 // Generate public/picoc/picoc.js for C engine (exposing Module.FS for reliable line-buffered/interactive stream I/O)
 if (existsSync('node_modules/picoc-js/dist/bundle.umd.js')) {
   mkdirSync('public/picoc', { recursive: true });

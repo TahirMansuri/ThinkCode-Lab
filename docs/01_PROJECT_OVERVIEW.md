@@ -29,9 +29,10 @@ While ThinkCode focuses on visual algorithm tracing and step-by-step memory insp
 | **0ms Server Latency** | Execution occurs locally on the device's CPU via WebAssembly and Web Workers. Code begins executing instantaneously with zero cloud queue time. |
 | **True Runtime Interactive Input** | Unlike typical online compilers that demand pre-entering all inputs in a static box before execution, ThinkCode Lab supports sequential, real-time in-console `input()`, `Scanner`, `cin >>`, and `scanf` prompts. |
 | **Java Desktop Window Emulation** | Java AWT/Swing graphical applications open directly inside an interactive, draggable desktop window frame with title bar, minimize, maximize, close, and DOM layout managers. |
-| **University Syllabus Practicals** | 78 official university lab assignments (FYBCA, SYBCA, TYBCA) preloaded with clean 2-space indentation and 1-click loading. |
+| **University Syllabus Practicals** | 83 official university lab assignments (FYBCA, SYBCA, TYBCA) preloaded with clean 2-space indentation and 1-click loading. |
 | **Adaptive Split Pane** | Student-optimized vertical split: starts at **80% Code : 20% Output** for comfortable code viewing on mobile screens, and auto-expands to **65% Output** upon pressing **Run**. |
 | **Mobile Coding Ergonomics** | Bottom-pinned 25-token Quick-Symbol Strip (`#quickBar`), 1-tap Offline Code Beautifier (`🪄`), ultra-slim 1-line header + slide-out drawer (`☰ Menu`), and compact dual `A−`/`A+` zoom controls. |
+| **Python Data Science Suite** | On-demand Scientific Library Manager (NumPy, Pandas, Matplotlib, Scikit-learn, Seaborn), client-side CSV/Excel data uploader, pre-seeded datasets, and inline plot visualizer with zero base size bloat. |
 | **1-Tap Lab Journal PDF Export** | Generates clean, print-ready A4 assignment PDFs offline (`src/lab-journal.js`) with sticky Student Profile, practical metadata, syntax-colored source code, captured console/SQL/Swing output, and faculty signature block. |
 | **Silent In-App APK Update Check** | Zero-telemetry HTTPS manifest checker (`src/update-checker.js` + `/version.json`) notifies sideloaded Android students cleanly via non-blocking toast, menu badge, and details modal with 24h snooze. |
 | **Cross-Platform Flexibility** | Runs as a responsive Single-Page Application (SPA) on desktop and mobile browsers (`https://thinkcode-lab.web.app`), and as a native Android APK (`v1.3.4 / Build 11`, API 36) packaged via Capacitor 6. |
@@ -46,7 +47,10 @@ ThinkCode Lab features 8 fully independent execution engines running in isolated
    - Complete standard library execution in an isolated Web Worker (`python.worker.js`).
    - Interactive runtime `input()` and `sys.stdin` with inline console prompt injection and mobile touch modal.
    - Clean, student-friendly error tracebacks mapped back to user code.
-   - 11 university syllabus practical assignments (CA-214: Python Programming Lab).
+   - On-demand Scientific Suite: NumPy, Pandas, Matplotlib, Scikit-learn, Seaborn, and openpyxl with zero base APK bloat.
+   - Client-side virtual filesystem mounting for CSV and Excel files, pre-seeded with `students.csv`, `iris.csv`, and `sales.csv`.
+   - Inline Matplotlib plot visualizer with PNG download and clipboard copy.
+   - 16 university syllabus practical assignments (CA-214: Python Programming Lab & Unit 4 Data Science / ML).
 
 2. **Java JDK Simulation & AWT/Swing Window Engine (`java.worker.js`)**
    - 100% offline Java compiler and AST transpiler supporting classes, constructors, methods, overloading, overriding, inheritance, interfaces, and exception handling (`try-catch-finally`).

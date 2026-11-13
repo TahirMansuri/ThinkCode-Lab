@@ -95,6 +95,12 @@
 13. **Offline Lab Journal PDF & Top-Layer Popover Ordering**:
    - `src/lab-journal.js` uses a zero-dependency pure-JS JPEG-in-PDF 1.4 binary writer alongside Canvas 2D A4 pagination; never break 20-byte `xref` entry formatting or `@media print` semantic markup, and run `node scripts/test-journal.mjs` after edits.
    - `#updateToast` uses native `popover="manual"` — keep `isAnyModalOrDrawerOpen()` gating active so top-layer toasts never cover open `<dialog>` sheets (`#journalDialog`, `#updateDialog`, etc.) or `#menuDrawer`.
+14. **Python Data Science & Scientific Suite Architecture**:
+   - Never bundle heavy scientific wheels (`.whl`) in `public/pyodide/` or `android/assets/` — this preserves the ultra-compact ~17.7 MB base APK and lightweight Web bundle.
+   - `scripts/copy-runtimes.mjs` patches `public/pyodide/pyodide.asm.js` to enable transparent CDN fallback (`Ge + n`) in browser workers and cache fetched wheels in `caches.open('thinkcode-pyodide-packages')`. Once cached, libraries work 100% offline.
+   - Matplotlib graphs are captured via an in-worker `plt.show()` interceptor and post-execution figure flush emitting `__THINKCODE_IMAGE_B64__:<b64>`, cleanly separated from console text and rendered as interactive cards in `#console`.
+   - User CSV and Excel files are mounted directly into Pyodide virtual filesystem (`pyodide.FS.writeFile('/home/pyodide/...')`) with zero server transfer. Pre-seeded datasets (`students.csv`, `iris.csv`, `sales.csv`) are embedded in `src/python-datasets.js`.
+   - Run `npm run test` (or `node scripts/test-python-datascience.mjs`) whenever touching Python runtime, packages, or dataset handling.
 
 ---
 
@@ -103,9 +109,11 @@
 | Command | Action |
 | :--- | :--- |
 | `npm run dev` | Start local Vite development server |
+| `npm run test` | Run entire 74-check automated suite (C/C++, Journal, Update, Python) |
 | `npm run test:ccpp` | Run automated 47-check C & C++ regression & `SharedArrayBuffer` suite |
 | `node scripts/test-journal.mjs` | Run automated 10-check Lab Journal & A4 PDF 1.4 suite |
 | `node scripts/test-update-checker.mjs` | Run automated 10-check Silent APK Update Checker & `version.json` suite |
+| `node scripts/test-python-datascience.mjs` | Run automated 7-check Python Data Science & Scientific Suite |
 | `npm run build` | Prepare offline runtimes and build production `dist/` |
 | `firebase deploy --only hosting` | Deploy web application to `https://thinkcode-lab.web.app` |
 | `npx cap sync android` | Sync `dist/` web assets with the native Android project |

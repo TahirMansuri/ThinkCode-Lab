@@ -63,6 +63,15 @@ export function createEditor(parent, { doc, lang, onChange, onRun }) {
     set(text, l) {
       view.dispatch({ changes: { from: 0, to: view.state.doc.length, insert: text }, effects: langC.reconfigure(LANG[l] ? LANG[l]() : []) });
     },
+    insert(text) {
+      const state = view.state;
+      const sel = state.selection.main;
+      view.dispatch({
+        changes: { from: sel.from, to: sel.to, insert: text },
+        selection: { anchor: sel.from + text.length }
+      });
+      view.focus();
+    },
     view,
     insertSymbol(sym) {
       const state = view.state;

@@ -161,18 +161,25 @@ The Linux shell engine (`src/engines/shell.js`) implements a client-side UNIX co
 
 ---
 
-## 🐍 6. Python 3.12 Pyodide Architecture
+## 🐍 6. Python 3.12 Pyodide & Scientific Suite Architecture
 
 ### 6.1 Architecture
 The Python engine (`src/engines/python.worker.js`) leverages Pyodide v0.26.4 (CPython 3.12 WebAssembly).
 
 ### 6.2 Key Components
-1. **Self-Hosted Packaging**:
-   - All runtime files (`pyodide.js`, `pyodide.asm.wasm`, `pyodide.asm.js`, and `python_stdlib.zip`) reside in `public/pyodide/`.
-   - Operates 100% offline without accessing external CDNs.
+1. **Self-Hosted Packaging + On-Demand CDN Fallback**:
+   - All core runtime files (`pyodide.js`, `pyodide.asm.wasm`, `pyodide.asm.js`, and `python_stdlib.zip`) reside in `public/pyodide/` for 100% offline baseline execution.
+   - `scripts/copy-runtimes.mjs` patches `public/pyodide/pyodide.asm.js` so requested scientific wheels (`numpy`, `pandas`, `matplotlib`, `scikit-learn`, `scipy`) cleanly fall back to CDN when not in `public/pyodide/`, download on-demand, and persist in device `CacheStorage` (`thinkcode-pyodide-packages`) to work offline thereafter without base APK/Web bloat.
 2. **Interactive In-Console `input()`**:
    - Overrides `sys.stdin.readline` to invoke `Atomics.wait()` on a `SharedArrayBuffer` on Web, or `readNativeStdinSync()` via `POST /__native_stdin` on Android WebView.
    - The main thread injects an inline `<input>` field into `#console`, captures student typing, and writes the string to shared memory (or the native bridge slot), resuming CPython instantly.
+3. **Client-Side Virtual Filesystem (VFS) & Data File Upload**:
+   - Students upload CSV, Excel (`.xlsx`), JSON, and text files via HTML5 FileReader (`readAsArrayBuffer` / `readAsText`) mounted directly into `/home/pyodide/` via `pyodide.FS.writeFile`.
+   - Pre-seeds 3 academic datasets (`students.csv`, `iris.csv`, `sales.csv`) into the virtual filesystem at runtime initialization.
+4. **Inline Matplotlib Plot Interceptor**:
+   - Intercepts `plt.show()` and auto-flushes open figures after code execution.
+   - Saves figures to an in-memory `io.BytesIO()`, base64 encodes the PNG data, and emits `__THINKCODE_IMAGE_B64__:<b64>`.
+   - The worker output stream strips this token from textual console output and emits a `{ t: 'plot', b64 }` message to the main thread, which renders high-DPI plot cards in `#console` with 1-tap **Copy Image** and **Save PNG** actions.
 
 ---
 

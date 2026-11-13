@@ -30,6 +30,22 @@
 - **Automated Verification (`scripts/test-journal.mjs`)**:
   - Added **10** automated checks validating profile persistence, title/subject inference, language keyword tokenization, multi-page A4 pagination, and strict PDF 1.4 `xref` byte-offset validity.
 
+### 🐍 Python Data Science & Scientific Suite (NumPy, Pandas, Matplotlib, Scikit-learn, Seaborn, VFS Data Upload)
+- **On-Demand Scientific Package Manager (`src/python-tools.js`, `<dialog id="pyPkgDialog">`)**:
+  - Zero base size burden on base APK (~17.7 MB) and base Web bundle. Downloads wheels on-demand from Pyodide/PyPI CDN only when requested and caches them in device `CacheStorage` (`thinkcode-pyodide-packages`) to work 100% offline thereafter.
+  - Supports the 5 core BCA Unit 4 libraries: **NumPy** (`1.26.4`), **Pandas** (`2.2.0`), **Matplotlib** (`3.5.2`), **Scikit-learn** (`1.4.2` + SciPy), and **Seaborn** (`0.13.2`), plus **openpyxl** for Excel (`.xlsx`) files.
+  - Runtime CDN fallback patch in `scripts/copy-runtimes.mjs` modifying `public/pyodide/pyodide.asm.js` so browser workers fall back cleanly to CDN and cache wheels in local `CacheStorage`.
+- **Client-Side Virtual Filesystem (VFS) & Data File Upload (`<dialog id="pyDataFilesDialog">`)**:
+  - 100% private, client-side data file manager. Students can upload CSV, Excel (`.xlsx`), JSON, and text files via HTML5 FileReader directly into Pyodide virtual filesystem (`pyodide.FS.writeFile('/home/pyodide/...')`).
+  - Pre-seeded with 3 academic datasets: `students.csv` (10 rows, academic grades), `iris.csv` (15 rows, botanical classification), and `sales.csv` (12 rows, business metrics).
+  - 1-tap "Use in Code" snippet generator inserting `pd.read_csv(...)` or `pd.read_excel(...)` directly into the editor.
+- **Inline Matplotlib Plot Visualizer (`src/engines/python.worker.js`, `src/main.js`)**:
+  - Intercepts `plt.show()` and auto-flushes open figures, rendering publication-quality graphs directly inside the console as cards with **Copy Image** and **Save PNG** actions.
+- **University Practical Syllabi Extension (`src/practicals.js`)**:
+  - Added 5 new Unit 4 practicals (`py-12` NumPy, `py-13` Pandas, `py-14` Matplotlib, `py-15` Seaborn, `py-16` Scikit-learn), expanding total practicals from 78 to **83**.
+- **Automated Verification (`scripts/test-python-datascience.mjs`)**:
+  - Added **7** unit tests covering dataset schemas, RFC 4180 parsing conformance, package metadata, practicals extension, and Pyodide CDN fallback patch. Total test suite expanded to **74 tests** across all engines.
+
 ### 🗂️ Workflow & Repository Hygiene (`f5ad090`)
 - Created dedicated feature branch `feature/v1.3.5` for clean incremental releases, added `.firebase/` hosting cache to `.gitignore`, organized Play Store promotional assets, and codified the no-VDI / manual-testing workflow rule in `docs/07_DEVELOPER_MEMORY.md`.
 

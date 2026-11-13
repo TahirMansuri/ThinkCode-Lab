@@ -31,6 +31,16 @@ import {
   formatReleaseDate,
   formatShortChecksum
 } from './update-checker.js';
+import {
+  initPythonTools,
+  openPackagesDialog,
+  openDataFilesDialog,
+  markPackageLoaded,
+  markPackageFailed,
+  setMountedFiles,
+  addMountedFile,
+  removeMountedFile
+} from './python-tools.js';
 
 const $ = id => document.getElementById(id);
 const store = {
@@ -88,6 +98,70 @@ function table(cols, rows) {
     tb.append(tr);
   });
   t.append(tb); wrap.append(t); con.append(bar, wrap); stick();
+}
+function renderPlotImage(b64) {
+  const wrap = document.createElement('div');
+  wrap.className = 'con-plot-wrap';
+
+  const head = document.createElement('div');
+  head.className = 'con-plot-head';
+
+  const title = document.createElement('span');
+  title.className = 'con-plot-title';
+  title.textContent = '📊 Matplotlib Plot';
+
+  const tools = document.createElement('div');
+  tools.className = 'con-plot-tools';
+
+  const btnCopy = document.createElement('button');
+  btnCopy.type = 'button';
+  btnCopy.className = 'tool con-plot-btn-copy';
+  btnCopy.textContent = 'Copy';
+  btnCopy.title = 'Copy Image to Clipboard';
+  btnCopy.onclick = async () => {
+    try {
+      const res = await fetch(`data:image/png;base64,${b64}`);
+      const blob = await res.blob();
+      if (navigator.clipboard && window.ClipboardItem) {
+        await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+        toast('✓ Plot copied to clipboard!');
+      } else {
+        toast('Clipboard copy not supported by browser');
+      }
+    } catch (_) {
+      toast('Could not copy plot');
+    }
+  };
+
+  const btnSave = document.createElement('button');
+  btnSave.type = 'button';
+  btnSave.className = 'tool con-plot-btn-save';
+  btnSave.textContent = 'Save PNG';
+  btnSave.title = 'Download Plot as PNG image';
+  btnSave.onclick = () => {
+    const a = document.createElement('a');
+    a.href = `data:image/png;base64,${b64}`;
+    a.download = `plot_${Date.now()}.png`;
+    a.click();
+    toast('✓ Plot downloaded!');
+  };
+
+  tools.append(btnCopy, btnSave);
+  head.append(title, tools);
+
+  const imgBox = document.createElement('div');
+  imgBox.className = 'con-plot-img-box';
+
+  const img = document.createElement('img');
+  img.className = 'con-plot-img';
+  img.src = `data:image/png;base64,${b64}`;
+  img.alt = 'Python Matplotlib Plot';
+
+  imgBox.append(img);
+  wrap.append(head, imgBox);
+
+  con.append(wrap);
+  stick();
 }
 const HOOK = `<script>(()=>{
   const s=(k,a)=>parent.postMessage({cf:k,m:[...a].map(x=>{try{return typeof x==='object'?JSON.stringify(x):String(x)}catch{return String(x)}}).join(' ')},'*');
@@ -252,7 +326,19 @@ const sink = {
     preview.srcdoc = /<head[^>]*>/i.test(html) ? html.replace(/<head[^>]*>/i, m => m + HOOK) : HOOK + html;
     showTab('preview');
   },
-  gui_window: winData => renderJavaGuiWindow(winData)
+  gui_window: winData => renderJavaGuiWindow(winData),
+  plot: b64 => renderPlotImage(b64),
+  package_loaded: ({ name }) => {
+    markPackageLoaded(name);
+    toast(`✓ Installed ${name} successfully!`);
+  },
+  package_failed: ({ name, error }) => {
+    markPackageFailed(name, error);
+    toast(`Failed to install ${name}: ${error}`);
+  },
+  file_list: files => setMountedFiles(files),
+  file_mounted: ({ name, size }) => addMountedFile(name, size),
+  file_unmounted: ({ name }) => removeMountedFile(name)
 };
 con.addEventListener('click', () => {
   const inp = con.querySelector('.con-input');
@@ -408,9 +494,12 @@ function applyLang() {
     hideJavaGui();
   }
   const isPhp = cur.id === 'php';
+  const isPy = cur.id === 'python';
   $('editor').hidden = isPhp;
   $('dualEditor').hidden = !isPhp;
   $('phpViewSwitch').hidden = !isPhp;
+  const pyTools = $('pyToolsSwitch');
+  if (pyTools) pyTools.hidden = !isPy;
   if (isPhp) {
     initDualEditor();
     setPhpViewMode(phpViewMode);
@@ -618,7 +707,7 @@ if (bClr) bClr.onclick = () => { con.textContent = ''; setOutputSmall(); };
 const stdinEl = $('stdin');
 if (stdinEl) stdinEl.oninput = e => store.set('cf.in.' + cur.id, e.target.value);
 window.addEventListener('keydown', e => {
-  if ($('journalDialog')?.open || $('updateDialog')?.open) return;
+  if ($('journalDialog')?.open || $('updateDialog')?.open || $('pyPkgDialog')?.open || $('pyDataFilesDialog')?.open) return;
   if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
     e.preventDefault();
     if (running) stop();
@@ -2239,6 +2328,8 @@ function initUpdateChecker() {
   const isAnyOverlayOpen = () => (
     !document.body.classList.contains('app-ready') ||
     Boolean($('journalDialog')?.open) ||
+    Boolean($('pyPkgDialog')?.open) ||
+    Boolean($('pyDataFilesDialog')?.open) ||
     Boolean(dialog?.open) ||
     Boolean($('sheet') && !$('sheet').hidden) ||
     Boolean($('promptModal') && !$('promptModal').hidden) ||
@@ -2732,6 +2823,57 @@ function initUpdateChecker() {
   };
 }
 
+// ==========================================
+// Python Data Science & Scientific Suite
+// ==========================================
+function initPythonScienceSuite() {
+  const getActiveTargetEditor = () => {
+    if (cur.id === 'php' && editorPhp) return editorPhp;
+    return editor;
+  };
+
+  initPythonTools({
+    onMountFile: (name, content, size) => {
+      engines.python?.mountFile?.(name, content, size, sink);
+    },
+    onUnmountFile: (name) => {
+      engines.python?.unmountFile?.(name, sink);
+    },
+    onLoadPackage: (pkgId) => {
+      engines.python?.loadPackage?.(pkgId, sink);
+    },
+    onInsertCode: (snippet) => {
+      const ed = getActiveTargetEditor();
+      if (ed && typeof ed.insert === 'function') {
+        ed.insert(snippet);
+      } else if (ed && typeof ed.insertSymbol === 'function') {
+        ed.insertSymbol(snippet);
+      }
+    },
+    toast
+  });
+
+  const btnPkgs = $('btnPyPackages');
+  const btnData = $('btnPyDatasets');
+  const menuBtnPkgs = $('menuBtnPyPackages');
+  const menuBtnData = $('menuBtnPyData');
+
+  const openPkgs = () => {
+    closeMenuDrawer();
+    openPackagesDialog();
+  };
+
+  const openData = () => {
+    closeMenuDrawer();
+    openDataFilesDialog();
+  };
+
+  btnPkgs?.addEventListener('click', openPkgs);
+  btnData?.addEventListener('click', openData);
+  menuBtnPkgs?.addEventListener('click', openPkgs);
+  menuBtnData?.addEventListener('click', openData);
+}
+
 // ---------- boot ----------
 function shellCmd(line) { print(`${engines.shell.sh.prompt} ${line}\n`, 'cmd'); engines.shell.exec(line, sink); $('promptLabel').textContent = engines.shell.sh.prompt; }
 shellui.init({ sh: engines.shell.sh, cmd: shellCmd });
@@ -2746,6 +2888,7 @@ initQuickSymbolBar();
 initCodeFormatter();
 initLabJournal();
 const updateController = initUpdateChecker();
+initPythonScienceSuite();
 const warmPromise = warm();
 window.__app = { run, stop, engines, cur: () => cur, editorPhp: () => editorPhp, editorHtml: () => editorHtml, running: () => running, updates: updateController };
 

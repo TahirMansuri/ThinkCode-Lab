@@ -229,6 +229,14 @@
           <button type="button" class="view-btn" data-mode="html" title="HTML Form only">🌐 HTML</button>
           <button type="button" class="view-btn" data-mode="php" title="PHP Script only">🐘 PHP</button>
         </div>
+        <div id="pyToolsSwitch" class="py-tools-switch" hidden>
+          <button type="button" id="btnPyPackages" class="py-tool-btn" title="Python Scientific Libraries (NumPy, Pandas, Matplotlib, Scikit-learn, Seaborn)">
+            <span>📦 Libs</span>
+          </button>
+          <button type="button" id="btnPyDatasets" class="py-tool-btn" title="Data Files &amp; Datasets (CSV, Excel, JSON)">
+            <span>📁 Data</span>
+          </button>
+        </div>
       </div>
       <div class="head-right">
         <button type="button" id="btnFormat" class="btn-format" title="Format & Beautify Code (Shift+Alt+F)" aria-label="Format code">
@@ -362,6 +370,24 @@
           <small>Generate A4 assignment sheet with code &amp; output</small>
         </div>
         <span class="d-badge">PDF</span>
+      </button>
+
+      <button type="button" class="drawer-item" id="menuBtnPyPackages">
+        <span class="d-icon">📦</span>
+        <div class="d-text">
+          <b>Python Scientific Libraries</b>
+          <small>Install NumPy, Pandas, Matplotlib, Scikit-learn, Seaborn</small>
+        </div>
+        <span class="d-badge">Libs</span>
+      </button>
+
+      <button type="button" class="drawer-item" id="menuBtnPyData">
+        <span class="d-icon">📁</span>
+        <div class="d-text">
+          <b>Python Data Files &amp; Datasets</b>
+          <small>Upload CSV/Excel or load sample datasets</small>
+        </div>
+        <span class="d-badge">Data</span>
       </button>
 
       <button type="button" class="drawer-item" id="menuBtnReset">
@@ -595,6 +621,57 @@
           <button type="submit" id="btnJournalDownload" class="jf-btn jf-btn-pri">⬇ Download PDF</button>
         </div>
       </form>
+    </div>
+  </div>
+</dialog>
+
+<!-- Python Scientific Libraries Dialog -->
+<dialog id="pyPkgDialog" class="journal-dialog py-dialog" aria-labelledby="pyPkgTitle" closedby="any">
+  <div class="jd-shell">
+    <div class="jd-head">
+      <div class="jd-title-wrap">
+        <div class="jd-badge">Python 3.12 · WASM</div>
+        <h2 id="pyPkgTitle" class="jd-title">Scientific Libraries Manager</h2>
+        <span class="jd-sub">Install on-demand. Cached in browser storage to work 100% offline.</span>
+      </div>
+      <button type="button" class="jd-close py-dialog-close" aria-label="Close dialog">✕</button>
+    </div>
+    <div class="jd-body py-dialog-body">
+      <div id="pyPkgList" class="py-pkg-list"></div>
+      <div class="py-pkg-note">
+        💡 <b>Zero Base Size Burden:</b> Libraries are downloaded once on-demand from CDN and saved in your device's browser cache. Next time, they work completely offline without internet!
+      </div>
+    </div>
+    <div class="jd-foot py-dialog-foot">
+      <button type="button" class="jf-btn jf-btn-sec py-dialog-close">Close</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Python Data Files & Datasets Dialog -->
+<dialog id="pyDataFilesDialog" class="journal-dialog py-dialog" aria-labelledby="pyDataTitle" closedby="any">
+  <div class="jd-shell">
+    <div class="jd-head">
+      <div class="jd-title-wrap">
+        <div class="jd-badge">Virtual Filesystem</div>
+        <h2 id="pyDataTitle" class="jd-title">Python Data Files &amp; Datasets</h2>
+        <span class="jd-sub">CSV, Excel &amp; JSON files mounted in local Python memory. 100% Private.</span>
+      </div>
+      <button type="button" class="jd-close py-dialog-close" aria-label="Close dialog">✕</button>
+    </div>
+    <div class="jd-body py-dialog-body">
+      <div id="pyDropZone" class="py-drop-zone">
+        <div class="py-drop-icon">📂</div>
+        <b>Upload CSV or Excel File from Device</b>
+        <span class="py-drop-hint">Tap to browse (.csv, .xlsx, .json, .txt) or drag &amp; drop</span>
+        <input type="file" id="pyFileInput" accept=".csv,.xlsx,.xls,.json,.txt,.tsv,.dat" hidden>
+      </div>
+
+      <div class="py-section-title">Mounted Workspace Files &amp; Datasets</div>
+      <div id="pyDataFilesList" class="py-data-list"></div>
+    </div>
+    <div class="jd-foot py-dialog-foot">
+      <button type="button" class="jf-btn jf-btn-sec py-dialog-close">Close</button>
     </div>
   </div>
 </dialog>
