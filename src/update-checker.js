@@ -4,15 +4,15 @@
 export const APP_META = Object.freeze({
   appId: 'com.igc.thinkcodelab',
   appName: 'ThinkCode Lab',
-  versionName: '1.3.4',
-  versionCode: 11,
-  releaseDate: '2026-11-11',
-  apkFilename: 'ThinkCodeLab-v1.3.4.apk',
+  versionName: '1.3.5',
+  versionCode: 12,
+  releaseDate: '2026-11-13',
+  apkFilename: 'ThinkCodeLab-v1.3.5.apk',
   apkSize: '~17.7 MB',
-  sha256: '879856e091aa8e0244f7125de596dd76a6596e1e2cf1eec8c32419d0',
+  sha256: 'feb6769c278631d7ef902fe61b78aa0406b7d4c06418249d1116575afd6bffb7',
   minAndroidVersion: '7.0',
   downloadPageUrl: 'https://thinkcode-lab.web.app/download',
-  defaultApkUrl: 'https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.4/ThinkCodeLab-v1.3.4.apk',
+  defaultApkUrl: 'https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.5/ThinkCodeLab-v1.3.5.apk',
   fallbackApkUrl: 'https://thinkcode-lab.web.app/ThinkCodeLab.apk',
   webManifestUrls: Object.freeze(['/version.json']),
   nativeManifestUrls: Object.freeze([
@@ -20,10 +20,12 @@ export const APP_META = Object.freeze({
     'https://thinkcode-lab.firebaseapp.com/version.json'
   ]),
   defaultReleaseNotes: Object.freeze([
-    'Fixed Android 15/16 Edge-to-Edge header safe-area alignment and slide-out drawer layout',
-    'Dynamic Dark & Light mode status bar and navigation bar contrast synchronization',
-    'Native Android stdin input bridge for smooth interactive C, C++, Python, and Java programs',
-    'Hardened offline PicoC & unified JSCPP WebAssembly execution engines'
+    'Python Data Science Suite: NumPy, Pandas, Matplotlib, Scikit-learn, and Seaborn on-demand',
+    'Interactive CSV & Excel Virtual Filesystem data upload with pre-seeded datasets',
+    'Inline Matplotlib plot visualizer with image copy & PNG download',
+    'Animated plot loading dialog with real-time Pyodide compilation status',
+    '1-Tap Student Lab Journal & Assignment PDF export with faculty signature block',
+    'Silent in-app APK update checker for sideloaded students'
   ])
 });
 

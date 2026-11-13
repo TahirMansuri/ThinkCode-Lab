@@ -11,8 +11,8 @@
 | :--- | :--- | :--- |
 | **Application Title** | `ThinkCode Lab` | Former development codename: *CodeForge* |
 | **Android Application ID** | `com.igc.thinkcodelab` | Immutable package identifier on Google Play |
-| **Current Production APK** | `v1.3.4` (`versionCode: 11`) | Signed release APK (`ThinkCodeLab-v1.3.4.apk`, ~17.7 MB) |
-| **Active Web / Feature Branch** | `feature/v1.3.5` | Web-deployed enhancements staged for upcoming `v1.3.5` (Build `12`) APK |
+| **Current Production APK** | `v1.3.5` (`versionCode: 12`) | Signed release APK (`ThinkCodeLab-v1.3.5.apk`, ~17.7 MB, SHA-256: `feb6769c278631d7ef902fe61b78aa0406b7d4c06418249d1116575afd6bffb7`) |
+| **Active Web / Feature Branch** | `feature/v1.3.5` | Live release branch for `v1.3.5` (Build `12`) APK & Web IDE |
 | **Lead Developer / Architect** | **Tahir Mansuri** | Lead System Engineer & HOD, IMRD College |
 | **Organization / Agency** | **InfoGalaxy Computers** | Shirpur, Maharashtra, India |
 | **Developer Email** | `tprocks786@gmail.com` | Primary Git author and developer contact |
@@ -28,11 +28,11 @@
 | :--- | :--- | :--- |
 | **Production Web App (Primary)** | [https://thinkcode-lab.web.app](https://thinkcode-lab.web.app) | Live 100% offline-ready web IDE |
 | **Production Web App (Secondary)** | [https://thinkcode-lab.firebaseapp.com](https://thinkcode-lab.firebaseapp.com) | Alternate Firebase SSL domain |
-| **APK Web Download Portal** | [https://thinkcode-lab.web.app/download](https://thinkcode-lab.web.app/download) | Auto-hydrating installer page reading `/version.json` (`v1.3.4`, Build `11`) |
+| **APK Web Download Portal** | [https://thinkcode-lab.web.app/download](https://thinkcode-lab.web.app/download) | Auto-hydrating installer page reading `/version.json` (`v1.3.5`, Build `12`) |
 | **Live App Update Manifest** | [https://thinkcode-lab.web.app/version.json](https://thinkcode-lab.web.app/version.json) | Public JSON manifest (`CORS`, `CORP: cross-origin`, `no-store`) consumed by in-app updater |
-| **Versioned APK Download URL (Redirect)** | [https://thinkcode-lab.web.app/ThinkCodeLab-v1.3.4.apk](https://thinkcode-lab.web.app/ThinkCodeLab-v1.3.4.apk) | 302 redirect saving `ThinkCodeLab-v1.3.4.apk` |
-| **Direct APK Download URL (Redirect)** | [https://thinkcode-lab.web.app/ThinkCodeLab.apk](https://thinkcode-lab.web.app/ThinkCodeLab.apk) | 302 redirect directly to latest GitHub release binary (`ThinkCodeLab-v1.3.4.apk`) |
-| **Short APK Download Link** | [https://thinkcode-lab.web.app/apk](https://thinkcode-lab.web.app/apk) | Quick short URL for student sharing (`ThinkCodeLab-v1.3.4.apk`) |
+| **Versioned APK Download URL (Redirect)** | [https://thinkcode-lab.web.app/ThinkCodeLab-v1.3.5.apk](https://thinkcode-lab.web.app/ThinkCodeLab-v1.3.5.apk) | 302 redirect saving `ThinkCodeLab-v1.3.5.apk` |
+| **Direct APK Download URL (Redirect)** | [https://thinkcode-lab.web.app/ThinkCodeLab.apk](https://thinkcode-lab.web.app/ThinkCodeLab.apk) | 302 redirect directly to latest GitHub release binary (`ThinkCodeLab-v1.3.5.apk`) |
+| **Short APK Download Link** | [https://thinkcode-lab.web.app/apk](https://thinkcode-lab.web.app/apk) | Quick short URL for student sharing (`ThinkCodeLab-v1.3.5.apk`) |
 | **Privacy Policy Portal** | [https://thinkcode-lab.web.app/privacy.html](https://thinkcode-lab.web.app/privacy.html) | Live privacy policy for Google Play compliance |
 | **Companion Visualization Portal** | [https://thinkcode.infogalaxy.space/](https://thinkcode.infogalaxy.space/) | ThinkCode algorithm visualizer and tracing tool |
 
@@ -88,11 +88,11 @@ And on `/version.json` for cross-origin update checks from Capacitor Android Web
 | **Repository URL** | [https://github.com/TahirMansuri/ThinkCode-Lab](https://github.com/TahirMansuri/ThinkCode-Lab) | Public open-source repository |
 | **Git Clone SSH** | `git@github.com:TahirMansuri/ThinkCode-Lab.git` | SSH protocol clone link |
 | **Git Clone HTTPS** | `https://github.com/TahirMansuri/ThinkCode-Lab.git` | HTTPS protocol clone link |
-| **Default Branch** | `main` | Production-ready main branch (`v1.3.4`) |
-| **Active Feature Branch** | `feature/v1.3.5` | Current web development & upcoming Build 12 release branch |
+| **Default Branch** | `main` | Production-ready main branch |
+| **Active Feature Branch** | `feature/v1.3.5` | Current release branch for Build 12 (`v1.3.5`) |
 | **GitHub Releases Page** | [github.com/TahirMansuri/ThinkCode-Lab/releases](https://github.com/TahirMansuri/ThinkCode-Lab/releases) | Versioned binary distribution page |
-| **Latest Release Tag** | `v1.3.4` | Tag containing `ThinkCodeLab-v1.3.4.apk` asset (`versionCode 11`) |
-| **Release APK Direct CDN** | [github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.4/ThinkCodeLab-v1.3.4.apk](https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.4/ThinkCodeLab-v1.3.4.apk) | GitHub release asset binary download |
+| **Latest Release Tag** | `v1.3.5` | Tag containing `ThinkCodeLab-v1.3.5.apk` asset (`versionCode 12`) |
+| **Release APK Direct CDN** | [github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.5/ThinkCodeLab-v1.3.5.apk](https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.5/ThinkCodeLab-v1.3.5.apk) | GitHub release asset binary download |
 | **Git User Config** | Name: `TahirMansuri`<br>Email: `tprocks786@gmail.com` | Configured git identity |
 
 ---

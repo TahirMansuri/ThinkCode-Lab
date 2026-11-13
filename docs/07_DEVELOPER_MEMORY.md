@@ -9,8 +9,8 @@
 - **Author:** Tahir Mansuri (Lead System Engineer & HOD, IMRD College).
 - **Core Purpose:** Standalone, 100% OFFLINE multi-language coding playground and mobile IDE for computer science students.
 - **Companion Project:** [ThinkCode Interactive Visualizer & Code Tracer](https://thinkcode.infogalaxy.space/).
-- **Released Android APK:** **v1.3.4 (Build 11)** on GitHub Releases & `/download`.
-- **Active Development Branch:** **`feature/v1.3.5`** (Web IDE live at `https://thinkcode-lab.web.app`, staging features for upcoming Build 12 APK).
+- **Released Android APK:** **v1.3.5 (Build 12)** on GitHub Releases & `/download` (`ThinkCodeLab-v1.3.5.apk`, SHA-256: `feb6769c278631d7ef902fe61b78aa0406b7d4c06418249d1116575afd6bffb7`).
+- **Active Development Branch:** **`feature/v1.3.5`** (Web IDE live at `https://thinkcode-lab.web.app`).
 
 ---
 

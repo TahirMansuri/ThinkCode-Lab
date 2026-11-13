@@ -4,8 +4,8 @@
 
 ---
 
-## 🚀 Version 1.3.5 (In Progress on `feature/v1.3.5` — Live on Web IDE)
-*Development Window: November 2026 (Staged for Build 12 APK)*
+## 🚀 Version 1.3.5 (Build 12) — Released Android APK & Live Web IDE
+*Release Date: November 13, 2026*
 
 ### 🔔 Silent In-App APK Update Checker & Dynamic Manifest (`src/update-checker.js`, `public/version.json`)
 - **Zero-Telemetry Update Manifest (`/version.json`)**:
