@@ -17,6 +17,7 @@ Welcome to the comprehensive technical documentation for **ThinkCode Lab**. All 
 | **07** | [**Developer Memory & Operational Rules**](07_DEVELOPER_MEMORY.md) | Critical developer memory, strictly enforced rules (Web-only deployment, no unrequested APK builds or VDI/emulator launches, backup policy), and production gotchas learned. |
 | **08** | [**Future Enhancements & Feature Catalog**](08_FUTURE_ENHANCEMENTS.md) | Status-tracked specifications for completed enhancements (Quick-Symbol Strip, Beautifier, App Drawer, Lab Journal PDF, Silent APK Updates) and upcoming features. |
 | **09** | [**Master Accounts, Keys & URLs Directory**](09_ACCOUNT_AND_DEPLOYMENT_INFO.md) | Complete directory of administrative accounts, Firebase project IDs, `/version.json` manifest rules, signing keystore passwords, SHA-256 hashes, release URLs, and Git/deployment commands. |
+| **10** | [**Python Data Science & Scientific Suite**](10_PYTHON_DATA_SCIENCE_SPEC.md) | Technical specification and roadmap for on-demand scientific libraries (NumPy, Pandas, Matplotlib, Scikit-learn, Seaborn), local CSV/Excel uploads, and inline plot visualization. |
 
 ---
 

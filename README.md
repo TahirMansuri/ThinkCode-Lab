@@ -284,6 +284,7 @@ All technical architecture guides, engine specifications, changelogs, roadmaps, 
 - 🧠 [**docs/07_DEVELOPER_MEMORY.md**](docs/07_DEVELOPER_MEMORY.md) — Developer memory, strictly enforced operational rules (Web-only deployment, no unrequested APK/VDI runs, backup policy), and technical gotchas learned.
 - 🚀 [**docs/08_FUTURE_ENHANCEMENTS.md**](docs/08_FUTURE_ENHANCEMENTS.md) — Feature catalog tracking completed items (Quick-Symbol Strip, Beautifier, Drawer, Lab Journal PDF, Update Checker) and upcoming specifications.
 - 🔐 [**docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md**](docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md) — Master reference for administrative accounts, Firebase configuration, `/version.json` rules, Android signing keystore, SHA-256 hashes, and deployment commands.
+- 🐍 [**docs/10_PYTHON_DATA_SCIENCE_SPEC.md**](docs/10_PYTHON_DATA_SCIENCE_SPEC.md) — Technical specification and roadmap for on-demand scientific libraries (NumPy, Pandas, Matplotlib, Scikit-learn, Seaborn), local CSV/Excel uploads, and inline plot visualization.
 
 ---
 
