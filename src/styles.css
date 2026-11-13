@@ -4765,8 +4765,12 @@ dialog::backdrop {
 .py-tools-switch {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  margin-left: 6px;
+  gap: 2px;
+  background: var(--raised);
+  padding: 2px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  margin-left: 4px;
 }
 
 .py-tools-switch[hidden] {
@@ -4776,24 +4780,60 @@ dialog::backdrop {
 .py-tool-btn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 3px 8px;
-  min-height: 24px;
+  gap: 3px;
+  background: transparent;
+  border: none;
+  color: var(--mute);
   font-size: 11px;
   font-weight: 600;
-  color: var(--text);
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 6px;
+  font-family: var(--ui);
+  padding: 2px 7px;
+  border-radius: 4px;
   cursor: pointer;
   transition: all 0.15s ease;
-  line-height: 1;
+  line-height: 1.2;
+  white-space: nowrap;
 }
 
 .py-tool-btn:hover {
-  border-color: var(--ember);
-  color: var(--ember);
-  background: var(--ember-subtle);
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme='light'] .py-tool-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 600px) {
+  .pane-head {
+    padding: 4px 8px;
+    gap: 6px;
+  }
+  .head-left {
+    gap: 5px;
+    min-width: 0;
+  }
+  .head-right {
+    gap: 5px;
+    flex-shrink: 0;
+  }
+  .btn-practicals {
+    padding: 2px 6px;
+    font-size: 11px;
+  }
+  .py-tool-btn {
+    padding: 2px 5px;
+    font-size: 10.5px;
+  }
+}
+
+@media (max-width: 440px) {
+  .head-left .fname {
+    display: none;
+  }
+  #saveState {
+    display: none;
+  }
 }
 
 /* Console Matplotlib Plot Output */
