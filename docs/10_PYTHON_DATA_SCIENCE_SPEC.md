@@ -136,6 +136,21 @@ In desktop Python, `plt.show()` creates a desktop GUI window (via Tkinter/Qt), w
   - Pyodide runtime CDN fallback & CacheStorage patch.
   - Integrated into `npm run test` command.
 
+### Phase 7: Animated Loading Card / Dialog for Matplotlib & Seaborn Execution
+- [x] **Visual Feedback for Heavy WASM Rendering**:
+  - Matplotlib font cache building, C-extensions initialization, and Seaborn micropip installation take 2–5 seconds on first run.
+  - Added `#pyPlotLoader` centered inside `.out-pane` with frosted-glass backdrop (`backdrop-filter: blur(8px)`), luminous brand accent, and 60fps hardware-accelerated animations.
+  - Animated chart visual with bouncing SVG bars (`.bar-1`..`.bar-4`), pulse ring, glowing trend line (`.chart-trend`), and indeterminate shimmer progress bar (`.py-loader-bar-fill`).
+- [x] **Real-Time Dynamic Status Updates**:
+  - Dynamically updates as the worker runs: *"Loading matplotlib…"*, *"Installing seaborn via micropip…"*, *"Setting up inline graphics engine…"*, *"Executing Python script & computing chart…"*, *"Rendering high-resolution plot…"*.
+- [x] **Smart Trigger & Dismiss Lifecycle**:
+  - Ahead-of-time trigger via `isPlottingScript(code)` checking for `matplotlib`, `pyplot`, `plt`, `seaborn`, `sns`, or `.plot()`.
+  - Dynamic fallback trigger in `sink.status` whenever Pyodide package loader loads Matplotlib or Seaborn.
+  - Instant auto-dismiss on plot arrival (`sink.plot`), script completion (`finally`), error reporting (`sink.err`), output clear (`btnClear`), or language switch (`applyLang`).
+  - Integrated `[⏹ Stop Execution]` button (`#btnCancelPlot`) allowing students to cancel running scripts immediately.
+- [x] **Automated Verification**:
+  - Added unit tests for `isPlottingScript` (positive/negative patterns), DOM element IDs (`#pyPlotLoader`, `#pyPlotLoaderTitle`, `#pyPlotLoaderStatus`, `#btnCancelPlot`), and CSS keyframe animations. Total suite expanded to **77 tests**.
+
 ---
 
 ## 🔒 6. Zero-Server & Offline Reliability Verification

@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { SAMPLE_DATASETS, listSampleDatasets, getSampleDataset } from '../src/python-datasets.js';
-import { SCIENTIFIC_PACKAGES } from '../src/python-tools.js';
+import { SCIENTIFIC_PACKAGES, isPlottingScript } from '../src/python-tools.js';
 import { PRACTICALS } from '../src/practicals.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -144,6 +144,58 @@ test('Pyodide runtime script public/pyodide/pyodide.asm.js has offline CacheStor
 test('Global practicals count across all languages matches exactly 83', () => {
   const allPracticals = Object.values(PRACTICALS).flat();
   assert.equal(allPracticals.length, 83, 'Total practicals should be 83 (78 prior + 5 new Python data science)');
+});
+
+// 6. Plotting Script Detection tests
+test('isPlottingScript detection accurately identifies plotting vs non-plotting Python scripts', () => {
+  assert.equal(isPlottingScript('import matplotlib.pyplot as plt\nplt.plot([1, 2], [3, 4])'), true);
+  assert.equal(isPlottingScript('from matplotlib import pyplot as plt'), true);
+  assert.equal(isPlottingScript('import seaborn as sns\nsns.heatmap(df.corr())'), true);
+  assert.equal(isPlottingScript('fig, ax = plt.subplots()\nax.scatter(x, y)'), true);
+  assert.equal(isPlottingScript('df.plot(kind="bar")\nplt.show()'), true);
+  assert.equal(isPlottingScript('plt.hist(data)'), true);
+  assert.equal(isPlottingScript('sns.barplot(x="cat", y="val", data=df)'), true);
+
+  // Non-plotting scripts must return false
+  assert.equal(isPlottingScript('print("Hello World")'), false);
+  assert.equal(isPlottingScript('for i in range(10):\n    print(i * 2)'), false);
+  assert.equal(isPlottingScript('import math\nprint(math.sqrt(144))'), false);
+  assert.equal(isPlottingScript('class Student:\n    def __init__(self, name):\n        self.name = name'), false);
+  assert.equal(isPlottingScript(''), false);
+  assert.equal(isPlottingScript(null), false);
+});
+
+// 7. Animated Plot Loader DOM Elements & Accessibility
+test('Animated Python Plot Loader DOM elements and accessibility structure exist in index.html', () => {
+  const indexPath = path.join(rootDir, 'index.html');
+  assert.ok(fs.existsSync(indexPath), 'index.html must exist');
+  const html = fs.readFileSync(indexPath, 'utf8');
+
+  assert.ok(html.includes('id="pyPlotLoader"'), 'index.html must contain #pyPlotLoader');
+  assert.ok(html.includes('id="pyPlotLoaderTitle"'), 'index.html must contain #pyPlotLoaderTitle');
+  assert.ok(html.includes('id="pyPlotLoaderStatus"'), 'index.html must contain #pyPlotLoaderStatus');
+  assert.ok(html.includes('id="btnCancelPlot"'), 'index.html must contain #btnCancelPlot');
+  assert.ok(html.includes('role="status"'), 'Plot loader must include role="status"');
+  assert.ok(html.includes('aria-live="polite"'), 'Plot loader must include aria-live="polite"');
+  assert.ok(html.includes('py-loader-chart-svg'), 'Plot loader must include animated chart SVG');
+});
+
+// 8. Animated Plot Loader CSS Classes & Keyframe Animations
+test('Animated Python Plot Loader CSS classes and keyframes exist in src/styles.css', () => {
+  const cssPath = path.join(rootDir, 'src', 'styles.css');
+  assert.ok(fs.existsSync(cssPath), 'src/styles.css must exist');
+  const css = fs.readFileSync(cssPath, 'utf8');
+
+  assert.ok(css.includes('.py-plot-loader'), 'styles.css must contain .py-plot-loader');
+  assert.ok(css.includes('.py-loader-card'), 'styles.css must contain .py-loader-card');
+  assert.ok(css.includes('.py-loader-pulse-ring'), 'styles.css must contain .py-loader-pulse-ring');
+  assert.ok(css.includes('.py-loader-chart-svg'), 'styles.css must contain .py-loader-chart-svg');
+  assert.ok(css.includes('.py-loader-bar-fill'), 'styles.css must contain .py-loader-bar-fill');
+  assert.ok(css.includes('.py-btn-cancel-plot'), 'styles.css must contain .py-btn-cancel-plot');
+  assert.ok(css.includes('@keyframes pyPulseRing'), 'styles.css must contain @keyframes pyPulseRing');
+  assert.ok(css.includes('@keyframes pyBarBounce'), 'styles.css must contain @keyframes pyBarBounce');
+  assert.ok(css.includes('@keyframes pyProgressShimmer'), 'styles.css must contain @keyframes pyProgressShimmer');
+  assert.ok(css.includes('@keyframes pyDrawLine'), 'styles.css must contain @keyframes pyDrawLine');
 });
 
 console.log(`\nAll ${passed} Python Data Science tests passed successfully! ✨\n`);

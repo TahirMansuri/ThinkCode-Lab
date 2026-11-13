@@ -327,19 +327,26 @@ onmessage = async ({ data }) => {
     stdoutBuf = '';
 
     try {
+      const isPlotting = /\b(?:matplotlib|pyplot|plt|seaborn|sns)\b/.test(data.code);
+
       // 1. Check and install imports on demand (NumPy, Pandas, Matplotlib, Seaborn, openpyxl)
       await preparePythonImports(data.code);
 
       // 2. Setup Matplotlib plot interception if needed
-      if (/\b(?:matplotlib|pyplot|plt|seaborn|sns)\b/.test(data.code)) {
+      if (isPlotting) {
+        post('status', 'Setting up inline graphics engine…');
         await setupMatplotlibHook();
       }
 
       // 3. Execute Python code
+      if (isPlotting) {
+        post('status', 'Executing Python script & computing chart…');
+      }
       await py.runPythonAsync(data.code);
 
       // 4. Auto-flush any open Matplotlib figures
-      if (/\b(?:matplotlib|pyplot|plt|seaborn|sns)\b/.test(data.code)) {
+      if (isPlotting) {
+        post('status', 'Rendering high-resolution plot…');
         await flushMatplotlibPlots();
       }
 

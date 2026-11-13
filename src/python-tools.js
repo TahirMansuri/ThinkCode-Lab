@@ -49,6 +49,17 @@ export const SCIENTIFIC_PACKAGES = Object.freeze([
 
 const CACHE_NAME = 'thinkcode-pyodide-packages';
 
+/**
+ * Detects whether Python source code involves Matplotlib, Seaborn, or chart plotting
+ * to determine whether the animated loading card should be displayed.
+ */
+export function isPlottingScript(code) {
+  if (!code || typeof code !== 'string') return false;
+  return /\b(?:matplotlib|pyplot|seaborn|sns)\b/i.test(code) ||
+         /\b(?:plt|ax|fig)\s*\.\s*(?:plot|scatter|bar|barh|hist|boxplot|pie|imshow|show|figure|subplot|subplots|heatmap|pairplot|catplot|countplot)\b/i.test(code) ||
+         /\.plot\s*\(/i.test(code);
+}
+
 let mountedFiles = [];
 let loadedPackages = new Set();
 let installingPackages = new Set();

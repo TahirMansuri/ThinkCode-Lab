@@ -310,6 +310,46 @@
     <div id="tableStrip" class="strip" hidden></div>
     <div id="fileTree" class="ftree" hidden></div>
     <div id="console" class="console" data-empty="Run your code to see output here."></div>
+
+    <!-- Animated Python Plot & Data Science Loading Card/Overlay -->
+    <div id="pyPlotLoader" class="py-plot-loader" hidden role="status" aria-live="polite">
+      <div class="py-loader-backdrop"></div>
+      <div class="py-loader-card">
+        <div class="py-loader-visual">
+          <div class="py-loader-pulse-ring"></div>
+          <div class="py-loader-icon-box" aria-hidden="true">
+            <svg class="py-loader-chart-svg" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="8" y1="38" x2="40" y2="38" class="chart-axis" stroke-width="2"/>
+              <line x1="8" y1="10" x2="8" y2="38" class="chart-axis" stroke-width="2"/>
+              <line x1="14" y1="38" x2="14" y2="24" class="chart-bar bar-1" stroke-width="4"/>
+              <line x1="22" y1="38" x2="22" y2="16" class="chart-bar bar-2" stroke-width="4"/>
+              <line x1="30" y1="38" x2="30" y2="20" class="chart-bar bar-3" stroke-width="4"/>
+              <line x1="38" y1="38" x2="38" y2="12" class="chart-bar bar-4" stroke-width="4"/>
+              <polyline points="14,24 22,16 30,20 38,12" class="chart-trend" stroke-width="2.2"/>
+              <circle cx="38" cy="12" r="3" class="chart-dot"/>
+            </svg>
+          </div>
+        </div>
+        <div class="py-loader-content">
+          <div class="py-loader-badge">
+            <span class="py-loader-badge-dot"></span>
+            <span>Python 3.12 · Data Science</span>
+          </div>
+          <h3 id="pyPlotLoaderTitle" class="py-loader-title">Rendering Data Visualization…</h3>
+          <p id="pyPlotLoaderStatus" class="py-loader-status">Preparing scientific libraries &amp; plotting engine…</p>
+          <div class="py-loader-bar-wrap" role="progressbar" aria-label="Loading Plot" aria-valuemin="0" aria-valuemax="100">
+            <div class="py-loader-bar-fill"></div>
+          </div>
+          <div class="py-loader-meta">
+            <span class="py-loader-hint">⚡ Pyodide WebAssembly offline vector graphics renderer</span>
+            <button type="button" id="btnCancelPlot" class="btn btn-xs py-btn-cancel-plot" title="Cancel running script">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="5" width="14" height="14" rx="2"/></svg>
+              <span>Stop</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div id="schemaView" class="schema" hidden></div>
     <iframe id="preview" title="Preview" sandbox="allow-scripts allow-modals allow-forms allow-same-origin" hidden></iframe>
     <form id="promptbar" class="promptbar" hidden autocomplete="off">

@@ -44,7 +44,16 @@
 - **University Practical Syllabi Extension (`src/practicals.js`)**:
   - Added 5 new Unit 4 practicals (`py-12` NumPy, `py-13` Pandas, `py-14` Matplotlib, `py-15` Seaborn, `py-16` Scikit-learn), expanding total practicals from 78 to **83**.
 - **Automated Verification (`scripts/test-python-datascience.mjs`)**:
-  - Added **7** unit tests covering dataset schemas, RFC 4180 parsing conformance, package metadata, practicals extension, and Pyodide CDN fallback patch. Total test suite expanded to **74 tests** across all engines.
+  - Added **10** unit tests covering dataset schemas, RFC 4180 parsing conformance, package metadata, practicals extension, Pyodide CDN fallback patch, plotting script detection regex, and animated loading card DOM/CSS integrity. Total test suite expanded to **77 tests** across all engines.
+
+### 📊 Animated Plot & Data Science Loading Card (`index.html`, `src/styles.css`, `src/main.js`, `src/engines/python.worker.js`)
+- **Lively Visual Feedback for WASM Plotting Delay**:
+  - Matplotlib and Seaborn require downloading/caching wheels, initializing C-extensions, compiling Agg backend font caches, and converting high-DPI figures to PNG, which takes 2–5 seconds on first run.
+  - Added an animated loading dialog card (`#pyPlotLoader`) positioned inside the Output pane (`.out-pane`), featuring an animated chart with rhythmically bouncing SVG bars (`.bar-1`..`.bar-4`), a pulsating glow ring (`pyPulseRing`), glowing emerald trend line (`.chart-trend`), dynamic status updates, an indeterminate progress bar (`pyProgressShimmer`), and an integrated **Stop Execution** button (`#btnCancelPlot`).
+- **Dynamic Worker Status & Clean Lifecycle**:
+  - Automatically triggered ahead-of-time whenever Python code imports `matplotlib`, `pyplot`, `seaborn`, `sns`, or calls `.plot()`, or reactively when worker emits package load events.
+  - Worker streams live phase messages: *"Loading matplotlib…"*, *"Installing seaborn & dependencies…"*, *"Setting up inline graphics engine…"*, *"Executing Python script & computing chart…"*, *"Rendering high-resolution plot…"*.
+  - Seamlessly dismisses the instant `sink.plot` receives the rendered image, or if the script finishes, errors out, or is stopped by the user.
 
 ### 🗂️ Workflow & Repository Hygiene (`f5ad090`)
 - Created dedicated feature branch `feature/v1.3.5` for clean incremental releases, added `.firebase/` hosting cache to `.gitignore`, organized Play Store promotional assets, and codified the no-VDI / manual-testing workflow rule in `docs/07_DEVELOPER_MEMORY.md`.

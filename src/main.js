@@ -39,7 +39,8 @@ import {
   markPackageFailed,
   setMountedFiles,
   addMountedFile,
-  removeMountedFile
+  removeMountedFile,
+  isPlottingScript
 } from './python-tools.js';
 
 const $ = id => document.getElementById(id);
@@ -99,6 +100,39 @@ function table(cols, rows) {
   });
   t.append(tb); wrap.append(t); con.append(bar, wrap); stick();
 }
+
+export function showPlotLoader(title = 'Rendering Data Visualization…', status = 'Preparing scientific libraries & plotting engine…') {
+  const loader = $('pyPlotLoader');
+  if (!loader) return;
+  const tEl = $('pyPlotLoaderTitle');
+  const sEl = $('pyPlotLoaderStatus');
+  if (tEl) tEl.textContent = title;
+  if (sEl) sEl.textContent = status;
+  loader.hidden = false;
+  requestAnimationFrame(() => {
+    loader.classList.add('is-active');
+  });
+}
+
+export function hidePlotLoader() {
+  const loader = $('pyPlotLoader');
+  if (!loader || loader.hidden) return;
+  loader.classList.remove('is-active');
+  loader.hidden = true;
+}
+
+export function updatePlotLoaderStatus(status) {
+  const loader = $('pyPlotLoader');
+  if (!loader || loader.hidden) return;
+  const sEl = $('pyPlotLoaderStatus');
+  if (sEl && status) {
+    let clean = String(status).trim();
+    if (clean.startsWith('Loading ')) clean = `Downloading ${clean.slice(8)}…`;
+    else if (clean.startsWith('Loaded ')) clean = `✓ Loaded ${clean.slice(7)}`;
+    sEl.textContent = clean;
+  }
+}
+
 function renderPlotImage(b64) {
   const wrap = document.createElement('div');
   wrap.className = 'con-plot-wrap';
@@ -244,7 +278,12 @@ function closePromptModal(result = null) {
 }
 
 const sink = {
-  out: s => print(s), err: s => print(s, 'err'), table,
+  out: s => print(s),
+  err: s => {
+    hidePlotLoader();
+    print(s, 'err');
+  },
+  table,
   prompt_modal: (msg, data) => {
     const def = (data && data.defaultVal) || '';
     showPromptModal(msg, def, val => {
@@ -257,6 +296,7 @@ const sink = {
     }, 'JavaScript', 'Alert', true);
   },
   need_input: () => {
+    hidePlotLoader();
     con.querySelector('.con-input-wrap, .con-input')?.remove();
     const wrap = document.createElement('span');
     wrap.className = 'con-input-wrap';
@@ -317,17 +357,28 @@ const sink = {
     setState('loading', s);
     const txt = con.querySelector('.cwn-text');
     if (txt) txt.textContent = s;
+    if (cur.id === 'python' && /matplotlib|seaborn|pyplot/i.test(s)) {
+      const loader = $('pyPlotLoader');
+      if (loader && loader.hidden && running) {
+        showPlotLoader('Rendering Data Visualization…', s);
+      }
+    }
+    updatePlotLoaderStatus(s);
   },
   clear: () => {
     con.textContent = '';
     hideJavaGui();
+    hidePlotLoader();
   },
   preview: html => {
     preview.srcdoc = /<head[^>]*>/i.test(html) ? html.replace(/<head[^>]*>/i, m => m + HOOK) : HOOK + html;
     showTab('preview');
   },
   gui_window: winData => renderJavaGuiWindow(winData),
-  plot: b64 => renderPlotImage(b64),
+  plot: b64 => {
+    hidePlotLoader();
+    renderPlotImage(b64);
+  },
   package_loaded: ({ name }) => {
     markPackageLoaded(name);
     toast(`✓ Installed ${name} successfully!`);
@@ -490,6 +541,7 @@ function select(l) {
 }
 let wasShell = false;
 function applyLang() {
+  hidePlotLoader();
   if (cur.id !== 'java') {
     hideJavaGui();
   }
@@ -603,6 +655,16 @@ async function run(arg) {
     if (cur.id !== 'web' && (!opts || opts.tab !== 'preview')) showTab('console');
     const wasWarming = !eng.isReady && (cur.id === 'python' || cur.id === 'sql' || cur.id === 'php' || cur.id === 'c' || cur.id === 'cpp' || cur.id === 'java');
     sink.clear();
+
+    const codeToRun = customCode || editor.get();
+    const isPyPlot = cur.id === 'python' && isPlottingScript(codeToRun);
+    if (isPyPlot) {
+      const initialStatus = wasWarming
+        ? 'Initializing Pyodide WebAssembly runtime & scientific packages…'
+        : 'Preparing scientific libraries & plotting engine…';
+      showPlotLoader('Rendering Data Visualization…', initialStatus);
+    }
+
     if (wasWarming) {
       print(`⏳ ${eng.label || cur.name} runtime is still downloading/loading on your device…\n`, 'sys');
       print(`   Execution is queued — your code will run automatically as soon as ready!\n\n`, 'mute');
@@ -632,6 +694,7 @@ async function run(arg) {
       setState('error', 'Runtime failed');
     }
   } finally {
+    hidePlotLoader();
     running = false;
     syncButtons();
   }
@@ -642,6 +705,7 @@ function stop() {
   running = false;
   syncButtons();
   hideJavaGui();
+  hidePlotLoader();
   con.querySelector('.con-input-wrap, .con-input')?.remove();
   closePromptModal(null);
   try { engines[cur.engine]?.stop(sink); } catch (_) {}
@@ -702,8 +766,10 @@ if (bRun) {
 }
 const bStop = $('btnStop');
 if (bStop) bStop.onclick = stop;
+const bCancelPlot = $('btnCancelPlot');
+if (bCancelPlot) bCancelPlot.onclick = stop;
 const bClr = $('btnClear');
-if (bClr) bClr.onclick = () => { con.textContent = ''; setOutputSmall(); };
+if (bClr) bClr.onclick = () => { con.textContent = ''; hidePlotLoader(); setOutputSmall(); };
 const stdinEl = $('stdin');
 if (stdinEl) stdinEl.oninput = e => store.set('cf.in.' + cur.id, e.target.value);
 window.addEventListener('keydown', e => {
