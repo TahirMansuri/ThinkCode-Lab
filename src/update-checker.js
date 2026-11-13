@@ -4,15 +4,15 @@
 export const APP_META = Object.freeze({
   appId: 'com.igc.thinkcodelab',
   appName: 'ThinkCode Lab',
-  versionName: '1.3.5',
-  versionCode: 12,
+  versionName: '1.3.6',
+  versionCode: 13,
   releaseDate: '2026-11-13',
-  apkFilename: 'ThinkCodeLab-v1.3.5.apk',
+  apkFilename: 'ThinkCodeLab-v1.3.6.apk',
   apkSize: '~17.7 MB',
-  sha256: 'feb6769c278631d7ef902fe61b78aa0406b7d4c06418249d1116575afd6bffb7',
+  sha256: '2ee17e6032c1a5b82bb45725ede444920ccc1260f96ed2a2f934895c1b4d7e3f',
   minAndroidVersion: '7.0',
   downloadPageUrl: 'https://thinkcode-lab.web.app/download',
-  defaultApkUrl: 'https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.5/ThinkCodeLab-v1.3.5.apk',
+  defaultApkUrl: 'https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.6/ThinkCodeLab-v1.3.6.apk',
   fallbackApkUrl: 'https://thinkcode-lab.web.app/ThinkCodeLab.apk',
   webManifestUrls: Object.freeze(['/version.json']),
   nativeManifestUrls: Object.freeze([
@@ -20,6 +20,8 @@ export const APP_META = Object.freeze({
     'https://thinkcode-lab.firebaseapp.com/version.json'
   ]),
   defaultReleaseNotes: Object.freeze([
+    'Exit confirmation dialog before leaving ThinkCode Lab on Android',
+    'Hardware back button & swipe gesture closes open menus, dialogs, and sheets before exiting',
     'Python Data Science Suite: NumPy, Pandas, Matplotlib, Scikit-learn, and Seaborn on-demand',
     'Interactive CSV & Excel Virtual Filesystem data upload with pre-seeded datasets',
     'Inline Matplotlib plot visualizer with image copy & PNG download',

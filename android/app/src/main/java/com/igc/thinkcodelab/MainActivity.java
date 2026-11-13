@@ -19,6 +19,7 @@ import android.webkit.ServiceWorkerController;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
+import androidx.activity.OnBackPressedCallback;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -162,12 +163,46 @@ public class MainActivity extends BridgeActivity {
                 return false;
             }
         }
+
+        @JavascriptInterface
+        public void exitApp() {
+            runOnUiThread(() -> {
+                try {
+                    finishAffinity();
+                } catch (Exception e) {
+                    finish();
+                }
+            });
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupEdgeToEdgeInsets();
+        setupBackPressHandler();
+    }
+
+    private void setupBackPressHandler() {
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                runOnUiThread(() -> {
+                    if (bridge != null && bridge.getWebView() != null) {
+                        bridge.getWebView().evaluateJavascript(
+                            "if (typeof window.handleThinkCodeBackPress === 'function') {\n" +
+                            "  window.handleThinkCodeBackPress();\n" +
+                            "} else {\n" +
+                            "  if (window.history.length > 1) { window.history.back(); }\n" +
+                            "}",
+                            null
+                        );
+                    } else {
+                        finish();
+                    }
+                });
+            }
+        });
     }
 
     @Override

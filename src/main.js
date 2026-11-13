@@ -2940,6 +2940,179 @@ function initPythonScienceSuite() {
   menuBtnData?.addEventListener('click', openData);
 }
 
+/* ==========================================================================
+   Android Back-Button Interception & Exit Confirmation Box
+   ========================================================================== */
+export function showExitConfirmDialog() {
+  const dialog = $('exitDialog');
+  if (!dialog) return;
+  if (dialog.open) return;
+  try {
+    dialog.showModal();
+    $('btnExitCancel')?.focus();
+  } catch (_) {
+    dialog.setAttribute('open', '');
+  }
+}
+
+export function closeExitConfirmDialog() {
+  const dialog = $('exitDialog');
+  if (!dialog || !dialog.open) return;
+  dialog.close();
+}
+
+export function handleAppExit() {
+  closeExitConfirmDialog();
+  if (window.ThinkCodeSystemUI?.exitApp) {
+    window.ThinkCodeSystemUI.exitApp();
+  } else if (window.Capacitor?.App?.exitApp) {
+    window.Capacitor.App.exitApp();
+  } else {
+    toast('Tap browser back or close tab to exit');
+  }
+}
+
+/**
+ * Hierarchical Android back press & back gesture handler.
+ * If any popup, dropdown, drawer, sheet, or dialog is open,
+ * closes ONLY that overlay and does NOT exit the app.
+ * If no overlay is open, displays the custom Exit Confirmation dialog.
+ * @returns {boolean} true if an action was performed
+ */
+export function handleThinkCodeBackPress() {
+  // 1. If Exit Dialog is already showing, pressing back cancels it (stay in app)
+  const exitDialog = $('exitDialog');
+  if (exitDialog && exitDialog.open) {
+    closeExitConfirmDialog();
+    return true;
+  }
+
+  // 2. Interactive input prompt modal (scanf, cin, input, prompt)
+  const promptModal = $('promptModal');
+  if (promptModal && !promptModal.hidden) {
+    closePromptModal(null);
+    return true;
+  }
+
+  // 3. Java AWT/Swing desktop GUI window frame
+  const guiWindowModal = $('guiWindowModal');
+  if (guiWindowModal && !guiWindowModal.hidden) {
+    guiWindowModal.hidden = true;
+    const btnReopen = $('btnReopenGui');
+    if (btnReopen && cur.id === 'java') btnReopen.hidden = false;
+    print('[GUI Window Closed]\n', 'sys');
+    window.dispatchEvent(new CustomEvent('cf:overlay-closed'));
+    return true;
+  }
+
+  // 4. Python animated plot loader
+  const plotLoader = $('pyPlotLoader');
+  if (plotLoader && !plotLoader.hidden) {
+    const btnCancelPlot = $('btnCancelPlot');
+    if (btnCancelPlot) {
+      btnCancelPlot.click();
+    } else {
+      plotLoader.hidden = true;
+      plotLoader.classList.remove('is-active');
+    }
+    return true;
+  }
+
+  // 5. Any HTML5 <dialog> with [open] (Lab Journal, Py Packages, Datasets, Updates, etc.)
+  const openDialogs = Array.from(document.querySelectorAll('dialog[open]'));
+  if (openDialogs.length > 0) {
+    const topDialog = openDialogs[openDialogs.length - 1];
+    if (typeof topDialog.close === 'function') {
+      topDialog.close();
+    } else {
+      topDialog.removeAttribute('open');
+    }
+    return true;
+  }
+
+  // 6. Navigation Drawer (Menu & Options)
+  const menuDrawer = $('menuDrawer');
+  if (menuDrawer && (!menuDrawer.hidden || menuDrawer.classList.contains('open'))) {
+    closeMenuDrawer();
+    return true;
+  }
+
+  // 7. Bottom Sheet (Practicals list, Developer profile, SQL schemas)
+  const sheet = $('sheet');
+  if (sheet && !sheet.hidden) {
+    closeSheet();
+    return true;
+  }
+
+  // 8. Popovers or update toasts
+  try {
+    const openPopover = document.querySelector(':popover-open');
+    if (openPopover) {
+      openPopover.hidePopover?.();
+      return true;
+    }
+  } catch (_) {}
+
+  // 9. If an active input/select has focus outside editor, dismiss virtual keyboard/dropdown
+  if (document.activeElement && document.activeElement !== document.body &&
+      (document.activeElement.tagName === 'SELECT' ||
+       (document.activeElement.tagName === 'INPUT' && document.activeElement.id !== 'filePick'))) {
+    document.activeElement.blur();
+    return true;
+  }
+
+  // 10. Everything is closed: show exit confirmation box!
+  showExitConfirmDialog();
+  return true;
+}
+
+// Expose on global window object so Android WebView can call it immediately
+window.handleThinkCodeBackPress = handleThinkCodeBackPress;
+
+function initExitConfirmation() {
+  const dialog = $('exitDialog');
+  const btnCancel = $('btnExitCancel');
+  const btnConfirm = $('btnExitConfirm');
+  const menuBtnExit = $('menuBtnExit');
+
+  btnCancel?.addEventListener('click', closeExitConfirmDialog);
+  btnConfirm?.addEventListener('click', handleAppExit);
+
+  // Backdrop click closes dialog
+  dialog?.addEventListener('click', e => {
+    if (e.target === dialog) {
+      closeExitConfirmDialog();
+    }
+  });
+
+  // Drawer "Exit App" button
+  menuBtnExit?.addEventListener('click', () => {
+    closeMenuDrawer();
+    setTimeout(() => {
+      showExitConfirmDialog();
+    }, 180);
+  });
+
+  // Global Escape key handler
+  window.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if (dialog && dialog.open) {
+        e.preventDefault();
+        closeExitConfirmDialog();
+      }
+    }
+  });
+
+  // Capacitor App plugin listener if present
+  try {
+    if (window.Capacitor?.Plugins?.App?.addListener) {
+      window.Capacitor.Plugins.App.addListener('backButton', () => {
+        handleThinkCodeBackPress();
+      });
+    }
+  } catch (_) {}
+}
+
 // ---------- boot ----------
 function shellCmd(line) { print(`${engines.shell.sh.prompt} ${line}\n`, 'cmd'); engines.shell.exec(line, sink); $('promptLabel').textContent = engines.shell.sh.prompt; }
 shellui.init({ sh: engines.shell.sh, cmd: shellCmd });
@@ -2955,8 +3128,9 @@ initCodeFormatter();
 initLabJournal();
 const updateController = initUpdateChecker();
 initPythonScienceSuite();
+initExitConfirmation();
 const warmPromise = warm();
-window.__app = { run, stop, engines, cur: () => cur, editorPhp: () => editorPhp, editorHtml: () => editorHtml, running: () => running, updates: updateController };
+window.__app = { run, stop, engines, cur: () => cur, editorPhp: () => editorPhp, editorHtml: () => editorHtml, running: () => running, updates: updateController, handleBack: handleThinkCodeBackPress, showExit: showExitConfirmDialog };
 
 // ---------- compulsory 2.5s splash screen + component loading ----------
 const splashMinTimer = new Promise(resolve => setTimeout(resolve, 2500));
