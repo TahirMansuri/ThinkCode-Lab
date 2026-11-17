@@ -39,6 +39,8 @@
 When appealing Play Protect warnings or filing developer verification forms:
 - **Certificate Fingerprint Field**: Requires the colon-separated SHA-256 (`49:03:53:9B:E9:...`)
 - **APK / AAB SHA-256 File Hash Field**: Requires the exact 64-character lowercase hexadecimal hash of the binary itself without colons:
+  - **v1.3.8 AAB Bundle Hash**: `7860ab47bc48d06d9d08636a24de6ca9ab26fed2561a42f64965d253ceee2986`
+  - **v1.3.8 APK File Hash**: `a0cc2ef2092e9482227b8133de2b3314ef6ca6d43106b3f6bb35791011749809`
   - **v1.3.7 AAB Bundle Hash**: `4993a47bd7f890915bb7dac4da062eec623db7d75bd875ff62c7acd6348688a1`
   - **v1.3.7 APK File Hash**: `b71e5d4873cf447465aa773b24ef7fc05bef3930a829bd009afe2ee51c959a0b`
   - **v1.3.6 APK File Hash**: `2ee17e6032c1a5b82bb45725ede444920ccc1260f96ed2a2f934895c1b4d7e3f`
