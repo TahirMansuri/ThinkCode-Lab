@@ -38,7 +38,10 @@
 ### Google Play Protect Appeal Portal Reference
 When appealing Play Protect warnings or filing developer verification forms:
 - **Certificate Fingerprint Field**: Requires the colon-separated SHA-256 (`49:03:53:9B:E9:...`)
-- **APK SHA-256 File Hash Field**: Requires the exact 64-character lowercase hexadecimal hash of the APK binary itself without colons:
+- **APK / AAB SHA-256 File Hash Field**: Requires the exact 64-character lowercase hexadecimal hash of the binary itself without colons:
+  - **v1.3.7 AAB Bundle Hash**: `b4ffdfcc9a1a9a39c8631befee5206cae673324e36513a0d3c11525dbe893def`
+  - **v1.3.7 APK File Hash**: `f165e80e90374ead84f0f951a3544e1bd3413a91d84b2199802b3b4c68c49b2b`
+  - **v1.3.6 APK File Hash**: `2ee17e6032c1a5b82bb45725ede444920ccc1260f96ed2a2f934895c1b4d7e3f`
   - **v1.3.5 APK File Hash**: `feb6769c278631d7ef902fe61b78aa0406b7d4c06418249d1116575afd6bffb7`
   - **v1.3.4 APK File Hash**: `879856e091aa8e0244f7125de596dd76a65328e9c6596e1e2cf1eec8c32419d0`
   - **v1.3.3 APK File Hash**: `6f5dbdb720c9df0c81ff4edbb6061b21ad7066cd4f47a8a1627232f50b53447e`
@@ -50,7 +53,9 @@ When appealing Play Protect warnings or filing developer verification forms:
 
 | Version | Version Code | Target API | Min API | Artifact Name | Size | Status |
 | :---: | :---: | :---: | :---: | :--- | :---: | :--- |
-| **1.3.5** | **12** | **36** | **24** | `ThinkCodeLab-v1.3.5.apk` | **17.7 MB** | **Active Release (Direct & Web)** |
+| **1.3.7** | **14** | **36** | **24** | `ThinkCodeLab-v1.3.7.aab` / `.apk` | **17.5 / 17.7 MB** | **Google Play Production Update + Direct** |
+| **1.3.6** | **13** | **36** | **24** | `ThinkCodeLab-v1.3.6.apk` | **17.7 MB** | Previous Release |
+| **1.3.5** | **12** | **36** | **24** | `ThinkCodeLab-v1.3.5.apk` | **17.7 MB** | Previous Release |
 | **1.3.4** | **11** | **36** | **24** | `ThinkCodeLab-v1.3.4.apk` | **17.7 MB** | Previous Release |
 | **1.3.3** | **10** | **36** | **24** | `ThinkCodeLab-v1.3.3.apk` | **17.7 MB** | Previous Release |
 | **1.3.2** | **9** | **36** | **24** | `ThinkCodeLab.apk` | **17.6 MB** | Previous Release |

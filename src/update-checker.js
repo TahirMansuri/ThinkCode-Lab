@@ -4,15 +4,16 @@
 export const APP_META = Object.freeze({
   appId: 'com.igc.thinkcodelab',
   appName: 'ThinkCode Lab',
-  versionName: '1.3.6',
-  versionCode: 13,
-  releaseDate: '2026-11-13',
-  apkFilename: 'ThinkCodeLab-v1.3.6.apk',
+  versionName: '1.3.7',
+  versionCode: 14,
+  releaseDate: '2026-11-18',
+  apkFilename: 'ThinkCodeLab-v1.3.7.apk',
   apkSize: '~17.7 MB',
-  sha256: '2ee17e6032c1a5b82bb45725ede444920ccc1260f96ed2a2f934895c1b4d7e3f',
+  sha256: 'f165e80e90374ead84f0f951a3544e1bd3413a91d84b2199802b3b4c68c49b2b',
   minAndroidVersion: '7.0',
+  playStoreUrl: 'https://play.google.com/store/apps/details?id=com.igc.thinkcodelab',
   downloadPageUrl: 'https://thinkcode-lab.web.app/download',
-  defaultApkUrl: 'https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.6/ThinkCodeLab-v1.3.6.apk',
+  defaultApkUrl: 'https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.7/ThinkCodeLab-v1.3.7.apk',
   fallbackApkUrl: 'https://thinkcode-lab.web.app/ThinkCodeLab.apk',
   webManifestUrls: Object.freeze(['/version.json']),
   nativeManifestUrls: Object.freeze([
@@ -20,14 +21,13 @@ export const APP_META = Object.freeze({
     'https://thinkcode-lab.firebaseapp.com/version.json'
   ]),
   defaultReleaseNotes: Object.freeze([
-    'Exit confirmation dialog before leaving ThinkCode Lab on Android',
-    'Hardware back button & swipe gesture closes open menus, dialogs, and sheets before exiting',
-    'Python Data Science Suite: NumPy, Pandas, Matplotlib, Scikit-learn, and Seaborn on-demand',
+    'Official Google Play Store integration — in-app updates now open Google Play directly',
+    'Exit confirmation dialog & hierarchical Android back-gesture handling for menus and dialogs',
+    'Python Data Science Suite: NumPy, Pandas, Matplotlib, Scikit-learn & Seaborn on-demand',
     'Interactive CSV & Excel Virtual Filesystem data upload with pre-seeded datasets',
-    'Inline Matplotlib plot visualizer with image copy & PNG download',
-    'Animated plot loading dialog with real-time Pyodide compilation status',
-    '1-Tap Student Lab Journal & Assignment PDF export with faculty signature block',
-    'Silent in-app APK update checker for sideloaded students'
+    'Inline Matplotlib plot visualizer with animated loading dialog & PNG export',
+    'C, C++, Java (with AWT/Swing GUI Frames), PHP, Oracle SQL, JS & Linux Bash offline runtimes',
+    '1-Tap Student Lab Journal & Assignment A4 PDF export with faculty signature block'
   ])
 });
 
@@ -126,6 +126,7 @@ export function normalizeManifest(raw) {
   const apkUrl = sanitizeHttpUrl(raw.apkUrl);
   const fallbackUrl = sanitizeHttpUrl(raw.fallbackUrl);
   const downloadPageUrl = sanitizeHttpUrl(raw.downloadPageUrl) || APP_META.downloadPageUrl;
+  const playStoreUrl = sanitizeHttpUrl(raw.playStoreUrl) || APP_META.playStoreUrl;
 
   if (!apkUrl && !fallbackUrl && !downloadPageUrl) {
     return null;
@@ -158,6 +159,7 @@ export function normalizeManifest(raw) {
     apkUrl: apkUrl || fallbackUrl || downloadPageUrl,
     fallbackUrl: fallbackUrl || downloadPageUrl,
     downloadPageUrl,
+    playStoreUrl,
     sha256,
     minAndroidVersion: typeof raw.minAndroidVersion === 'string' ? raw.minAndroidVersion.trim().slice(0, 16) : '7.0',
     releaseNotes,
@@ -258,6 +260,7 @@ export function createSimulatedManifest(installed, baseManifest = null) {
     apkUrl: baseManifest?.apkUrl || APP_META.defaultApkUrl,
     fallbackUrl: baseManifest?.fallbackUrl || APP_META.fallbackApkUrl,
     downloadPageUrl: baseManifest?.downloadPageUrl || APP_META.downloadPageUrl,
+    playStoreUrl: baseManifest?.playStoreUrl || APP_META.playStoreUrl,
     sha256: baseManifest?.sha256 || '',
     minAndroidVersion: baseManifest?.minAndroidVersion || APP_META.minAndroidVersion,
     releaseNotes: [

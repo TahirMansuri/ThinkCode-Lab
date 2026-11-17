@@ -2541,15 +2541,16 @@ function initUpdateChecker() {
     }
     if (drawerDlTitle) {
       drawerDlTitle.textContent = installed.isNative
-        ? (hasUpdate ? `Update App to v${manifest.versionName}` : `Android App Portal (v${manifest.versionName})`)
-        : `Download Android App (v${manifest.versionName})`;
+        ? (hasUpdate ? `Update Available (v${manifest.versionName})` : `ThinkCode Lab on Google Play`)
+        : `Get Android App on Google Play`;
     }
     if (drawerDlMeta) {
-      const sz = manifest.apkSize ? ` (${manifest.apkSize})` : '';
-      drawerDlMeta.textContent = `${manifest.apkFilename}${sz}`;
+      drawerDlMeta.textContent = installed.isNative
+        ? (hasUpdate ? 'Update safely via Google Play Store' : `v${installed.versionName} · Official Android Release`)
+        : `v${manifest.versionName} · Play Store & Offline APK`;
     }
     if (drawerDlBadge) {
-      drawerDlBadge.textContent = hasUpdate ? 'Update' : (installed.isNative ? 'Details' : 'Get APK');
+      drawerDlBadge.textContent = hasUpdate ? 'Update' : 'Play Store';
     }
     if (menuUpdateSub) {
       menuUpdateSub.textContent = hasUpdate
@@ -2563,11 +2564,11 @@ function initUpdateChecker() {
 
     // 3. Update Modal Dialog content
     if (headerBadge) {
-      headerBadge.textContent = manifest.isSimulated ? 'DEMO' : (hasUpdate ? `v${manifest.versionName}` : 'APK');
+      headerBadge.textContent = manifest.isSimulated ? 'DEMO' : (hasUpdate ? `v${manifest.versionName}` : (installed.isNative ? 'PLAY' : 'APP'));
     }
     if (installedVerEl) installedVerEl.textContent = `v${installed.versionName}`;
     if (installedMetaEl) {
-      const runtimeLabel = installed.isNative ? 'Android APK' : 'Web IDE';
+      const runtimeLabel = installed.isNative ? 'Android App' : 'Web IDE';
       installedMetaEl.textContent = `Build ${installed.versionCode} · ${runtimeLabel}`;
     }
 
@@ -2589,12 +2590,14 @@ function initUpdateChecker() {
           ? `Demo Preview: v${manifest.versionName} Update Alert`
           : `ThinkCode Lab v${manifest.versionName} is ready!`;
         bannerSub.textContent = manifest.isSimulated
-          ? 'Previewing how sideloaded students see the silent update toast and changelog.'
-          : 'Tap Download APK below to install the latest build over your current app.';
+          ? 'Previewing how students see the silent update toast and changelog.'
+          : (installed.isNative
+            ? 'Tap Update on Google Play below to install the latest release safely.'
+            : 'Tap Get Android App below to update via Google Play Store or download page.');
       } else if (checking) {
         bannerCard.dataset.state = 'idle';
         bannerIcon.textContent = '⏳';
-        bannerTitle.textContent = 'Checking for Android APK updates…';
+        bannerTitle.textContent = 'Checking for app updates…';
         bannerSub.textContent = 'Connecting silently to https://thinkcode-lab.web.app/version.json';
       } else if (isOfflineErr) {
         bannerCard.dataset.state = 'offline';
@@ -2605,13 +2608,15 @@ function initUpdateChecker() {
         bannerCard.dataset.state = 'latest';
         bannerIcon.textContent = '✅';
         bannerTitle.textContent = installed.isNative
-          ? 'Your ThinkCode Lab APK is up to date'
+          ? 'Your ThinkCode Lab app is up to date'
           : 'Running latest release build';
-        bannerSub.textContent = `Build ${manifest.versionCode} matches the newest published APK (${manifest.apkFilename}).`;
+        bannerSub.textContent = installed.isNative
+          ? `Build ${manifest.versionCode} matches the newest published release on Google Play.`
+          : `Build ${manifest.versionCode} matches the newest published release (${manifest.apkFilename}).`;
       }
     }
 
-    if (apkFileEl) apkFileEl.textContent = manifest.apkFilename;
+    if (apkFileEl) apkFileEl.textContent = installed.isNative ? 'com.igc.thinkcodelab (Play Store)' : manifest.apkFilename;
     if (apkSizeEl) apkSizeEl.textContent = manifest.apkSize || '~17.7 MB';
     if (releaseDateEl) releaseDateEl.textContent = formatReleaseDate(manifest.releaseDate);
     if (sha256El) sha256El.textContent = formatShortChecksum(manifest.sha256);
@@ -2627,13 +2632,15 @@ function initUpdateChecker() {
     }
 
     if (btnDownload) {
-      const targetHref = (hasUpdate || installed.isNative)
-        ? (manifest.apkUrl || manifest.fallbackUrl || manifest.downloadPageUrl)
-        : (manifest.downloadPageUrl || manifest.apkUrl);
+      const playUrl = manifest.playStoreUrl || APP_META.playStoreUrl;
+      // Google Play policy compliance: native Android builds MUST route updates to Google Play Store, never external APKs
+      const targetHref = installed.isNative
+        ? playUrl
+        : (manifest.downloadPageUrl || playUrl);
       btnDownload.href = targetHref;
-      btnDownload.textContent = hasUpdate
-        ? `⬇ Download v${manifest.versionName} APK`
-        : (installed.isNative ? `⬇ Re-download v${manifest.versionName} APK` : `⬇ Download APK Page (v${manifest.versionName})`);
+      btnDownload.textContent = installed.isNative
+        ? (hasUpdate ? `▶ Update on Google Play (v${manifest.versionName})` : '▶ Open on Google Play Store')
+        : (hasUpdate ? `▶ Get Android App (v${manifest.versionName})` : `▶ Get Android App (v${manifest.versionName})`);
     }
 
     if (demoRow) {

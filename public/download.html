@@ -208,6 +208,39 @@
     .step-text strong {
       color: #F1F5F9;
     }
+    .btn-play {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 15px 20px;
+      background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
+      color: #FFFFFF;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 16px;
+      border-radius: 14px;
+      box-shadow: 0 10px 26px rgba(34, 197, 94, 0.32);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      margin-bottom: 12px;
+    }
+    .btn-play:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(34, 197, 94, 0.42);
+    }
+    .btn-play:active {
+      transform: scale(0.98);
+    }
+    .btn-play .play-rec {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: rgba(0, 0, 0, 0.22);
+      padding: 3px 7px;
+      border-radius: 6px;
+    }
     footer {
       margin-top: 24px;
       text-align: center;
@@ -230,22 +263,30 @@
     </p>
 
     <div class="badge-bar">
-      <span class="badge green">✓ Safe &amp; Verified</span>
-      <span class="badge" id="dlVersionBadge">v1.3.6 (Build 13)</span>
+      <span class="badge green">✓ Live on Google Play</span>
+      <span class="badge" id="dlVersionBadge">v1.3.7 (Build 14)</span>
       <span class="badge" id="dlSizeBadge">~17.7 MB</span>
       <span class="badge">100% Offline</span>
     </div>
 
-    <a href="https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.6/ThinkCodeLab-v1.3.6.apk" download="ThinkCodeLab-v1.3.6.apk" class="btn-download" id="downloadBtn">
+    <a href="https://play.google.com/store/apps/details?id=com.igc.thinkcodelab" target="_blank" rel="noopener" class="btn-play" id="playStoreBtn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M3.61 1.814L13.793 12 3.61 22.186a1.47 1.47 0 0 1-.61-1.193V3.007c0-.487.235-.917.61-1.193zM14.854 13.06l2.893 2.893-11.2 6.37 8.307-9.263zm3.997-2.274l2.313 1.315c.782.445.782 1.353 0 1.798l-2.313 1.315-3.168-3.168 3.168-3.26zM6.547 1.677l11.2 6.37-2.893 2.893-8.307-9.263z"/>
+      </svg>
+      <span>Get it on Google Play</span>
+      <span class="play-rec">Recommended</span>
+    </a>
+
+    <a href="https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.7/ThinkCodeLab-v1.3.7.apk" download="ThinkCodeLab-v1.3.7.apk" class="btn-download" id="downloadBtn">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
         <polyline points="7 10 12 15 17 10"></polyline>
         <line x1="12" y1="15" x2="12" y2="3"></line>
       </svg>
-      <span id="downloadBtnText">Download ThinkCode Lab v1.3.6 (APK)</span>
+      <span id="downloadBtnText">Direct Download v1.3.7 (APK)</span>
     </a>
     <div id="dlFileMeta" style="font-size: 12px; color: #94A3B8; margin: -6px 0 16px;">
-      File: <strong style="color:#E2E8F0;" id="dlFilename">ThinkCodeLab-v1.3.6.apk</strong> &middot; Version Code: <strong style="color:#E2E8F0;" id="dlBuildNum">13</strong> &middot; Android <span id="dlMinAndroid">7.0+</span>
+      File: <strong style="color:#E2E8F0;" id="dlFilename">ThinkCodeLab-v1.3.7.apk</strong> &middot; Version Code: <strong style="color:#E2E8F0;" id="dlBuildNum">14</strong> &middot; Android <span id="dlMinAndroid">7.0+</span>
     </div>
 
     <a href="/" class="btn-web">

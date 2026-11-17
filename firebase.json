@@ -145,6 +145,11 @@
     ],
     "redirects": [
       {
+        "source": "/ThinkCodeLab-v1.3.7.apk",
+        "destination": "https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.7/ThinkCodeLab-v1.3.7.apk",
+        "type": 302
+      },
+      {
         "source": "/ThinkCodeLab-v1.3.6.apk",
         "destination": "https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.6/ThinkCodeLab-v1.3.6.apk",
         "type": 302
@@ -161,12 +166,17 @@
       },
       {
         "source": "/ThinkCodeLab.apk",
-        "destination": "https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.6/ThinkCodeLab-v1.3.6.apk",
+        "destination": "https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.7/ThinkCodeLab-v1.3.7.apk",
         "type": 302
       },
       {
         "source": "/apk",
-        "destination": "https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.6/ThinkCodeLab-v1.3.6.apk",
+        "destination": "https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.7/ThinkCodeLab-v1.3.7.apk",
+        "type": 302
+      },
+      {
+        "source": "/play",
+        "destination": "https://play.google.com/store/apps/details?id=com.igc.thinkcodelab",
         "type": 302
       }
     ],

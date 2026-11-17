@@ -224,9 +224,16 @@ test('HTML, download portal, and main.js DOM IDs match cleanly with zero danglin
     }
   }
 
-  for (const dlId of ['dlVersionBadge', 'dlSizeBadge', 'downloadBtn', 'downloadBtnText', 'dlFilename', 'dlBuildNum', 'dlMinAndroid', 'dlReleaseNotes', 'dlNotesSummary', 'dlNotesList']) {
+  for (const dlId of ['playStoreBtn', 'dlVersionBadge', 'dlSizeBadge', 'downloadBtn', 'downloadBtnText', 'dlFilename', 'dlBuildNum', 'dlMinAndroid', 'dlReleaseNotes', 'dlNotesSummary', 'dlNotesList']) {
     assert.ok(downloadHtml.includes(`id="${dlId}"`), `Missing id="${dlId}" in public/download.html`);
   }
+});
+
+test('Google Play compliance: native Android update CTA routes exclusively to Google Play Store', () => {
+  assert.equal(APP_META.playStoreUrl, 'https://play.google.com/store/apps/details?id=com.igc.thinkcodelab');
+  const mainJs = fs.readFileSync(path.join(rootDir, 'src/main.js'), 'utf8');
+  assert.ok(mainJs.includes('const playUrl = manifest.playStoreUrl || APP_META.playStoreUrl;'), 'main.js must resolve playStoreUrl');
+  assert.ok(mainJs.includes('installed.isNative\n        ? playUrl'), 'Native Android must route updates to Play Store, never external APK');
 });
 
 console.log(`\nAll ${passed} Update Checker unit tests passed!\n`);
