@@ -55,6 +55,7 @@ const SAMPLE_DATASETS = {
 };
 
 function readNativeStdinSync() {
+  flushStdoutBuffer();
   post('need_input');
   try {
     const xhr = new XMLHttpRequest();
@@ -78,10 +79,34 @@ function mountAcademicDatasets() {
   }
 }
 
+const PLOT_PREFIX = '__THINKCODE_IMAGE_B64__:';
+
+function emitStdout(chunk) {
+  if (!chunk) return;
+  stdoutBuf += chunk;
+  let nl;
+  while ((nl = stdoutBuf.indexOf('\n')) !== -1) {
+    const line = stdoutBuf.slice(0, nl);
+    stdoutBuf = stdoutBuf.slice(nl + 1);
+    if (line.startsWith(PLOT_PREFIX)) {
+      const b64 = line.slice(PLOT_PREFIX.length).trim();
+      if (b64) postMessage({ t: 'plot', b64 });
+    } else {
+      post('out', line + '\n');
+    }
+  }
+  // Stream partial lines immediately (e.g. input("Your name: "), print(..., end=""))
+  // unless the partial buffer could be the start of an inline plot marker.
+  if (stdoutBuf && !PLOT_PREFIX.startsWith(stdoutBuf) && !stdoutBuf.startsWith(PLOT_PREFIX)) {
+    post('out', stdoutBuf);
+    stdoutBuf = '';
+  }
+}
+
 function flushStdoutBuffer() {
   if (!stdoutBuf) return;
-  if (stdoutBuf.startsWith('__THINKCODE_IMAGE_B64__:')) {
-    const b64 = stdoutBuf.slice('__THINKCODE_IMAGE_B64__:'.length).trim();
+  if (stdoutBuf.startsWith(PLOT_PREFIX)) {
+    const b64 = stdoutBuf.slice(PLOT_PREFIX.length).trim();
     if (b64) postMessage({ t: 'plot', b64 });
   } else {
     post('out', stdoutBuf);
@@ -187,19 +212,7 @@ onmessage = async ({ data }) => {
 
       py.setStdout({
         write: b => {
-          const chunk = dec.decode(b, { stream: true });
-          stdoutBuf += chunk;
-          let nl;
-          while ((nl = stdoutBuf.indexOf('\n')) !== -1) {
-            const line = stdoutBuf.slice(0, nl);
-            stdoutBuf = stdoutBuf.slice(nl + 1);
-            if (line.startsWith('__THINKCODE_IMAGE_B64__:')) {
-              const b64 = line.slice('__THINKCODE_IMAGE_B64__:'.length).trim();
-              if (b64) postMessage({ t: 'plot', b64 });
-            } else {
-              post('out', line + '\n');
-            }
-          }
+          emitStdout(dec.decode(b, { stream: true }));
           return b.length;
         }
       });
@@ -211,9 +224,14 @@ onmessage = async ({ data }) => {
         }
       });
 
+      // Keep isatty: false so CPython's input(prompt) writes the prompt through
+      // Python sys.stdout (captured by py.setStdout above) instead of bypassing
+      // it via C PyOS_Readline directly to FD 1 / browser console.
       py.setStdin({
-        isatty: true,
+        isatty: false,
+        autoEOF: true,
         stdin: () => {
+          flushStdoutBuffer();
           // Priority 1: Interactive in-console input via SharedArrayBuffer
           if (status) {
             post('need_input');
@@ -240,6 +258,17 @@ onmessage = async ({ data }) => {
           return null;
         }
       });
+
+      // Ensure non-newline prints (e.g. print("Enter x: ", end="")) flush immediately before input()
+      try {
+        await py.runPythonAsync(`
+import sys
+try:
+    sys.stdout.reconfigure(line_buffering=True, write_through=True)
+except Exception:
+    pass
+`);
+      } catch (_) {}
 
       post('ready');
     } catch (e) {

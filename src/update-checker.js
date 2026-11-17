@@ -9,7 +9,7 @@ export const APP_META = Object.freeze({
   releaseDate: '2026-11-18',
   apkFilename: 'ThinkCodeLab-v1.3.7.apk',
   apkSize: '~17.7 MB',
-  sha256: 'f165e80e90374ead84f0f951a3544e1bd3413a91d84b2199802b3b4c68c49b2b',
+  sha256: 'b71e5d4873cf447465aa773b24ef7fc05bef3930a829bd009afe2ee51c959a0b',
   minAndroidVersion: '7.0',
   playStoreUrl: 'https://play.google.com/store/apps/details?id=com.igc.thinkcodelab',
   downloadPageUrl: 'https://thinkcode-lab.web.app/download',

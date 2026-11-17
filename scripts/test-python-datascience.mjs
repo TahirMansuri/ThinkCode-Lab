@@ -198,4 +198,72 @@ test('Animated Python Plot Loader CSS classes and keyframes exist in src/styles.
   assert.ok(css.includes('@keyframes pyDrawLine'), 'styles.css must contain @keyframes pyDrawLine');
 });
 
+// 9. Python Worker Interactive input() Prompt Streaming & Non-TTY Guard
+test('python.worker.js streams input() prompts immediately before need_input (isatty: false + flushStdoutBuffer)', () => {
+  const workerSrc = fs.readFileSync(path.join(rootDir, 'src', 'engines', 'python.worker.js'), 'utf8');
+  assert.ok(workerSrc.includes('isatty: false'), 'py.setStdin must use isatty: false so CPython writes prompts to Python sys.stdout');
+  assert.ok(workerSrc.includes('function emitStdout('), 'python.worker.js must stream partial stdout lines via emitStdout');
+  assert.ok(workerSrc.includes('flushStdoutBuffer();\n          // Priority 1:'), 'stdin() must flush stdoutBuf before posting need_input');
+  assert.ok(workerSrc.includes('sys.stdout.reconfigure(line_buffering=True, write_through=True)'), 'stdout must enable write_through for print(..., end="") before input()');
+});
+
+// 10. Real Pyodide 3.12 Interactive Prompt Ordering Test
+const { loadPyodide } = await import('pyodide');
+{
+  const py = await loadPyodide();
+  const events = [];
+  const dec = new TextDecoder();
+  let stdoutBuf = '';
+  const PLOT_PREFIX = '__THINKCODE_IMAGE_B64__:';
+
+  const emitStdout = chunk => {
+    if (!chunk) return;
+    stdoutBuf += chunk;
+    let nl;
+    while ((nl = stdoutBuf.indexOf('\n')) !== -1) {
+      const line = stdoutBuf.slice(0, nl);
+      stdoutBuf = stdoutBuf.slice(nl + 1);
+      if (line.startsWith(PLOT_PREFIX)) events.push(['plot', line.slice(PLOT_PREFIX.length).trim()]);
+      else events.push(['out', line + '\n']);
+    }
+    if (stdoutBuf && !PLOT_PREFIX.startsWith(stdoutBuf) && !stdoutBuf.startsWith(PLOT_PREFIX)) {
+      events.push(['out', stdoutBuf]);
+      stdoutBuf = '';
+    }
+  };
+  const flushStdoutBuffer = () => {
+    if (!stdoutBuf) return;
+    if (stdoutBuf.startsWith(PLOT_PREFIX)) events.push(['plot', stdoutBuf.slice(PLOT_PREFIX.length).trim()]);
+    else events.push(['out', stdoutBuf]);
+    stdoutBuf = '';
+  };
+
+  py.setStdout({ write: b => { emitStdout(dec.decode(b, { stream: true })); return b.length; } });
+  const answers = ['Tahir', '10'];
+  py.setStdin({
+    isatty: false,
+    autoEOF: true,
+    stdin: () => {
+      flushStdoutBuffer();
+      events.push(['need_input']);
+      const v = answers.shift();
+      return v === undefined ? null : v + '\n';
+    }
+  });
+  await py.runPythonAsync('import sys\nsys.stdout.reconfigure(line_buffering=True, write_through=True)');
+  await py.runPythonAsync('name = input("Your name: ")\nprint(f"Hello, {name}!")\nprint("Num: ", end="")\nn = int(input())\nprint(n * 2)');
+  flushStdoutBuffer();
+
+  assert.deepEqual(events, [
+    ['out', 'Your name: '],
+    ['need_input'],
+    ['out', 'Hello, Tahir!\n'],
+    ['out', 'Num: '],
+    ['need_input'],
+    ['out', '20\n']
+  ]);
+  passed++;
+  console.log('  ✓ Real Pyodide 3.12 emits input("Your name: ") & print(..., end="") BEFORE need_input');
+}
+
 console.log(`\nAll ${passed} Python Data Science tests passed successfully! ✨\n`);
