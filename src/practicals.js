@@ -3052,31 +3052,31 @@ echo "Testing Number: " . $checkNumber . "\\n";
 
 // 1. Positive, Negative, or Zero Check
 if ($checkNumber > 0) {
-    echo "Sign Check      : Positive Number (+)\\n";
+  echo "Sign Check      : Positive Number (+)\\n";
 } elseif ($checkNumber < 0) {
-    echo "Sign Check      : Negative Number (-)\\n";
+  echo "Sign Check      : Negative Number (-)\\n";
 } else {
-    echo "Sign Check      : Zero (0)\\n";
+  echo "Sign Check      : Zero (0)\\n";
 }
 
 // 2. Even or Odd Check
 if ($checkNumber % 2 == 0) {
-    echo "Parity Check    : Even Number\\n";
+  echo "Parity Check    : Even Number\\n";
 } else {
-    echo "Parity Check    : Odd Number\\n";
+  echo "Parity Check    : Odd Number\\n";
 }
 
 // 3. Prime Number Check
 $isPrime = true;
 if ($checkNumber <= 1) {
-    $isPrime = false;
+  $isPrime = false;
 } else {
-    for ($i = 2; $i <= sqrt($checkNumber); $i++) {
-        if ($checkNumber % $i == 0) {
-            $isPrime = false;
-            break;
-        }
+  for ($i = 2; $i <= sqrt($checkNumber); $i++) {
+    if ($checkNumber % $i == 0) {
+      $isPrime = false;
+      break;
     }
+  }
 }
 echo "Prime Check     : " . ($isPrime ? "Yes (Prime Number)" : "No (Composite Number)") . "\\n";
 
@@ -3087,8 +3087,8 @@ $tableNumber = 7;
 echo "Multiplication Table for {$tableNumber} (Generated via for-loop):\\n";
 
 for ($multiplier = 1; $multiplier <= 10; $multiplier++) {
-    $result = $tableNumber * $multiplier;
-    printf("   %2d  x  %2d  =  %3d\\n", $tableNumber, $multiplier, $result);
+  $result = $tableNumber * $multiplier;
+  printf("   %2d  x  %2d  =  %3d\\n", $tableNumber, $multiplier, $result);
 }
 echo "========================================================\\n";
 ?>`
@@ -3109,33 +3109,33 @@ echo "========================================================\\n";
 
 // User-Defined Function: Calculate Student Grade based on Percentage
 function calculateGrade($percentage) {
-    if ($percentage >= 75) return "Distinction (A+)";
-    if ($percentage >= 60) return "First Class (A)";
-    if ($percentage >= 50) return "Second Class (B)";
-    if ($percentage >= 40) return "Pass Class (C)";
-    return "Fail (F)";
+  if ($percentage >= 75) return "Distinction (A+)";
+  if ($percentage >= 60) return "First Class (A)";
+  if ($percentage >= 50) return "Second Class (B)";
+  if ($percentage >= 40) return "Pass Class (C)";
+  return "Fail (F)";
 }
 
 // User-Defined Function: Print Formatted Header
 function printHeader($title) {
-    echo "========================================================\\n";
-    echo "  " . strtoupper($title) . "\\n";
-    echo "========================================================\\n";
+  echo "========================================================\\n";
+  echo "  " . strtoupper($title) . "\\n";
+  echo "========================================================\\n";
 }
 
 // 1. Indexed Array Demonstration
 printHeader("1. Indexed Array: TYBCA Semester V Subjects");
 $subjects = [
-    "CA-311: Software Engineering",
-    "CA-312: Core Java Programming",
-    "CA-313: Python Programming-II",
-    "CA-314: Web Technology-I (PHP & MySQL)",
-    "CA-315: Practical on Java",
-    "CA-317(A): Practical on Web Technology"
+  "CA-311: Software Engineering",
+  "CA-312: Core Java Programming",
+  "CA-313: Python Programming-II",
+  "CA-314: Web Technology-I (PHP & MySQL)",
+  "CA-315: Practical on Java",
+  "CA-317(A): Practical on Web Technology"
 ];
 
 foreach ($subjects as $index => $subject) {
-    echo "  [" . ($index + 1) . "] " . $subject . "\\n";
+  echo "  [" . ($index + 1) . "] " . $subject . "\\n";
 }
 
 echo "--------------------------------------------------------\\n";
@@ -3143,13 +3143,13 @@ echo "--------------------------------------------------------\\n";
 // 2. Associative Array Demonstration: Student Marksheet
 printHeader("2. Associative Array: Student Academic Record");
 $student = [
-    "Roll No"     => 301,
-    "Name"        => "Tahir Mansuri",
-    "Class"       => "TYBCA Semester V",
-    "Web Tech"    => 88,
-    "Java"        => 85,
-    "Python"      => 92,
-    "Software Eng"=> 79
+  "Roll No"     => 301,
+  "Name"        => "Tahir Mansuri",
+  "Class"       => "TYBCA Semester V",
+  "Web Tech"    => 88,
+  "Java"        => 85,
+  "Python"      => 92,
+  "Software Eng"=> 79
 ];
 
 $totalMarks = $student["Web Tech"] + $student["Java"] + $student["Python"] + $student["Software Eng"];
@@ -3157,7 +3157,7 @@ $percentage = $totalMarks / 4.0;
 $grade = calculateGrade($percentage);
 
 foreach ($student as $key => $value) {
-    printf("  %-15s : %s\\n", $key, $value);
+  printf("  %-15s : %s\\n", $key, $value);
 }
 echo "  ----------------------------------------------------\\n";
 printf("  %-15s : %d / 400\\n", "Total Marks", $totalMarks);
@@ -3198,27 +3198,27 @@ echo "--------------------------------------------------------\\n";
 
 // Execute with SQLite / In-Memory engine for 100% offline client-side verification
 try {
-    $pdo = new PDO('sqlite::memory:');
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-    // Create students table
-    $pdo->exec("CREATE TABLE IF NOT EXISTS students (
-        roll_no INTEGER PRIMARY KEY,
-        name TEXT NOT NULL,
-        course TEXT NOT NULL,
-        marks REAL NOT NULL
-    )");
+  $pdo = new PDO('sqlite::memory:');
+  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  
+  // Create students table
+  $pdo->exec("CREATE TABLE IF NOT EXISTS students (
+    roll_no INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    course TEXT NOT NULL,
+    marks REAL NOT NULL
+  )");
 
-    // Insert record
-    $stmt = $pdo->prepare("INSERT INTO students (roll_no, name, course, marks) VALUES (?, ?, ?, ?)");
-    $stmt->execute([$roll, $name, $course, $marks]);
+  // Insert record
+  $stmt = $pdo->prepare("INSERT INTO students (roll_no, name, course, marks) VALUES (?, ?, ?, ?)");
+  $stmt->execute([$roll, $name, $course, $marks]);
 
-    echo "✓ Connection to Database established successfully!\\n";
-    echo "✓ SQL Executed: INSERT INTO students (roll_no, name, course, marks)\\n";
-    echo "                VALUES ({$roll}, '{$name}', '{$course}', {$marks});\\n";
-    echo "✓ Student record inserted successfully into 'students' table!\\n";
+  echo "✓ Connection to Database established successfully!\\n";
+  echo "✓ SQL Executed: INSERT INTO students (roll_no, name, course, marks)\\n";
+  echo "                VALUES ({$roll}, '{$name}', '{$course}', {$marks});\\n";
+  echo "✓ Student record inserted successfully into 'students' table!\\n";
 } catch (Exception $e) {
-    echo "Database Error: " . $e->getMessage() . "\\n";
+  echo "Database Error: " . $e->getMessage() . "\\n";
 }
 
 echo "--------------------------------------------------------\\n";
@@ -3255,36 +3255,36 @@ $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 // 1. CREATE TABLE
 $pdo->exec("CREATE TABLE students (
-    id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    course TEXT NOT NULL,
-    marks REAL NOT NULL
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  course TEXT NOT NULL,
+  marks REAL NOT NULL
 )");
 
 // 2. CREATE (INSERT) RECORDS
 $students = [
-    [101, "Tahir Mansuri", "TYBCA", 88.5],
-    [102, "Amit Sharma",   "TYBCA", 74.0],
-    [103, "Pooja Patel",   "SYBCA", 82.0],
-    [104, "Vikas Verma",   "FYBCA", 65.5]
+  [101, "Tahir Mansuri", "TYBCA", 88.5],
+  [102, "Amit Sharma",   "TYBCA", 74.0],
+  [103, "Pooja Patel",   "SYBCA", 82.0],
+  [104, "Vikas Verma",   "FYBCA", 65.5]
 ];
 
 $insertStmt = $pdo->prepare("INSERT INTO students VALUES (?, ?, ?, ?)");
 foreach ($students as $s) {
-    $insertStmt->execute($s);
+  $insertStmt->execute($s);
 }
 echo "✓ [CREATE] 4 Student records inserted into database.\\n\\n";
 
 // Helper Function: Display Current Table
 function displayRecords($pdo, $stageTitle) {
-    echo "--- " . strtoupper($stageTitle) . " ---\\n";
-    printf(" %-5s | %-16s | %-8s | %-6s\\n", "ID", "Name", "Course", "Marks");
-    echo "-------------------------------------------\\n";
-    $stmt = $pdo->query("SELECT * FROM students ORDER BY id ASC");
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        printf(" %-5d | %-16s | %-8s | %-6.1f\\n", $row['id'], $row['name'], $row['course'], $row['marks']);
-    }
-    echo "\\n";
+  echo "--- " . strtoupper($stageTitle) . " ---\\n";
+  printf(" %-5s | %-16s | %-8s | %-6s\\n", "ID", "Name", "Course", "Marks");
+  echo "-------------------------------------------\\n";
+  $stmt = $pdo->query("SELECT * FROM students ORDER BY id ASC");
+  while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    printf(" %-5d | %-16s | %-8s | %-6.1f\\n", $row['id'], $row['name'], $row['course'], $row['marks']);
+  }
+  echo "\\n";
 }
 
 // 3. READ (SELECT)
@@ -3371,12 +3371,12 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'POST';
 
 // Fallback test values if running script standalone without form submission
 if (empty($_POST) && empty($_GET)) {
-    $_POST = [
-        'name'   => 'Tahir Mansuri',
-        'email'  => 'tahir@infogalaxy.edu',
-        'course' => 'TYBCA',
-        'phone'  => '9876543210'
-    ];
+  $_POST = [
+    'name'   => 'Tahir Mansuri',
+    'email'  => 'tahir@infogalaxy.edu',
+    'course' => 'TYBCA',
+    'phone'  => '9876543210'
+  ];
 }
 
 $inputSource = ($method === 'POST') ? $_POST : $_GET;
@@ -3389,21 +3389,21 @@ $phone  = isset($inputSource['phone'])  ? trim(htmlspecialchars($inputSource['ph
 
 // 2. Input Validation Rules
 if (empty($name)) {
-    $errors[] = "Name field is required.";
+  $errors[] = "Name field is required.";
 } elseif (!preg_match("/^[a-zA-Z\\s]+$/", $name)) {
-    $errors[] = "Name must contain only alphabets and spaces.";
+  $errors[] = "Name must contain only alphabets and spaces.";
 }
 
 if (empty($email)) {
-    $errors[] = "Email field is required.";
+  $errors[] = "Email field is required.";
 } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    $errors[] = "Invalid email format.";
+  $errors[] = "Invalid email format.";
 }
 
 if (empty($phone)) {
-    $errors[] = "Phone number is required.";
+  $errors[] = "Phone number is required.";
 } elseif (!preg_match("/^[0-9]{10}$/", $phone)) {
-    $errors[] = "Phone number must be exactly 10 digits.";
+  $errors[] = "Phone number must be exactly 10 digits.";
 }
 
 echo "========================================================\\n";
@@ -3411,20 +3411,20 @@ echo "   PHP FORM PROCESSING & VALIDATION REPORT (" . $method . ")\\n";
 echo "========================================================\\n";
 
 if (empty($errors)) {
-    echo "✓ FORM VALIDATION SUCCESSFUL!\\n";
-    echo "--------------------------------------------------------\\n";
-    echo "Applicant Name : " . $name . "\\n";
-    echo "Email Address  : " . $email . "\\n";
-    echo "Enrolled Course: " . $course . "\\n";
-    echo "Contact Phone  : " . $phone . "\\n";
-    echo "Submission Time: " . date("d-M-Y H:i:s") . "\\n";
-    echo "Status         : Application Approved & Registered\\n";
+  echo "✓ FORM VALIDATION SUCCESSFUL!\\n";
+  echo "--------------------------------------------------------\\n";
+  echo "Applicant Name : " . $name . "\\n";
+  echo "Email Address  : " . $email . "\\n";
+  echo "Enrolled Course: " . $course . "\\n";
+  echo "Contact Phone  : " . $phone . "\\n";
+  echo "Submission Time: " . date("d-M-Y H:i:s") . "\\n";
+  echo "Status         : Application Approved & Registered\\n";
 } else {
-    echo "✗ VALIDATION ERRORS DETECTED:\\n";
-    echo "--------------------------------------------------------\\n";
-    foreach ($errors as $idx => $err) {
-        echo "  [" . ($idx + 1) . "] " . $err . "\\n";
-    }
+  echo "✗ VALIDATION ERRORS DETECTED:\\n";
+  echo "--------------------------------------------------------\\n";
+  foreach ($errors as $idx => $err) {
+    echo "  [" . ($idx + 1) . "] " . $err . "\\n";
+  }
 }
 echo "========================================================\\n";
 ?>`
@@ -3476,23 +3476,23 @@ echo "========================================================\\n";
 
 // Start or resume session
 if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+  session_start();
 }
 
 // Authorized credentials database
 $validUsers = [
-    "student_tahir" => [
-        "password" => "bca2026",
-        "name"     => "Tahir Mansuri",
-        "role"     => "Student (TYBCA)",
-        "email"    => "tahir@infogalaxy.edu"
-    ],
-    "admin" => [
-        "password" => "admin123",
-        "name"     => "Lab Incharge",
-        "role"     => "Faculty Administrator",
-        "email"    => "admin@infogalaxy.edu"
-    ]
+  "student_tahir" => [
+    "password" => "bca2026",
+    "name"     => "Tahir Mansuri",
+    "role"     => "Student (TYBCA)",
+    "email"    => "tahir@infogalaxy.edu"
+  ],
+  "admin" => [
+    "password" => "admin123",
+    "name"     => "Lab Incharge",
+    "role"     => "Faculty Administrator",
+    "email"    => "admin@infogalaxy.edu"
+  ]
 ];
 
 // Determine Action: login, logout, or view status
@@ -3503,39 +3503,39 @@ echo "      PHP SESSION-BASED AUTHENTICATION SYSTEM           \\n";
 echo "========================================================\\n";
 
 if ($action === 'logout') {
-    // Clear all session variables & destroy
-    $_SESSION = [];
-    if (session_id()) session_destroy();
-    echo "✓ LOGOUT SUCCESSFUL!\\n";
-    echo "  Session destroyed. User signed out securely.\\n";
-    echo "========================================================\\n";
-    exit;
+  // Clear all session variables & destroy
+  $_SESSION = [];
+  if (session_id()) session_destroy();
+  echo "✓ LOGOUT SUCCESSFUL!\\n";
+  echo "  Session destroyed. User signed out securely.\\n";
+  echo "========================================================\\n";
+  exit;
 }
 
 if ($action === 'login') {
-    $username = $_POST['username'] ?? 'student_tahir';
-    $password = $_POST['password'] ?? 'bca2026';
+  $username = $_POST['username'] ?? 'student_tahir';
+  $password = $_POST['password'] ?? 'bca2026';
 
-    if (isset($validUsers[$username]) && $validUsers[$username]['password'] === $password) {
-        // Authentication succeeded -> Store in Session
-        $_SESSION['authenticated'] = true;
-        $_SESSION['username']      = $username;
-        $_SESSION['user_data']     = $validUsers[$username];
-        $_SESSION['login_time']    = date("Y-m-d H:i:s");
+  if (isset($validUsers[$username]) && $validUsers[$username]['password'] === $password) {
+    // Authentication succeeded -> Store in Session
+    $_SESSION['authenticated'] = true;
+    $_SESSION['username']      = $username;
+    $_SESSION['user_data']     = $validUsers[$username];
+    $_SESSION['login_time']    = date("Y-m-d H:i:s");
 
-        echo "✓ LOGIN SUCCESSFUL!\\n";
-        echo "--------------------------------------------------------\\n";
-        echo "Active Session ID : " . session_id() . "\\n";
-        echo "User Full Name    : " . $_SESSION['user_data']['name'] . "\\n";
-        echo "Role / Category   : " . $_SESSION['user_data']['role'] . "\\n";
-        echo "Email Address     : " . $_SESSION['user_data']['email'] . "\\n";
-        echo "Authenticated At  : " . $_SESSION['login_time'] . "\\n";
-        echo "Session Status    : Active (Logged In)\\n";
-        echo "--------------------------------------------------------\\n";
-        echo "Welcome to the TYBCA Student Dashboard!\\n";
-    } else {
-        echo "✗ ACCESS DENIED: Invalid username or password.\\n";
-    }
+    echo "✓ LOGIN SUCCESSFUL!\\n";
+    echo "--------------------------------------------------------\\n";
+    echo "Active Session ID : " . session_id() . "\\n";
+    echo "User Full Name    : " . $_SESSION['user_data']['name'] . "\\n";
+    echo "Role / Category   : " . $_SESSION['user_data']['role'] . "\\n";
+    echo "Email Address     : " . $_SESSION['user_data']['email'] . "\\n";
+    echo "Authenticated At  : " . $_SESSION['login_time'] . "\\n";
+    echo "Session Status    : Active (Logged In)\\n";
+    echo "--------------------------------------------------------\\n";
+    echo "Welcome to the TYBCA Student Dashboard!\\n";
+  } else {
+    echo "✗ ACCESS DENIED: Invalid username or password.\\n";
+  }
 }
 echo "========================================================\\n";
 ?>`
@@ -3616,10 +3616,10 @@ echo "PART B: FILE UPLOAD INSPECTION & VERIFICATION\\n";
 
 // Realistic file representation if submitted via form or simulated
 $simulatedFile = [
-    'name'     => 'tybca_php_practical_report.pdf',
-    'type'     => 'application/pdf',
-    'size'     => 148520, // ~145 KB
-    'error'    => 0
+  'name'     => 'tybca_php_practical_report.pdf',
+  'type'     => 'application/pdf',
+  'size'     => 148520, // ~145 KB
+  'error'    => 0
 ];
 
 $file = !empty($_FILES['project_file']['name']) ? $_FILES['project_file'] : $simulatedFile;
@@ -3633,20 +3633,20 @@ $allowedExtensions = ['txt', 'pdf', 'doc', 'docx', 'png', 'jpg', 'php'];
 $maxSize = 2 * 1024 * 1024; // 2MB
 
 if ($fileError === 0) {
-    if (!in_array($fileExt, $allowedExtensions)) {
-        echo "✗ Error: Invalid file format (." . $fileExt . "). Allowed: " . implode(', ', $allowedExtensions) . "\\n";
-    } elseif ($fileSize > $maxSize) {
-        echo "✗ Error: File size exceeds the maximum 2MB limit.\\n";
-    } else {
-        echo "✓ File Upload Validated Successfully!\\n";
-        echo "  • Filename   : " . $fileName . "\\n";
-        echo "  • File Size  : " . round($fileSize / 1024, 2) . " KB\\n";
-        echo "  • Extension  : " . strtoupper($fileExt) . "\\n";
-        echo "  • Destination: uploads/" . $fileName . "\\n";
-        echo "✓ Status     : Stored successfully on server.\\n";
-    }
+  if (!in_array($fileExt, $allowedExtensions)) {
+    echo "✗ Error: Invalid file format (." . $fileExt . "). Allowed: " . implode(', ', $allowedExtensions) . "\\n";
+  } elseif ($fileSize > $maxSize) {
+    echo "✗ Error: File size exceeds the maximum 2MB limit.\\n";
+  } else {
+    echo "✓ File Upload Validated Successfully!\\n";
+    echo "  • Filename   : " . $fileName . "\\n";
+    echo "  • File Size  : " . round($fileSize / 1024, 2) . " KB\\n";
+    echo "  • Extension  : " . strtoupper($fileExt) . "\\n";
+    echo "  • Destination: uploads/" . $fileName . "\\n";
+    echo "✓ Status     : Stored successfully on server.\\n";
+  }
 } else {
-    echo "✗ File upload encountered error code: " . $fileError . "\\n";
+  echo "✗ File upload encountered error code: " . $fileError . "\\n";
 }
 echo "========================================================\\n";
 ?>`
@@ -3667,56 +3667,56 @@ echo "========================================================\\n";
 
 // 1. Define Student Class using Object-Oriented PHP
 class Student implements JsonSerializable {
-    private $rollNo;
-    private $name;
-    private $course;
-    private $marks;
-    private $status;
+  private $rollNo;
+  private $name;
+  private $course;
+  private $marks;
+  private $status;
 
-    public function __construct($rollNo, $name, $course, $marks) {
-        $this->rollNo = $rollNo;
-        $this->name   = $name;
-        $this->course = $course;
-        $this->marks  = $marks;
-        $this->status = ($marks >= 40) ? "PASS" : "FAIL";
-    }
+  public function __construct($rollNo, $name, $course, $marks) {
+    $this->rollNo = $rollNo;
+    $this->name   = $name;
+    $this->course = $course;
+    $this->marks  = $marks;
+    $this->status = ($marks >= 40) ? "PASS" : "FAIL";
+  }
 
-    // Getters
-    public function getRollNo() { return $this->rollNo; }
-    public function getName()   { return $this->name; }
-    public function getCourse() { return $this->course; }
-    public function getMarks()  { return $this->marks; }
-    public function getStatus() { return $this->status; }
+  // Getters
+  public function getRollNo() { return $this->rollNo; }
+  public function getName()   { return $this->name; }
+  public function getCourse() { return $this->course; }
+  public function getMarks()  { return $this->marks; }
+  public function getStatus() { return $this->status; }
 
-    // Custom JSON serialization representation
-    public function jsonSerialize(): mixed {
-        return [
-            'roll_no' => $this->rollNo,
-            'name'    => $this->name,
-            'course'  => $this->course,
-            'marks'   => $this->marks,
-            'status'  => $this->status
-        ];
-    }
+  // Custom JSON serialization representation
+  public function jsonSerialize(): mixed {
+    return [
+      'roll_no' => $this->rollNo,
+      'name'    => $this->name,
+      'course'  => $this->course,
+      'marks'   => $this->marks,
+      'status'  => $this->status
+    ];
+  }
 }
 
 // 2. Instantiate Objects (simulating database records from college_db)
 $studentList = [
-    new Student(101, "Tahir Mansuri", "TYBCA", 88.5),
-    new Student(102, "Amit Sharma",   "TYBCA", 74.0),
-    new Student(103, "Pooja Patel",   "SYBCA", 91.5),
-    new Student(104, "Rahul Patil",   "TYBCA", 82.0),
-    new Student(105, "Sneha Kulkarni","FYBCA", 68.0)
+  new Student(101, "Tahir Mansuri", "TYBCA", 88.5),
+  new Student(102, "Amit Sharma",   "TYBCA", 74.0),
+  new Student(103, "Pooja Patel",   "SYBCA", 91.5),
+  new Student(104, "Rahul Patil",   "TYBCA", 82.0),
+  new Student(105, "Sneha Kulkarni","FYBCA", 68.0)
 ];
 
 // 3. Construct API Response Envelope
 $response = [
-    "status"      => "success",
-    "course_code" => "CA-317(A)",
-    "course_title"=> "Web Technology-I (PHP)",
-    "timestamp"   => date("c"),
-    "total_count" => count($studentList),
-    "data"        => $studentList
+  "status"      => "success",
+  "course_code" => "CA-317(A)",
+  "course_title"=> "Web Technology-I (PHP)",
+  "timestamp"   => date("c"),
+  "total_count" => count($studentList),
+  "data"        => $studentList
 ];
 
 // 4. Encode to JSON with clean indentation
@@ -3746,30 +3746,30 @@ using System;
 
 namespace ThinkCodeLab
 {
-    class Program
+  class Program
+  {
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("=================================================");
-            Console.WriteLine("    TYBCA C#.NET LAB - STUDENT REGISTRATION      ");
-            Console.WriteLine("=================================================");
+      Console.WriteLine("=================================================");
+      Console.WriteLine("    TYBCA C#.NET LAB - STUDENT REGISTRATION      ");
+      Console.WriteLine("=================================================");
 
-            // Student profile details
-            string name = "Tahir Mansuri";
-            int rollNo = 101;
-            string course = "Bachelor of Computer Applications (TYBCA)";
-            string college = "InfoGalaxy Computers, Shirpur";
-            string subject = "Programming using C#.Net (CA-314)";
+      // Student profile details
+      string name = "Tahir Mansuri";
+      int rollNo = 101;
+      string course = "Bachelor of Computer Applications (TYBCA)";
+      string college = "InfoGalaxy Computers, Shirpur";
+      string subject = "Programming using C#.Net (CA-314)";
 
-            Console.WriteLine($"Student Name : {name}");
-            Console.WriteLine($"Roll Number  : {rollNo}");
-            Console.WriteLine($"Course       : {course}");
-            Console.WriteLine($"College      : {college}");
-            Console.WriteLine($"Subject Code : {subject}");
-            Console.WriteLine("=================================================");
-            Console.WriteLine("C# program structure executed successfully!");
-        }
+      Console.WriteLine($"Student Name : {name}");
+      Console.WriteLine($"Roll Number  : {rollNo}");
+      Console.WriteLine($"Course       : {course}");
+      Console.WriteLine($"College      : {college}");
+      Console.WriteLine($"Subject Code : {subject}");
+      Console.WriteLine("=================================================");
+      Console.WriteLine("C# program structure executed successfully!");
     }
+  }
 }`
     },
     {
@@ -3784,34 +3784,34 @@ using System;
 
 namespace ThinkCodeLab
 {
-    class ArithmeticApp
+  class ArithmeticApp
+  {
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("=================================================");
-            Console.WriteLine("        C# DATA TYPES & ARITHMETIC OPERATORS     ");
-            Console.WriteLine("=================================================");
+      Console.WriteLine("=================================================");
+      Console.WriteLine("        C# DATA TYPES & ARITHMETIC OPERATORS     ");
+      Console.WriteLine("=================================================");
 
-            int num1 = 45;
-            int num2 = 12;
+      int num1 = 45;
+      int num2 = 12;
 
-            int sum = num1 + num2;
-            int diff = num1 - num2;
-            int product = num1 * num2;
-            double quotient = (double)num1 / num2;
-            int remainder = num1 % num2;
+      int sum = num1 + num2;
+      int diff = num1 - num2;
+      int product = num1 * num2;
+      double quotient = (double)num1 / num2;
+      int remainder = num1 % num2;
 
-            Console.WriteLine($"First Number  : {num1}");
-            Console.WriteLine($"Second Number : {num2}");
-            Console.WriteLine("-------------------------------------------------");
-            Console.WriteLine($"Addition       ({num1} + {num2}) = {sum}");
-            Console.WriteLine($"Subtraction    ({num1} - {num2}) = {diff}");
-            Console.WriteLine($"Multiplication ({num1} * {num2}) = {product}");
-            Console.WriteLine($"Division       ({num1} / {num2}) = {quotient:F2}");
-            Console.WriteLine($"Modulus        ({num1} % {num2}) = {remainder}");
-            Console.WriteLine("=================================================");
-        }
+      Console.WriteLine($"First Number  : {num1}");
+      Console.WriteLine($"Second Number : {num2}");
+      Console.WriteLine("-------------------------------------------------");
+      Console.WriteLine($"Addition       ({num1} + {num2}) = {sum}");
+      Console.WriteLine($"Subtraction    ({num1} - {num2}) = {diff}");
+      Console.WriteLine($"Multiplication ({num1} * {num2}) = {product}");
+      Console.WriteLine($"Division       ({num1} / {num2}) = {quotient:F2}");
+      Console.WriteLine($"Modulus        ({num1} % {num2}) = {remainder}");
+      Console.WriteLine("=================================================");
     }
+  }
 }`
     },
     {
@@ -3826,69 +3826,69 @@ using System;
 
 namespace ThinkCodeLab
 {
-    class GradeCalculator
+  class GradeCalculator
+  {
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("=================================================");
-            Console.WriteLine("      TYBCA SEMESTER MARKSHEET & GRADE EVAL      ");
-            Console.WriteLine("=================================================");
+      Console.WriteLine("=================================================");
+      Console.WriteLine("      TYBCA SEMESTER MARKSHEET & GRADE EVAL      ");
+      Console.WriteLine("=================================================");
 
-            int csharpMarks = 85;
-            int phpMarks = 78;
-            int javaMarks = 92;
-            int osMarks = 88;
-            int totalSubjects = 4;
+      int csharpMarks = 85;
+      int phpMarks = 78;
+      int javaMarks = 92;
+      int osMarks = 88;
+      int totalSubjects = 4;
 
-            int totalMarks = csharpMarks + phpMarks + javaMarks + osMarks;
-            double percentage = (double)totalMarks / totalSubjects;
+      int totalMarks = csharpMarks + phpMarks + javaMarks + osMarks;
+      double percentage = (double)totalMarks / totalSubjects;
 
-            string grade;
-            string remarks;
+      string grade;
+      string remarks;
 
-            if (percentage >= 85)
-            {
-                grade = "A+ (Distinction)";
-                remarks = "Outstanding Performance";
-            }
-            else if (percentage >= 75)
-            {
-                grade = "A (First Class with Dist)";
-                remarks = "Excellent Work";
-            }
-            else if (percentage >= 60)
-            {
-                grade = "B (First Class)";
-                remarks = "Very Good";
-            }
-            else if (percentage >= 50)
-            {
-                grade = "C (Second Class)";
-                remarks = "Good, Scope for Improvement";
-            }
-            else if (percentage >= 40)
-            {
-                grade = "D (Pass Class)";
-                remarks = "Passed";
-            }
-            else
-            {
-                grade = "F (Fail)";
-                remarks = "Needs Remediate Practice";
-            }
+      if (percentage >= 85)
+      {
+        grade = "A+ (Distinction)";
+        remarks = "Outstanding Performance";
+      }
+      else if (percentage >= 75)
+      {
+        grade = "A (First Class with Dist)";
+        remarks = "Excellent Work";
+      }
+      else if (percentage >= 60)
+      {
+        grade = "B (First Class)";
+        remarks = "Very Good";
+      }
+      else if (percentage >= 50)
+      {
+        grade = "C (Second Class)";
+        remarks = "Good, Scope for Improvement";
+      }
+      else if (percentage >= 40)
+      {
+        grade = "D (Pass Class)";
+        remarks = "Passed";
+      }
+      else
+      {
+        grade = "F (Fail)";
+        remarks = "Needs Remediate Practice";
+      }
 
-            Console.WriteLine($"C#.NET Marks : {csharpMarks} / 100");
-            Console.WriteLine($"PHP Marks    : {phpMarks} / 100");
-            Console.WriteLine($"Java Marks   : {javaMarks} / 100");
-            Console.WriteLine($"OS Marks     : {osMarks} / 100");
-            Console.WriteLine("-------------------------------------------------");
-            Console.WriteLine($"Total Marks  : {totalMarks} / 400");
-            Console.WriteLine($"Percentage   : {percentage:F2}%");
-            Console.WriteLine($"Final Grade  : {grade}");
-            Console.WriteLine($"Result       : {remarks}");
-            Console.WriteLine("=================================================");
-        }
+      Console.WriteLine($"C#.NET Marks : {csharpMarks} / 100");
+      Console.WriteLine($"PHP Marks    : {phpMarks} / 100");
+      Console.WriteLine($"Java Marks   : {javaMarks} / 100");
+      Console.WriteLine($"OS Marks     : {osMarks} / 100");
+      Console.WriteLine("-------------------------------------------------");
+      Console.WriteLine($"Total Marks  : {totalMarks} / 400");
+      Console.WriteLine($"Percentage   : {percentage:F2}%");
+      Console.WriteLine($"Final Grade  : {grade}");
+      Console.WriteLine($"Result       : {remarks}");
+      Console.WriteLine("=================================================");
     }
+  }
 }`
     },
     {
@@ -3903,43 +3903,43 @@ using System;
 
 namespace ThinkCodeLab
 {
-    class LoopsApp
+  class LoopsApp
+  {
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("=================================================");
-            Console.WriteLine("      C# LOOPING CONSTRUCTS (FOR, WHILE, FOREACH) ");
-            Console.WriteLine("=================================================");
+      Console.WriteLine("=================================================");
+      Console.WriteLine("      C# LOOPING CONSTRUCTS (FOR, WHILE, FOREACH) ");
+      Console.WriteLine("=================================================");
 
-            // 1. For Loop: Multiplication Table of 7
-            int tableNum = 7;
-            Console.WriteLine($"[1] Multiplication Table of {tableNum} (for loop):");
-            for (int i = 1; i <= 10; i++)
-            {
-                Console.WriteLine($"    {tableNum} x {i,2} = {tableNum * i,2}");
-            }
+      // 1. For Loop: Multiplication Table of 7
+      int tableNum = 7;
+      Console.WriteLine($"[1] Multiplication Table of {tableNum} (for loop):");
+      for (int i = 1; i <= 10; i++)
+      {
+        Console.WriteLine($"    {tableNum} x {i,2} = {tableNum * i,2}");
+      }
 
-            // 2. While Loop: Factorial Calculation of 6
-            int factNum = 6;
-            long factResult = 1;
-            int counter = factNum;
-            while (counter > 1)
-            {
-                factResult *= counter;
-                counter--;
-            }
-            Console.WriteLine($"\\n[2] Factorial of {factNum} (while loop): {factResult}");
+      // 2. While Loop: Factorial Calculation of 6
+      int factNum = 6;
+      long factResult = 1;
+      int counter = factNum;
+      while (counter > 1)
+      {
+        factResult *= counter;
+        counter--;
+      }
+      Console.WriteLine($"\\n[2] Factorial of {factNum} (while loop): {factResult}");
 
-            // 3. Foreach Loop: Array Traversal
-            int[] primes = new int[] { 2, 3, 5, 7, 11, 13, 17, 19 };
-            Console.Write("\\n[3] Prime numbers under 20 (foreach loop): ");
-            foreach (int p in primes)
-            {
-                Console.Write($"{p} ");
-            }
-            Console.WriteLine("\\n=================================================");
-        }
+      // 3. Foreach Loop: Array Traversal
+      int[] primes = new int[] { 2, 3, 5, 7, 11, 13, 17, 19 };
+      Console.Write("\\n[3] Prime numbers under 20 (foreach loop): ");
+      foreach (int p in primes)
+      {
+        Console.Write($"{p} ");
+      }
+      Console.WriteLine("\\n=================================================");
     }
+  }
 }`
     },
     {
@@ -3954,61 +3954,61 @@ using System;
 
 namespace ThinkCodeLab
 {
-    class Employee
+  class Employee
+  {
+    // Encapsulated properties
+    public int EmployeeId { get; set; }
+    public string Name { get; set; }
+    public double BasicSalary { get; set; }
+    public string Department { get; set; }
+
+    // Parameterized Constructor
+    public Employee(int id, string name, double basicSalary, string dept)
     {
-        // Encapsulated properties
-        public int EmployeeId { get; set; }
-        public string Name { get; set; }
-        public double BasicSalary { get; set; }
-        public string Department { get; set; }
-
-        // Parameterized Constructor
-        public Employee(int id, string name, double basicSalary, string dept)
-        {
-            EmployeeId = id;
-            Name = name;
-            BasicSalary = basicSalary;
-            Department = dept;
-        }
-
-        // Method to compute net allowance & total salary
-        public double CalculateTotalSalary()
-        {
-            double hra = BasicSalary * 0.20; // 20% House Rent Allowance
-            double da = BasicSalary * 0.10;  // 10% Dearness Allowance
-            return BasicSalary + hra + da;
-        }
-
-        // Method to display details
-        public void DisplayDetails()
-        {
-            Console.WriteLine($"ID         : {EmployeeId}");
-            Console.WriteLine($"Name       : {Name}");
-            Console.WriteLine($"Department : {Department}");
-            Console.WriteLine($"Basic Pay  : Rs. {BasicSalary:N2}");
-            Console.WriteLine($"Gross Pay  : Rs. {CalculateTotalSalary():N2}");
-            Console.WriteLine("-------------------------------------------------");
-        }
+      EmployeeId = id;
+      Name = name;
+      BasicSalary = basicSalary;
+      Department = dept;
     }
 
-    class Program
+    // Method to compute net allowance & total salary
+    public double CalculateTotalSalary()
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("=================================================");
-            Console.WriteLine("   OOP ENCAPSULATION & EMPLOYEE MANAGEMENT       ");
-            Console.WriteLine("=================================================");
-
-            Employee emp1 = new Employee(1001, "Tahir Mansuri", 55000, "Software Engineering");
-            Employee emp2 = new Employee(1002, "Amit Sharma", 48000, "Quality Assurance");
-
-            emp1.DisplayDetails();
-            emp2.DisplayDetails();
-
-            Console.WriteLine("Employee records encapsulated and verified!");
-            Console.WriteLine("=================================================");
-        }
+      double hra = BasicSalary * 0.20; // 20% House Rent Allowance
+      double da = BasicSalary * 0.10;  // 10% Dearness Allowance
+      return BasicSalary + hra + da;
     }
+
+    // Method to display details
+    public void DisplayDetails()
+    {
+      Console.WriteLine($"ID         : {EmployeeId}");
+      Console.WriteLine($"Name       : {Name}");
+      Console.WriteLine($"Department : {Department}");
+      Console.WriteLine($"Basic Pay  : Rs. {BasicSalary:N2}");
+      Console.WriteLine($"Gross Pay  : Rs. {CalculateTotalSalary():N2}");
+      Console.WriteLine("-------------------------------------------------");
+    }
+  }
+
+  class Program
+  {
+    static void Main(string[] args)
+    {
+      Console.WriteLine("=================================================");
+      Console.WriteLine("   OOP ENCAPSULATION & EMPLOYEE MANAGEMENT       ");
+      Console.WriteLine("=================================================");
+
+      Employee emp1 = new Employee(1001, "Tahir Mansuri", 55000, "Software Engineering");
+      Employee emp2 = new Employee(1002, "Amit Sharma", 48000, "Quality Assurance");
+
+      emp1.DisplayDetails();
+      emp2.DisplayDetails();
+
+      Console.WriteLine("Employee records encapsulated and verified!");
+      Console.WriteLine("=================================================");
+    }
+  }
 }`
     },
     {
@@ -4023,78 +4023,78 @@ using System;
 
 namespace ThinkCodeLab
 {
-    // Base Class
-    class Employee
+  // Base Class
+  class Employee
+  {
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public double BaseSalary { get; set; }
+
+    public Employee(int id, string name, double baseSalary)
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public double BaseSalary { get; set; }
-
-        public Employee(int id, string name, double baseSalary)
-        {
-            Id = id;
-            Name = name;
-            BaseSalary = baseSalary;
-        }
-
-        // Virtual method intended for runtime polymorphism
-        public virtual double CalculateSalary()
-        {
-            return BaseSalary;
-        }
-
-        public virtual void Display()
-        {
-            Console.WriteLine($"[Staff] ID: {Id} | Name: {Name} | Total: Rs. {CalculateSalary():N2}");
-        }
+      Id = id;
+      Name = name;
+      BaseSalary = baseSalary;
     }
 
-    // Derived Class inheriting Employee
-    class Manager : Employee
+    // Virtual method intended for runtime polymorphism
+    public virtual double CalculateSalary()
     {
-        public double Bonus { get; set; }
-        public string ProjectTitle { get; set; }
-
-        // Forward constructor parameters to base class
-        public Manager(int id, string name, double baseSalary, double bonus, string project)
-            : base(id, name, baseSalary)
-        {
-            Bonus = bonus;
-            ProjectTitle = project;
-        }
-
-        // Override method to add manager bonus
-        public override double CalculateSalary()
-        {
-            return BaseSalary + Bonus;
-        }
-
-        public override void Display()
-        {
-            Console.WriteLine($"[Manager] ID: {Id} | Name: {Name} | Project: {ProjectTitle}");
-            Console.WriteLine($"          Base: Rs. {BaseSalary:N2} | Bonus: Rs. {Bonus:N2} | Total: Rs. {CalculateSalary():N2}");
-        }
+      return BaseSalary;
     }
 
-    class Program
+    public virtual void Display()
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("=================================================");
-            Console.WriteLine("      INHERITANCE & POLYMORPHISM DEMO            ");
-            Console.WriteLine("=================================================");
-
-            Employee staff = new Employee(201, "Pooja Patel", 42000);
-            Manager lead = new Manager(101, "Tahir Mansuri", 75000, 25000, "ThinkCode Mobile Platform");
-
-            staff.Display();
-            Console.WriteLine("-------------------------------------------------");
-            lead.Display();
-
-            Console.WriteLine("=================================================");
-            Console.WriteLine("Inheritance & virtual/override method dispatch verified!");
-        }
+      Console.WriteLine($"[Staff] ID: {Id} | Name: {Name} | Total: Rs. {CalculateSalary():N2}");
     }
+  }
+
+  // Derived Class inheriting Employee
+  class Manager : Employee
+  {
+    public double Bonus { get; set; }
+    public string ProjectTitle { get; set; }
+
+    // Forward constructor parameters to base class
+    public Manager(int id, string name, double baseSalary, double bonus, string project)
+      : base(id, name, baseSalary)
+    {
+      Bonus = bonus;
+      ProjectTitle = project;
+    }
+
+    // Override method to add manager bonus
+    public override double CalculateSalary()
+    {
+      return BaseSalary + Bonus;
+    }
+
+    public override void Display()
+    {
+      Console.WriteLine($"[Manager] ID: {Id} | Name: {Name} | Project: {ProjectTitle}");
+      Console.WriteLine($"          Base: Rs. {BaseSalary:N2} | Bonus: Rs. {Bonus:N2} | Total: Rs. {CalculateSalary():N2}");
+    }
+  }
+
+  class Program
+  {
+    static void Main(string[] args)
+    {
+      Console.WriteLine("=================================================");
+      Console.WriteLine("      INHERITANCE & POLYMORPHISM DEMO            ");
+      Console.WriteLine("=================================================");
+
+      Employee staff = new Employee(201, "Pooja Patel", 42000);
+      Manager lead = new Manager(101, "Tahir Mansuri", 75000, 25000, "ThinkCode Mobile Platform");
+
+      staff.Display();
+      Console.WriteLine("-------------------------------------------------");
+      lead.Display();
+
+      Console.WriteLine("=================================================");
+      Console.WriteLine("Inheritance & virtual/override method dispatch verified!");
+    }
+  }
 }`
     },
     {
@@ -4110,72 +4110,72 @@ using System.Collections.Generic;
 
 namespace ThinkCodeLab
 {
-    class Student
+  class Student
+  {
+    public int RollNo { get; set; }
+    public string Name { get; set; }
+    public double Marks { get; set; }
+
+    public Student(int rollNo, string name, double marks)
     {
-        public int RollNo { get; set; }
-        public string Name { get; set; }
-        public double Marks { get; set; }
-
-        public Student(int rollNo, string name, double marks)
-        {
-            RollNo = rollNo;
-            Name = name;
-            Marks = marks;
-        }
+      RollNo = rollNo;
+      Name = name;
+      Marks = marks;
     }
+  }
 
-    class Program
+  class Program
+  {
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+      Console.WriteLine("=================================================");
+      Console.WriteLine("      GENERIC COLLECTIONS: List<Student>         ");
+      Console.WriteLine("=================================================");
+
+      List<Student> roster = new List<Student>();
+
+      // 1. Dynamic Insertion
+      roster.Add(new Student(101, "Tahir Mansuri", 94.5));
+      roster.Add(new Student(102, "Amit Sharma", 82.0));
+      roster.Add(new Student(103, "Sneha Kulkarni", 88.5));
+      roster.Add(new Student(104, "Rahul Patil", 76.0));
+
+      Console.WriteLine($"Total Students Enrolled: {roster.Count}\\n");
+
+      // 2. Traversal with foreach
+      Console.WriteLine("RollNo | Student Name        | Marks  | Status");
+      Console.WriteLine("-----------------------------------------------");
+      foreach (var s in roster)
+      {
+        string status = s.Marks >= 40 ? "Pass" : "Fail";
+        Console.WriteLine($"{s.RollNo,-6} | {s.Name,-19} | {s.Marks,6:F1} | {status}");
+      }
+      Console.WriteLine("-----------------------------------------------");
+
+      // 3. Search operation by Roll Number
+      int searchRoll = 101;
+      Console.WriteLine($"\\nSearching for Roll Number {searchRoll}...");
+      Student found = null;
+      foreach (var s in roster)
+      {
+        if (s.RollNo == searchRoll)
         {
-            Console.WriteLine("=================================================");
-            Console.WriteLine("      GENERIC COLLECTIONS: List<Student>         ");
-            Console.WriteLine("=================================================");
-
-            List<Student> roster = new List<Student>();
-
-            // 1. Dynamic Insertion
-            roster.Add(new Student(101, "Tahir Mansuri", 94.5));
-            roster.Add(new Student(102, "Amit Sharma", 82.0));
-            roster.Add(new Student(103, "Sneha Kulkarni", 88.5));
-            roster.Add(new Student(104, "Rahul Patil", 76.0));
-
-            Console.WriteLine($"Total Students Enrolled: {roster.Count}\\n");
-
-            // 2. Traversal with foreach
-            Console.WriteLine("RollNo | Student Name        | Marks  | Status");
-            Console.WriteLine("-----------------------------------------------");
-            foreach (var s in roster)
-            {
-                string status = s.Marks >= 40 ? "Pass" : "Fail";
-                Console.WriteLine($"{s.RollNo,-6} | {s.Name,-19} | {s.Marks,6:F1} | {status}");
-            }
-            Console.WriteLine("-----------------------------------------------");
-
-            // 3. Search operation by Roll Number
-            int searchRoll = 101;
-            Console.WriteLine($"\\nSearching for Roll Number {searchRoll}...");
-            Student found = null;
-            foreach (var s in roster)
-            {
-                if (s.RollNo == searchRoll)
-                {
-                    found = s;
-                    break;
-                }
-            }
-
-            if (found != null)
-            {
-                Console.WriteLine($"✓ Match Found: {found.Name} secured {found.Marks}%");
-            }
-            else
-            {
-                Console.WriteLine("✗ Student record not found.");
-            }
-            Console.WriteLine("=================================================");
+          found = s;
+          break;
         }
+      }
+
+      if (found != null)
+      {
+        Console.WriteLine($"✓ Match Found: {found.Name} secured {found.Marks}%");
+      }
+      else
+      {
+        Console.WriteLine("✗ Student record not found.");
+      }
+      Console.WriteLine("=================================================");
     }
+  }
 }`
     },
     {
@@ -4190,71 +4190,71 @@ using System;
 
 namespace ThinkCodeLab
 {
-    class Program
+  class Program
+  {
+    static void SafeDivision(int numerator, int denominator)
     {
-        static void SafeDivision(int numerator, int denominator)
+      Console.WriteLine($"\\nDividing {numerator} by {denominator}:");
+      try
+      {
+        if (denominator == 0)
         {
-            Console.WriteLine($"\\nDividing {numerator} by {denominator}:");
-            try
-            {
-                if (denominator == 0)
-                {
-                    throw new DivideByZeroException("Division by zero is not permitted in arithmetic!");
-                }
-                int result = numerator / denominator;
-                Console.WriteLine($"  ✓ Quotient: {result}");
-            }
-            catch (DivideByZeroException ex)
-            {
-                Console.WriteLine($"  [Catch DivideByZeroException]: {ex.Message}");
-            }
-            catch (FormatException ex)
-            {
-                Console.WriteLine($"  [Catch FormatException]: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"  [Catch General Exception]: {ex.Message}");
-            }
-            finally
-            {
-                Console.WriteLine("  [Finally Block] Clean-up completed for division operation.");
-            }
+          throw new DivideByZeroException("Division by zero is not permitted in arithmetic!");
         }
-
-        static void Main(string[] args)
-        {
-            Console.WriteLine("=================================================");
-            Console.WriteLine("   STRUCTURED EXCEPTION HANDLING IN C# (.NET)    ");
-            Console.WriteLine("=================================================");
-
-            // Case 1: Valid division
-            SafeDivision(50, 5);
-
-            // Case 2: Division by zero triggers DivideByZeroException
-            SafeDivision(100, 0);
-
-            // Case 3: Format error simulation
-            Console.WriteLine("\\nParsing non-numeric text 'ABC' as integer:");
-            try
-            {
-                string invalidInput = "ABC";
-                int parsed = int.Parse(invalidInput);
-                Console.WriteLine($"Parsed number: {parsed}");
-            }
-            catch (FormatException ex)
-            {
-                Console.WriteLine($"  [Catch FormatException]: {ex.Message}");
-            }
-            finally
-            {
-                Console.WriteLine("  [Finally Block] Parsing routine finished.");
-            }
-
-            Console.WriteLine("\\n=================================================");
-            Console.WriteLine("Exception handling pipeline executed safely!");
-        }
+        int result = numerator / denominator;
+        Console.WriteLine($"  ✓ Quotient: {result}");
+      }
+      catch (DivideByZeroException ex)
+      {
+        Console.WriteLine($"  [Catch DivideByZeroException]: {ex.Message}");
+      }
+      catch (FormatException ex)
+      {
+        Console.WriteLine($"  [Catch FormatException]: {ex.Message}");
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine($"  [Catch General Exception]: {ex.Message}");
+      }
+      finally
+      {
+        Console.WriteLine("  [Finally Block] Clean-up completed for division operation.");
+      }
     }
+
+    static void Main(string[] args)
+    {
+      Console.WriteLine("=================================================");
+      Console.WriteLine("   STRUCTURED EXCEPTION HANDLING IN C# (.NET)    ");
+      Console.WriteLine("=================================================");
+
+      // Case 1: Valid division
+      SafeDivision(50, 5);
+
+      // Case 2: Division by zero triggers DivideByZeroException
+      SafeDivision(100, 0);
+
+      // Case 3: Format error simulation
+      Console.WriteLine("\\nParsing non-numeric text 'ABC' as integer:");
+      try
+      {
+        string invalidInput = "ABC";
+        int parsed = int.Parse(invalidInput);
+        Console.WriteLine($"Parsed number: {parsed}");
+      }
+      catch (FormatException ex)
+      {
+        Console.WriteLine($"  [Catch FormatException]: {ex.Message}");
+      }
+      finally
+      {
+        Console.WriteLine("  [Finally Block] Parsing routine finished.");
+      }
+
+      Console.WriteLine("\\n=================================================");
+      Console.WriteLine("Exception handling pipeline executed safely!");
+    }
+  }
 }`
     },
     {
@@ -4270,66 +4270,66 @@ using System.Windows.Forms;
 
 namespace ThinkCodeLab
 {
-    class StudentRegistrationForm : Form
+  class StudentRegistrationForm : Form
+  {
+    public StudentRegistrationForm()
     {
-        public StudentRegistrationForm()
-        {
-            this.Text = "TYBCA Student Enrollment Form";
-            this.Width = 480;
-            this.Height = 360;
+      this.Text = "TYBCA Student Enrollment Form";
+      this.Width = 480;
+      this.Height = 360;
 
-            // Form Title Header
-            Label lblHeader = new Label();
-            lblHeader.Text = "Student Registration Portal";
-            this.Controls.Add(lblHeader);
+      // Form Title Header
+      Label lblHeader = new Label();
+      lblHeader.Text = "Student Registration Portal";
+      this.Controls.Add(lblHeader);
 
-            // Student Name Input
-            Label lblName = new Label();
-            lblName.Text = "Full Name:";
-            TextBox txtName = new TextBox();
-            txtName.Text = "Tahir Mansuri";
-            this.Controls.Add(lblName);
-            this.Controls.Add(txtName);
+      // Student Name Input
+      Label lblName = new Label();
+      lblName.Text = "Full Name:";
+      TextBox txtName = new TextBox();
+      txtName.Text = "Tahir Mansuri";
+      this.Controls.Add(lblName);
+      this.Controls.Add(txtName);
 
-            // Specialization Dropdown
-            Label lblSpec = new Label();
-            lblSpec.Text = "Select Stream:";
-            ComboBox cmbStream = new ComboBox();
-            cmbStream.Items.Add("Software Engineering");
-            cmbStream.Items.Add("Data Science & AI");
-            cmbStream.Items.Add("Cloud Computing");
-            cmbStream.SelectedIndex = 0;
-            this.Controls.Add(lblSpec);
-            this.Controls.Add(cmbStream);
+      // Specialization Dropdown
+      Label lblSpec = new Label();
+      lblSpec.Text = "Select Stream:";
+      ComboBox cmbStream = new ComboBox();
+      cmbStream.Items.Add("Software Engineering");
+      cmbStream.Items.Add("Data Science & AI");
+      cmbStream.Items.Add("Cloud Computing");
+      cmbStream.SelectedIndex = 0;
+      this.Controls.Add(lblSpec);
+      this.Controls.Add(cmbStream);
 
-            // Library & Lab Membership CheckBoxes
-            CheckBox chkLab = new CheckBox();
-            chkLab.Text = "Access Programming Lab 24x7";
-            chkLab.Checked = true;
-            this.Controls.Add(chkLab);
+      // Library & Lab Membership CheckBoxes
+      CheckBox chkLab = new CheckBox();
+      chkLab.Text = "Access Programming Lab 24x7";
+      chkLab.Checked = true;
+      this.Controls.Add(chkLab);
 
-            // Submit Button with Click Event Handler
-            Button btnSubmit = new Button();
-            btnSubmit.Text = "Submit Registration";
-            btnSubmit.Click += (sender, e) =>
-            {
-                string msg = $"Student Registered Successfully!\\n\\nName: {txtName.Text}\\nStream: {cmbStream.SelectedItem}\\nLab Access: {(chkLab.Checked ? "Granted" : "Pending")}";
-                MessageBox.Show(msg, "Registration Confirmed");
-            };
-            this.Controls.Add(btnSubmit);
-        }
+      // Submit Button with Click Event Handler
+      Button btnSubmit = new Button();
+      btnSubmit.Text = "Submit Registration";
+      btnSubmit.Click += (sender, e) =>
+      {
+        string msg = $"Student Registered Successfully!\\n\\nName: {txtName.Text}\\nStream: {cmbStream.SelectedItem}\\nLab Access: {(chkLab.Checked ? "Granted" : "Pending")}";
+        MessageBox.Show(msg, "Registration Confirmed");
+      };
+      this.Controls.Add(btnSubmit);
     }
+  }
 
-    class Program
+  class Program
+  {
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Launching C# Windows Form Application Frame...");
-            StudentRegistrationForm form = new StudentRegistrationForm();
-            Application.Run(form);
-            Console.WriteLine("Windows Form application active in desktop frame.");
-        }
+      Console.WriteLine("Launching C# Windows Form Application Frame...");
+      StudentRegistrationForm form = new StudentRegistrationForm();
+      Application.Run(form);
+      Console.WriteLine("Windows Form application active in desktop frame.");
     }
+  }
 }`
     },
     {
@@ -4345,77 +4345,77 @@ using System.Data.SqlClient;
 
 namespace ThinkCodeLab
 {
-    class Program
+  class Program
+  {
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+      Console.WriteLine("=================================================");
+      Console.WriteLine("   ADO.NET DATABASE CONNECTIVITY (SQL SERVER)    ");
+      Console.WriteLine("=================================================");
+
+      // 1. Connection string configuration
+      string connectionString = "Server=localhost;Database=CollegeDB;Trusted_Connection=True;";
+      SqlConnection conn = new SqlConnection(connectionString);
+
+      try
+      {
+        conn.Open();
+        Console.WriteLine("✓ Database connection established successfully.\\n");
+
+        // 2. Create Table
+        string createSql = "CREATE TABLE Students (Id INT PRIMARY KEY, Name VARCHAR(50), Course VARCHAR(20), Marks FLOAT)";
+        SqlCommand createCmd = new SqlCommand(createSql, conn);
+        createCmd.ExecuteNonQuery();
+        Console.WriteLine("✓ Table 'Students' created successfully.");
+
+        // 3. Insert Student Records
+        string insertSql = @"
+          INSERT INTO Students VALUES (101, 'Tahir Mansuri', 'TYBCA', 94.5);
+          INSERT INTO Students VALUES (102, 'Amit Sharma', 'TYBCA', 81.0);
+          INSERT INTO Students VALUES (103, 'Pooja Patel', 'SYBCA', 89.0);
+          INSERT INTO Students VALUES (104, 'Sneha Kulkarni', 'TYBCA', 92.5);
+        ";
+        SqlCommand insertCmd = new SqlCommand(insertSql, conn);
+        int rowsAffected = insertCmd.ExecuteNonQuery();
+        Console.WriteLine($"✓ Inserted {rowsAffected} student records into database.\\n");
+
+        // 4. Retrieve & Display Records using SqlDataReader
+        Console.WriteLine("Reading records using SqlDataReader:");
+        Console.WriteLine("-------------------------------------------------");
+        Console.WriteLine("ID   | Student Name        | Course | Marks");
+        Console.WriteLine("-------------------------------------------------");
+
+        string selectSql = "SELECT Id, Name, Course, Marks FROM Students ORDER BY Marks DESC";
+        SqlCommand selectCmd = new SqlCommand(selectSql, conn);
+        SqlDataReader reader = selectCmd.ExecuteReader();
+
+        while (reader.Read())
         {
-            Console.WriteLine("=================================================");
-            Console.WriteLine("   ADO.NET DATABASE CONNECTIVITY (SQL SERVER)    ");
-            Console.WriteLine("=================================================");
+          int id = reader.GetInt32(0);
+          string name = reader.GetString(1);
+          string course = reader.GetString(2);
+          double marks = reader.GetDouble(3);
 
-            // 1. Connection string configuration
-            string connectionString = "Server=localhost;Database=CollegeDB;Trusted_Connection=True;";
-            SqlConnection conn = new SqlConnection(connectionString);
-
-            try
-            {
-                conn.Open();
-                Console.WriteLine("✓ Database connection established successfully.\\n");
-
-                // 2. Create Table
-                string createSql = "CREATE TABLE Students (Id INT PRIMARY KEY, Name VARCHAR(50), Course VARCHAR(20), Marks FLOAT)";
-                SqlCommand createCmd = new SqlCommand(createSql, conn);
-                createCmd.ExecuteNonQuery();
-                Console.WriteLine("✓ Table 'Students' created successfully.");
-
-                // 3. Insert Student Records
-                string insertSql = @"
-                    INSERT INTO Students VALUES (101, 'Tahir Mansuri', 'TYBCA', 94.5);
-                    INSERT INTO Students VALUES (102, 'Amit Sharma', 'TYBCA', 81.0);
-                    INSERT INTO Students VALUES (103, 'Pooja Patel', 'SYBCA', 89.0);
-                    INSERT INTO Students VALUES (104, 'Sneha Kulkarni', 'TYBCA', 92.5);
-                ";
-                SqlCommand insertCmd = new SqlCommand(insertSql, conn);
-                int rowsAffected = insertCmd.ExecuteNonQuery();
-                Console.WriteLine($"✓ Inserted {rowsAffected} student records into database.\\n");
-
-                // 4. Retrieve & Display Records using SqlDataReader
-                Console.WriteLine("Reading records using SqlDataReader:");
-                Console.WriteLine("-------------------------------------------------");
-                Console.WriteLine("ID   | Student Name        | Course | Marks");
-                Console.WriteLine("-------------------------------------------------");
-
-                string selectSql = "SELECT Id, Name, Course, Marks FROM Students ORDER BY Marks DESC";
-                SqlCommand selectCmd = new SqlCommand(selectSql, conn);
-                SqlDataReader reader = selectCmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    int id = reader.GetInt32(0);
-                    string name = reader.GetString(1);
-                    string course = reader.GetString(2);
-                    double marks = reader.GetDouble(3);
-
-                    Console.WriteLine($"{id,-4} | {name,-19} | {course,-6} | {marks,5:F1}");
-                }
-                reader.Close();
-
-                Console.WriteLine("-------------------------------------------------");
-                Console.WriteLine("✓ All database records fetched and verified.");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Database Error: {ex.Message}");
-            }
-            finally
-            {
-                conn.Close();
-                Console.WriteLine("✓ Database connection closed cleanly.");
-            }
-
-            Console.WriteLine("=================================================");
+          Console.WriteLine($"{id,-4} | {name,-19} | {course,-6} | {marks,5:F1}");
         }
+        reader.Close();
+
+        Console.WriteLine("-------------------------------------------------");
+        Console.WriteLine("✓ All database records fetched and verified.");
+      }
+      catch (Exception ex)
+      {
+        Console.WriteLine($"Database Error: {ex.Message}");
+      }
+      finally
+      {
+        conn.Close();
+        Console.WriteLine("✓ Database connection closed cleanly.");
+      }
+
+      Console.WriteLine("=================================================");
     }
+  }
 }`
     }
   ]

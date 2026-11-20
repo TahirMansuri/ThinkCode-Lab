@@ -121,16 +121,16 @@ public class Main {
 using System;
 
 class Program {
-    static void Main(string[] args) {
-        Console.Write("Enter your name: ");
-        string name = Console.ReadLine();
+  static void Main(string[] args) {
+    Console.Write("Enter your name: ");
+    string name = Console.ReadLine();
 
-        Console.Write("Enter your roll number: ");
-        int roll = int.Parse(Console.ReadLine());
+    Console.Write("Enter your roll number: ");
+    int roll = int.Parse(Console.ReadLine());
 
-        Console.WriteLine($"\\nHello, {name}! (Roll: {roll})");
-        Console.WriteLine("C# (.NET) interactive in-console input is working!");
-    }
+    Console.WriteLine($"\\nHello, {name}! (Roll: {roll})");
+    Console.WriteLine("C# (.NET) interactive in-console input is working!");
+  }
 }
 ` }
 ];

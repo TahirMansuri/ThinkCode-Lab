@@ -27,6 +27,8 @@ export function formatCode(code, lang = 'c') {
     case 'c':
     case 'cpp':
     case 'java':
+    case 'csharp':
+    case 'cs':
     case 'php':
     case 'js':
     case 'javascript':
