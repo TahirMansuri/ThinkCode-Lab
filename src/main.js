@@ -1134,23 +1134,60 @@ $('filePick').onchange = async e => {
 };
 
 function handleResetTemplate() {
-  if (confirm('Replace your code with the starter template?')) {
+  const currentCode = cur.id === 'php' && editorPhp ? editorPhp.get() : editor.get();
+  const isDefaultTemplate = (cur.id === 'php')
+    ? (editorPhp && editorPhp.get().trim() === DEFAULT_PHP_SCRIPT.trim() && (!editorHtml || editorHtml.get().trim() === DEFAULT_PHP_HTML.trim()))
+    : (currentCode.trim() === cur.tpl.trim());
+
+  if (isDefaultTemplate && !activePracticalMeta) {
+    toast(`✨ Already on the clean ${cur.name} starter template!`);
+    return;
+  }
+
+  const confirmMsg = activePracticalMeta
+    ? `Start a new ${cur.name} program?\n\nThis will clear "${activePracticalMeta.title}" and restore the clean starter template.`
+    : `Start a new ${cur.name} program?\n\nThis will replace your current code with the clean starter template.`;
+
+  if (confirm(confirmMsg)) {
     activePracticalMeta = null;
-    if (cur.id === 'php' && editorHtml && editorPhp) {
-      editorHtml.set(DEFAULT_PHP_HTML, 'web');
-      editorPhp.set(DEFAULT_PHP_SCRIPT, 'php');
-      store.set('cf.code.php_html', DEFAULT_PHP_HTML);
-      store.set('cf.code.php_script', DEFAULT_PHP_SCRIPT);
+    if (cur.id === 'php') {
+      if (editorHtml) {
+        editorHtml.set(DEFAULT_PHP_HTML, 'web');
+        store.set('cf.code.php_html', DEFAULT_PHP_HTML);
+      }
+      if (editorPhp) {
+        editorPhp.set(DEFAULT_PHP_SCRIPT, 'php');
+        store.set('cf.code.php_script', DEFAULT_PHP_SCRIPT);
+        store.set('cf.code.php', DEFAULT_PHP_SCRIPT);
+      }
+      sink.preview(DEFAULT_PHP_HTML);
+      setPhpViewMode('split');
     } else {
       editor.set(cur.tpl, cur.id);
+      store.set('cf.code.' + cur.id, cur.tpl);
     }
     sink.clear();
     con.querySelector('.con-input-wrap, .con-input')?.remove();
+    if (cur.id === 'web' || cur.id === 'php') {
+      preview.srcdoc = '';
+    }
     setOutputSmall();
-    toast('Template restored');
+    showTab('console');
+    toast(`✓ New ${cur.name} program ready!`);
   }
 }
+
+$('btnNewCode')?.addEventListener('click', handleResetTemplate);
+$('btnPracticals')?.addEventListener('click', openPracticalsSheet);
 if ($('btnReset')) $('btnReset').onclick = handleResetTemplate;
+
+// Shortcut Alt+N for New Program / Starter Template
+window.addEventListener('keydown', e => {
+  if (e.altKey && (e.key === 'N' || e.key === 'n')) {
+    e.preventDefault();
+    handleResetTemplate();
+  }
+});
 
 /* ==========================================================================
    Slide-out Navigation Drawer / Options Slider

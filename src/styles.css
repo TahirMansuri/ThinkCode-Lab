@@ -1169,7 +1169,8 @@ svg {
   gap: 10px;
 }
 
-/* Practicals Button in Pane Head */
+/* New Program & Practicals Buttons in Pane Head */
+.btn-new-code,
 .btn-practicals {
   display: inline-flex;
   align-items: center;
@@ -1183,6 +1184,18 @@ svg {
   color: var(--text);
   cursor: pointer;
   transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-new-code:hover {
+  border-color: #38BDF8;
+  background: var(--raised);
+  color: #38BDF8;
+}
+
+.btn-new-code svg {
+  color: #38BDF8;
+  flex-shrink: 0;
 }
 
 .btn-practicals:hover {
@@ -1193,6 +1206,23 @@ svg {
 
 .btn-practicals svg {
   color: var(--ember);
+  flex-shrink: 0;
+}
+
+[data-theme='light'] .btn-new-code {
+  background: #FFFFFF;
+  border-color: #CBD5E1;
+  color: #0F172A;
+}
+
+[data-theme='light'] .btn-new-code:hover {
+  background: #F0F9FF;
+  border-color: #0284C7;
+  color: #0284C7;
+}
+
+[data-theme='light'] .btn-new-code svg {
+  color: #0284C7;
 }
 
 /* Practicals Sheet UI */
@@ -4864,6 +4894,7 @@ dialog::backdrop {
     gap: 5px;
     flex-shrink: 0;
   }
+  .btn-new-code,
   .btn-practicals {
     padding: 2px 6px;
     font-size: 11px;
