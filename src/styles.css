@@ -1187,6 +1187,10 @@ svg {
   white-space: nowrap;
 }
 
+.btn-new-code .btn-new-label {
+  display: inline;
+}
+
 .btn-new-code:hover {
   border-color: #38BDF8;
   background: var(--raised);
@@ -1223,6 +1227,16 @@ svg {
 
 [data-theme='light'] .btn-new-code svg {
   color: #0284C7;
+}
+
+/* Android Native App Optimization: Hide text label on mobile/app to preserve critical space */
+body.is-native-app .btn-new-code .btn-new-label {
+  display: none !important;
+}
+
+body.is-native-app .btn-new-code {
+  padding: 3px 6px;
+  gap: 0;
 }
 
 /* Practicals Sheet UI */
@@ -4894,7 +4908,13 @@ dialog::backdrop {
     gap: 5px;
     flex-shrink: 0;
   }
-  .btn-new-code,
+  .btn-new-code .btn-new-label {
+    display: none !important;
+  }
+  .btn-new-code {
+    padding: 2px 6px;
+    gap: 0;
+  }
   .btn-practicals {
     padding: 2px 6px;
     font-size: 11px;

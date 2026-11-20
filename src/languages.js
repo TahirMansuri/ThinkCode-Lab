@@ -1,6 +1,22 @@
+// Minimal initial code segments for 1-tap "New File" action
+export const BLANK_TEMPLATES = {
+  python: `print("Welcome")\n`,
+  c: `#include <stdio.h>\n\nint main() {\n  \n  return 0;\n}\n`,
+  cpp: `#include <iostream>\nusing namespace std;\n\nint main() {\n  \n  return 0;\n}\n`,
+  java: `import java.util.Scanner;\n\npublic class Main {\n  public static void main(String[] args) {\n    \n  }\n}\n`,
+  csharp: `using System;\n\nclass Program {\n  static void Main(string[] args) {\n    \n  }\n}\n`,
+  php: `<?php\n\necho "Welcome";\n\n?>\n`,
+  js: `console.log("Welcome");\n`,
+  web: `<!DOCTYPE html>\n<html>\n<head>\n  <meta charset="UTF-8">\n  <title>My Web Page</title>\n</head>\n<body>\n  \n</body>\n</html>\n`,
+  shell: `#!/bin/bash\n\necho "Welcome"\n`,
+  sql: `-- SQL Query\nSELECT 'Welcome' AS message FROM dual;\n`
+};
+
+export const BLANK_PHP_HTML = `<!DOCTYPE html>\n<html>\n<head>\n  <meta charset="UTF-8">\n  <title>PHP Web Form</title>\n</head>\n<body>\n  \n</body>\n</html>\n`;
+
 // Language registry: identity colour, engine binding, starter template. status 'soon' = engine pack planned.
 export const LANGS = [
-  { id: 'python', name: 'Python', file: 'main.py', engine: 'python', hue: '#5DA9E9', input: null,
+  { id: 'python', name: 'Python', file: 'main.py', engine: 'python', hue: '#5DA9E9', input: null, blank: BLANK_TEMPLATES.python,
     tpl: `# Python 3.12 — runs offline on your device
 name = input("Your name: ")
 print(f"Hello, {name}!")
@@ -8,7 +24,7 @@ print(f"Hello, {name}!")
 squares = [n * n for n in range(1, 6)]
 print("Squares:", squares)
 ` },
-  { id: 'js', name: 'JavaScript', file: 'main.js', engine: 'js', hue: '#F4D35E', input: null,
+  { id: 'js', name: 'JavaScript', file: 'main.js', engine: 'js', hue: '#F4D35E', input: null, blank: BLANK_TEMPLATES.js,
     tpl: `// JavaScript — console.log() and prompt() are supported
 const name = prompt("Your name?") ?? "friend";
 console.log(\`Hello, \${name}!\`);
@@ -16,7 +32,7 @@ console.log(\`Hello, \${name}!\`);
 const fib = n => (n < 2 ? n : fib(n - 1) + fib(n - 2));
 console.log([...Array(10).keys()].map(fib));
 ` },
-  { id: 'sql', name: 'Oracle SQL', file: 'query.sql', engine: 'sql', hue: '#3DD6C0', input: null, sample: true,
+  { id: 'sql', name: 'Oracle SQL', file: 'query.sql', engine: 'sql', hue: '#3DD6C0', input: null, sample: true, blank: BLANK_TEMPLATES.sql,
     tpl: `-- Tap "Sample data" to load EMP and DEPT, then run this.
 -- Oracle-style: NVL, DUAL, SYSDATE, ROWNUM, MINUS, TO_CHAR, DESC
 SELECT d.dname, COUNT(*) AS staff, ROUND(AVG(e.sal), 2) AS avg_sal
@@ -27,7 +43,7 @@ ORDER BY avg_sal DESC;
 SELECT ename, NVL(comm, 0) AS comm FROM emp WHERE ROWNUM <= 5;
 SELECT TO_CHAR(SYSDATE, 'DD-MON-YYYY') AS today FROM dual;
 ` },
-  { id: 'web', name: 'HTML / CSS', file: 'index.html', engine: 'web', hue: '#FF7A59', input: null,
+  { id: 'web', name: 'HTML / CSS', file: 'index.html', engine: 'web', hue: '#FF7A59', input: null, blank: BLANK_TEMPLATES.web,
     tpl: `<!doctype html>
 <html>
 <head>
@@ -46,7 +62,7 @@ SELECT TO_CHAR(SYSDATE, 'DD-MON-YYYY') AS today FROM dual;
 </body>
 </html>
 ` },
-  { id: 'shell', name: 'Linux Shell', file: 'script.sh', engine: 'shell', hue: '#9EE493', input: 'prompt',
+  { id: 'shell', name: 'Linux Shell', file: 'script.sh', engine: 'shell', hue: '#9EE493', input: 'prompt', blank: BLANK_TEMPLATES.shell,
     tpl: `#!/bin/bash
 # Offline Linux shell — files persist on this device
 echo "Hello, $USER!"
@@ -55,12 +71,12 @@ for i in 1 2 3; do echo "line $i" >> notes.txt; done
 cat notes.txt | grep -n 2
 ls -l
 ` },
-  { id: 'php', name: 'PHP', file: 'index.php', engine: 'php', hue: '#8892BF', input: null,
+  { id: 'php', name: 'PHP', file: 'index.php', engine: 'php', hue: '#8892BF', input: null, blank: BLANK_TEMPLATES.php,
     tpl: `<?php
 
 ?>
 `, stdin: '' },
-  { id: 'c', name: 'C', file: 'main.c', engine: 'c', hue: '#64748B', input: null,
+  { id: 'c', name: 'C', file: 'main.c', engine: 'c', hue: '#64748B', input: null, blank: BLANK_TEMPLATES.c,
     tpl: `// C (C99) — runs 100% offline on your device
 #include <stdio.h>
 
@@ -77,7 +93,7 @@ int main() {
   return 0;
 }
 ` },
-  { id: 'cpp', name: 'C++', file: 'main.cpp', engine: 'cpp', hue: '#8B5CF6', input: null,
+  { id: 'cpp', name: 'C++', file: 'main.cpp', engine: 'cpp', hue: '#8B5CF6', input: null, blank: BLANK_TEMPLATES.cpp,
     tpl: `// C++ — runs 100% offline on your device
 #include <iostream>
 using namespace std;
@@ -97,7 +113,7 @@ int main() {
   return 0;
 }
 ` },
-  { id: 'java', name: 'Java', file: 'Main.java', engine: 'java', hue: '#F28482', input: null,
+  { id: 'java', name: 'Java', file: 'Main.java', engine: 'java', hue: '#F28482', input: null, blank: BLANK_TEMPLATES.java,
     tpl: `// Java (JDK) — runs 100% offline on your device
 import java.util.Scanner;
 
@@ -116,7 +132,7 @@ public class Main {
   }
 }
 ` },
-  { id: 'csharp', name: 'C#', file: 'Program.cs', engine: 'csharp', hue: '#A855F7', input: null,
+  { id: 'csharp', name: 'C#', file: 'Program.cs', engine: 'csharp', hue: '#A855F7', input: null, blank: BLANK_TEMPLATES.csharp,
     tpl: `// C# (.NET) — runs 100% offline on your device
 using System;
 

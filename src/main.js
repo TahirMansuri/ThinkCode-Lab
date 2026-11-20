@@ -1,7 +1,7 @@
 import '@fontsource-variable/bricolage-grotesque';
 import '@fontsource-variable/jetbrains-mono';
 import './styles.css';
-import { LANGS } from './languages.js';
+import { LANGS, BLANK_TEMPLATES, BLANK_PHP_HTML } from './languages.js';
 import { engines } from './engines/index.js';
 import { createEditor } from './editor.js';
 import { formatCode } from './formatter.js';
@@ -1133,38 +1133,43 @@ $('filePick').onchange = async e => {
   editor.set(await f.text(), cur.id); toast('Opened ' + f.name); e.target.value = '';
 };
 
-function handleResetTemplate() {
-  const currentCode = cur.id === 'php' && editorPhp ? editorPhp.get() : editor.get();
-  const isDefaultTemplate = (cur.id === 'php')
-    ? (editorPhp && editorPhp.get().trim() === DEFAULT_PHP_SCRIPT.trim() && (!editorHtml || editorHtml.get().trim() === DEFAULT_PHP_HTML.trim()))
-    : (currentCode.trim() === cur.tpl.trim());
+if (window.Capacitor?.isNativePlatform?.()) {
+  document.body.classList.add('is-native-app');
+}
 
-  if (isDefaultTemplate && !activePracticalMeta) {
-    toast(`✨ Already on the clean ${cur.name} starter template!`);
+function handleResetTemplate() {
+  const blankCode = cur.blank || BLANK_TEMPLATES[cur.id] || cur.tpl;
+  const currentCode = cur.id === 'php' && editorPhp ? editorPhp.get() : editor.get();
+  const isDefaultBlank = (cur.id === 'php')
+    ? (editorPhp && editorPhp.get().trim() === blankCode.trim() && (!editorHtml || editorHtml.get().trim() === BLANK_PHP_HTML.trim()))
+    : (currentCode.trim() === blankCode.trim());
+
+  if (isDefaultBlank && !activePracticalMeta) {
+    toast(`✨ Already on a blank ${cur.name} file!`);
     return;
   }
 
   const confirmMsg = activePracticalMeta
-    ? `Start a new ${cur.name} program?\n\nThis will clear "${activePracticalMeta.title}" and restore the clean starter template.`
-    : `Start a new ${cur.name} program?\n\nThis will replace your current code with the clean starter template.`;
+    ? `Start a new blank ${cur.name} file?\n\nThis will clear "${activePracticalMeta.title}" and give you a fresh starter.`
+    : `Start a new blank ${cur.name} file?\n\nThis will replace your current code with the initial blank template.`;
 
   if (confirm(confirmMsg)) {
     activePracticalMeta = null;
     if (cur.id === 'php') {
       if (editorHtml) {
-        editorHtml.set(DEFAULT_PHP_HTML, 'web');
-        store.set('cf.code.php_html', DEFAULT_PHP_HTML);
+        editorHtml.set(BLANK_PHP_HTML, 'web');
+        store.set('cf.code.php_html', BLANK_PHP_HTML);
       }
       if (editorPhp) {
-        editorPhp.set(DEFAULT_PHP_SCRIPT, 'php');
-        store.set('cf.code.php_script', DEFAULT_PHP_SCRIPT);
-        store.set('cf.code.php', DEFAULT_PHP_SCRIPT);
+        editorPhp.set(blankCode, 'php');
+        store.set('cf.code.php_script', blankCode);
+        store.set('cf.code.php', blankCode);
       }
-      sink.preview(DEFAULT_PHP_HTML);
+      sink.preview(BLANK_PHP_HTML);
       setPhpViewMode('split');
     } else {
-      editor.set(cur.tpl, cur.id);
-      store.set('cf.code.' + cur.id, cur.tpl);
+      editor.set(blankCode, cur.id);
+      store.set('cf.code.' + cur.id, blankCode);
     }
     sink.clear();
     con.querySelector('.con-input-wrap, .con-input')?.remove();
@@ -1173,7 +1178,7 @@ function handleResetTemplate() {
     }
     setOutputSmall();
     showTab('console');
-    toast(`✓ New ${cur.name} program ready!`);
+    toast(`✓ New blank ${cur.name} file ready!`);
   }
 }
 
