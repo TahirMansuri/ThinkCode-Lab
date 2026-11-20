@@ -18,11 +18,59 @@
 
 <br>
 
-[✨ Key Features](#-key-features) • [📱 App Screenshots](#-app-screenshots--visual-tour) • [🏛️ System Architecture](#-system-architecture) • [🧩 Supported Languages](#-supported-languages-all-100-offline) • [📚 Syllabus Practicals](#-university-syllabus-practicals-library-78-assignments) • [🚀 Quick Start](#-quick-start) • [📱 Android Build](#-android-app-apk) • [📖 Documentation](#-complete-documentation-directory) • [👤 Author](#-author--leadership) • [📄 License](#-license)
+[👤 Author](#-author--leadership) • [🌟 Why ThinkCode Lab?](#-why-thinkcode-lab) • [✨ Key Features](#-key-features) • [📱 App Screenshots](#-app-screenshots--visual-tour) • [🏛️ System Architecture](#-system-architecture) • [🧩 Supported Languages](#-supported-languages-all-100-offline) • [📚 Syllabus Practicals](#-university-syllabus-practicals-library-83-assignments) • [🚀 Quick Start](#-quick-start) • [📱 Android App](#-android-app--google-play-store-distribution) • [📖 Documentation](#-complete-documentation-directory) • [📄 License](#-license)
 
 ---
 
 </div>
+
+## 👤 Author & Leadership
+
+<div align="center">
+
+<table style="border: 2px solid #30363d; border-radius: 16px; background: linear-gradient(145deg, #0e1622, #161f2e); padding: 18px 22px; max-width: 920px; box-shadow: 0 8px 32px rgba(0,0,0,0.45); margin: 10px auto;">
+  <tr>
+    <td width="130px" align="center" valign="middle" style="border: none; padding-right: 18px;">
+      <img src="docs/screenshots/tahir-mansuri.png" width="110px" height="110px" style="border-radius: 50%; border: 3px solid #ffb04a; box-shadow: 0 0 24px rgba(255,176,74,0.45); object-fit: cover;" alt="Tahir Mansuri" />
+      <br>
+      <span style="display: inline-block; margin-top: 8px; font-size: 11px; font-weight: 700; color: #3ddc84; background: rgba(61,220,132,0.12); padding: 3px 10px; border-radius: 12px; border: 1px solid rgba(61,220,132,0.3);">
+        ● System Architect
+      </span>
+    </td>
+    <td align="left" valign="middle" style="border: none;">
+      <h2 style="margin: 0 0 4px 0; color: #ffb04a; font-size: 24px; font-weight: 800; letter-spacing: -0.5px;">
+        Tahir Mansuri
+      </h2>
+      <p style="margin: 0 0 8px 0; color: #58a6ff; font-weight: 600; font-size: 14px;">
+        Lead System Engineer &amp; Head of Department (HOD) · IMRD College
+      </p>
+      <p style="margin: 0 0 12px 0; color: #c9d1d9; font-size: 13px; line-height: 1.6;">
+        Creator &amp; Chief Architect of <b>ThinkCode Lab</b> &amp; <b>ThinkCode Visualizer</b>. Over <b>8+ years</b> of leadership in Computer Science education, Systems Engineering, and Offline WebAssembly Architecture. Dedicated to empowering students with zero-latency, zero-cost developer tooling on budget hardware.
+      </p>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px;">
+        <a href="https://github.com/TahirMansuri">
+          <img src="https://img.shields.io/badge/GitHub-TahirMansuri-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Profile" />
+        </a>
+        &nbsp;
+        <a href="https://thinkcode.infogalaxy.space/">
+          <img src="https://img.shields.io/badge/Companion_Platform-ThinkCode_Visualizer-8e5bd6?style=for-the-badge&logo=googlechrome&logoColor=white" alt="ThinkCode Visualizer" />
+        </a>
+        &nbsp;
+        <a href="https://play.google.com/store/apps/details?id=com.igc.thinkcodelab">
+          <img src="https://img.shields.io/badge/Google_Play-Live_App-34A853?style=for-the-badge&logo=googleplay&logoColor=white" alt="Google Play Store" />
+        </a>
+        &nbsp;
+        <a href="mailto:tprocks786@gmail.com">
+          <img src="https://img.shields.io/badge/Email-tprocks786%40gmail.com-EA4335?style=for-the-badge&logo=gmail&logoColor=white" alt="Direct Email" />
+        </a>
+      </div>
+    </td>
+  </tr>
+</table>
+
+</div>
+
+---
 
 ## 🌟 Why ThinkCode Lab?
 
@@ -311,40 +359,6 @@ All technical architecture guides, engine specifications, changelogs, roadmaps, 
 - 🚀 [**docs/08_FUTURE_ENHANCEMENTS.md**](docs/08_FUTURE_ENHANCEMENTS.md) — Feature catalog tracking completed items (Quick-Symbol Strip, Beautifier, Drawer, Lab Journal PDF, Update Checker, Back-Button Exit) and upcoming specifications.
 - 🔐 [**docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md**](docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md) — Master reference for administrative accounts, Firebase configuration, `/version.json` rules, Android signing keystore, SHA-256 hashes, and deployment commands.
 - 🐍 [**docs/10_PYTHON_DATA_SCIENCE_SPEC.md**](docs/10_PYTHON_DATA_SCIENCE_SPEC.md) — Technical specification and roadmap for on-demand scientific libraries (NumPy, Pandas, Matplotlib, Scikit-learn, Seaborn), local CSV/Excel uploads, and inline plot visualization.
-- 🧠 [**docs/07_DEVELOPER_MEMORY.md**](docs/07_DEVELOPER_MEMORY.md) — Developer memory, strictly enforced operational rules (Web-only deployment, no unrequested APK/VDI runs, backup policy), and technical gotchas learned.
-- 🚀 [**docs/08_FUTURE_ENHANCEMENTS.md**](docs/08_FUTURE_ENHANCEMENTS.md) — Feature catalog tracking completed items (Quick-Symbol Strip, Beautifier, Drawer, Lab Journal PDF, Update Checker) and upcoming specifications.
-- 🔐 [**docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md**](docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md) — Master reference for administrative accounts, Firebase configuration, `/version.json` rules, Android signing keystore, SHA-256 hashes, and deployment commands.
-- 🐍 [**docs/10_PYTHON_DATA_SCIENCE_SPEC.md**](docs/10_PYTHON_DATA_SCIENCE_SPEC.md) — Technical specification and roadmap for on-demand scientific libraries (NumPy, Pandas, Matplotlib, Scikit-learn, Seaborn), local CSV/Excel uploads, and inline plot visualization.
-
----
-
-## 👤 Author & Leadership
-
-<table style="border: none; background: transparent;">
-  <tr>
-    <td width="110px" align="center" valign="middle">
-      <img src="docs/screenshots/tahir-mansuri.png" width="100px" style="border-radius: 50%; box-shadow: 0 4px 16px rgba(255,176,74,0.4);" alt="Tahir Mansuri" />
-    </td>
-    <td>
-      <h3 style="margin: 0; color: #ffb04a;">Tahir Mansuri</h3>
-      <p style="margin: 4px 0; color: #58a6ff; font-weight: 600;">
-        Lead System Engineer &amp; HOD, IMRD College
-      </p>
-      <p style="margin: 4px 0; color: #c9d1d9;">
-        Creator of <b>ThinkCode Lab</b> &amp; <b>ThinkCode</b> • 8+ Years of Experience in IT, Systems Engineering, Education, and Software Architecture.
-      </p>
-      <p style="margin: 6px 0 0 0;">
-        <a href="https://github.com/TahirMansuri">
-          <img src="https://img.shields.io/badge/GitHub-TahirMansuri-181717?style=flat-square&logo=github" alt="GitHub Profile" />
-        </a>
-        &nbsp;
-        <a href="https://thinkcode.infogalaxy.space/">
-          <img src="https://img.shields.io/badge/Website-ThinkCode-8e5bd6?style=flat-square&logo=googlechrome&logoColor=white" alt="ThinkCode Portal" />
-        </a>
-      </p>
-    </td>
-  </tr>
-</table>
 
 ---
 
