@@ -296,8 +296,15 @@ const sink = {
       engines[cur.engine]?.sendPromptResponse?.('');
     }, 'JavaScript', 'Alert', true);
   },
-  need_input: () => {
+  need_input: (promptMsg) => {
     hidePlotLoader();
+    if (promptMsg) {
+      const trimmed = String(promptMsg).trim();
+      const conText = con.textContent.trim();
+      if (trimmed && !conText.endsWith(trimmed)) {
+        print(promptMsg, 'out');
+      }
+    }
     con.querySelector('.con-input-wrap, .con-input')?.remove();
     const wrap = document.createElement('span');
     wrap.className = 'con-input-wrap';
@@ -310,9 +317,12 @@ const sink = {
     inp.autocapitalize = 'off';
     inp.spellcheck = false;
     inp.enterKeyHint = 'send';
-    inp.style.width = '3ch';
+    inp.placeholder = '...';
+    inp.setAttribute('aria-label', promptMsg ? String(promptMsg).trim() : 'Input required');
+    inp.style.minWidth = '5ch';
+    inp.style.width = '5ch';
     inp.oninput = () => {
-      inp.style.width = Math.max(3, inp.value.length + 1) + 'ch';
+      inp.style.width = Math.max(5, inp.value.length + 1) + 'ch';
       stick();
     };
 
@@ -3158,7 +3168,7 @@ const shareController = initCodeSharer({
     if (!targetLang) return false;
 
     if (cur.id !== targetLang.id) {
-      selectLang(targetLang);
+      select(targetLang);
     }
 
     if (targetLang.id === 'php') {
@@ -3186,6 +3196,30 @@ const shareController = initCodeSharer({
 });
 const warmPromise = warm();
 window.__app = { run, stop, engines, cur: () => cur, editorPhp: () => editorPhp, editorHtml: () => editorHtml, running: () => running, updates: updateController, sharer: shareController, handleBack: handleThinkCodeBackPress, showExit: showExitConfirmDialog };
+
+// Global deep-link bridge for native Android app launches & QR scan intents
+window.__applySharedHash = function(hash) {
+  if (!hash) return;
+  const parsed = shareController.parseHash(hash);
+  if (parsed && typeof shareController.applyShared === 'function') {
+    shareController.applyShared(parsed);
+    const langTitle = parsed.lang.toUpperCase();
+    toast(`Shared ${langTitle} program loaded! 🚀`);
+  }
+};
+
+try {
+  if (window.Capacitor?.Plugins?.App?.addListener) {
+    window.Capacitor.Plugins.App.addListener('appUrlOpen', (event) => {
+      if (event && event.url) {
+        const hashIdx = event.url.indexOf('#');
+        if (hashIdx !== -1) {
+          window.__applySharedHash(event.url.slice(hashIdx));
+        }
+      }
+    });
+  }
+} catch (_) {}
 
 // ---------- compulsory 2.5s splash screen + component loading ----------
 const splashMinTimer = new Promise(resolve => setTimeout(resolve, 2500));

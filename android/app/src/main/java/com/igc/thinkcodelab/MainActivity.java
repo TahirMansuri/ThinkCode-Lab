@@ -181,6 +181,29 @@ public class MainActivity extends BridgeActivity {
         super.onCreate(savedInstanceState);
         setupEdgeToEdgeInsets();
         setupBackPressHandler();
+        handleDeepLinkIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleDeepLinkIntent(intent);
+    }
+
+    private void handleDeepLinkIntent(Intent intent) {
+        if (intent == null || intent.getData() == null) return;
+        Uri uri = intent.getData();
+        String fragment = uri.getFragment();
+        if (fragment != null && !fragment.isEmpty()) {
+            final String fullHash = "#" + fragment;
+            if (this.bridge != null && this.bridge.getWebView() != null) {
+                this.bridge.getWebView().postDelayed(() -> {
+                    String js = "if (window.__applySharedHash) { window.__applySharedHash('" + fullHash.replace("'", "\\'") + "'); } else { window.location.hash = '" + fullHash.replace("'", "\\'") + "'; }";
+                    this.bridge.getWebView().evaluateJavascript(js, null);
+                }, 500);
+            }
+        }
     }
 
     private void setupBackPressHandler() {

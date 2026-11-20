@@ -188,6 +188,23 @@
   <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="7" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
 </svg>
 
+<!-- Smart Mobile App Banner (Visible only on mobile web when viewing shared code) -->
+<aside id="openInAppBanner" class="open-in-app-banner" hidden aria-label="Open in ThinkCode Lab Android App">
+  <div class="oia-card">
+    <div class="oia-brand">
+      <span class="oia-logo" aria-hidden="true">⚡</span>
+      <div class="oia-info">
+        <b class="oia-title">ThinkCode Lab App</b>
+        <small class="oia-desc">Open this code directly in the Android App</small>
+      </div>
+    </div>
+    <div class="oia-actions">
+      <button type="button" id="btnOpenInApp" class="oia-btn-open">Open in App</button>
+      <button type="button" id="btnDismissInApp" class="oia-btn-dismiss" aria-label="Dismiss banner">✕</button>
+    </div>
+  </div>
+</aside>
+
 <header class="top">
   <div class="brand-wrap">
     <div class="brand" id="brandLogo" title="ThinkCode Lab — Tap for Menu" role="button" tabindex="0">

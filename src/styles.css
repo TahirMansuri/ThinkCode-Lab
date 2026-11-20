@@ -5992,3 +5992,105 @@ dialog::backdrop {
     align-items: stretch;
   }
 }
+
+/* Smart Open in Android App Banner (Mobile Web) */
+.open-in-app-banner {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: linear-gradient(90deg, #161F2E, #0E1622);
+  border-bottom: 1px solid var(--line);
+  padding: 8px 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+.oia-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.oia-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.oia-logo {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: rgba(255, 176, 74, 0.15);
+  border: 1px solid rgba(255, 176, 74, 0.35);
+  flex-shrink: 0;
+}
+.oia-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.oia-title {
+  font-size: 12.5px;
+  color: var(--text);
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.oia-desc {
+  font-size: 11px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.oia-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.oia-btn-open {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  padding: 0 12px;
+  border-radius: 7px;
+  background: #3B82F6;
+  border: 1px solid #2563EB;
+  color: #FFFFFF;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+.oia-btn-open:hover {
+  background: #2563EB;
+}
+.oia-btn-dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.oia-btn-dismiss:hover {
+  color: var(--text);
+  background: var(--line);
+}

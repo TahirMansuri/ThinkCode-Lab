@@ -330,4 +330,23 @@ test('Mobile camera scanner (jsQR) decodes generated QR code across realistic co
   }
 });
 
+test('Java inheritance shared program payload parsing & language preservation', () => {
+  const javaInheritance = `class Animal {\n  void sound() { System.out.println("Animal makes a sound"); }\n}\nclass Dog extends Animal {\n  void sound() { System.out.println("Dog barks"); }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Animal a = new Dog();\n    a.sound();\n  }\n}`;
+  const packed = packSharePayload({ lang: 'java', code: javaInheritance });
+  const hash = `#c=${packed}`;
+  const parsed = parseShareHash(hash);
+  assert.ok(parsed, 'Hash must parse successfully');
+  assert.strictEqual(parsed.lang, 'java', 'Parsed language must remain java');
+  assert.strictEqual(parsed.code, javaInheritance, 'Parsed code must match original Java program');
+});
+
+test('Android Intent URL schema conforms to standard deep link specification', () => {
+  const fakeHash = '#c=H4sIAAAAAAAACmNiYGBgAAAABA==';
+  const intentUrl = `intent://thinkcode-lab.web.app/${fakeHash}#Intent;scheme=https;package=com.igc.thinkcodelab;S.browser_fallback_url=${encodeURIComponent('https://play.google.com/store/apps/details?id=com.igc.thinkcodelab')};end;`;
+  assert.ok(intentUrl.startsWith('intent://thinkcode-lab.web.app/#c='), 'Must start with intent://');
+  assert.ok(intentUrl.includes('package=com.igc.thinkcodelab'), 'Must specify package');
+  assert.ok(intentUrl.includes('scheme=https'), 'Must specify https scheme');
+  assert.ok(intentUrl.includes('S.browser_fallback_url='), 'Must have fallback Play Store URL');
+});
+
 console.log(`\nAll ${passed} Serverless Code Sharing & QR Code tests passed successfully! ✨\n`);

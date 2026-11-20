@@ -54,9 +54,16 @@ const SAMPLE_DATASETS = {
 2026-03-24,East,Mouse,70,650,45500`
 };
 
+let currentPrompt = '';
+self.setLastPrompt = (p) => {
+  currentPrompt = String(p ?? '');
+};
+
 function readNativeStdinSync() {
   flushStdoutBuffer();
-  post('need_input');
+  const promptToSend = currentPrompt;
+  currentPrompt = '';
+  post('need_input', promptToSend);
   try {
     const xhr = new XMLHttpRequest();
     xhr.open('POST', base + '__native_stdin?ts=' + Date.now(), false);
@@ -193,6 +200,40 @@ except Exception:
   } catch (_) {}
 }
 
+async function ensurePythonInputHook() {
+  if (!py) return;
+  try {
+    await py.runPythonAsync(`
+import builtins, sys
+
+try:
+    sys.stdout.reconfigure(line_buffering=True, write_through=True)
+except Exception:
+    pass
+
+if not getattr(builtins.input, '_thinkcode_hooked', False):
+    _orig_input = builtins.input
+    def _thinkcode_input(*args, **kwargs):
+        prompt = None
+        if args:
+            prompt = args[0]
+        elif 'prompt' in kwargs:
+            prompt = kwargs.get('prompt')
+        if prompt is not None:
+            sys.stdout.write(str(prompt))
+            try:
+                import js
+                js.setLastPrompt(str(prompt))
+            except Exception:
+                pass
+        sys.stdout.flush()
+        return _orig_input()
+    _thinkcode_input._thinkcode_hooked = True
+    builtins.input = _thinkcode_input
+`);
+  } catch (_) {}
+}
+
 onmessage = async ({ data }) => {
   if (data.type === 'init') {
     base = data.base;
@@ -232,9 +273,11 @@ onmessage = async ({ data }) => {
         autoEOF: true,
         stdin: () => {
           flushStdoutBuffer();
+          const promptToSend = currentPrompt;
+          currentPrompt = '';
           // Priority 1: Interactive in-console input via SharedArrayBuffer
           if (status) {
-            post('need_input');
+            post('need_input', promptToSend);
             Atomics.store(status, 0, 1); // 1 = WAITING_FOR_INPUT
             Atomics.wait(status, 0, 1);
             if (Atomics.load(status, 0) === 2) { // 2 = INPUT_READY
@@ -259,16 +302,8 @@ onmessage = async ({ data }) => {
         }
       });
 
-      // Ensure non-newline prints (e.g. print("Enter x: ", end="")) flush immediately before input()
-      try {
-        await py.runPythonAsync(`
-import sys
-try:
-    sys.stdout.reconfigure(line_buffering=True, write_through=True)
-except Exception:
-    pass
-`);
-      } catch (_) {}
+      // Install robust input() prompt streaming and line-buffering hook
+      await ensurePythonInputHook();
 
       post('ready');
     } catch (e) {
@@ -357,6 +392,9 @@ except Exception:
 
     try {
       const isPlotting = /\b(?:matplotlib|pyplot|plt|seaborn|sns)\b/.test(data.code);
+
+      // Ensure input() prompt streaming hook and unbuffered output is active
+      await ensurePythonInputHook();
 
       // 1. Check and install imports on demand (NumPy, Pandas, Matplotlib, Seaborn, openpyxl)
       await preparePythonImports(data.code);

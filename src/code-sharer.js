@@ -776,6 +776,42 @@ export function initCodeSharer({
     }
   });
 
+  // --- Smart Mobile "Open in Android App" Banner ---
+  function maybeShowAppBanner(hash) {
+    if (typeof window === 'undefined') return;
+    // Never show inside the native Android APK wrapper
+    if (window.Capacitor?.isNativePlatform?.()) return;
+
+    // Only show on Android devices
+    const isAndroid = /Android/i.test(navigator.userAgent || '');
+    if (!isAndroid) return;
+
+    const banner = document.getElementById('openInAppBanner');
+    const btnOpen = document.getElementById('btnOpenInApp');
+    const btnDismiss = document.getElementById('btnDismissInApp');
+    if (!banner || !btnOpen) return;
+
+    // Check if user dismissed it during this session
+    try {
+      if (sessionStorage.getItem('cf.dismiss_app_banner') === '1') return;
+    } catch (_) {}
+
+    const cleanHash = hash || window.location.hash || '';
+    // Android Intent URL: attempts to launch com.igc.thinkcodelab; falls back cleanly to Google Play Store
+    const intentUrl = `intent://thinkcode-lab.web.app/${cleanHash}#Intent;scheme=https;package=com.igc.thinkcodelab;S.browser_fallback_url=${encodeURIComponent('https://play.google.com/store/apps/details?id=com.igc.thinkcodelab')};end;`;
+
+    btnOpen.onclick = () => {
+      window.location.href = intentUrl;
+    };
+
+    btnDismiss.onclick = () => {
+      banner.hidden = true;
+      try { sessionStorage.setItem('cf.dismiss_app_banner', '1'); } catch (_) {}
+    };
+
+    banner.hidden = false;
+  }
+
   // --- Process Incoming Shared Link on Boot / HashChange ---
   function checkIncomingShare() {
     if (typeof window === 'undefined') return;
@@ -784,6 +820,9 @@ export function initCodeSharer({
 
     const parsed = parseShareHash(hash);
     if (!parsed) return;
+
+    // Offer to open in native Android App if user is in mobile browser
+    maybeShowAppBanner(hash);
 
     // Check if applySharedCode handler is registered
     if (typeof applySharedCode === 'function') {
@@ -800,23 +839,41 @@ export function initCodeSharer({
         }
       } catch (_) {}
 
-      const success = applySharedCode(parsed);
-      if (success) {
-        const langTitle = parsed.lang.toUpperCase();
-        toast(`Shared ${langTitle} program loaded successfully! 🚀`);
+      try {
+        const success = applySharedCode(parsed);
+        if (success) {
+          const langTitle = parsed.lang.toUpperCase();
+          const notify = () => toast(`Shared ${langTitle} program loaded successfully! 🚀`);
 
-        // Clean up URL hash to prevent re-triggering on reload
-        try {
-          if (window.history && window.history.replaceState) {
-            window.history.replaceState(null, '', window.location.pathname + window.location.search);
+          // Only show toast after splash screen has cleared so user sees it
+          if (document.body.classList.contains('app-ready')) {
+            notify();
+          } else {
+            const observer = new MutationObserver(() => {
+              if (document.body.classList.contains('app-ready')) {
+                observer.disconnect();
+                setTimeout(notify, 400);
+              }
+            });
+            observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+            setTimeout(notify, 2800); // Safety timeout
           }
-        } catch (_) {}
+
+          // Clean up URL hash to prevent re-triggering on reload
+          try {
+            if (window.history && window.history.replaceState) {
+              window.history.replaceState(null, '', window.location.pathname + window.location.search);
+            }
+          } catch (_) {}
+        }
+      } catch (err) {
+        console.error('Error applying shared code payload:', err);
       }
     }
   }
 
   // Check immediately on startup and listen for hash changes
-  setTimeout(checkIncomingShare, 100);
+  setTimeout(checkIncomingShare, 150);
   window.addEventListener('hashchange', checkIncomingShare);
 
   return {
@@ -825,6 +882,8 @@ export function initCodeSharer({
     pack: packSharePayload,
     unpack: unpackSharePayload,
     generateUrl: generateShareUrl,
-    parseHash: parseShareHash
+    parseHash: parseShareHash,
+    applyShared: (payload) => applySharedCode(payload),
+    checkIncoming: checkIncomingShare
   };
 }

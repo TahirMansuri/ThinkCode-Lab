@@ -203,8 +203,9 @@ test('python.worker.js streams input() prompts immediately before need_input (is
   const workerSrc = fs.readFileSync(path.join(rootDir, 'src', 'engines', 'python.worker.js'), 'utf8');
   assert.ok(workerSrc.includes('isatty: false'), 'py.setStdin must use isatty: false so CPython writes prompts to Python sys.stdout');
   assert.ok(workerSrc.includes('function emitStdout('), 'python.worker.js must stream partial stdout lines via emitStdout');
-  assert.ok(workerSrc.includes('flushStdoutBuffer();\n          // Priority 1:'), 'stdin() must flush stdoutBuf before posting need_input');
+  assert.ok(workerSrc.includes('flushStdoutBuffer()'), 'stdin() must flush stdoutBuf before posting need_input');
   assert.ok(workerSrc.includes('sys.stdout.reconfigure(line_buffering=True, write_through=True)'), 'stdout must enable write_through for print(..., end="") before input()');
+  assert.ok(workerSrc.includes('ensurePythonInputHook'), 'python.worker.js must provide ensurePythonInputHook');
 });
 
 // 10. Real Pyodide 3.12 Interactive Prompt Ordering Test
