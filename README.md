@@ -9,9 +9,10 @@
 > Built by **Tahir Mansuri** for Computer Science and IT students to practice Java (with interactive AWT/Swing desktop windows), Python, C, C++, PHP, Oracle SQL, Linux Shell, JavaScript, and HTML/CSS directly on Web and Android.
 
 [![Parent Initiative: ThinkCode](https://img.shields.io/badge/Companion_To-ThinkCode_Visualizer-8e5bd6?style=for-the-badge&logo=googlechrome&logoColor=white)](https://thinkcode.infogalaxy.space/)
+[![Google Play Store](https://img.shields.io/badge/Google_Play-Live_on_Play_Store-34A853?style=for-the-badge&logo=googleplay&logoColor=white)](https://play.google.com/store/apps/details?id=com.igc.thinkcodelab)
 [![Live Web App](https://img.shields.io/badge/Live_Web_App-thinkcode--lab.web.app-FFB04A?style=for-the-badge&logo=firebase&logoColor=black)](https://thinkcode-lab.web.app)
-[![Android APK v1.3.4](https://img.shields.io/badge/Android_APK-v1.3.4_Build_11_(17.7MB)-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://thinkcode-lab.web.app/download)
-[![Feature Branch v1.3.5](https://img.shields.io/badge/Web_Dev-feature%2Fv1.3.5-58A6FF?style=for-the-badge&logo=git&logoColor=white)](docs/04_CHANGELOG.md)
+[![Android APK v1.3.8](https://img.shields.io/badge/Android_APK-v1.3.8_Build_15_(17.7MB)-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://thinkcode-lab.web.app/download)
+[![Release Branch v1.3.8](https://img.shields.io/badge/Release_Branch-release%2Fv1.3.8-58A6FF?style=for-the-badge&logo=git&logoColor=white)](docs/04_CHANGELOG.md)
 [![Author: Tahir Mansuri](https://img.shields.io/badge/Author-Tahir_Mansuri-blue?style=for-the-badge&logo=github&logoColor=white)](https://github.com/TahirMansuri)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
@@ -165,17 +166,28 @@ flowchart TD
   - Language tab rail, editor box, 8px attached precision splitter divider, and output console form a seamless connected IDE with zero wasted card gaps or floating borders.
 - **☰ Ultra-Slim 1-Line Header & Slide-Out Options Drawer:**
   - Collapses top controls into a clean bar with a slide-out drawer (`☰ Menu`) holding File Save/Open, **Export Lab Journal PDF**, Reset, Theme Toggle, **App Updates**, Share, and Developer info, freeing maximum vertical space for the active code editor.
+- **🐍 Python 3.12 + On-Demand Scientific Suite:**
+  - Full CPython standard library with interactive in-console `input()` streaming.
+  - On-demand Scientific Library Manager: **NumPy**, **Pandas**, **Matplotlib**, **Scikit-learn**, **Seaborn**, and **openpyxl** with zero base APK size bloat (cached in offline `CacheStorage`).
+  - Client-side Virtual Filesystem (VFS) with CSV & Excel upload support and pre-seeded academic datasets (`students.csv`, `iris.csv`, `sales.csv`).
+  - Publication-quality inline Matplotlib plot visualizer with high-DPI rendering, animated loading states, **Copy Image**, and **Save PNG** actions.
 - **📄 1-Tap Offline Lab Journal & Assignment A4 PDF Export (`src/lab-journal.js`):**
   - Generates print-ready multi-page A4 assignment PDFs 100% offline via an embedded Canvas 2D + pure-JS JPEG-in-PDF 1.4 writer (plus Android native `PrintManager` bridge).
   - Remembers student details (`Institute`, `Department`, `Name`, `Roll No.`, `Class`, `Year`), auto-infers subject & title, syntax-colors source code with line numbers, captures execution output / SQL tables / Swing frames, and renders a faculty signature footer.
-- **🔔 Silent In-App APK Update Checker (`src/update-checker.js` + `/version.json`):**
-  - Zero-telemetry HTTPS update manifest (`CORS` + `CORP` + `no-store`) informing sideloaded Android students of newer APK builds via non-blocking toast, menu dot badge, release-notes dialog, and 24-hour snooze, while dynamically hydrating **[thinkcode-lab.web.app/download](https://thinkcode-lab.web.app/download)**.
+- **🛡️ Android Hardware/Gesture Back-Button & Exit Confirmation Dialog:**
+  - Intercepts Android hardware/gesture back events via `OnBackPressedCallback` in `MainActivity.java`.
+  - Hierarchical dismissal: closes open select dropdowns, slide-out menu drawer, and active dialogs (`#journalDialog`, `#updateDialog`, Java Swing frame `#guiWindowModal`) first, preventing accidental app closure.
+  - Prompts a sleek confirmation dialog before safely exiting via native bridge.
+- **🔔 Silent In-App Update Checker & Google Play Compliance:**
+  - Zero-telemetry HTTPS update manifest (`CORS` + `CORP` + `no-store`) informing sideloaded Android students of newer APK builds via non-blocking toast, menu dot badge, release-notes dialog, and 24-hour snooze.
+  - In native Android builds, the update CTA routes directly to the official **Google Play Store listing** (`com.igc.thinkcodelab`) in strict compliance with Google Play Developer policies.
 - **👤 Interactive Developer Profile Header Pill:**
   - Dedicated `Dev By - Tahir Mansuri` header pill opens the developer leadership bio and architecture modal with a single tap.
 - **📏 Universal 2-Space Indentation:**
   - Clean 2-space tab indentation across all practical assignments and templates to prevent line wrapping on mobile.
-- **📱 Standalone Native Android App:**
-  - Built with Capacitor 6, targeting Android API 36 (`minSdkVersion 24`), Edge-to-Edge WindowInsets + dynamic Light/Dark bar contrast, `NativeStdinBridge`, and signed with production keystore.
+- **📱 Standalone Native Android App & Google Play Bundle:**
+  - Built with Capacitor 6, targeting Android API 36 (`minSdkVersion 24`), Edge-to-Edge WindowInsets + dynamic Light/Dark bar contrast, `NativeStdinBridge`, and signed with production keystore (`thinkcode-lab.keystore`).
+  - Published on Google Play Store (`com.igc.thinkcodelab`) and distributed as standalone APK (~17.7 MB) and AAB (~17.5 MB).
 
 ---
 
@@ -195,13 +207,13 @@ flowchart TD
 
 ---
 
-## 📚 University Syllabus Practicals Library (78 Assignments)
+## 📚 University Syllabus Practicals Library (83 Assignments)
 
-ThinkCode Lab comes pre-loaded with **78 official university lab practicals** formatted with clean **2-space indentation** for instant 1-click loading:
+ThinkCode Lab comes pre-loaded with **83 official university lab practicals** formatted with clean **2-space indentation** for instant 1-click loading:
 
 | Subject / Course | Practical Count | Topics Covered |
 | :--- | :---: | :--- |
-| **Python (CA-214)** | **11** | Basic I/O, Conditions, Prime Range, Fibonacci, Matrix Addition, Functions & Recursion, Tuples/Sets, Dictionaries, OOP Class, File Handling, Inheritance |
+| **Python (CA-214 & Unit 4 Data Science)** | **16** | Basic I/O, Conditions, Prime Range, Fibonacci, Matrix Addition, Functions & Recursion, Tuples/Sets, Dictionaries, OOP Class, File Handling, Inheritance, **NumPy Matrices**, **Pandas DataFrames**, **Matplotlib 2D Plots**, **Seaborn Statistical Visuals**, **Scikit-learn ML Models** |
 | **Java (CA-313 / CA-315)** | **16** | Student Info, Switch Arithmetic, Array Largest, CLI Args, Scanner Input, Constructors, Overloading, Inheritance, Overriding, Interface Area, Strings, Exceptions, **AWT Calculator**, **Swing Login Form**, JDBC Connection, CRUD Operations |
 | **C++ (CA-113 & CA-123)** | **17** | Arithmetic, Control Flow, Loops, Primes, Factorial, Fibonacci, 2D Matrix, Functions, Strings, Structs, Exam Tabulation, Default Args, Class, Constructors, Inheritance, Refrigerator App |
 | **Linux Shell (CA-123)** | **10** | Commands Demo, Fibonacci, Time Greeting, Login Check, Factorial, Divisible by 7, Prime, Palindrome, Armstrong Number, Result Sheet Filtering |
@@ -232,11 +244,14 @@ npm run dev
 ```
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-### 3. Run Automated Verification Suites
+### 3. Run Automated Verification Suites (85 Automated Checks)
 ```bash
-npm run test:ccpp                  # 47 checks: PicoC C99, unified JSCPP C++, SAB stdin, formatter
-node scripts/test-journal.mjs      # 10 checks: Student Lab Journal & A4 PDF 1.4 structure
-node scripts/test-update-checker.mjs # 10 checks: Semver, snooze, URL validation & version.json
+npm test                             # Runs all 85 checks across 5 test suites
+npm run test:ccpp                    # 47 checks: PicoC C99, unified JSCPP C++, SAB stdin, formatter
+node scripts/test-journal.mjs        # 10 checks: Student Lab Journal & A4 PDF 1.4 structure
+node scripts/test-update-checker.mjs # 11 checks: Semver, snooze, Play Store compliance & version.json
+node scripts/test-python-datascience.mjs # 12 checks: Data Science datasets, Pyodide loader, input streaming
+node scripts/test-backpress-exit.mjs # 5 checks: Hardware back-press interception & exit dialog
 ```
 
 ### 4. Build Production Web Distribution
@@ -252,22 +267,33 @@ npx firebase deploy --only hosting
 
 ---
 
-## 📱 Android App (Release APK)
+## 📱 Android App & Google Play Store Distribution
 
-ThinkCode Lab compiles into a standalone, 100% offline native Android application (**v1.3.4 / Build 11**, ~17.7 MB) with all WASM runtimes embedded:
+ThinkCode Lab compiles into a standalone, 100% offline native Android application (**v1.3.8 / Build 15**, ~17.7 MB) with all WASM runtimes embedded, published live on Google Play:
+
+- **Google Play Store Listing:** [play.google.com/store/apps/details?id=com.igc.thinkcodelab](https://play.google.com/store/apps/details?id=com.igc.thinkcodelab)
+- **Application ID:** `com.igc.thinkcodelab`
+- **Target API:** API 36 (Android 16) | **Min API:** API 24 (Android 7.0+)
+- **Download Portal:** [thinkcode-lab.web.app/download](https://thinkcode-lab.web.app/download)
+- **Direct APK:** [ThinkCodeLab-v1.3.8.apk (GitHub Release v1.3.8)](https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.8/ThinkCodeLab-v1.3.8.apk)
+- **Direct App Bundle:** `ThinkCodeLab-v1.3.8.aab` (`17.5 MB`, `versionCode: 15`)
+
+### Verified Production Binary Hashes (SHA-256)
+| Artifact | Build | Size | SHA-256 Checksum |
+| :--- | :---: | :---: | :--- |
+| **`ThinkCodeLab-v1.3.8.aab`** (Play Console) | 15 | 17.5 MB | `7860ab47bc48d06d9d08636a24de6ca9ab26fed2561a42f64965d253ceee2986` |
+| **`ThinkCodeLab-v1.3.8.apk`** (Direct APK) | 15 | 17.7 MB | `a0cc2ef2092e9482227b8133de2b3314ef6ca6d43106b3f6bb35791011749809` |
 
 ```bash
 # 1. Build and sync web assets to Android
 npm run build
 npx cap sync android
 
-# 2. Assemble signed production Release APK
+# 2. Assemble signed production Release APK & Google Play Bundle
 cd android
 ./gradlew assembleRelease
+./gradlew bundleRelease
 ```
-- **Compiled Release APK:** `ThinkCodeLab-v1.3.4.apk` (Version Code `11`, ~17.7 MB)
-- **Target API:** API 36 (Android 16) | **Min API:** API 24 (Android 7.0+)
-- **Download Portal:** **[thinkcode-lab.web.app/download](https://thinkcode-lab.web.app/download)** (auto-hydrates from **[/version.json](https://thinkcode-lab.web.app/version.json)**; direct **[ThinkCodeLab-v1.3.4.apk](https://thinkcode-lab.web.app/ThinkCodeLab-v1.3.4.apk)**)
 
 ---
 
@@ -276,11 +302,15 @@ cd android
 All technical architecture guides, engine specifications, changelogs, roadmaps, and developer memory files are systematically organized inside the [`docs/`](docs/) directory:
 
 - 📘 [**docs/01_PROJECT_OVERVIEW.md**](docs/01_PROJECT_OVERVIEW.md) — Vision, problem statement, core value proposition, academic utilities, and repository structure.
-- 🛠️ [**docs/02_TECH_STACK.md**](docs/02_TECH_STACK.md) — Technical architecture, threading model, `NativeStdinBridge`, `SystemUiBridge`, pure-JS PDF 1.4, and automated test suites.
-- ⚙️ [**docs/03_ENGINE_ARCHITECTURE.md**](docs/03_ENGINE_ARCHITECTURE.md) — Deep dive into Java AST/Swing emulation, C/C++ PicoC/JSCPP, Clang upgrade path, PHP CGI bridge, Oracle SQL, Lab Journal PDF, and silent updater.
-- 📝 [**docs/04_CHANGELOG.md**](docs/04_CHANGELOG.md) — Comprehensive version history from v1.0.0 through **v1.3.4 (Build 11 APK)** and active **`feature/v1.3.5`** enhancements.
-- 🗺️ [**docs/05_ROADMAP.md**](docs/05_ROADMAP.md) — Completed phases 1–6, approved upcoming queue (#2 Saved Programs, #3 Classroom Auto-Graded Links, #5 Error Hints & Input Replay), and longer-term plans.
+- 🛠️ [**docs/02_TECH_STACK.md**](docs/02_TECH_STACK.md) — Technical architecture, threading model, `NativeStdinBridge`, `SystemUiBridge`, pure-JS PDF 1.4, and 85-check automated test suites.
+- ⚙️ [**docs/03_ENGINE_ARCHITECTURE.md**](docs/03_ENGINE_ARCHITECTURE.md) — Deep dive into Java AST/Swing emulation, C/C++ PicoC/JSCPP, Python stdin streaming, PHP CGI bridge, Oracle SQL, Lab Journal PDF, and silent updater.
+- 📝 [**docs/04_CHANGELOG.md**](docs/04_CHANGELOG.md) — Comprehensive version history through **v1.3.8 (Build 15)** including Python input streaming, Play Store release, and Android back navigation.
+- 🗺️ [**docs/05_ROADMAP.md**](docs/05_ROADMAP.md) — Completed phases 1–7, approved upcoming queue (#2 Saved Programs, #3 Classroom Auto-Graded Links, #5 Error Hints & Input Replay), and longer-term plans.
 - 🚀 [**docs/06_PLAYSTORE_RELEASE.md**](docs/06_PLAYSTORE_RELEASE.md) — Keystore credentials, SHA-256 fingerprints & binary hashes, Play Protect appeal guide, `version.json` checklist, and Play Store details.
+- 🧠 [**docs/07_DEVELOPER_MEMORY.md**](docs/07_DEVELOPER_MEMORY.md) — Developer memory, strictly enforced operational rules (Web-only deployment, backup policy, Play Store compliance), and technical gotchas learned.
+- 🚀 [**docs/08_FUTURE_ENHANCEMENTS.md**](docs/08_FUTURE_ENHANCEMENTS.md) — Feature catalog tracking completed items (Quick-Symbol Strip, Beautifier, Drawer, Lab Journal PDF, Update Checker, Back-Button Exit) and upcoming specifications.
+- 🔐 [**docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md**](docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md) — Master reference for administrative accounts, Firebase configuration, `/version.json` rules, Android signing keystore, SHA-256 hashes, and deployment commands.
+- 🐍 [**docs/10_PYTHON_DATA_SCIENCE_SPEC.md**](docs/10_PYTHON_DATA_SCIENCE_SPEC.md) — Technical specification and roadmap for on-demand scientific libraries (NumPy, Pandas, Matplotlib, Scikit-learn, Seaborn), local CSV/Excel uploads, and inline plot visualization.
 - 🧠 [**docs/07_DEVELOPER_MEMORY.md**](docs/07_DEVELOPER_MEMORY.md) — Developer memory, strictly enforced operational rules (Web-only deployment, no unrequested APK/VDI runs, backup policy), and technical gotchas learned.
 - 🚀 [**docs/08_FUTURE_ENHANCEMENTS.md**](docs/08_FUTURE_ENHANCEMENTS.md) — Feature catalog tracking completed items (Quick-Symbol Strip, Beautifier, Drawer, Lab Journal PDF, Update Checker) and upcoming specifications.
 - 🔐 [**docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md**](docs/09_ACCOUNT_AND_DEPLOYMENT_INFO.md) — Master reference for administrative accounts, Firebase configuration, `/version.json` rules, Android signing keystore, SHA-256 hashes, and deployment commands.

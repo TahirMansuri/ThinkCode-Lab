@@ -4,6 +4,66 @@
 
 ---
 
+## 🚀 Version 1.3.8 (Build 15) — Google Play Store Production Release & Python Stdin Streaming Fix
+*Release Date: November 18, 2026*
+
+### 🐍 Python 3.12 Runtime `input()` Prompt Streaming Fix (`src/engines/python.worker.js`)
+- **Pyodide TTY Emulation Configuration**:
+  - Configured `py.setStdin({ isatty: false, autoEOF: true })` inside `initPyodide()`. Previously, `isatty: true` caused CPython's `input("prompt")` C-extension to write prompts directly to OS file descriptor 1, bypassing the JavaScript `setStdout` hook entirely and leaving the console blank during input prompts.
+  - Added `sys.stdout.reconfigure(line_buffering=True, write_through=True)` execution initialization to unbuffer standard output for un-terminated prompts like `print("Enter: ", end="")`.
+- **Partial-Line Buffer Streaming**:
+  - Implemented `emitStdout()` and `flushStdoutBuffer()` called immediately prior to dispatching the `need_input` event across both Web (`SharedArrayBuffer`) and Android (`readNativeStdinSync`) blocking paths.
+  - Ensures prompt messages (e.g., `Your name: `) are cleanly emitted and rendered in `#console` before the user input field appears.
+- **Automated Verification (`scripts/test-python-datascience.mjs`)**:
+  - Expanded test suite to **12 tests**, verifying real CPython Pyodide execution of `input("Your name: ")` and `print(..., end="")` ensuring output chunks arrive before input blocking.
+
+### 📦 Google Play Console Production Upload (`versionCode: 15`)
+- **Resolved Version Code Conflict**:
+  - Handled Google Play Console error *"Version code 14 has already been used. Try another version code"* caused by permanent reservation of previous draft/test uploads.
+  - Bumped release to `versionCode: 15`, `versionName: "1.3.8"` across `android/app/build.gradle`, `public/version.json`, `src/update-checker.js`, and `public/download.html`.
+- **Signed Production Release Artifacts**:
+  - **Google Play App Bundle**: `ThinkCodeLab-v1.3.8.aab` (`17,492,690` bytes, `jar verified`, SHA-256: `7860ab47bc48d06d9d08636a24de6ca9ab26fed2561a42f64965d253ceee2986`).
+  - **Standalone APK**: `ThinkCodeLab-v1.3.8.apk` (`17,742,698` bytes, SHA-256: `a0cc2ef2092e9482227b8133de2b3314ef6ca6d43106b3f6bb35791011749809`).
+  - GitHub Release `v1.3.8` created and direct APK uploaded (`uploads.github.com/repos/.../releases/449118952/assets`).
+  - Live Web IDE deployed to Firebase Hosting (`https://thinkcode-lab.web.app`).
+
+---
+
+## 🚀 Version 1.3.7 (Build 14) — Google Play Store Compliance & Signed Production AAB
+*Release Date: November 17, 2026*
+
+### 🛡️ Google Play Policy Compliance (`src/main.js`, `src/update-checker.js`)
+- **Direct Play Store Routing for Native Android**:
+  - Google Play Developer Distribution Agreement strictly prohibits apps distributed via the Play Store from providing prompts, links, or buttons directing users to download/sideload external APKs.
+  - Updated native Android update flow (`window.Capacitor?.isNativePlatform?.()`): update buttons in the Drawer and update dialog redirect directly to `https://play.google.com/store/apps/details?id=com.igc.thinkcodelab`.
+  - Web users (`thinkcode-lab.web.app`) continue to receive direct APK download buttons and `/download` portal links.
+- **Automated Verification (`scripts/test-update-checker.mjs`)**:
+  - Added unit test asserting native Android update CTA exclusively routes to the Google Play Store URL.
+
+---
+
+## 🚀 Version 1.3.6 (Build 13) — Android Hardware Back-Press Interception & Exit Confirmation Dialog
+*Release Date: November 13, 2026*
+
+### 📱 Android Back-Gesture Hierarchical Dismissal (`MainActivity.java`, `src/main.js`, `index.html`)
+- **Native Android Back Dispatcher (`MainActivity.java`)**:
+  - Integrated `OnBackPressedCallback(true)` with Android's `OnBackPressedDispatcher`.
+  - Dispatches `thinkcode:backpress` custom event into the Capacitor WebView, preventing sudden app closure when users swipe or tap the system back button.
+- **Hierarchical UI Dismissal Chain (`src/main.js`)**:
+  - Prioritizes closing open sub-components in order:
+    1. Active `<select>` dropdowns (unfocuses and closes).
+    2. Slide-out `#menuDrawer` (animates closed).
+    3. Open modal dialogs (`#journalDialog`, `#updateDialog`, `#pyPkgDialog`, `#pyDataFilesDialog`, `#aboutDialog`).
+    4. Active Java AWT/Swing GUI desktop frame (`#guiWindowModal`).
+- **Exit Confirmation Dialog (`<dialog id="exitDialog">`)**:
+  - When no overlays or menus are open, back-press opens a styled confirmation dialog: *"Are you sure you want to exit ThinkCode Lab?"*
+  - **Exit App**: Calls `ThinkCodeSystemUI.exitApp()` via JavaScript bridge, cleanly finishing the Android activity.
+  - **Stay in App**: Closes the dialog and preserves the student's active code and output session.
+- **Automated Verification (`scripts/test-backpress-exit.mjs`)**:
+  - Added **5** automated unit checks covering exit dialog DOM structure, CSS classes, native Android back dispatcher, hierarchical dismiss precedence, and bridge exposure.
+
+---
+
 ## 🚀 Version 1.3.5 (Build 12) — Released Android APK & Live Web IDE
 *Release Date: November 13, 2026*
 

@@ -54,10 +54,12 @@ ThinkCode Lab is architected as an **offline-first, zero-backend, multi-threaded
 ### 🐍 1. Python 3.12 Engine (`src/engines/python.worker.js`)
 - **Technology:** [Pyodide](https://pyodide.org/) v0.26.4 (CPython compiled to WebAssembly via Emscripten).
 - **Packaging:** Self-hosted runtime (`pyodide.js`, `pyodide.asm.wasm`, `pyodide.asm.js`, `python_stdlib.zip`) in `public/pyodide/` for 100% offline access.
-- **I/O Redirection:**
+- **I/O Redirection & Prompt Streaming:**
   - `py.setStdout`: Streams byte chunks decoded via `TextDecoder` to the main UI console sink.
   - `py.setStderr`: Strips Pyodide internals and displays clean academic tracebacks.
-  - `py.setStdin`: Blocks worker execution using `SharedArrayBuffer` + `Atomics.wait()`, prompting the user via an inline terminal field or touch-friendly `#promptModal`.
+  - `py.setStdin({ isatty: false, autoEOF: true })`: CPython writes `input("prompt")` prompts directly to Python `sys.stdout` instead of bypassing to OS file descriptor 1.
+  - Partial line buffer streaming: Worker streams unbuffered partial lines (`emitStdout()`) and flushes output buffers (`flushStdoutBuffer()`) immediately before posting `need_input`, ensuring prompts appear in `#console` prior to user typing.
+  - Blocks worker execution using `SharedArrayBuffer` + `Atomics.wait()` on Web, or `readNativeStdinSync()` via synchronous `POST /__native_stdin` on Android WebView.
 
 ### ☕ 2. Java JDK Simulation & AWT/Swing Engine (`src/engines/java.worker.js`)
 - **Technology:** Lightweight offline Java AST transpiler and bytecode emulator.
@@ -187,12 +189,18 @@ ThinkCode Lab supports true interactive runtime input via a dual-mode communicat
   - `printDocument(title)`: invokes Android's native `PrintManager` WebView print adapter for system PDF saving/printing.
   - `getAppVersion()`: returns runtime `PackageInfo` (`versionName` and `PackageInfoCompat.getLongVersionCode`) as JSON so the in-app updater checks the real installed APK build accurately.
   - `openExternalUrl(url)`: launches validated `https://` release/download URLs cleanly into Android's external browser (`ACTION_VIEW`) for one-tap APK downloading.
+  - `exitApp()`: safely finishes and terminates the Android activity when confirmed by the student.
+- **Android Back-Button Gesture Interception & Exit Confirmation (`MainActivity.java`):**
+  - Registers `OnBackPressedCallback(true)` with Android's `OnBackPressedDispatcher`.
+  - Dispatches `window.dispatchEvent(new CustomEvent('thinkcode:backpress'))` into WebView.
+  - `src/main.js` evaluates UI state hierarchically: closes active `<select>` dropdowns, slide-out `#menuDrawer`, open dialog modals (`#journalDialog`, `#updateDialog`, etc.), and Java AWT/Swing `#guiWindowModal`. Only when zero overlays are active, displays `<dialog id="exitDialog">` with Exit / Stay options.
 - **Android 15/16 Edge-to-Edge & Dynamic Bar Contrast:**
   - Consumes `WindowInsetsCompat.Type.systemBars() | displayCutout() | ime()` cleanly on `android.R.id.content` (`WindowInsetsCompat.CONSUMED`) so WebView never overlaps status/navigation bars or double-pads CSS `env(safe-area-inset-*)`.
-- **Android Target Compliance:**
+- **Android Target Compliance & Play Store Publishing:**
   - `compileSdkVersion = 36` (Android 16 / Latest API).
   - `targetSdkVersion = 36`.
   - `minSdkVersion = 24` (Android 7.0 Nougat+, meeting Google Play Automatic App Protection requirements).
+  - Published on Google Play Store (`com.igc.thinkcodelab`) as Signed Release Bundle (`ThinkCodeLab-v1.3.8.aab`, Build 15).
 - **Security & Signing:**
   - Dedicated production RSA 2048-bit release keystore (`thinkcode-lab.keystore`).
   - Signed using APK Signature Scheme v1 + v2 (`v1SigningEnabled = true`, `v2SigningEnabled = true`).
@@ -201,10 +209,13 @@ ThinkCode Lab supports true interactive runtime input via a dual-mode communicat
 
 ---
 
-## 🧪 6. Automated Verification & Regression Suites
+## 🧪 6. Automated Verification & Regression Suites (85 Checks)
 
 | Script / Command | Coverage | Checks |
 | :--- | :--- | :---: |
 | `npm run test:ccpp` (`scripts/test-c-cpp.mjs`) | PicoC C99 & unified JSCPP C++ engines, `SharedArrayBuffer` stdin streaming, all C/C++ syllabus practicals, formatter round-trips, `setState()` null-guards | **47 Checks** |
 | `node scripts/test-journal.mjs` (`scripts/test-journal.mjs`) | Student profile persistence, title/subject inference, syntax tokenization, multi-page A4 pagination, valid PDF 1.4 xref byte offsets & structure | **10 Checks** |
-| `node scripts/test-update-checker.mjs` (`scripts/test-update-checker.mjs`) | Semver & `versionCode` comparisons, HTTPS-only URL sanitization, 4h auto-throttle, 24h snooze, live `public/version.json` integrity | **10 Checks** |
+| `node scripts/test-update-checker.mjs` (`scripts/test-update-checker.mjs`) | Semver & `versionCode` comparisons, HTTPS-only URL sanitization, 4h auto-throttle, 24h snooze, Google Play Store compliance, live `public/version.json` integrity | **11 Checks** |
+| `node scripts/test-python-datascience.mjs` (`scripts/test-python-datascience.mjs`) | Datasets integrity, CSV parsing, Pyodide CDN fallback patch, practicals extension, animated loader structure, Python `input()` prompt streaming | **12 Checks** |
+| `node scripts/test-backpress-exit.mjs` (`scripts/test-backpress-exit.mjs`) | Exit dialog DOM, CSS animations, native Android back dispatcher & exit bridge, hierarchical overlay dismissal | **5 Checks** |
+| **Total Test Suite** (`npm test`) | **Full regression coverage across all engines, Android bridges, and academic utilities** | **85 Checks** |

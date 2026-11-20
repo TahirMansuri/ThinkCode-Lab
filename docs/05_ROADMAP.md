@@ -21,14 +21,26 @@
                                                                                  │
                                                                                  ▼
 ┌─────────────────────────────────────────┐     ┌─────────────────────────────────────────┐
-│               PHASE 5                   │     │           PHASE 6 (feature/v1.3.5)      │
-│             [COMPLETED]                 │ ──▶ │         [WEB LIVE / IN PROGRESS]        │
+│               PHASE 5                   │     │               PHASE 6                   │
+│             [COMPLETED]                 │ ──▶ │             [COMPLETED]                 │
 │                                         │     │                                         │
-│ • Adaptive 80:20 Split & Attached UI    │     │ • 1-Tap Lab Journal A4 PDF [DONE]       │
-│ • Quick-Symbol Strip & Beautifier       │     │ • Silent APK Update Checker [DONE]      │
-│ • Slim Header & Slide-Out Drawer        │     │ • My Saved Programs (IndexedDB) [NEXT]  │
-│ • Native Android Stdin & Edge-to-Edge   │     │ • Classroom Auto-Graded Links [QUEUED]  │
-│ • v1.3.4 Build 11 APK Released          │     │ • Input Replay + Error Hints [QUEUED]   │
+│ • Adaptive 80:20 Split & Attached UI    │     │ • 1-Tap Lab Journal A4 PDF              │
+│ • Quick-Symbol Strip & Beautifier       │     │ • Silent APK Update Checker             │
+│ • Slim Header & Slide-Out Drawer        │     │ • Python Data Science Suite (NumPy,     │
+│ • Native Android Stdin & Edge-to-Edge   │     │   Pandas, Matplotlib, Scikit-learn,     │
+│ • v1.3.4 Build 11 APK Released          │     │   Seaborn) & Inline Plotting            │
+└─────────────────────────────────────────┘     └─────────────────────────────────────────┘
+                                                             │
+                                                             ▼
+┌─────────────────────────────────────────┐     ┌─────────────────────────────────────────┐
+│               PHASE 7                   │     │               PHASE 8                   │
+│             [COMPLETED]                 │ ──▶ │               [QUEUED]                  │
+│                                         │     │                                         │
+│ • Android Back-Gesture Interception     │     │ • My Saved Programs (IndexedDB)         │
+│ • Exit Confirmation Dialog (#exitDialog)│     │ • Classroom Auto-Graded Challenge Links │
+│ • Python input() Prompt Streaming Fix   │     │ • Replay Input Presets & Error Hints    │
+│ • Google Play Live (com.igc.thinkcodelab)│     │ • Clang C/C++ On-Demand Package         │
+│ • v1.3.8 Build 15 AAB & APK Released    │     │ • Multi-File Project Workspace          │
 └─────────────────────────────────────────┘     └─────────────────────────────────────────┘
 ```
 
@@ -69,14 +81,20 @@
 - Hardened PicoC C99 & unified patched `JSCPP` C++ engines backed by the 47-check `npm run test:ccpp` suite.
 - Native Android `NativeStdinBridge` (`/__native_stdin`), Edge-to-Edge `WindowInsets` alignment, dynamic Light/Dark system bar contrast, and versioned APK downloads (`ThinkCodeLab-v1.3.4.apk`, Build 11).
 
-### 6. Phase 6: Academic Productivity & Sideload Update Workflow (`feature/v1.3.5`)
+### 6. Phase 6: Academic Productivity & Sideload Update Workflow (`v1.3.5`)
 - ✅ **1-Tap Student Lab Journal / Assignment A4 PDF Export**: Offline pure-JS JPEG-in-PDF 1.4 generator (`src/lab-journal.js`), sticky Student Profile, live preview modal, Android native print adapter, and 10-check verification (`scripts/test-journal.mjs`).
 - ✅ **Silent In-App APK Update Check**: Zero-telemetry `/version.json` manifest with CORS/CORP/`no-store` headers, auto-hydrating `/download` portal, Menu dot badge, `popover="manual"` toast + 24h snooze, native `getAppVersion()`/`openExternalUrl()` bridges, and 10-check verification (`scripts/test-update-checker.mjs`).
-- ✅ **Python Data Science & Scientific Suite**: On-demand package manager for NumPy, Pandas, Matplotlib, Scikit-learn, Seaborn + openpyxl (`src/python-tools.js`, `<dialog id="pyPkgDialog">`), client-side VFS CSV/Excel file uploader (`<dialog id="pyDataFilesDialog">`), pre-seeded sample datasets (`students.csv`, `iris.csv`, `sales.csv`), inline Matplotlib plot visualizer with copy/download PNG, 5 new Unit 4 practicals (83 total), and 7-check verification (`scripts/test-python-datascience.mjs`).
+- ✅ **Python Data Science & Scientific Suite**: On-demand package manager for NumPy, Pandas, Matplotlib, Scikit-learn, Seaborn + openpyxl (`src/python-tools.js`, `<dialog id="pyPkgDialog">`), client-side VFS CSV/Excel file uploader (`<dialog id="pyDataFilesDialog">`), pre-seeded sample datasets (`students.csv`, `iris.csv`, `sales.csv`), inline Matplotlib plot visualizer with copy/download PNG, 5 new Unit 4 practicals (83 total), and 12-check verification (`scripts/test-python-datascience.mjs`).
+
+### 7. Phase 7: Android Navigation Polish & Google Play Store Launch (`v1.3.6` – `v1.3.8`)
+- ✅ **Android Back-Gesture Hierarchical Dismissal & Exit Dialog (`v1.3.6`)**: Intercepts Android hardware and gesture back navigation via `OnBackPressedCallback`, cleanly closing dropdowns, drawer, modal dialogs, and Java GUI frames before presenting a confirmation dialog. 5-check test suite (`scripts/test-backpress-exit.mjs`).
+- ✅ **Google Play Developer Policy Compliance (`v1.3.7`)**: Tailored update CTAs in native Android builds to point directly to Google Play Store listing (`com.igc.thinkcodelab`) while preserving direct APK downloads for Web students.
+- ✅ **Python `input()` Prompt Streaming Fix (`v1.3.8`)**: Pyodide `isatty: false` configuration, unbuffered line streaming via `emitStdout()` and `flushStdoutBuffer()`, ensuring sequential `input()` prompts appear in `#console` prior to user typing.
+- ✅ **Google Play Production Release (`v1.3.8 / Build 15`)**: Signed App Bundle (`ThinkCodeLab-v1.3.8.aab`, 17.5 MB) and Standalone APK (`ThinkCodeLab-v1.3.8.apk`, 17.7 MB) published with target API 36 compliance. Full 85-check automated verification suite passing.
 
 ---
 
-## 🔜 Approved Next Queue (Shortlisted for `v1.3.5+`)
+## 🔜 Approved Next Queue (Shortlisted for `v1.4.0+`)
 
 ### 💾 1. My Saved Programs (IndexedDB) + Undo-Safe Practical Loading
 - Dedicated personal sketch/program notebook stored locally in `IndexedDB`, allowing students to name, bookmark, filter, and switch programs across sessions while preserving undo/backup safety whenever loading a syllabus practical over unsaved edits.

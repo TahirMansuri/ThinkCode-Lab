@@ -149,7 +149,7 @@ In desktop Python, `plt.show()` creates a desktop GUI window (via Tkinter/Qt), w
   - Instant auto-dismiss on plot arrival (`sink.plot`), script completion (`finally`), error reporting (`sink.err`), output clear (`btnClear`), or language switch (`applyLang`).
   - Integrated `[⏹ Stop Execution]` button (`#btnCancelPlot`) allowing students to cancel running scripts immediately.
 - [x] **Automated Verification**:
-  - Added unit tests for `isPlottingScript` (positive/negative patterns), DOM element IDs (`#pyPlotLoader`, `#pyPlotLoaderTitle`, `#pyPlotLoaderStatus`, `#btnCancelPlot`), and CSS keyframe animations. Total suite expanded to **77 tests**.
+  - Added unit tests for `isPlottingScript` (positive/negative patterns), DOM element IDs (`#pyPlotLoader`, `#pyPlotLoaderTitle`, `#pyPlotLoaderStatus`, `#btnCancelPlot`), and CSS keyframe animations. Total test suite expanded to **85 tests** across all 5 suites.
 
 ---
 

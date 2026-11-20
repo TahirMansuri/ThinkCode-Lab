@@ -253,16 +253,19 @@ A visual **"Trace / Step Mode"** (inspired by Python Tutor) that allows students
 | **2. Mobile Quick-Symbol Strip** | 🔥 High | 🟢 Low | ✅ **Completed (`v1.3.2`)** |
 | **7. One-Tap Code Auto-Formatter** | ⚡ High | 🟡 Medium | ✅ **Completed (`v1.3.2`)** |
 | **9. Unified App Menu / Options Drawer** | 💎 High | 🟢 Low | ✅ **Completed (`v1.3.2`–`v1.3.4`)** |
-| **1. Lab Journal / Manual PDF Generator** | 💎 Exceptional | 🟡 Medium | ✅ **Completed (`feature/v1.3.5`)** |
-| **10. Silent In-App APK Update Check** | 💎 High | 🟡 Medium | ✅ **Completed (`feature/v1.3.5`)** |
+| **1. Lab Journal / Manual PDF Generator** | 💎 Exceptional | 🟡 Medium | ✅ **Completed (`v1.3.5`)** |
+| **10. Silent In-App APK Update Check** | 💎 High | 🟡 Medium | ✅ **Completed (`v1.3.5`)** |
+| **Python Data Science & Scientific Suite** | 💎 Exceptional | 🟡 Medium | ✅ **Completed (`v1.3.5`)** |
+| **Android Back-Button & Exit Confirmation** | 🔥 High | 🟢 Low | ✅ **Completed (`v1.3.6`)** |
+| **Python Stdin Streaming & Play Store Launch**| 💎 Exceptional | 🟡 Medium | ✅ **Completed (`v1.3.8`)** |
 | **11. My Saved Programs (IndexedDB) + Undo-Safe Loading** | 🔥 High | 🟡 Medium | 🔜 **Next Approved** |
 | **12. Classroom Auto-Graded Challenge Links** | 💎 Exceptional | 🟡 Medium | 🔜 **Approved Queue** |
 | **13. Replay Input Presets & Friendly Error Hints** | 🔥 High | 🟢 Low | 🔜 **Approved Queue** |
 | **4. Viva Voce & Cheat-Sheet Drawer** | 🔥 High | 🟢 Low | 📋 **Backlog** |
 | **5. Serverless Code Sharing (QR / Hash)** | ⚡ High | 🟢 Low | 📋 **Backlog** |
 | **3. SQL Visual ER Diagram** | 💎 Exceptional | 🟡 Medium | 📋 **Backlog** |
-| **6. Multi-File Project Workspace** | 🌟 Moderate | 🔴 High | 📋 **Phase 7.0** |
-| **8. Step-by-Step Execution Visualizer** | 🌟 High | 🔴 High | 📋 **Phase 7.1** |
+| **6. Multi-File Project Workspace** | 🌟 Moderate | 🔴 High | 📋 **Phase 8.0** |
+| **8. Step-by-Step Execution Visualizer** | 🌟 High | 🔴 High | 📋 **Phase 8.1** |
 
 ---
 

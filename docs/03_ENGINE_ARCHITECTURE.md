@@ -170,9 +170,12 @@ The Python engine (`src/engines/python.worker.js`) leverages Pyodide v0.26.4 (CP
 1. **Self-Hosted Packaging + On-Demand CDN Fallback**:
    - All core runtime files (`pyodide.js`, `pyodide.asm.wasm`, `pyodide.asm.js`, and `python_stdlib.zip`) reside in `public/pyodide/` for 100% offline baseline execution.
    - `scripts/copy-runtimes.mjs` patches `public/pyodide/pyodide.asm.js` so requested scientific wheels (`numpy`, `pandas`, `matplotlib`, `scikit-learn`, `scipy`) cleanly fall back to CDN when not in `public/pyodide/`, download on-demand, and persist in device `CacheStorage` (`thinkcode-pyodide-packages`) to work offline thereafter without base APK/Web bloat.
-2. **Interactive In-Console `input()`**:
-   - Overrides `sys.stdin.readline` to invoke `Atomics.wait()` on a `SharedArrayBuffer` on Web, or `readNativeStdinSync()` via `POST /__native_stdin` on Android WebView.
-   - The main thread injects an inline `<input>` field into `#console`, captures student typing, and writes the string to shared memory (or the native bridge slot), resuming CPython instantly.
+2. **Interactive In-Console `input()` & Prompt Streaming**:
+   - Pyodide's `py.setStdin({ isatty: false, autoEOF: true })` ensures Python's `input("prompt")` writes prompts to Python `sys.stdout` instead of writing directly to OS file descriptor 1.
+   - The worker actively unbuffers `sys.stdout` via `sys.stdout.reconfigure(line_buffering=True, write_through=True)`.
+   - Before emitting `need_input`, the worker streams any partial line content via `emitStdout()` and calls `flushStdoutBuffer()`, ensuring input prompts (e.g. `Your name: `) are received by `#console` before input blocking occurs.
+   - Synchronous blocking: Uses `Atomics.wait()` on `SharedArrayBuffer` on Web, or `readNativeStdinSync()` via `POST /__native_stdin` on Android WebView.
+   - The main thread injects an inline `<input>` field into `#console`, captures student typing, and writes the string to shared memory (or native bridge slot), resuming CPython instantly.
 3. **Client-Side Virtual Filesystem (VFS) & Data File Upload**:
    - Students upload CSV, Excel (`.xlsx`), JSON, and text files via HTML5 FileReader (`readAsArrayBuffer` / `readAsText`) mounted directly into `/home/pyodide/` via `pyodide.FS.writeFile`.
    - Pre-seeds 3 academic datasets (`students.csv`, `iris.csv`, `sales.csv`) into the virtual filesystem at runtime initialization.
@@ -210,3 +213,15 @@ Active Workspace (Code + Execution Output / SQL Grid / Web Frame / Swing GUI)
 - **Version Evaluation & UX (`src/update-checker.js`)**:
   - Queries installed APK version via `ThinkCodeSystemUI.getAppVersion()` (or `APP_META` fallback on Web), compares numeric `versionCode` and semantic `versionName` (`compareSemver()`), throttles silent background checks to every 4 hours, and persists 24-hour user dismissals in `localStorage`.
   - Surfaces updates non-intrusively via `#menuUpdateDot`, top-layer `popover="manual"` `#updateToast` (deferred whenever modals/drawer are open), and `<dialog id="updateDialog" closedby="any">`, launching GitHub Release downloads externally via `ThinkCodeSystemUI.openExternalUrl()` with strict HTTPS URL sanitization.
+- For apps running on native Android, the update CTA redirects strictly to the official Google Play Store listing (`https://play.google.com/store/apps/details?id=com.igc.thinkcodelab`) to comply with Google Play Developer policies.
+
+### 7.3 Android Hardware/Gesture Back-Button & Exit Confirmation Subsystem
+- **Android `OnBackPressedDispatcher` (`MainActivity.java`)**:
+  - Implements `OnBackPressedCallback(true)` to intercept physical back buttons and modern edge-swipe gestures.
+  - Bridges the event directly into WebView JavaScript via `window.dispatchEvent(new CustomEvent('thinkcode:backpress'))`.
+- **Hierarchical UI Dismissal (`src/main.js` -> `handleThinkCodeBackPress()`):**
+  - **Level 1 (Form Controls)**: If a native `<select>` dropdown is open or focused, closes/blurs it.
+  - **Level 2 (Slide-Out Navigation)**: If `#menuDrawer` is active, animates it closed (`closeDrawer()`).
+  - **Level 3 (Modal Dialogs)**: If any `<dialog open>` is present (`#journalDialog`, `#updateDialog`, `#pyPkgDialog`, `#pyDataFilesDialog`, `#aboutDialog`, etc.), calls `.close()`.
+  - **Level 4 (Java AWT/Swing GUI Window)**: If `#guiWindowModal` is visible and not minimized, closes the desktop frame.
+  - **Level 5 (Exit Confirmation Dialog)**: If no overlays are open, opens `<dialog id="exitDialog">`. Clicking **Exit App** invokes `ThinkCodeSystemUI.exitApp()`; clicking **Stay in App** or swiping back again closes the confirmation.

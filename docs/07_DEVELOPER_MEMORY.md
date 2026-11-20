@@ -9,8 +9,8 @@
 - **Author:** Tahir Mansuri (Lead System Engineer & HOD, IMRD College).
 - **Core Purpose:** Standalone, 100% OFFLINE multi-language coding playground and mobile IDE for computer science students.
 - **Companion Project:** [ThinkCode Interactive Visualizer & Code Tracer](https://thinkcode.infogalaxy.space/).
-- **Released Android APK:** **v1.3.5 (Build 12)** on GitHub Releases & `/download` (`ThinkCodeLab-v1.3.5.apk`, SHA-256: `feb6769c278631d7ef902fe61b78aa0406b7d4c06418249d1116575afd6bffb7`).
-- **Active Development Branch:** **`feature/v1.3.5`** (Web IDE live at `https://thinkcode-lab.web.app`).
+- **Released Android APK & AAB:** **v1.3.8 (Build 15)** on Google Play Store (`com.igc.thinkcodelab`), GitHub Releases & `/download` (`ThinkCodeLab-v1.3.8.apk`, SHA-256: `a0cc2ef2092e9482227b8133de2b3314ef6ca6d43106b3f6bb35791011749809` and `ThinkCodeLab-v1.3.8.aab`, SHA-256: `7860ab47bc48d06d9d08636a24de6ca9ab26fed2561a42f64965d253ceee2986`).
+- **Active Release Branch:** **`release/v1.3.8`** (Web IDE live at `https://thinkcode-lab.web.app`).
 
 ---
 
@@ -102,6 +102,19 @@
    - User CSV and Excel files are mounted directly into Pyodide virtual filesystem (`pyodide.FS.writeFile('/home/pyodide/...')`) with zero server transfer. Pre-seeded datasets (`students.csv`, `iris.csv`, `sales.csv`) are embedded in `src/python-datasets.js`.
    - Run `npm run test` (or `node scripts/test-python-datascience.mjs`) whenever touching Python runtime, packages, or dataset handling.
 
+15. **Google Play Store Version Code Permanence**:
+    - Google Play Console permanently reserves every `versionCode` ever uploaded to any track (internal testing, closed testing, open testing, or production), even if the release is deleted or left in draft.
+    - `versionCode` must always be strictly incremented (e.g., Build 14 was burned in draft/test, so the production release required bumping to `versionCode: 15`).
+16. **Python CPython Pyodide `input()` Prompt Buffering & `isatty`**:
+    - In Pyodide, `input("prompt")` writes prompts to `sys.stdout` only when `isatty` is `false`. When `isatty` is `true`, CPython writes the prompt directly to underlying OS file descriptor 1, bypassing the JavaScript `setStdout` hook.
+    - Furthermore, partial lines without trailing newline must be streamed before emitting `need_input` event via `emitStdout()` and `flushStdoutBuffer()`, along with `sys.stdout.reconfigure(line_buffering=True, write_through=True)`.
+17. **Google Play Store Sideload CTA Policy Compliance**:
+    - Google Play Developer Distribution Agreement strictly forbids apps distributed via the Play Store from showing prompts, links, or buttons encouraging users to sideload external APKs.
+    - In `src/main.js`, native Android instances (`window.Capacitor?.isNativePlatform?.()`) route updates exclusively to `https://play.google.com/store/apps/details?id=com.igc.thinkcodelab`, while Web users continue to receive direct download links.
+18. **Android Hardware Back-Press Hierarchical Interception**:
+    - On Android 13+ with predictive back gesture, pressing back or swiping would abruptly exit the app if a dropdown, menu drawer, or modal was open.
+    - In `MainActivity.java` and `src/main.js`, `OnBackPressedCallback` calls `handleThinkCodeBackPress()` to hierarchically dismiss: 1) open select dropdowns, 2) slide-out menu drawer, 3) open dialogs (`#journalDialog`, `#updateDialog`, etc.), 4) Java GUI frame `#guiWindowModal`, and only when all overlays are closed, presents an exit confirmation dialog (`#exitDialog`) before invoking `exitApp()`.
+
 ---
 
 ## 🛠️ 4. Common Commands Quick Reference
@@ -109,13 +122,14 @@
 | Command | Action |
 | :--- | :--- |
 | `npm run dev` | Start local Vite development server |
-| `npm run test` | Run entire 74-check automated suite (C/C++, Journal, Update, Python) |
+| `npm test` | Run entire 85-check automated suite (C/C++, Journal, Update, Python, Exit) |
 | `npm run test:ccpp` | Run automated 47-check C & C++ regression & `SharedArrayBuffer` suite |
 | `node scripts/test-journal.mjs` | Run automated 10-check Lab Journal & A4 PDF 1.4 suite |
-| `node scripts/test-update-checker.mjs` | Run automated 10-check Silent APK Update Checker & `version.json` suite |
-| `node scripts/test-python-datascience.mjs` | Run automated 7-check Python Data Science & Scientific Suite |
+| `node scripts/test-update-checker.mjs` | Run automated 11-check Silent APK Update Checker & `version.json` suite |
+| `node scripts/test-python-datascience.mjs` | Run automated 12-check Python Data Science & input streaming suite |
+| `node scripts/test-backpress-exit.mjs` | Run automated 5-check Android Back-Button & Exit Confirmation suite |
 | `npm run build` | Prepare offline runtimes and build production `dist/` |
 | `firebase deploy --only hosting` | Deploy web application to `https://thinkcode-lab.web.app` |
 | `npx cap sync android` | Sync `dist/` web assets with the native Android project |
-| `cd android && ./gradlew assembleRelease` | Build signed release APK (`ThinkCodeLab-v1.3.4.apk`) |
-| `cd android && ./gradlew bundleRelease` | Build signed Google Play Bundle (`ThinkCodeLab-release.aab`) |
+| `cd android && ./gradlew assembleRelease` | Build signed release APK (`ThinkCodeLab-v1.3.8.apk`) |
+| `cd android && ./gradlew bundleRelease` | Build signed Google Play Bundle (`ThinkCodeLab-v1.3.8.aab`) |
