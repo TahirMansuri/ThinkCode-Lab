@@ -109,7 +109,12 @@
 - ✅ **Pure-JS Offline ISO/IEC 18004 QR Code Generator (`src/qr-code.js`)**: $GF(2^8)$ Galois Field arithmetic, Reed-Solomon polynomial ECC, Versions 1–40, 8 penalty masks, high-contrast camera-scannable Canvas 2D and SVG vector output with zero external CDN dependencies.
 - ✅ **Interactive Share Dialog (`<dialog id="shareDialog">`)**: High-contrast QR card, link input with live compression metrics, one-tap Copy with visual feedback, native app sharing via `@capacitor/share`, and PNG QR image download.
 - ✅ **Incoming Share Auto-Hydration**: Automatic boot and `hashchange` link unpacking, previous code safety snapshot in `localStorage` (`cf.share.backup`), automatic language switching, and clean hash clearing via `history.replaceState`.
-- ✅ **Automated Verification**: 14 new automated unit tests (`scripts/test-code-sharer.mjs`), expanding project automated test suite to **99 passing tests**.
+- ✅ **Automated Verification**: 17 automated unit tests (`scripts/test-code-sharer.mjs`).
+
+### 9. Phase 9: TYBCA Web Technology-I (PHP CA-317(A)) Practicals Suite (`v1.3.10`)
+- ✅ **10 Syllabus Practicals (`src/practicals.js`)**: Comprehensive university syllabus implementation covering basic I/O & date, arithmetic calculations, loops/tables, user functions & arrays, MySQL URL parameter insertion, database CRUD operations, HTML form processing & validation, login/logout session authentication, file upload & cookies, and OOP classes with JSON API generation (`json_encode`).
+- ✅ **Dual-Mode Workspace Integration (`src/main.js`)**: Automatic loading of both `editorPhp` (`process.php`) and `editorHtml` (`index.html`) with auto-switching to split view and live iframe preview for form-based assignments.
+- ✅ **Lab Journal & Testing (`src/lab-journal.js`, `scripts/test-php-practicals.mjs`)**: Configured `SUBJECT_DEFAULTS.php` to `'Web Technology-I (PHP) Lab (CA-317(A))'`, automated 6-test suite (`npm run test:php`), expanding total project tests to **91 checks** and global practicals count to **93**.
 
 ---
 

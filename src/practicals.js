@@ -2936,5 +2936,801 @@ public class Main {
 }
 `
     }
+  ],
+
+  // ========================================================
+  // PHP PRACTICALS (TYBCA CA-317(A): Practical based on Web Technology-I)
+  // Course Category: DSE-2 | InfoGalaxy Computers & IT Academy
+  // ========================================================
+  php: [
+    {
+      id: 'php-1',
+      num: 'Assignment 1',
+      cat: 'Environment & Basics',
+      title: 'XAMPP Setup & Hello World with Current Date',
+      desc: 'Install XAMPP server and execute a basic PHP program to display "Hello World" and current date.',
+      code: `<?php
+// ====================================================================
+// Course: TYBCA CA-317(A) | Practical based on Web Technology-I (PHP)
+// Assignment 1: Install XAMPP server and execute a basic PHP program
+//               to display "Hello World" and current date.
+// InfoGalaxy Computers & IT Academy
+// ====================================================================
+
+// Set default timezone for accurate local time
+date_default_timezone_set('Asia/Kolkata');
+
+$welcomeMessage = "Hello World! Welcome to PHP Web Technology.";
+$currentDate = date("l, F j, Y");
+$currentTime = date("h:i:s A");
+$phpVersion = phpversion();
+$serverSoftware = isset($_SERVER['SERVER_SOFTWARE']) ? $_SERVER['SERVER_SOFTWARE'] : 'XAMPP / Apache 2.4 (PHP-Wasm Sandbox)';
+
+echo "========================================================\\n";
+echo "   TYBCA CA-317(A): WEB TECHNOLOGY-I (PHP PRACTICALS)  \\n";
+echo "========================================================\\n";
+echo "Status         : " . $welcomeMessage . "\\n";
+echo "Current Date   : " . $currentDate . "\\n";
+echo "Current Time   : " . $currentTime . "\\n";
+echo "PHP Version    : " . $phpVersion . "\\n";
+echo "Web Server     : " . $serverSoftware . "\\n";
+echo "--------------------------------------------------------\\n";
+echo "Note: In XAMPP, save this file in 'htdocs/practical1.php'\\n";
+echo "and open 'http://localhost/practical1.php' in browser.\\n";
+echo "========================================================\\n";
+?>`
+    },
+    {
+      id: 'php-2',
+      num: 'Assignment 2',
+      cat: 'Operators & Math',
+      title: 'Arithmetic Calculations & Operator Demonstration',
+      desc: 'Write a PHP program using variables and operators to perform simple arithmetic calculations.',
+      code: `<?php
+// ====================================================================
+// Course: TYBCA CA-317(A) | Practical based on Web Technology-I (PHP)
+// Assignment 2: Write a PHP program using variables and operators
+//               to perform simple arithmetic calculations.
+// InfoGalaxy Computers & IT Academy
+// ====================================================================
+
+$num1 = 45;
+$num2 = 10;
+
+// Performing core arithmetic operations
+$sum        = $num1 + $num2;
+$difference = $num1 - $num2;
+$product    = $num1 * $num2;
+$quotient   = $num1 / $num2;
+$remainder  = $num1 % $num2;
+$exponent   = $num1 ** 2;
+
+echo "========================================================\\n";
+echo "         PHP ARITHMETIC OPERATORS DEMONSTRATION         \\n";
+echo "========================================================\\n";
+echo "Operand 1 (num1) : " . $num1 . "\\n";
+echo "Operand 2 (num2) : " . $num2 . "\\n";
+echo "--------------------------------------------------------\\n";
+echo "Addition ($num1 + $num2)        = " . $sum . "\\n";
+echo "Subtraction ($num1 - $num2)     = " . $difference . "\\n";
+echo "Multiplication ($num1 * $num2)  = " . $product . "\\n";
+echo "Division ($num1 / $num2)        = " . number_format($quotient, 2) . "\\n";
+echo "Modulus ($num1 % $num2)         = " . $remainder . "\\n";
+echo "Exponentiation ($num1 ** 2)     = " . $exponent . "\\n";
+echo "--------------------------------------------------------\\n";
+
+// Compound Assignment Demonstration
+$counter = 100;
+echo "Initial Counter                = " . $counter . "\\n";
+$counter += 25;
+echo "Counter after += 25            = " . $counter . "\\n";
+$counter *= 2;
+echo "Counter after *= 2             = " . $counter . "\\n";
+echo "========================================================\\n";
+?>`
+    },
+    {
+      id: 'php-3',
+      num: 'Assignment 3',
+      cat: 'Control Structures',
+      title: 'Conditional Statements & Mathematical Tables',
+      desc: 'Implement conditional statements and loops in PHP to check number conditions and generate tables.',
+      code: `<?php
+// ====================================================================
+// Course: TYBCA CA-317(A) | Practical based on Web Technology-I (PHP)
+// Assignment 3: Implement conditional statements and loops in PHP
+//               to check number conditions and generate tables.
+// InfoGalaxy Computers & IT Academy
+// ====================================================================
+
+$checkNumber = 28;
+
+echo "========================================================\\n";
+echo "          PART A: CONDITIONAL NUMBER EVALUATION         \\n";
+echo "========================================================\\n";
+echo "Testing Number: " . $checkNumber . "\\n";
+
+// 1. Positive, Negative, or Zero Check
+if ($checkNumber > 0) {
+    echo "Sign Check      : Positive Number (+)\\n";
+} elseif ($checkNumber < 0) {
+    echo "Sign Check      : Negative Number (-)\\n";
+} else {
+    echo "Sign Check      : Zero (0)\\n";
+}
+
+// 2. Even or Odd Check
+if ($checkNumber % 2 == 0) {
+    echo "Parity Check    : Even Number\\n";
+} else {
+    echo "Parity Check    : Odd Number\\n";
+}
+
+// 3. Prime Number Check
+$isPrime = true;
+if ($checkNumber <= 1) {
+    $isPrime = false;
+} else {
+    for ($i = 2; $i <= sqrt($checkNumber); $i++) {
+        if ($checkNumber % $i == 0) {
+            $isPrime = false;
+            break;
+        }
+    }
+}
+echo "Prime Check     : " . ($isPrime ? "Yes (Prime Number)" : "No (Composite Number)") . "\\n";
+
+echo "--------------------------------------------------------\\n";
+echo "          PART B: MULTIPLICATION TABLE GENERATION       \\n";
+echo "========================================================\\n";
+$tableNumber = 7;
+echo "Multiplication Table for {$tableNumber} (Generated via for-loop):\\n";
+
+for ($multiplier = 1; $multiplier <= 10; $multiplier++) {
+    $result = $tableNumber * $multiplier;
+    printf("   %2d  x  %2d  =  %3d\\n", $tableNumber, $multiplier, $result);
+}
+echo "========================================================\\n";
+?>`
+    },
+    {
+      id: 'php-4',
+      num: 'Assignment 4',
+      cat: 'Functions & Arrays',
+      title: 'User-Defined Functions & Array Traversal with Foreach',
+      desc: 'Create user-defined functions and demonstrate indexed and associative arrays using foreach.',
+      code: `<?php
+// ====================================================================
+// Course: TYBCA CA-317(A) | Practical based on Web Technology-I (PHP)
+// Assignment 4: Create user-defined functions and demonstrate
+//               indexed and associative arrays using foreach.
+// InfoGalaxy Computers & IT Academy
+// ====================================================================
+
+// User-Defined Function: Calculate Student Grade based on Percentage
+function calculateGrade($percentage) {
+    if ($percentage >= 75) return "Distinction (A+)";
+    if ($percentage >= 60) return "First Class (A)";
+    if ($percentage >= 50) return "Second Class (B)";
+    if ($percentage >= 40) return "Pass Class (C)";
+    return "Fail (F)";
+}
+
+// User-Defined Function: Print Formatted Header
+function printHeader($title) {
+    echo "========================================================\\n";
+    echo "  " . strtoupper($title) . "\\n";
+    echo "========================================================\\n";
+}
+
+// 1. Indexed Array Demonstration
+printHeader("1. Indexed Array: TYBCA Semester V Subjects");
+$subjects = [
+    "CA-311: Software Engineering",
+    "CA-312: Core Java Programming",
+    "CA-313: Python Programming-II",
+    "CA-314: Web Technology-I (PHP & MySQL)",
+    "CA-315: Practical on Java",
+    "CA-317(A): Practical on Web Technology"
+];
+
+foreach ($subjects as $index => $subject) {
+    echo "  [" . ($index + 1) . "] " . $subject . "\\n";
+}
+
+echo "--------------------------------------------------------\\n";
+
+// 2. Associative Array Demonstration: Student Marksheet
+printHeader("2. Associative Array: Student Academic Record");
+$student = [
+    "Roll No"     => 301,
+    "Name"        => "Tahir Mansuri",
+    "Class"       => "TYBCA Semester V",
+    "Web Tech"    => 88,
+    "Java"        => 85,
+    "Python"      => 92,
+    "Software Eng"=> 79
+];
+
+$totalMarks = $student["Web Tech"] + $student["Java"] + $student["Python"] + $student["Software Eng"];
+$percentage = $totalMarks / 4.0;
+$grade = calculateGrade($percentage);
+
+foreach ($student as $key => $value) {
+    printf("  %-15s : %s\\n", $key, $value);
+}
+echo "  ----------------------------------------------------\\n";
+printf("  %-15s : %d / 400\\n", "Total Marks", $totalMarks);
+printf("  %-15s : %.2f%%\\n", "Percentage", $percentage);
+printf("  %-15s : %s\\n", "Final Grade", $grade);
+echo "========================================================\\n";
+?>`
+    },
+    {
+      id: 'php-5',
+      num: 'Assignment 5',
+      cat: 'MySQL & URL Params',
+      title: 'MySQL Database Connection & URL Parameter Insertion',
+      desc: 'Connect PHP with MySQL database and insert student records using URL parameters (without form).',
+      code: `<?php
+// ====================================================================
+// Course: TYBCA CA-317(A) | Practical based on Web Technology-I (PHP)
+// Assignment 5: Connect PHP with MySQL database and insert student
+//               records using URL parameters (without form).
+// InfoGalaxy Computers & IT Academy
+// ====================================================================
+
+// Read URL Query Parameters with safe fallbacks (e.g. ?roll=101&name=Tahir&course=BCA&marks=88)
+$roll   = isset($_GET['roll'])   ? intval($_GET['roll'])   : 101;
+$name   = isset($_GET['name'])   ? trim($_GET['name'])     : "Tahir Mansuri";
+$course = isset($_GET['course']) ? trim($_GET['course'])   : "TYBCA";
+$marks  = isset($_GET['marks'])  ? floatval($_GET['marks']): 88.5;
+
+echo "========================================================\\n";
+echo "   PHP & MYSQL: INSERT STUDENT RECORD VIA URL PARAMS    \\n";
+echo "========================================================\\n";
+echo "Parsed URL Parameters:\\n";
+echo "  • Roll No : {$roll}\\n";
+echo "  • Name    : {$name}\\n";
+echo "  • Course  : {$course}\\n";
+echo "  • Marks   : {$marks}\\n";
+echo "--------------------------------------------------------\\n";
+
+// Execute with SQLite / In-Memory engine for 100% offline client-side verification
+try {
+    $pdo = new PDO('sqlite::memory:');
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    // Create students table
+    $pdo->exec("CREATE TABLE IF NOT EXISTS students (
+        roll_no INTEGER PRIMARY KEY,
+        name TEXT NOT NULL,
+        course TEXT NOT NULL,
+        marks REAL NOT NULL
+    )");
+
+    // Insert record
+    $stmt = $pdo->prepare("INSERT INTO students (roll_no, name, course, marks) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$roll, $name, $course, $marks]);
+
+    echo "✓ Connection to Database established successfully!\\n";
+    echo "✓ SQL Executed: INSERT INTO students (roll_no, name, course, marks)\\n";
+    echo "                VALUES ({$roll}, '{$name}', '{$course}', {$marks});\\n";
+    echo "✓ Student record inserted successfully into 'students' table!\\n";
+} catch (Exception $e) {
+    echo "Database Error: " . $e->getMessage() . "\\n";
+}
+
+echo "--------------------------------------------------------\\n";
+echo "Standard XAMPP MySQLi Syntax for College Submission:\\n";
+echo "  \\$conn = mysqli_connect('localhost', 'root', '', 'college_db');\\n";
+echo "  \\$sql = \\\"INSERT INTO students VALUES ('$roll', '$name', '$course', '$marks')\\\";\\n";
+echo "  mysqli_query(\\$conn, \\$sql);\\n";
+echo "========================================================\\n";
+echo "Test with URL: process.php?roll=102&name=Rahul&course=BCA&marks=92\\n";
+echo "========================================================\\n";
+?>`
+    },
+    {
+      id: 'php-6',
+      num: 'Assignment 6',
+      cat: 'Database CRUD',
+      title: 'PHP & MySQL Database CRUD Operations',
+      desc: 'Perform CRUD operations by displaying, updating and deleting database records through PHP scripts.',
+      code: `<?php
+// ====================================================================
+// Course: TYBCA CA-317(A) | Practical based on Web Technology-I (PHP)
+// Assignment 6: Perform CRUD operations by displaying, updating
+//               and deleting database records through PHP scripts.
+// InfoGalaxy Computers & IT Academy
+// ====================================================================
+
+echo "========================================================\\n";
+echo "    DATABASE CRUD OPERATIONS (CREATE, READ, UPDATE, DELETE)\\n";
+echo "========================================================\\n";
+
+// Initialize in-memory database engine for immediate offline verification
+$pdo = new PDO('sqlite::memory:');
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+// 1. CREATE TABLE
+$pdo->exec("CREATE TABLE students (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    course TEXT NOT NULL,
+    marks REAL NOT NULL
+)");
+
+// 2. CREATE (INSERT) RECORDS
+$students = [
+    [101, "Tahir Mansuri", "TYBCA", 88.5],
+    [102, "Amit Sharma",   "TYBCA", 74.0],
+    [103, "Pooja Patel",   "SYBCA", 82.0],
+    [104, "Vikas Verma",   "FYBCA", 65.5]
+];
+
+$insertStmt = $pdo->prepare("INSERT INTO students VALUES (?, ?, ?, ?)");
+foreach ($students as $s) {
+    $insertStmt->execute($s);
+}
+echo "✓ [CREATE] 4 Student records inserted into database.\\n\\n";
+
+// Helper Function: Display Current Table
+function displayRecords($pdo, $stageTitle) {
+    echo "--- " . strtoupper($stageTitle) . " ---\\n";
+    printf(" %-5s | %-16s | %-8s | %-6s\\n", "ID", "Name", "Course", "Marks");
+    echo "-------------------------------------------\\n";
+    $stmt = $pdo->query("SELECT * FROM students ORDER BY id ASC");
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        printf(" %-5d | %-16s | %-8s | %-6.1f\\n", $row['id'], $row['name'], $row['course'], $row['marks']);
+    }
+    echo "\\n";
+}
+
+// 3. READ (SELECT)
+displayRecords($pdo, "1. Current Student Records (READ)");
+
+// 4. UPDATE RECORD
+$updateId = 102;
+$newMarks = 85.0;
+$updateStmt = $pdo->prepare("UPDATE students SET marks = ? WHERE id = ?");
+$updateStmt->execute([$newMarks, $updateId]);
+echo "✓ [UPDATE] Record ID {$updateId} marks updated to {$newMarks}.\\n";
+displayRecords($pdo, "2. Records After Update");
+
+// 5. DELETE RECORD
+$deleteId = 104;
+$deleteStmt = $pdo->prepare("DELETE FROM students WHERE id = ?");
+$deleteStmt->execute([$deleteId]);
+echo "✓ [DELETE] Record ID {$deleteId} (Vikas Verma) deleted from database.\\n";
+displayRecords($pdo, "3. Final Records After Deletion");
+
+echo "========================================================\\n";
+echo "✓ All CRUD operations executed successfully.\\n";
+echo "========================================================\\n";
+?>`
+    },
+    {
+      id: 'php-7',
+      num: 'Assignment 7',
+      cat: 'Forms & Validation',
+      title: 'HTML Form Processing & Validation ($_GET and $_POST)',
+      desc: 'Design an HTML form and retrieve user input using $_GET and $_POST with basic validation.',
+      html: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Admission Form</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #0F172A; color: #F8FAFC; padding: 24px; margin: 0; }
+    .card { max-width: 440px; margin: 0 auto; background: #1E293B; border-radius: 12px; padding: 24px; border: 1px solid #334155; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    h2 { margin-top: 0; color: #38BDF8; font-size: 20px; text-align: center; }
+    label { display: block; margin: 12px 0 4px; font-size: 13px; font-weight: 600; color: #94A3B8; }
+    input, select { width: 100%; box-sizing: border-box; padding: 10px; border-radius: 6px; border: 1px solid #475569; background: #0F172A; color: #FFF; font-size: 14px; }
+    button { width: 100%; margin-top: 20px; padding: 12px; border: none; border-radius: 8px; background: #0284C7; color: #FFF; font-size: 15px; font-weight: 700; cursor: pointer; }
+    button:hover { background: #0369A1; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>🎓 Student Admission Form</h2>
+    <form action="process.php" method="POST">
+      <label for="name">Full Name *</label>
+      <input type="text" id="name" name="name" value="Tahir Mansuri" required>
+
+      <label for="email">Email Address *</label>
+      <input type="email" id="email" name="email" value="tahir@infogalaxy.edu" required>
+
+      <label for="course">Selected Course *</label>
+      <select id="course" name="course">
+        <option value="TYBCA" selected>TYBCA (Web Technology)</option>
+        <option value="SYBCA">SYBCA (Database Systems)</option>
+        <option value="FYBCA">FYBCA (Computer Basics)</option>
+      </select>
+
+      <label for="phone">Phone Number (10 Digits) *</label>
+      <input type="text" id="phone" name="phone" value="9876543210" required>
+
+      <button type="submit">Submit Registration ➔</button>
+    </form>
+  </div>
+</body>
+</html>`,
+      code: `<?php
+// ====================================================================
+// Course: TYBCA CA-317(A) | Practical based on Web Technology-I (PHP)
+// Assignment 7: Design an HTML form and retrieve user input
+//               using $_GET and $_POST with basic validation.
+// InfoGalaxy Computers & IT Academy
+// ====================================================================
+
+$errors = [];
+
+// Determine request method
+$method = $_SERVER['REQUEST_METHOD'] ?? 'POST';
+
+// Fallback test values if running script standalone without form submission
+if (empty($_POST) && empty($_GET)) {
+    $_POST = [
+        'name'   => 'Tahir Mansuri',
+        'email'  => 'tahir@infogalaxy.edu',
+        'course' => 'TYBCA',
+        'phone'  => '9876543210'
+    ];
+}
+
+$inputSource = ($method === 'POST') ? $_POST : $_GET;
+
+// 1. Data Retrieval and Sanitization
+$name   = isset($inputSource['name'])   ? trim(htmlspecialchars($inputSource['name']))   : '';
+$email  = isset($inputSource['email'])  ? trim(htmlspecialchars($inputSource['email']))  : '';
+$course = isset($inputSource['course']) ? trim(htmlspecialchars($inputSource['course'])) : '';
+$phone  = isset($inputSource['phone'])  ? trim(htmlspecialchars($inputSource['phone']))  : '';
+
+// 2. Input Validation Rules
+if (empty($name)) {
+    $errors[] = "Name field is required.";
+} elseif (!preg_match("/^[a-zA-Z\\s]+$/", $name)) {
+    $errors[] = "Name must contain only alphabets and spaces.";
+}
+
+if (empty($email)) {
+    $errors[] = "Email field is required.";
+} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $errors[] = "Invalid email format.";
+}
+
+if (empty($phone)) {
+    $errors[] = "Phone number is required.";
+} elseif (!preg_match("/^[0-9]{10}$/", $phone)) {
+    $errors[] = "Phone number must be exactly 10 digits.";
+}
+
+echo "========================================================\\n";
+echo "   PHP FORM PROCESSING & VALIDATION REPORT (" . $method . ")\\n";
+echo "========================================================\\n";
+
+if (empty($errors)) {
+    echo "✓ FORM VALIDATION SUCCESSFUL!\\n";
+    echo "--------------------------------------------------------\\n";
+    echo "Applicant Name : " . $name . "\\n";
+    echo "Email Address  : " . $email . "\\n";
+    echo "Enrolled Course: " . $course . "\\n";
+    echo "Contact Phone  : " . $phone . "\\n";
+    echo "Submission Time: " . date("d-M-Y H:i:s") . "\\n";
+    echo "Status         : Application Approved & Registered\\n";
+} else {
+    echo "✗ VALIDATION ERRORS DETECTED:\\n";
+    echo "--------------------------------------------------------\\n";
+    foreach ($errors as $idx => $err) {
+        echo "  [" . ($idx + 1) . "] " . $err . "\\n";
+    }
+}
+echo "========================================================\\n";
+?>`
+    },
+    {
+      id: 'php-8',
+      num: 'Assignment 8',
+      cat: 'Sessions & Auth',
+      title: 'User Authentication System with PHP Sessions (Login & Logout)',
+      desc: 'Develop a login and logout system using sessions for user authentication.',
+      html: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Portal Login</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #0B132B; color: #FFF; padding: 24px; margin: 0; }
+    .card { max-width: 400px; margin: 30px auto; background: #1C2541; padding: 28px; border-radius: 12px; border: 1px solid #3A506B; box-shadow: 0 4px 14px rgba(0,0,0,0.4); }
+    h2 { color: #48E5C2; margin-top: 0; text-align: center; }
+    label { display: block; margin: 12px 0 4px; font-size: 13px; color: #BAC1D2; }
+    input { width: 100%; box-sizing: border-box; padding: 10px; border-radius: 6px; border: 1px solid #3A506B; background: #0B132B; color: #FFF; }
+    button { width: 100%; margin-top: 20px; padding: 12px; border: none; border-radius: 8px; background: #48E5C2; color: #0B132B; font-weight: 700; cursor: pointer; }
+    button:hover { background: #3CD0AE; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>🔐 Student Portal Login</h2>
+    <form action="process.php" method="POST">
+      <input type="hidden" name="action" value="login">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" value="student_tahir" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" value="bca2026" required>
+
+      <button type="submit">Sign In to Dashboard ➔</button>
+    </form>
+  </div>
+</body>
+</html>`,
+      code: `<?php
+// ====================================================================
+// Course: TYBCA CA-317(A) | Practical based on Web Technology-I (PHP)
+// Assignment 8: Develop a login and logout system using sessions
+//               for user authentication.
+// InfoGalaxy Computers & IT Academy
+// ====================================================================
+
+// Start or resume session
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Authorized credentials database
+$validUsers = [
+    "student_tahir" => [
+        "password" => "bca2026",
+        "name"     => "Tahir Mansuri",
+        "role"     => "Student (TYBCA)",
+        "email"    => "tahir@infogalaxy.edu"
+    ],
+    "admin" => [
+        "password" => "admin123",
+        "name"     => "Lab Incharge",
+        "role"     => "Faculty Administrator",
+        "email"    => "admin@infogalaxy.edu"
+    ]
+];
+
+// Determine Action: login, logout, or view status
+$action = $_POST['action'] ?? $_GET['action'] ?? 'login';
+
+echo "========================================================\\n";
+echo "      PHP SESSION-BASED AUTHENTICATION SYSTEM           \\n";
+echo "========================================================\\n";
+
+if ($action === 'logout') {
+    // Clear all session variables & destroy
+    $_SESSION = [];
+    if (session_id()) session_destroy();
+    echo "✓ LOGOUT SUCCESSFUL!\\n";
+    echo "  Session destroyed. User signed out securely.\\n";
+    echo "========================================================\\n";
+    exit;
+}
+
+if ($action === 'login') {
+    $username = $_POST['username'] ?? 'student_tahir';
+    $password = $_POST['password'] ?? 'bca2026';
+
+    if (isset($validUsers[$username]) && $validUsers[$username]['password'] === $password) {
+        // Authentication succeeded -> Store in Session
+        $_SESSION['authenticated'] = true;
+        $_SESSION['username']      = $username;
+        $_SESSION['user_data']     = $validUsers[$username];
+        $_SESSION['login_time']    = date("Y-m-d H:i:s");
+
+        echo "✓ LOGIN SUCCESSFUL!\\n";
+        echo "--------------------------------------------------------\\n";
+        echo "Active Session ID : " . session_id() . "\\n";
+        echo "User Full Name    : " . $_SESSION['user_data']['name'] . "\\n";
+        echo "Role / Category   : " . $_SESSION['user_data']['role'] . "\\n";
+        echo "Email Address     : " . $_SESSION['user_data']['email'] . "\\n";
+        echo "Authenticated At  : " . $_SESSION['login_time'] . "\\n";
+        echo "Session Status    : Active (Logged In)\\n";
+        echo "--------------------------------------------------------\\n";
+        echo "Welcome to the TYBCA Student Dashboard!\\n";
+    } else {
+        echo "✗ ACCESS DENIED: Invalid username or password.\\n";
+    }
+}
+echo "========================================================\\n";
+?>`
+    },
+    {
+      id: 'php-9',
+      num: 'Assignment 9',
+      cat: 'File Upload & Cookies',
+      title: 'File Upload Handling & Cookie User Preferences',
+      desc: 'Upload a file using PHP and store user information using cookies.',
+      html: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Assignment File Upload & Cookie Preferences</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #111827; color: #F9FAFB; padding: 24px; margin: 0; }
+    .card { max-width: 440px; margin: 20px auto; background: #1F2937; padding: 24px; border-radius: 12px; border: 1px solid #374151; box-shadow: 0 4px 14px rgba(0,0,0,0.4); }
+    h2 { color: #A78BFA; margin-top: 0; text-align: center; font-size: 19px; }
+    label { display: block; margin: 12px 0 4px; font-size: 13px; color: #9CA3AF; }
+    input, select { width: 100%; box-sizing: border-box; padding: 10px; border-radius: 6px; border: 1px solid #4B5563; background: #111827; color: #FFF; }
+    button { width: 100%; margin-top: 20px; padding: 12px; border: none; border-radius: 8px; background: #8B5CF6; color: #FFF; font-weight: 700; cursor: pointer; }
+    button:hover { background: #7C3AED; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>📁 Project File Upload & Cookies</h2>
+    <form action="process.php" method="POST" enctype="multipart/form-data">
+      <label for="student_name">Student Name</label>
+      <input type="text" id="student_name" name="student_name" value="Tahir Mansuri">
+
+      <label for="preferred_theme">Editor Theme Preference (Stored in Cookie)</label>
+      <select id="preferred_theme" name="preferred_theme">
+        <option value="Obsidian Dark" selected>Obsidian Dark</option>
+        <option value="Solarized Light">Solarized Light</option>
+        <option value="Monokai Pro">Monokai Pro</option>
+      </select>
+
+      <label for="project_file">Select File to Upload (.txt, .pdf, .php)</label>
+      <input type="file" id="project_file" name="project_file">
+
+      <button type="submit">Upload File & Save Cookie ➔</button>
+    </form>
+  </div>
+</body>
+</html>`,
+      code: `<?php
+// ====================================================================
+// Course: TYBCA CA-317(A) | Practical based on Web Technology-I (PHP)
+// Assignment 9: Upload a file using PHP and store user
+//               information using cookies.
+// InfoGalaxy Computers & IT Academy
+// ====================================================================
+
+echo "========================================================\\n";
+echo "       PHP FILE UPLOAD & COOKIE STORAGE SYSTEM          \\n";
+echo "========================================================\\n";
+
+// 1. Cookie Handling: Set & Read User Theme Preferences
+$studentName = $_POST['student_name'] ?? 'Tahir Mansuri';
+$themePref   = $_POST['preferred_theme'] ?? 'Obsidian Dark';
+
+// Set cookie for 7 days (60 * 60 * 24 * 7)
+setcookie('student_user', $studentName, time() + 604800, "/");
+setcookie('theme_preference', $themePref, time() + 604800, "/");
+$_COOKIE['student_user'] = $studentName;
+$_COOKIE['theme_preference'] = $themePref;
+
+echo "PART A: COOKIE PREFERENCES SAVED\\n";
+echo "  • Student User Cookie    : " . ($_COOKIE['student_user'] ?? $studentName) . "\\n";
+echo "  • Theme Preference Cookie: " . ($_COOKIE['theme_preference'] ?? $themePref) . "\\n";
+echo "  • Cookie Expiry          : 7 Days (604,800 seconds)\\n";
+echo "--------------------------------------------------------\\n";
+
+// 2. File Upload Inspection & Validation
+echo "PART B: FILE UPLOAD INSPECTION & VERIFICATION\\n";
+
+// Realistic file representation if submitted via form or simulated
+$simulatedFile = [
+    'name'     => 'tybca_php_practical_report.pdf',
+    'type'     => 'application/pdf',
+    'size'     => 148520, // ~145 KB
+    'error'    => 0
+];
+
+$file = !empty($_FILES['project_file']['name']) ? $_FILES['project_file'] : $simulatedFile;
+
+$fileName = $file['name'];
+$fileSize = $file['size'];
+$fileError = $file['error'];
+$fileExt = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+
+$allowedExtensions = ['txt', 'pdf', 'doc', 'docx', 'png', 'jpg', 'php'];
+$maxSize = 2 * 1024 * 1024; // 2MB
+
+if ($fileError === 0) {
+    if (!in_array($fileExt, $allowedExtensions)) {
+        echo "✗ Error: Invalid file format (." . $fileExt . "). Allowed: " . implode(', ', $allowedExtensions) . "\\n";
+    } elseif ($fileSize > $maxSize) {
+        echo "✗ Error: File size exceeds the maximum 2MB limit.\\n";
+    } else {
+        echo "✓ File Upload Validated Successfully!\\n";
+        echo "  • Filename   : " . $fileName . "\\n";
+        echo "  • File Size  : " . round($fileSize / 1024, 2) . " KB\\n";
+        echo "  • Extension  : " . strtoupper($fileExt) . "\\n";
+        echo "  • Destination: uploads/" . $fileName . "\\n";
+        echo "✓ Status     : Stored successfully on server.\\n";
+    }
+} else {
+    echo "✗ File upload encountered error code: " . $fileError . "\\n";
+}
+echo "========================================================\\n";
+?>`
+    },
+    {
+      id: 'php-10',
+      num: 'Assignment 10',
+      cat: 'OOP & JSON API',
+      title: 'PHP Classes & JSON API Generation (json_encode)',
+      desc: 'Create a PHP class and generate database data in JSON format using json_encode.',
+      code: `<?php
+// ====================================================================
+// Course: TYBCA CA-317(A) | Practical based on Web Technology-I (PHP)
+// Assignment 10: Create a PHP class and generate database data
+//                in JSON format using json_encode.
+// InfoGalaxy Computers & IT Academy
+// ====================================================================
+
+// 1. Define Student Class using Object-Oriented PHP
+class Student implements JsonSerializable {
+    private $rollNo;
+    private $name;
+    private $course;
+    private $marks;
+    private $status;
+
+    public function __construct($rollNo, $name, $course, $marks) {
+        $this->rollNo = $rollNo;
+        $this->name   = $name;
+        $this->course = $course;
+        $this->marks  = $marks;
+        $this->status = ($marks >= 40) ? "PASS" : "FAIL";
+    }
+
+    // Getters
+    public function getRollNo() { return $this->rollNo; }
+    public function getName()   { return $this->name; }
+    public function getCourse() { return $this->course; }
+    public function getMarks()  { return $this->marks; }
+    public function getStatus() { return $this->status; }
+
+    // Custom JSON serialization representation
+    public function jsonSerialize(): mixed {
+        return [
+            'roll_no' => $this->rollNo,
+            'name'    => $this->name,
+            'course'  => $this->course,
+            'marks'   => $this->marks,
+            'status'  => $this->status
+        ];
+    }
+}
+
+// 2. Instantiate Objects (simulating database records from college_db)
+$studentList = [
+    new Student(101, "Tahir Mansuri", "TYBCA", 88.5),
+    new Student(102, "Amit Sharma",   "TYBCA", 74.0),
+    new Student(103, "Pooja Patel",   "SYBCA", 91.5),
+    new Student(104, "Rahul Patil",   "TYBCA", 82.0),
+    new Student(105, "Sneha Kulkarni","FYBCA", 68.0)
+];
+
+// 3. Construct API Response Envelope
+$response = [
+    "status"      => "success",
+    "course_code" => "CA-317(A)",
+    "course_title"=> "Web Technology-I (PHP)",
+    "timestamp"   => date("c"),
+    "total_count" => count($studentList),
+    "data"        => $studentList
+];
+
+// 4. Encode to JSON with clean indentation
+$jsonOutput = json_encode($response, JSON_PRETTY_PRINT);
+
+echo "========================================================\\n";
+echo "   PHP OBJECT-ORIENTED CLASS & JSON API GENERATOR       \\n";
+echo "========================================================\\n";
+echo "Header: Content-Type: application/json; charset=utf-8\\n\\n";
+echo $jsonOutput . "\\n";
+echo "========================================================\\n";
+echo "✓ JSON payload successfully generated using json_encode().\\n";
+echo "========================================================\\n";
+?>`
+    }
   ]
 };

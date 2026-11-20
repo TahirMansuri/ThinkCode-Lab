@@ -4,6 +4,31 @@
 
 ---
 
+## 🚀 Version 1.3.10 — TYBCA Web Technology-I (PHP CA-317(A)) Practicals Suite
+*Release Date: November 21, 2026*
+
+### 🐘 TYBCA PHP Syllabus Practicals (`src/practicals.js`, `src/main.js`, `src/lab-journal.js`)
+- **10 Official Syllabus Practicals Implemented**:
+  - `php-1`: Install XAMPP server and execute a basic PHP program to display "Hello World" and current date (`date()`).
+  - `php-2`: Write a PHP program using variables and operators to perform simple arithmetic calculations.
+  - `php-3`: Implement conditional statements and loops in PHP to check number conditions and generate tables.
+  - `php-4`: Create user-defined functions and demonstrate indexed and associative arrays using `foreach`.
+  - `php-5`: Connect PHP with MySQL database and insert student records using URL parameters (without form) with offline-safe SQLite/PDO verification.
+  - `php-6`: Perform CRUD operations by displaying, updating and deleting database records through PHP scripts.
+  - `php-7`: Design an HTML form and retrieve user input using `$_GET` and `$_POST` with basic validation.
+  - `php-8`: Develop a login and logout system using sessions for user authentication (`session_start()`, `$_SESSION`).
+  - `php-9`: Upload a file using PHP and store user information using cookies (`setcookie()`, `$_COOKIE`, `$_FILES`).
+  - `php-10`: Create a PHP class and generate database data in JSON format using `json_encode`.
+- **Dual-Mode Workspace Integration**:
+  - `loadPracticalCode()` in `src/main.js` automatically populates both `editorPhp` (`process.php`) and `editorHtml` (`index.html`).
+  - Automatically switches view mode to `'split'` with live preview rendering for form assignments (`php-7`, `php-8`, `php-9`).
+- **Lab Journal & Verification**:
+  - Configured `SUBJECT_DEFAULTS.php` to `'Web Technology-I (PHP) Lab (CA-317(A))'` in `src/lab-journal.js`.
+  - Added dedicated automated verification suite `scripts/test-php-practicals.mjs` (`npm run test:php`). Total project automated test suite expanded to **91 passing tests**.
+  - Expanded global practicals library across all 8 languages from 83 to **93 practicals**.
+
+---
+
 ## 🚀 Version 1.3.9 — Serverless Code Sharing via URL Hash & Offline QR Code
 *Release Date: November 20, 2026*
 

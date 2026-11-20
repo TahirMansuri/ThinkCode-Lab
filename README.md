@@ -18,7 +18,7 @@
 
 <br>
 
-[👤 Author](#-author--leadership) • [🌟 Why ThinkCode Lab?](#-why-thinkcode-lab) • [✨ Key Features](#-key-features) • [📱 App Screenshots](#-app-screenshots--visual-tour) • [🏛️ System Architecture](#-system-architecture) • [🧩 Supported Languages](#-supported-languages-all-100-offline) • [📚 Syllabus Practicals](#-university-syllabus-practicals-library-83-assignments) • [🚀 Quick Start](#-quick-start) • [📱 Android App](#-android-app--google-play-store-distribution) • [📖 Documentation](#-complete-documentation-directory) • [📄 License](#-license)
+[👤 Author](#-author--leadership) • [🌟 Why ThinkCode Lab?](#-why-thinkcode-lab) • [✨ Key Features](#-key-features) • [📱 App Screenshots](#-app-screenshots--visual-tour) • [🏛️ System Architecture](#-system-architecture) • [🧩 Supported Languages](#-supported-languages-all-100-offline) • [📚 Syllabus Practicals](#-university-syllabus-practicals-library-93-assignments) • [🚀 Quick Start](#-quick-start) • [📱 Android App](#-android-app--google-play-store-distribution) • [📖 Documentation](#-complete-documentation-directory) • [📄 License](#-license)
 
 ---
 
@@ -261,20 +261,21 @@ flowchart TD
 
 ---
 
-## 📚 University Syllabus Practicals Library (83 Assignments)
+## 📚 University Syllabus Practicals Library (93 Assignments)
 
-ThinkCode Lab comes pre-loaded with **83 official university lab practicals** formatted with clean **2-space indentation** for instant 1-click loading:
+ThinkCode Lab comes pre-loaded with **93 official university lab practicals** formatted with clean **2-space indentation** for instant 1-click loading:
 
 | Subject / Course | Practical Count | Topics Covered |
 | :--- | :---: | :--- |
 | **Python (CA-214 & Unit 4 Data Science)** | **16** | Basic I/O, Conditions, Prime Range, Fibonacci, Matrix Addition, Functions & Recursion, Tuples/Sets, Dictionaries, OOP Class, File Handling, Inheritance, **NumPy Matrices**, **Pandas DataFrames**, **Matplotlib 2D Plots**, **Seaborn Statistical Visuals**, **Scikit-learn ML Models** |
 | **Java (CA-313 / CA-315)** | **16** | Student Info, Switch Arithmetic, Array Largest, CLI Args, Scanner Input, Constructors, Overloading, Inheritance, Overriding, Interface Area, Strings, Exceptions, **AWT Calculator**, **Swing Login Form**, JDBC Connection, CRUD Operations |
 | **C++ (CA-113 & CA-123)** | **17** | Arithmetic, Control Flow, Loops, Primes, Factorial, Fibonacci, 2D Matrix, Functions, Strings, Structs, Exam Tabulation, Default Args, Class, Constructors, Inheritance, Refrigerator App |
+| **PHP (CA-317(A) Web Technology-I)** | **10** | Hello World & Date, Arithmetic Operators, Conditions & Tables, Functions & Arrays (Indexed/Associative Foreach), MySQL URL Parameters, Database CRUD Operations, HTML Form Validation ($_GET/$_POST), Session Authentication (Login/Logout), File Upload & Cookies, OOP Class & JSON API (`json_encode`) |
 | **Linux Shell (CA-123)** | **10** | Commands Demo, Fibonacci, Time Greeting, Login Check, Factorial, Divisible by 7, Prime, Palindrome, Armstrong Number, Result Sheet Filtering |
 | **Oracle SQL (CA-223)** | **8** | DDL Create Table, DML Insert/Update/Delete, WHERE & ORDER BY, Aggregate Functions & GROUP BY, Joins, Subqueries & Nested Queries, Views, Sequences |
 | **HTML / Web-I (CA-115)** | **7** | Headings & Paragraphs, Formatting, Lists, Links & Images, Tables, Student Registration Form, Frameset & CSS |
-| **JavaScript (CA-125)** | **4** | Dynamic Greetings, Factorial Calculation, Form Validation, Digital Clock & DOM |
 | **C Programming** | **5** | Factorial, Pointers & Swapping, Array Search, Struct Student, Dynamic Memory (`malloc`/`free`) |
+| **JavaScript (CA-125)** | **4** | Dynamic Greetings, Factorial Calculation, Form Validation, Digital Clock & DOM |
 
 ---
 
@@ -298,14 +299,16 @@ npm run dev
 ```
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-### 3. Run Automated Verification Suites (85 Automated Checks)
+### 3. Run Automated Verification Suites (91 Automated Checks)
 ```bash
-npm test                             # Runs all 85 checks across 5 test suites
+npm test                             # Runs all 91 checks across 7 test suites
 npm run test:ccpp                    # 47 checks: PicoC C99, unified JSCPP C++, SAB stdin, formatter
-node scripts/test-journal.mjs        # 10 checks: Student Lab Journal & A4 PDF 1.4 structure
-node scripts/test-update-checker.mjs # 11 checks: Semver, snooze, Play Store compliance & version.json
-node scripts/test-python-datascience.mjs # 12 checks: Data Science datasets, Pyodide loader, input streaming
-node scripts/test-backpress-exit.mjs # 5 checks: Hardware back-press interception & exit dialog
+npm run test:journal                 # 10 checks: Student Lab Journal & A4 PDF 1.4 structure
+npm run test:update                  # 11 checks: Semver, snooze, Play Store compliance & version.json
+npm run test:py                      # 12 checks: Data Science datasets, Pyodide loader, input streaming
+npm run test:php                     # 6 checks: TYBCA PHP CA-317(A) practicals & dual-mode integration
+npm run test:exit                    # 5 checks: Hardware back-press interception & exit dialog
+npm run test:share                   # 17 checks: Serverless Code Sharing, LZ-String compression & QR code
 ```
 
 ### 4. Build Production Web Distribution

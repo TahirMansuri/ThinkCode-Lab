@@ -8,7 +8,7 @@ export const SUBJECT_DEFAULTS = {
   java: 'Java Programming & AWT/Swing Lab (TYBCA)',
   cpp: 'Object Oriented Programming in C++ (CA-113 / CA-123)',
   c: 'C Programming Lab',
-  php: 'Web Technology — PHP & HTML Lab',
+  php: 'Web Technology-I (PHP) Lab (CA-317(A))',
   sql: 'Database Management System — Oracle SQL (CA-223)',
   shell: 'Linux Operating System Shell Lab (CA-123)',
   js: 'Web Design II — JavaScript Lab (CA-125)',

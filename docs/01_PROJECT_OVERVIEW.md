@@ -29,7 +29,7 @@ While ThinkCode focuses on visual algorithm tracing and step-by-step memory insp
 | **0ms Server Latency** | Execution occurs locally on the device's CPU via WebAssembly and Web Workers. Code begins executing instantaneously with zero cloud queue time. |
 | **True Runtime Interactive Input** | Unlike typical online compilers that demand pre-entering all inputs in a static box before execution, ThinkCode Lab supports sequential, real-time in-console `input()`, `Scanner`, `cin >>`, and `scanf` prompts. |
 | **Java Desktop Window Emulation** | Java AWT/Swing graphical applications open directly inside an interactive, draggable desktop window frame with title bar, minimize, maximize, close, and DOM layout managers. |
-| **University Syllabus Practicals** | 83 official university lab assignments (FYBCA, SYBCA, TYBCA) preloaded with clean 2-space indentation and 1-click loading. |
+| **University Syllabus Practicals** | 93 official university lab assignments (FYBCA, SYBCA, TYBCA) preloaded with clean 2-space indentation and 1-click loading. |
 | **Adaptive Split Pane** | Student-optimized vertical split: starts at **80% Code : 20% Output** for comfortable code viewing on mobile screens, and auto-expands to **65% Output** upon pressing **Run**. |
 | **Mobile Coding Ergonomics** | Bottom-pinned 25-token Quick-Symbol Strip (`#quickBar`), 1-tap Offline Code Beautifier (`🪄`), ultra-slim 1-line header + slide-out drawer (`☰ Menu`), and compact dual `A−`/`A+` zoom controls. |
 | **Python Data Science Suite** | On-demand Scientific Library Manager (NumPy, Pandas, Matplotlib, Scikit-learn, Seaborn), client-side CSV/Excel data uploader, pre-seeded datasets, and inline plot visualizer with zero base size bloat. |

@@ -141,9 +141,9 @@ test('Pyodide runtime script public/pyodide/pyodide.asm.js has offline CacheStor
 });
 
 // 5. Total Practicals Count
-test('Global practicals count across all languages matches exactly 83', () => {
+test('Global practicals count across all languages matches exactly 93', () => {
   const allPracticals = Object.values(PRACTICALS).flat();
-  assert.equal(allPracticals.length, 83, 'Total practicals should be 83 (78 prior + 5 new Python data science)');
+  assert.equal(allPracticals.length, 93, 'Total practicals should be 93 (83 prior + 10 new TYBCA PHP practicals)');
 });
 
 // 6. Plotting Script Detection tests

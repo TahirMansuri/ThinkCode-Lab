@@ -965,7 +965,9 @@ function openPracticalsSheet() {
     web: '🌐 Web Design-I HTML Practicals (CA-115)',
     js: '💛 Web Design-II JavaScript Practicals (CA-125)',
     sql: '🗄️ DBMS Oracle SQL Practicals (CA-223)',
-    c: '⚙️ C Programming Practicals'
+    c: '⚙️ C Programming Practicals',
+    java: '☕ Java Programming Practicals (CA-315)',
+    php: '🐘 Web Technology-I PHP Practicals (CA-317(A))'
   };
 
   const title = titles[activeLang] || `📚 ${cur.name} Practicals`;
@@ -1090,6 +1092,24 @@ function loadPracticalCode(item, langId) {
   };
   editor.set(item.code, langId);
   store.set('cf.code.' + langId, item.code);
+
+  if (langId === 'php') {
+    if (editorPhp) {
+      editorPhp.set(item.code, 'php');
+      store.set('cf.code.php_script', item.code);
+    }
+    const htmlCode = item.html || DEFAULT_PHP_HTML;
+    if (editorHtml) {
+      editorHtml.set(htmlCode, 'web');
+      store.set('cf.code.php_html', htmlCode);
+    }
+    if (item.html) {
+      sink.preview(htmlCode);
+      setPhpViewMode('split');
+    } else {
+      setPhpViewMode('php');
+    }
+  }
 
   // Reset output box and set it to small position
   sink.clear();
