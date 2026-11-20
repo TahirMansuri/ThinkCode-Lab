@@ -245,6 +245,15 @@
             <path d="m14 14-8 8"/>
           </svg>
         </button>
+        <button type="button" id="btnShareCode" class="btn-share-code" title="Share Code via Link & QR Code (Alt+S)" aria-label="Share Code">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="18" cy="5" r="3"></circle>
+            <circle cx="6" cy="12" r="3"></circle>
+            <circle cx="18" cy="19" r="3"></circle>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+          </svg>
+        </button>
         <div class="zoom-bar" id="zoomBar" title="Adjust Editor Font Size">
           <button type="button" id="btnZoomOut" class="btn-zoom" title="Zoom Out Editor (Ctrl -)">A−</button>
           <button type="button" id="btnZoomIn" class="btn-zoom" title="Zoom In Editor (Ctrl +)">A+</button>
@@ -410,6 +419,15 @@
           <small>Generate A4 assignment sheet with code &amp; output</small>
         </div>
         <span class="d-badge">PDF</span>
+      </button>
+
+      <button type="button" class="drawer-item" id="menuBtnShare">
+        <span class="d-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg></span>
+        <div class="d-text">
+          <b>Share Code &amp; QR Code</b>
+          <small>Instant URL link &amp; scannable mobile QR code</small>
+        </div>
+        <span class="d-badge">QR</span>
       </button>
 
       <button type="button" class="drawer-item" id="menuBtnPyPackages">
@@ -793,6 +811,73 @@
 
       <div id="udDemoRow" class="ud-demo-row" hidden>
         <button type="button" id="btnUpdateSimulate" class="ud-demo-btn">🧪 Preview Student APK Update Banner (Simulate v1.3.5)</button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<!-- Serverless Code Sharing & QR Code Dialog -->
+<dialog id="shareDialog" class="journal-dialog share-dialog" aria-labelledby="shareDialogTitle" closedby="any">
+  <div class="jd-shell share-shell">
+    <div class="jd-head">
+      <div class="jd-title-wrap">
+        <div class="jd-badge">100% Serverless · Zero Cloud Storage</div>
+        <h2 id="shareDialogTitle" class="jd-title">Share Code via Link &amp; QR Code</h2>
+        <span class="jd-sub">Encoded directly into the URL hash. Private, instant, and runs offline on any phone or lab PC.</span>
+      </div>
+      <button type="button" id="btnShareClose" class="jd-close" aria-label="Close dialog">✕</button>
+    </div>
+
+    <div class="jd-body share-body">
+      <!-- High Contrast QR Code Display -->
+      <div class="share-qr-section">
+        <div class="share-qr-card-wrap">
+          <div class="share-qr-card">
+            <canvas id="shareQrCanvas" class="share-qr-canvas" width="220" height="220" aria-label="Scannable QR Code"></canvas>
+            <div id="shareQrSvg" class="share-qr-svg" hidden></div>
+          </div>
+          <span class="share-qr-hint">📱 Scan with any phone camera or lens to open code instantly</span>
+        </div>
+      </div>
+
+      <!-- Share Link Section -->
+      <div class="share-link-sec">
+        <div class="share-meta-row">
+          <label for="shareUrlInput" class="share-input-label">Direct Share Link</label>
+          <span id="shareMetaPill" class="share-meta-pill">Python • 0% smaller (0 B)</span>
+        </div>
+        <div class="share-url-row">
+          <input type="text" id="shareUrlInput" class="share-url-input" readonly spellcheck="false" autocomplete="off" placeholder="Generating link...">
+          <button type="button" id="btnCopyShareUrl" class="share-btn share-btn-copy" title="Copy Share Link to Clipboard">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <span>Copy Link</span>
+          </button>
+        </div>
+        <div id="shareCopyFeedback" class="share-copy-feedback" hidden></div>
+      </div>
+
+      <!-- Actions: Native Share & Download QR -->
+      <div class="share-actions-row">
+        <button type="button" id="btnNativeShare" class="share-btn share-btn-native">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+          <span>Share via App…</span>
+        </button>
+        <button type="button" id="btnDownloadQr" class="share-btn share-btn-download">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <span>Save QR Image</span>
+        </button>
+      </div>
+
+      <!-- Code Preview Accordion / Snippet -->
+      <details class="share-snippet-details">
+        <summary>View Packed Code Snippet</summary>
+        <pre id="sharePreviewSnippet" class="share-preview-snippet"></pre>
+      </details>
+    </div>
+
+    <div class="jd-foot share-foot">
+      <div class="share-foot-tip">
+        🔒 <b>Zero Tracking / Zero Database:</b> Code travels purely in the URL hash fragment. Neither ThinkCode Lab nor any third-party server ever sees or stores your code.
       </div>
     </div>
   </div>

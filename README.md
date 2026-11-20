@@ -222,6 +222,12 @@ flowchart TD
 - **📄 1-Tap Offline Lab Journal & Assignment A4 PDF Export (`src/lab-journal.js`):**
   - Generates print-ready multi-page A4 assignment PDFs 100% offline via an embedded Canvas 2D + pure-JS JPEG-in-PDF 1.4 writer (plus Android native `PrintManager` bridge).
   - Remembers student details (`Institute`, `Department`, `Name`, `Roll No.`, `Class`, `Year`), auto-infers subject & title, syntax-colors source code with line numbers, captures execution output / SQL tables / Swing frames, and renders a faculty signature footer.
+- **🔗 Serverless Code Sharing via URL Hash & QR Code (`src/code-sharer.js`, `src/qr-code.js`):**
+  - **100% Serverless & Private:** Code is packed and compressed directly into the URL hash fragment (`#c=...`) using pure-JS URL-safe LZ-String compression. Zero data is ever sent to or stored on external servers.
+  - **Pure-JS ISO/IEC 18004 Standard QR Engine:** Generates high-contrast camera-scannable QR codes on Canvas and SVG without external CDN dependencies or internet access.
+  - **Instant Phone-to-PC Transfer:** Scan with any smartphone camera or lab PC webcam to open and execute the exact same code on the web IDE immediately. Supports dual-file PHP forms as well as single-file scripts.
+  - **One-Tap Actions:** Dedicated `#btnShareCode` toolbar button (`Alt+S`) and drawer item with **Copy Link** (with visual confirmation), **Share via App...** (via `@capacitor/share` or Web Share API), and **Save QR Image** (high-res PNG download).
+  - **Safe Restoration & Auto-Hydration:** Automatically backs up previous unsaved workspace code to `localStorage` (`cf.share.backup`) before loading shared code, displays a toast alert, and cleans the URL hash via `history.replaceState`.
 - **🛡️ Android Hardware/Gesture Back-Button & Exit Confirmation Dialog:**
   - Intercepts Android hardware/gesture back events via `OnBackPressedCallback` in `MainActivity.java`.
   - Hierarchical dismissal: closes open select dropdowns, slide-out menu drawer, and active dialogs (`#journalDialog`, `#updateDialog`, Java Swing frame `#guiWindowModal`) first, preventing accidental app closure.

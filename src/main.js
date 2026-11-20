@@ -42,6 +42,7 @@ import {
   removeMountedFile,
   isPlottingScript
 } from './python-tools.js';
+import { initCodeSharer } from './code-sharer.js';
 
 const $ = id => document.getElementById(id);
 const store = {
@@ -3136,8 +3137,55 @@ initLabJournal();
 const updateController = initUpdateChecker();
 initPythonScienceSuite();
 initExitConfirmation();
+const shareController = initCodeSharer({
+  getActiveLanguage: () => cur,
+  getActiveCode: () => {
+    if (cur.id === 'php' && editorPhp) {
+      return editorPhp.get();
+    }
+    return editor.get();
+  },
+  getActiveHtmlCode: () => {
+    if (cur.id === 'php' && editorHtml) {
+      return editorHtml.get();
+    }
+    return '';
+  },
+  applySharedCode: (payload) => {
+    if (!payload || !payload.lang || typeof payload.code !== 'string') return false;
+    const targetLang = LANGS.find(l => l.id.toLowerCase() === payload.lang.toLowerCase()) ||
+                       LANGS.find(l => l.name.toLowerCase() === payload.lang.toLowerCase());
+    if (!targetLang) return false;
+
+    if (cur.id !== targetLang.id) {
+      selectLang(targetLang);
+    }
+
+    if (targetLang.id === 'php') {
+      if (payload.htmlCode && editorHtml) {
+        editorHtml.set(payload.htmlCode, 'web');
+        store.set('cf.code.php_html', payload.htmlCode);
+      }
+      if (editorPhp) {
+        editorPhp.set(payload.code, 'php');
+        store.set('cf.code.php_script', payload.code);
+      }
+    } else {
+      editor.set(payload.code, targetLang.id);
+      store.set('cf.code.' + targetLang.id, payload.code);
+    }
+
+    sink.clear();
+    con.querySelector('.con-input-wrap, .con-input')?.remove();
+    setOutputSmall();
+    syncButtons();
+    return true;
+  },
+  toast,
+  store
+});
 const warmPromise = warm();
-window.__app = { run, stop, engines, cur: () => cur, editorPhp: () => editorPhp, editorHtml: () => editorHtml, running: () => running, updates: updateController, handleBack: handleThinkCodeBackPress, showExit: showExitConfirmDialog };
+window.__app = { run, stop, engines, cur: () => cur, editorPhp: () => editorPhp, editorHtml: () => editorHtml, running: () => running, updates: updateController, sharer: shareController, handleBack: handleThinkCodeBackPress, showExit: showExitConfirmDialog };
 
 // ---------- compulsory 2.5s splash screen + component loading ----------
 const splashMinTimer = new Promise(resolve => setTimeout(resolve, 2500));

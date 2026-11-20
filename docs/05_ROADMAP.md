@@ -34,14 +34,26 @@
                                                              ▼
 ┌─────────────────────────────────────────┐     ┌─────────────────────────────────────────┐
 │               PHASE 7                   │     │               PHASE 8                   │
-│             [COMPLETED]                 │ ──▶ │               [QUEUED]                  │
+│             [COMPLETED]                 │ ──▶ │             [COMPLETED]                 │
 │                                         │     │                                         │
-│ • Android Back-Gesture Interception     │     │ • My Saved Programs (IndexedDB)         │
-│ • Exit Confirmation Dialog (#exitDialog)│     │ • Classroom Auto-Graded Challenge Links │
-│ • Python input() Prompt Streaming Fix   │     │ • Replay Input Presets & Error Hints    │
-│ • Google Play Live (com.igc.thinkcodelab)│     │ • Clang C/C++ On-Demand Package         │
-│ • v1.3.8 Build 15 AAB & APK Released    │     │ • Multi-File Project Workspace          │
+│ • Android Back-Gesture Interception     │     │ • Serverless Code Sharing via URL Hash  │
+│ • Exit Confirmation Dialog (#exitDialog)│     │ • Pure-JS Offline ISO/IEC 18004 QR Code │
+│ • Python input() Prompt Streaming Fix   │     │ • Share Dialog & Mobile App Sharing     │
+│ • Google Play Live (com.igc.thinkcodelab)│     │ • Hash Auto-Hydration & Backup Safety   │
+│ • v1.3.8 Build 15 AAB & APK Released    │     │ • 99-Check Automated Test Suite         │
 └─────────────────────────────────────────┘     └─────────────────────────────────────────┘
+                                                                 │
+                                                                 ▼
+                                                ┌─────────────────────────────────────────┐
+                                                │               PHASE 9                   │
+                                                │               [QUEUED]                  │
+                                                │                                         │
+                                                │ • My Saved Programs (IndexedDB)         │
+                                                │ • Classroom Auto-Graded Challenge Links │
+                                                │ • Replay Input Presets & Error Hints    │
+                                                │ • Clang C/C++ On-Demand Package         │
+                                                │ • Multi-File Project Workspace          │
+                                                └─────────────────────────────────────────┘
 ```
 
 ---
@@ -91,6 +103,13 @@
 - ✅ **Google Play Developer Policy Compliance (`v1.3.7`)**: Tailored update CTAs in native Android builds to point directly to Google Play Store listing (`com.igc.thinkcodelab`) while preserving direct APK downloads for Web students.
 - ✅ **Python `input()` Prompt Streaming Fix (`v1.3.8`)**: Pyodide `isatty: false` configuration, unbuffered line streaming via `emitStdout()` and `flushStdoutBuffer()`, ensuring sequential `input()` prompts appear in `#console` prior to user typing.
 - ✅ **Google Play Production Release (`v1.3.8 / Build 15`)**: Signed App Bundle (`ThinkCodeLab-v1.3.8.aab`, 17.5 MB) and Standalone APK (`ThinkCodeLab-v1.3.8.apk`, 17.7 MB) published with target API 36 compliance. Full 85-check automated verification suite passing.
+
+### 8. Phase 8: Serverless Code Sharing & Offline QR Code (`v1.3.9`)
+- ✅ **100% Serverless, Private Code Sharing (`src/code-sharer.js`)**: Pure-JS URL-safe LZ-String dictionary compression serializing language, code, and secondary HTML code into compact `#c=...` hash fragments without accounts, cloud databases, or tracking.
+- ✅ **Pure-JS Offline ISO/IEC 18004 QR Code Generator (`src/qr-code.js`)**: $GF(2^8)$ Galois Field arithmetic, Reed-Solomon polynomial ECC, Versions 1–40, 8 penalty masks, high-contrast camera-scannable Canvas 2D and SVG vector output with zero external CDN dependencies.
+- ✅ **Interactive Share Dialog (`<dialog id="shareDialog">`)**: High-contrast QR card, link input with live compression metrics, one-tap Copy with visual feedback, native app sharing via `@capacitor/share`, and PNG QR image download.
+- ✅ **Incoming Share Auto-Hydration**: Automatic boot and `hashchange` link unpacking, previous code safety snapshot in `localStorage` (`cf.share.backup`), automatic language switching, and clean hash clearing via `history.replaceState`.
+- ✅ **Automated Verification**: 14 new automated unit tests (`scripts/test-code-sharer.mjs`), expanding project automated test suite to **99 passing tests**.
 
 ---
 

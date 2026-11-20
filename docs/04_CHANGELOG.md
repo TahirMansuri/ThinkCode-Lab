@@ -4,6 +4,35 @@
 
 ---
 
+## 🚀 Version 1.3.9 — Serverless Code Sharing via URL Hash & Offline QR Code
+*Release Date: November 20, 2026*
+
+### 🔗 100% Serverless, Private Code Sharing (`src/code-sharer.js`, `src/qr-code.js`)
+- **Zero-Backend URL Hash Compression**:
+  - Implemented pure-JS URL-safe LZ-String dictionary compression (`compressToEncodedURIComponent`, `decompressFromEncodedURIComponent`) with an alphanumeric alphabet (`A-Za-z0-9+\-$`) that eliminates percent-escaping (`%XX`).
+  - Serializes active language, source code, optional secondary HTML code (for dual PHP form workspaces), and snippet title into a compact `#c=...` hash fragment.
+  - Achieves 25%–65% compression ratios on medium and large programs, maintaining 100% privacy without accounts, databases, or external server calls.
+- **Pure-JS ISO/IEC 18004 Standard QR Code Engine (`src/qr-code.js`)**:
+  - Built an offline, zero-dependency QR code generator featuring Galois Field $GF(2^8)$ arithmetic, Reed-Solomon polynomial ECC generation, Version 1–40 matrix formatting, 8 penalty evaluation masks, format/version BCH bits, and concentric 7x7 finder patterns.
+  - Generates high-contrast Canvas 2D raster output for phone camera scanning and crisp SVG vector exports with quiet zone margins.
+- **Interactive Share Dialog (`<dialog id="shareDialog">`, `src/styles.css`)**:
+  - Added `#btnShareCode` to editor head-right toolbar with global shortcut `Alt+S` / `Option+S`.
+  - Added `#menuBtnShare` to navigation drawer.
+  - Real-time QR card display with light contrast pad optimized for phone lenses and webcams.
+  - Read-only share link input with instant compression metric pill (`Python • 62% smaller (184 B)`).
+  - One-tap **Copy Link** button with animated state change (`Copied! ✓`).
+  - **Share via App...** action using `@capacitor/share` on Android and `navigator.share` on modern browsers.
+  - **Save QR Image** downloading high-res PNG (`ThinkCodeLab-<lang>-qr.png`).
+  - Code preview accordion for quick validation before sending.
+- **Incoming Share Link Auto-Hydration**:
+  - Automatically listens on boot and `hashchange` for `#c=...`, `#code=...`, or `#share=...`.
+  - Automatically saves previous code to `localStorage` (`cf.share.backup`) for data safety.
+  - Seamlessly switches to the shared language, populates the CodeMirror editor, resets output to 80:20 split, shows toast notification (`Shared <LANG> program loaded! 🚀`), and cleans the URL hash via `history.replaceState`.
+- **Automated Verification Suite (`scripts/test-code-sharer.mjs`)**:
+  - Added 14 automated unit tests covering roundtrip compression across languages, multi-file PHP preservation, schema validation, corrupted hash immunity, QR matrix math, finder pattern structure, SVG generation, and DOM wiring. Total project test suite expanded to **99 tests**.
+
+---
+
 ## 🚀 Version 1.3.8 (Build 15) — Google Play Store Production Release & Python Stdin Streaming Fix
 *Release Date: November 18, 2026*
 

@@ -1011,6 +1011,41 @@ svg {
   color: var(--ember);
 }
 
+/* Toolbar Share Code Button */
+.btn-share-code {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--raised);
+  border: 1px solid var(--line);
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.btn-share-code:hover {
+  border-color: #38BDF8;
+  background: rgba(56, 189, 248, 0.12);
+  color: #38BDF8;
+  transform: translateY(-1px);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.25);
+}
+
+.btn-share-code:active {
+  transform: scale(0.94);
+}
+
+.btn-share-code svg {
+  width: 14px;
+  height: 14px;
+  color: inherit;
+}
+
 /* Quick-Symbol Accessory Strip for fast touch coding (Attached to bottom of editor) */
 .quick-bar {
   display: flex;
@@ -1114,6 +1149,18 @@ svg {
   background: #FFF7ED;
   border-color: var(--ember);
   color: var(--ember);
+}
+
+[data-theme='light'] .btn-share-code {
+  background: #FFFFFF;
+  border-color: #CBD5E1;
+  color: #0F172A;
+}
+
+[data-theme='light'] .btn-share-code:hover {
+  background: #F0F9FF;
+  border-color: #0284C7;
+  color: #0284C7;
 }
 
 .head-left {
@@ -5654,4 +5701,289 @@ dialog::backdrop {
 
 .drawer-item-exit:hover {
   background: rgba(239, 68, 68, 0.08) !important;
+}
+
+/* ==========================================================================
+   Serverless Code Sharing & QR Code Modal Styles
+   ========================================================================== */
+.share-dialog {
+  max-width: 520px;
+  width: 95vw;
+}
+
+.share-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.share-shell {
+  display: flex;
+  flex-direction: column;
+  max-height: min(92dvh, 850px);
+}
+
+.share-body {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  max-height: calc(90dvh - 140px);
+}
+
+/* High Contrast QR Code Card (Always light background for camera readability) */
+.share-qr-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-qr-card-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.share-qr-card {
+  background: #FFFFFF;
+  padding: 12px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.share-qr-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.36), 0 0 0 2px #38BDF8;
+}
+
+.share-qr-canvas {
+  width: 196px;
+  height: 196px;
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.share-qr-hint {
+  font-size: 11.5px;
+  color: var(--text-dim);
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Share URL Section */
+.share-link-sec {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.share-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.share-input-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-dim);
+}
+
+.share-meta-pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.14);
+  color: #38BDF8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  font-family: var(--mono);
+}
+
+.share-url-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.share-url-input {
+  flex: 1;
+  min-width: 0;
+  height: 38px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0 12px;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.share-url-input:focus {
+  border-color: #38BDF8;
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
+}
+
+/* Share Action Buttons */
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.share-btn-copy {
+  background: #3B82F6;
+  color: #FFFFFF;
+  border-color: #2563EB;
+}
+
+.share-btn-copy:hover {
+  background: #2563EB;
+  box-shadow: 0 3px 10px rgba(59, 130, 246, 0.4);
+}
+
+.share-btn-copy.is-copied {
+  background: #10B981 !important;
+  border-color: #059669 !important;
+  box-shadow: 0 3px 10px rgba(16, 185, 129, 0.4) !important;
+}
+
+.share-actions-row {
+  display: flex;
+  gap: 10px;
+}
+
+.share-btn-native {
+  flex: 1;
+  background: var(--raised);
+  border-color: var(--line);
+  color: var(--text);
+}
+
+.share-btn-native:hover {
+  background: var(--line);
+  border-color: #38BDF8;
+  color: #38BDF8;
+}
+
+.share-btn-download {
+  flex: 1;
+  background: var(--raised);
+  border-color: var(--line);
+  color: var(--text);
+}
+
+.share-btn-download:hover {
+  background: var(--line);
+  border-color: #A855F7;
+  color: #A855F7;
+}
+
+.share-copy-feedback {
+  font-size: 11.5px;
+  color: #10B981;
+  font-weight: 500;
+  text-align: center;
+}
+
+/* Code Preview Snippet Accordion */
+.share-snippet-details {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.share-snippet-details summary {
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dim);
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.share-snippet-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.share-snippet-details summary::after {
+  content: "▾";
+  font-size: 11px;
+  transition: transform 0.15s ease;
+}
+
+.share-snippet-details[open] summary::after {
+  transform: rotate(180deg);
+}
+
+.share-preview-snippet {
+  margin: 0;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.2);
+  border-top: 1px solid var(--line);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-dim);
+  max-height: 120px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+/* Footer Tip */
+.share-foot {
+  padding: 12px 20px;
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+
+.share-foot-tip {
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1.4;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .share-qr-canvas {
+    width: 170px;
+    height: 170px;
+  }
+  .share-actions-row {
+    flex-direction: column;
+  }
+  .share-url-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
