@@ -16,6 +16,7 @@ import assert from 'node:assert';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import jsqr from 'jsqr';
 
 import {
   compressToEncodedURIComponent,
@@ -268,6 +269,65 @@ test('src/styles.css defines share dialog and QR card styles', () => {
   assert.ok(css.includes('.share-dialog'), 'styles.css must style .share-dialog');
   assert.ok(css.includes('.share-qr-card'), 'styles.css must style .share-qr-card');
   assert.ok(css.includes('.btn-share-code'), 'styles.css must style .btn-share-code');
+});
+
+// 6. Camera / Scanner Optical Decode Verification (jsQR)
+test('Mobile camera scanner (jsQR) decodes generated QR code across realistic college programs', () => {
+  const testCases = [
+    {
+      name: 'Python default script',
+      payload: {
+        lang: 'python',
+        code: '# Python 3.12 - runs offline on your device\nname = input("Your name: ")\nprint(f"Hello, {name}!")\n\nsquares = [n * n for n in range(1, 6)]\nprint("Squares:", squares)\n'
+      }
+    },
+    {
+      name: 'Java OOP Practical',
+      payload: {
+        lang: 'java',
+        code: 'public class Main {\n  public static void main(String[] args) {\n    System.out.println("Java Lab");\n  }\n}'
+      }
+    },
+    {
+      name: 'PHP Dual Workspace',
+      payload: {
+        lang: 'php',
+        code: '<?php echo "Hello " . $_POST["name"]; ?>',
+        htmlCode: '<form method="POST"><input name="name"><button>Submit</button></form>'
+      }
+    }
+  ];
+
+  for (const tc of testCases) {
+    const share = generateShareUrl(tc.payload);
+    const qr = createQRCode(share.url, { ecc: 'M' });
+
+    const margin = 4;
+    const fullSize = qr.size + margin * 2;
+    const imgData = new Uint8ClampedArray(fullSize * fullSize * 4);
+    imgData.fill(255);
+
+    for (let r = 0; r < qr.size; r++) {
+      for (let c = 0; c < qr.size; c++) {
+        const idx = ((r + margin) * fullSize + (c + margin)) * 4;
+        const val = qr.modules[r][c] ? 0 : 255;
+        imgData[idx] = val;
+        imgData[idx + 1] = val;
+        imgData[idx + 2] = val;
+        imgData[idx + 3] = 255;
+      }
+    }
+
+    const result = jsqr(imgData, fullSize, fullSize);
+    assert.ok(result, `Camera scanner must detect QR for ${tc.name}`);
+    assert.strictEqual(result.data, share.url, `Scanned data must match URL exactly for ${tc.name}`);
+
+    // Parse decoded URL back
+    const parsed = parseShareHash(result.data.split('#')[1]);
+    assert.ok(parsed, 'Decoded URL hash must be parseable');
+    assert.strictEqual(parsed.lang, tc.payload.lang);
+    assert.strictEqual(parsed.code, tc.payload.code);
+  }
 });
 
 console.log(`\nAll ${passed} Serverless Code Sharing & QR Code tests passed successfully! ✨\n`);

@@ -5748,10 +5748,10 @@ dialog::backdrop {
 }
 
 .share-qr-card {
-  background: #FFFFFF;
-  padding: 12px;
+  background: #FFFFFF !important;
+  padding: 16px;
   border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -5761,15 +5761,18 @@ dialog::backdrop {
 
 .share-qr-card:hover {
   transform: scale(1.02);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.36), 0 0 0 2px #38BDF8;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.42), 0 0 0 2px #38BDF8;
 }
 
 .share-qr-canvas {
-  width: 196px;
-  height: 196px;
+  width: 228px;
+  height: 228px;
+  max-width: 75vw;
+  max-height: 75vw;
   display: block;
   image-rendering: pixelated;
   image-rendering: crisp-edges;
+  background: #FFFFFF !important;
 }
 
 .share-qr-hint {
@@ -5976,8 +5979,10 @@ dialog::backdrop {
 
 @media (max-width: 480px) {
   .share-qr-canvas {
-    width: 170px;
-    height: 170px;
+    width: 216px;
+    height: 216px;
+    max-width: 80vw;
+    max-height: 80vw;
   }
   .share-actions-row {
     flex-direction: column;

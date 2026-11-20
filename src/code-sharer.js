@@ -608,11 +608,10 @@ export function initCodeSharer({
       // Render high-DPI Canvas for scanner & download
       if (qrCanvas) {
         activeShareQr.toCanvas(qrCanvas, {
-          pixelSize: 6,
+          pixelSize: 8,
           margin: 4,
           lightColor: '#ffffff',
-          darkColor: '#0e1622',
-          borderRadius: 8
+          darkColor: '#000000'
         });
       }
 
@@ -621,7 +620,7 @@ export function initCodeSharer({
         qrSvgWrap.innerHTML = activeShareQr.toSVGString({
           margin: 4,
           lightColor: '#ffffff',
-          darkColor: '#0e1622'
+          darkColor: '#000000'
         });
       }
     } catch (err) {
