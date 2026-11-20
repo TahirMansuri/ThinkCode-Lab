@@ -7,6 +7,16 @@
 ## 🚀 Version 1.3.11 — C# (.NET) Engine & TYBCA CA-312 / CA-314 Practicals Suite
 *Release Date: November 21, 2026*
 
+### 📄 1-Tap "New Program" / Starter Template Button & Universal 2-Space Indentation
+- **Dedicated "New Program" Button (`index.html`, `src/main.js`, `src/styles.css`)**:
+  - Added a prominent `[📄 New]` button right beside `[Practicals]` in the editor toolbar (`pane-head`).
+  - Provides instant 1-tap access to restore the clean, official starter template for the active language with default boilerplate and imports.
+  - Safe confirmation guard prevents accidental loss of edits or loaded practical assignments (`activePracticalMeta`).
+  - Keyboard shortcut: **`Alt+N`** for quick keyboard workflow.
+- **Universal 2-Space Indentation Across Entire Codebase**:
+  - Re-formatted all practicals and templates across all 10 supported languages to strict universal 2-space indentation.
+  - Explicitly mapped `case 'csharp':` and `case 'cs':` in `src/formatter.js` universal 2-space beautifier engine.
+
 ### 💜 C# (.NET) Offline Runtime & Engine (`src/engines/csharp.worker.js`, `src/engines/index.js`, `src/languages.js`)
 - **Zero Binary Bloat AST Transpiler Engine**:
   - Implemented 100% offline Web Worker C# compiler and runtime (`csharp.worker.js`) with 0ms startup delay, eliminating 40–60 MB WebAssembly DLL download penalties.
