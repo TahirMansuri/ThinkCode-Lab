@@ -3732,5 +3732,691 @@ echo "✓ JSON payload successfully generated using json_encode().\\n";
 echo "========================================================\\n";
 ?>`
     }
+  ],
+  csharp: [
+    {
+      id: 'csharp-1',
+      num: 'Assignment 1',
+      cat: 'Fundamentals',
+      title: 'Basic C# Program Structure & Console Output',
+      desc: 'Demonstrates C# program structure (namespace, class, static void Main) and displays student details via Console.WriteLine statements.',
+      code: `// Practical 1: Basic C# Program Structure & Console Output
+// Course Code: CA-314 (Programming using C#.Net)
+using System;
+
+namespace ThinkCodeLab
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("=================================================");
+            Console.WriteLine("    TYBCA C#.NET LAB - STUDENT REGISTRATION      ");
+            Console.WriteLine("=================================================");
+
+            // Student profile details
+            string name = "Tahir Mansuri";
+            int rollNo = 101;
+            string course = "Bachelor of Computer Applications (TYBCA)";
+            string college = "InfoGalaxy Computers, Shirpur";
+            string subject = "Programming using C#.Net (CA-314)";
+
+            Console.WriteLine($"Student Name : {name}");
+            Console.WriteLine($"Roll Number  : {rollNo}");
+            Console.WriteLine($"Course       : {course}");
+            Console.WriteLine($"College      : {college}");
+            Console.WriteLine($"Subject Code : {subject}");
+            Console.WriteLine("=================================================");
+            Console.WriteLine("C# program structure executed successfully!");
+        }
+    }
+}`
+    },
+    {
+      id: 'csharp-2',
+      num: 'Assignment 2',
+      cat: 'Operators',
+      title: 'Data Types, Type Conversion & Arithmetic Operators',
+      desc: 'Accepts numbers and performs arithmetic operations (addition, subtraction, multiplication, division, modulo) using data types and operators.',
+      code: `// Practical 2: Data Types, Type Conversion & Arithmetic Operators
+// Course Code: CA-314 (Programming using C#.Net)
+using System;
+
+namespace ThinkCodeLab
+{
+    class ArithmeticApp
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("=================================================");
+            Console.WriteLine("        C# DATA TYPES & ARITHMETIC OPERATORS     ");
+            Console.WriteLine("=================================================");
+
+            int num1 = 45;
+            int num2 = 12;
+
+            int sum = num1 + num2;
+            int diff = num1 - num2;
+            int product = num1 * num2;
+            double quotient = (double)num1 / num2;
+            int remainder = num1 % num2;
+
+            Console.WriteLine($"First Number  : {num1}");
+            Console.WriteLine($"Second Number : {num2}");
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine($"Addition       ({num1} + {num2}) = {sum}");
+            Console.WriteLine($"Subtraction    ({num1} - {num2}) = {diff}");
+            Console.WriteLine($"Multiplication ({num1} * {num2}) = {product}");
+            Console.WriteLine($"Division       ({num1} / {num2}) = {quotient:F2}");
+            Console.WriteLine($"Modulus        ({num1} % {num2}) = {remainder}");
+            Console.WriteLine("=================================================");
+        }
+    }
+}`
+    },
+    {
+      id: 'csharp-3',
+      num: 'Assignment 3',
+      cat: 'Control Flow',
+      title: 'Student Marks, Percentage & Grade Calculation',
+      desc: 'Accepts marks of multiple subjects, calculates total and percentage, and determines grades using conditional if-else statements.',
+      code: `// Practical 3: Student Marks, Percentage & Grade Calculation
+// Course Code: CA-314 (Programming using C#.Net)
+using System;
+
+namespace ThinkCodeLab
+{
+    class GradeCalculator
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("=================================================");
+            Console.WriteLine("      TYBCA SEMESTER MARKSHEET & GRADE EVAL      ");
+            Console.WriteLine("=================================================");
+
+            int csharpMarks = 85;
+            int phpMarks = 78;
+            int javaMarks = 92;
+            int osMarks = 88;
+            int totalSubjects = 4;
+
+            int totalMarks = csharpMarks + phpMarks + javaMarks + osMarks;
+            double percentage = (double)totalMarks / totalSubjects;
+
+            string grade;
+            string remarks;
+
+            if (percentage >= 85)
+            {
+                grade = "A+ (Distinction)";
+                remarks = "Outstanding Performance";
+            }
+            else if (percentage >= 75)
+            {
+                grade = "A (First Class with Dist)";
+                remarks = "Excellent Work";
+            }
+            else if (percentage >= 60)
+            {
+                grade = "B (First Class)";
+                remarks = "Very Good";
+            }
+            else if (percentage >= 50)
+            {
+                grade = "C (Second Class)";
+                remarks = "Good, Scope for Improvement";
+            }
+            else if (percentage >= 40)
+            {
+                grade = "D (Pass Class)";
+                remarks = "Passed";
+            }
+            else
+            {
+                grade = "F (Fail)";
+                remarks = "Needs Remediate Practice";
+            }
+
+            Console.WriteLine($"C#.NET Marks : {csharpMarks} / 100");
+            Console.WriteLine($"PHP Marks    : {phpMarks} / 100");
+            Console.WriteLine($"Java Marks   : {javaMarks} / 100");
+            Console.WriteLine($"OS Marks     : {osMarks} / 100");
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine($"Total Marks  : {totalMarks} / 400");
+            Console.WriteLine($"Percentage   : {percentage:F2}%");
+            Console.WriteLine($"Final Grade  : {grade}");
+            Console.WriteLine($"Result       : {remarks}");
+            Console.WriteLine("=================================================");
+        }
+    }
+}`
+    },
+    {
+      id: 'csharp-4',
+      num: 'Assignment 4',
+      cat: 'Loops',
+      title: 'Loop Constructs (for, while, foreach)',
+      desc: 'Generates multiplication tables, calculates factorials, and traverses arrays using for, while, and foreach looping constructs.',
+      code: `// Practical 4: Loop Constructs (for, while, foreach)
+// Course Code: CA-314 (Programming using C#.Net)
+using System;
+
+namespace ThinkCodeLab
+{
+    class LoopsApp
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("=================================================");
+            Console.WriteLine("      C# LOOPING CONSTRUCTS (FOR, WHILE, FOREACH) ");
+            Console.WriteLine("=================================================");
+
+            // 1. For Loop: Multiplication Table of 7
+            int tableNum = 7;
+            Console.WriteLine($"[1] Multiplication Table of {tableNum} (for loop):");
+            for (int i = 1; i <= 10; i++)
+            {
+                Console.WriteLine($"    {tableNum} x {i,2} = {tableNum * i,2}");
+            }
+
+            // 2. While Loop: Factorial Calculation of 6
+            int factNum = 6;
+            long factResult = 1;
+            int counter = factNum;
+            while (counter > 1)
+            {
+                factResult *= counter;
+                counter--;
+            }
+            Console.WriteLine($"\\n[2] Factorial of {factNum} (while loop): {factResult}");
+
+            // 3. Foreach Loop: Array Traversal
+            int[] primes = new int[] { 2, 3, 5, 7, 11, 13, 17, 19 };
+            Console.Write("\\n[3] Prime numbers under 20 (foreach loop): ");
+            foreach (int p in primes)
+            {
+                Console.Write($"{p} ");
+            }
+            Console.WriteLine("\\n=================================================");
+        }
+    }
+}`
+    },
+    {
+      id: 'csharp-5',
+      num: 'Assignment 5',
+      cat: 'OOP',
+      title: 'Employee Class, Auto-Properties & Encapsulation',
+      desc: 'Creates Employee class with properties { get; set; }, parameterized constructors, and methods demonstrating OOP encapsulation.',
+      code: `// Practical 5: Employee Class, Encapsulation & Properties
+// Course Code: CA-314 (Programming using C#.Net)
+using System;
+
+namespace ThinkCodeLab
+{
+    class Employee
+    {
+        // Encapsulated properties
+        public int EmployeeId { get; set; }
+        public string Name { get; set; }
+        public double BasicSalary { get; set; }
+        public string Department { get; set; }
+
+        // Parameterized Constructor
+        public Employee(int id, string name, double basicSalary, string dept)
+        {
+            EmployeeId = id;
+            Name = name;
+            BasicSalary = basicSalary;
+            Department = dept;
+        }
+
+        // Method to compute net allowance & total salary
+        public double CalculateTotalSalary()
+        {
+            double hra = BasicSalary * 0.20; // 20% House Rent Allowance
+            double da = BasicSalary * 0.10;  // 10% Dearness Allowance
+            return BasicSalary + hra + da;
+        }
+
+        // Method to display details
+        public void DisplayDetails()
+        {
+            Console.WriteLine($"ID         : {EmployeeId}");
+            Console.WriteLine($"Name       : {Name}");
+            Console.WriteLine($"Department : {Department}");
+            Console.WriteLine($"Basic Pay  : Rs. {BasicSalary:N2}");
+            Console.WriteLine($"Gross Pay  : Rs. {CalculateTotalSalary():N2}");
+            Console.WriteLine("-------------------------------------------------");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("=================================================");
+            Console.WriteLine("   OOP ENCAPSULATION & EMPLOYEE MANAGEMENT       ");
+            Console.WriteLine("=================================================");
+
+            Employee emp1 = new Employee(1001, "Tahir Mansuri", 55000, "Software Engineering");
+            Employee emp2 = new Employee(1002, "Amit Sharma", 48000, "Quality Assurance");
+
+            emp1.DisplayDetails();
+            emp2.DisplayDetails();
+
+            Console.WriteLine("Employee records encapsulated and verified!");
+            Console.WriteLine("=================================================");
+        }
+    }
+}`
+    },
+    {
+      id: 'csharp-6',
+      num: 'Assignment 6',
+      cat: 'OOP',
+      title: 'Inheritance, Constructor Forwarding & Polymorphism',
+      desc: 'Implements Employee base class and Manager derived class with : base() forwarding and method overriding for salary calculation.',
+      code: `// Practical 6: Inheritance, Constructor Forwarding & Polymorphism
+// Course Code: CA-314 (Programming using C#.Net)
+using System;
+
+namespace ThinkCodeLab
+{
+    // Base Class
+    class Employee
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public double BaseSalary { get; set; }
+
+        public Employee(int id, string name, double baseSalary)
+        {
+            Id = id;
+            Name = name;
+            BaseSalary = baseSalary;
+        }
+
+        // Virtual method intended for runtime polymorphism
+        public virtual double CalculateSalary()
+        {
+            return BaseSalary;
+        }
+
+        public virtual void Display()
+        {
+            Console.WriteLine($"[Staff] ID: {Id} | Name: {Name} | Total: Rs. {CalculateSalary():N2}");
+        }
+    }
+
+    // Derived Class inheriting Employee
+    class Manager : Employee
+    {
+        public double Bonus { get; set; }
+        public string ProjectTitle { get; set; }
+
+        // Forward constructor parameters to base class
+        public Manager(int id, string name, double baseSalary, double bonus, string project)
+            : base(id, name, baseSalary)
+        {
+            Bonus = bonus;
+            ProjectTitle = project;
+        }
+
+        // Override method to add manager bonus
+        public override double CalculateSalary()
+        {
+            return BaseSalary + Bonus;
+        }
+
+        public override void Display()
+        {
+            Console.WriteLine($"[Manager] ID: {Id} | Name: {Name} | Project: {ProjectTitle}");
+            Console.WriteLine($"          Base: Rs. {BaseSalary:N2} | Bonus: Rs. {Bonus:N2} | Total: Rs. {CalculateSalary():N2}");
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("=================================================");
+            Console.WriteLine("      INHERITANCE & POLYMORPHISM DEMO            ");
+            Console.WriteLine("=================================================");
+
+            Employee staff = new Employee(201, "Pooja Patel", 42000);
+            Manager lead = new Manager(101, "Tahir Mansuri", 75000, 25000, "ThinkCode Mobile Platform");
+
+            staff.Display();
+            Console.WriteLine("-------------------------------------------------");
+            lead.Display();
+
+            Console.WriteLine("=================================================");
+            Console.WriteLine("Inheritance & virtual/override method dispatch verified!");
+        }
+    }
+}`
+    },
+    {
+      id: 'csharp-7',
+      num: 'Assignment 7',
+      cat: 'Collections',
+      title: 'Generic Collection List<T> Management',
+      desc: 'Uses generic List<Student> for dynamic record operations: Add(), Count, foreach iteration, and linear searching.',
+      code: `// Practical 7: Generic Collection List<T> Management
+// Course Code: CA-314 (Programming using C#.Net)
+using System;
+using System.Collections.Generic;
+
+namespace ThinkCodeLab
+{
+    class Student
+    {
+        public int RollNo { get; set; }
+        public string Name { get; set; }
+        public double Marks { get; set; }
+
+        public Student(int rollNo, string name, double marks)
+        {
+            RollNo = rollNo;
+            Name = name;
+            Marks = marks;
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("=================================================");
+            Console.WriteLine("      GENERIC COLLECTIONS: List<Student>         ");
+            Console.WriteLine("=================================================");
+
+            List<Student> roster = new List<Student>();
+
+            // 1. Dynamic Insertion
+            roster.Add(new Student(101, "Tahir Mansuri", 94.5));
+            roster.Add(new Student(102, "Amit Sharma", 82.0));
+            roster.Add(new Student(103, "Sneha Kulkarni", 88.5));
+            roster.Add(new Student(104, "Rahul Patil", 76.0));
+
+            Console.WriteLine($"Total Students Enrolled: {roster.Count}\\n");
+
+            // 2. Traversal with foreach
+            Console.WriteLine("RollNo | Student Name        | Marks  | Status");
+            Console.WriteLine("-----------------------------------------------");
+            foreach (var s in roster)
+            {
+                string status = s.Marks >= 40 ? "Pass" : "Fail";
+                Console.WriteLine($"{s.RollNo,-6} | {s.Name,-19} | {s.Marks,6:F1} | {status}");
+            }
+            Console.WriteLine("-----------------------------------------------");
+
+            // 3. Search operation by Roll Number
+            int searchRoll = 101;
+            Console.WriteLine($"\\nSearching for Roll Number {searchRoll}...");
+            Student found = null;
+            foreach (var s in roster)
+            {
+                if (s.RollNo == searchRoll)
+                {
+                    found = s;
+                    break;
+                }
+            }
+
+            if (found != null)
+            {
+                Console.WriteLine($"✓ Match Found: {found.Name} secured {found.Marks}%");
+            }
+            else
+            {
+                Console.WriteLine("✗ Student record not found.");
+            }
+            Console.WriteLine("=================================================");
+        }
+    }
+}`
+    },
+    {
+      id: 'csharp-8',
+      num: 'Assignment 8',
+      cat: 'Exceptions',
+      title: 'Structured Exception Handling (try, catch, finally)',
+      desc: 'Demonstrates robust error handling using try, catch blocks for DivideByZeroException and FormatException, and finally clean-up.',
+      code: `// Practical 8: Exception Handling (try, catch, finally)
+// Course Code: CA-314 (Programming using C#.Net)
+using System;
+
+namespace ThinkCodeLab
+{
+    class Program
+    {
+        static void SafeDivision(int numerator, int denominator)
+        {
+            Console.WriteLine($"\\nDividing {numerator} by {denominator}:");
+            try
+            {
+                if (denominator == 0)
+                {
+                    throw new DivideByZeroException("Division by zero is not permitted in arithmetic!");
+                }
+                int result = numerator / denominator;
+                Console.WriteLine($"  ✓ Quotient: {result}");
+            }
+            catch (DivideByZeroException ex)
+            {
+                Console.WriteLine($"  [Catch DivideByZeroException]: {ex.Message}");
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine($"  [Catch FormatException]: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"  [Catch General Exception]: {ex.Message}");
+            }
+            finally
+            {
+                Console.WriteLine("  [Finally Block] Clean-up completed for division operation.");
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            Console.WriteLine("=================================================");
+            Console.WriteLine("   STRUCTURED EXCEPTION HANDLING IN C# (.NET)    ");
+            Console.WriteLine("=================================================");
+
+            // Case 1: Valid division
+            SafeDivision(50, 5);
+
+            // Case 2: Division by zero triggers DivideByZeroException
+            SafeDivision(100, 0);
+
+            // Case 3: Format error simulation
+            Console.WriteLine("\\nParsing non-numeric text 'ABC' as integer:");
+            try
+            {
+                string invalidInput = "ABC";
+                int parsed = int.Parse(invalidInput);
+                Console.WriteLine($"Parsed number: {parsed}");
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine($"  [Catch FormatException]: {ex.Message}");
+            }
+            finally
+            {
+                Console.WriteLine("  [Finally Block] Parsing routine finished.");
+            }
+
+            Console.WriteLine("\\n=================================================");
+            Console.WriteLine("Exception handling pipeline executed safely!");
+        }
+    }
+}`
+    },
+    {
+      id: 'csharp-9',
+      num: 'Assignment 9',
+      cat: 'GUI',
+      title: 'Windows Forms Desktop GUI Application',
+      desc: 'Builds an event-driven Windows Form with Label, TextBox, ComboBox, CheckBox, Button, and MessageBox.Show() in a desktop window frame.',
+      code: `// Practical 9: Windows Forms Event-Driven Desktop Application
+// Course Code: CA-314 (Programming using C#.Net)
+using System;
+using System.Windows.Forms;
+
+namespace ThinkCodeLab
+{
+    class StudentRegistrationForm : Form
+    {
+        public StudentRegistrationForm()
+        {
+            this.Text = "TYBCA Student Enrollment Form";
+            this.Width = 480;
+            this.Height = 360;
+
+            // Form Title Header
+            Label lblHeader = new Label();
+            lblHeader.Text = "Student Registration Portal";
+            this.Controls.Add(lblHeader);
+
+            // Student Name Input
+            Label lblName = new Label();
+            lblName.Text = "Full Name:";
+            TextBox txtName = new TextBox();
+            txtName.Text = "Tahir Mansuri";
+            this.Controls.Add(lblName);
+            this.Controls.Add(txtName);
+
+            // Specialization Dropdown
+            Label lblSpec = new Label();
+            lblSpec.Text = "Select Stream:";
+            ComboBox cmbStream = new ComboBox();
+            cmbStream.Items.Add("Software Engineering");
+            cmbStream.Items.Add("Data Science & AI");
+            cmbStream.Items.Add("Cloud Computing");
+            cmbStream.SelectedIndex = 0;
+            this.Controls.Add(lblSpec);
+            this.Controls.Add(cmbStream);
+
+            // Library & Lab Membership CheckBoxes
+            CheckBox chkLab = new CheckBox();
+            chkLab.Text = "Access Programming Lab 24x7";
+            chkLab.Checked = true;
+            this.Controls.Add(chkLab);
+
+            // Submit Button with Click Event Handler
+            Button btnSubmit = new Button();
+            btnSubmit.Text = "Submit Registration";
+            btnSubmit.Click += (sender, e) =>
+            {
+                string msg = $"Student Registered Successfully!\\n\\nName: {txtName.Text}\\nStream: {cmbStream.SelectedItem}\\nLab Access: {(chkLab.Checked ? "Granted" : "Pending")}";
+                MessageBox.Show(msg, "Registration Confirmed");
+            };
+            this.Controls.Add(btnSubmit);
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("Launching C# Windows Form Application Frame...");
+            StudentRegistrationForm form = new StudentRegistrationForm();
+            Application.Run(form);
+            Console.WriteLine("Windows Form application active in desktop frame.");
+        }
+    }
+}`
+    },
+    {
+      id: 'csharp-10',
+      num: 'Assignment 10',
+      cat: 'Database',
+      title: 'Database Connectivity using ADO.NET Architecture',
+      desc: 'Connects to database using ADO.NET (SqlConnection, SqlCommand, SqlDataReader) and executes DDL and DML operations offline.',
+      code: `// Practical 10: Database Connectivity using ADO.NET
+// Course Code: CA-314 (Programming using C#.Net)
+using System;
+using System.Data.SqlClient;
+
+namespace ThinkCodeLab
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("=================================================");
+            Console.WriteLine("   ADO.NET DATABASE CONNECTIVITY (SQL SERVER)    ");
+            Console.WriteLine("=================================================");
+
+            // 1. Connection string configuration
+            string connectionString = "Server=localhost;Database=CollegeDB;Trusted_Connection=True;";
+            SqlConnection conn = new SqlConnection(connectionString);
+
+            try
+            {
+                conn.Open();
+                Console.WriteLine("✓ Database connection established successfully.\\n");
+
+                // 2. Create Table
+                string createSql = "CREATE TABLE Students (Id INT PRIMARY KEY, Name VARCHAR(50), Course VARCHAR(20), Marks FLOAT)";
+                SqlCommand createCmd = new SqlCommand(createSql, conn);
+                createCmd.ExecuteNonQuery();
+                Console.WriteLine("✓ Table 'Students' created successfully.");
+
+                // 3. Insert Student Records
+                string insertSql = @"
+                    INSERT INTO Students VALUES (101, 'Tahir Mansuri', 'TYBCA', 94.5);
+                    INSERT INTO Students VALUES (102, 'Amit Sharma', 'TYBCA', 81.0);
+                    INSERT INTO Students VALUES (103, 'Pooja Patel', 'SYBCA', 89.0);
+                    INSERT INTO Students VALUES (104, 'Sneha Kulkarni', 'TYBCA', 92.5);
+                ";
+                SqlCommand insertCmd = new SqlCommand(insertSql, conn);
+                int rowsAffected = insertCmd.ExecuteNonQuery();
+                Console.WriteLine($"✓ Inserted {rowsAffected} student records into database.\\n");
+
+                // 4. Retrieve & Display Records using SqlDataReader
+                Console.WriteLine("Reading records using SqlDataReader:");
+                Console.WriteLine("-------------------------------------------------");
+                Console.WriteLine("ID   | Student Name        | Course | Marks");
+                Console.WriteLine("-------------------------------------------------");
+
+                string selectSql = "SELECT Id, Name, Course, Marks FROM Students ORDER BY Marks DESC";
+                SqlCommand selectCmd = new SqlCommand(selectSql, conn);
+                SqlDataReader reader = selectCmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    int id = reader.GetInt32(0);
+                    string name = reader.GetString(1);
+                    string course = reader.GetString(2);
+                    double marks = reader.GetDouble(3);
+
+                    Console.WriteLine($"{id,-4} | {name,-19} | {course,-6} | {marks,5:F1}");
+                }
+                reader.Close();
+
+                Console.WriteLine("-------------------------------------------------");
+                Console.WriteLine("✓ All database records fetched and verified.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Database Error: {ex.Message}");
+            }
+            finally
+            {
+                conn.Close();
+                Console.WriteLine("✓ Database connection closed cleanly.");
+            }
+
+            Console.WriteLine("=================================================");
+        }
+    }
+}`
+    }
   ]
 };

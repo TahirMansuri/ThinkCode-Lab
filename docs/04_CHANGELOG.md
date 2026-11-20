@@ -4,6 +4,45 @@
 
 ---
 
+## 🚀 Version 1.3.11 — C# (.NET) Engine & TYBCA CA-312 / CA-314 Practicals Suite
+*Release Date: November 21, 2026*
+
+### 💜 C# (.NET) Offline Runtime & Engine (`src/engines/csharp.worker.js`, `src/engines/index.js`, `src/languages.js`)
+- **Zero Binary Bloat AST Transpiler Engine**:
+  - Implemented 100% offline Web Worker C# compiler and runtime (`csharp.worker.js`) with 0ms startup delay, eliminating 40–60 MB WebAssembly DLL download penalties.
+  - Supports modern C# features: auto-properties `{ get; set; }`, constructors, constructor parameter forwarding (`: base(...)`), single inheritance, method overriding (`virtual` / `override`), runtime polymorphism, and `foreach` iteration.
+  - String interpolation engine (`$"..."`) supporting C# format specifiers (`:F1`, `:F2`, `:N2`), alignment padding (`,width`, `,-width`), and nested ternary expressions.
+  - Generic collections support: `List<T>` with `Add()`, `Count`, indexer, and linear search.
+  - Structured exception handling: `try`, `catch` blocks for `DivideByZeroException`, `FormatException`, `Exception`, and `finally` clean-up blocks.
+  - Interactive stdin support via `SharedArrayBuffer` / `Atomics.wait` on desktop and `readNativeStdinSync` on Android WebView.
+- **Interactive Windows Forms Desktop GUI Emulation**:
+  - Emulates `System.Windows.Forms` (`Form`, `Label`, `TextBox`, `ComboBox`, `CheckBox`, `Button`, `MessageBox.Show()`, `Application.Run()`).
+  - Launches interactive draggable desktop window modal frame with minimize `—`, maximize `▢`, close `✕`, and floating reopen pill button (`💜 C# Windows Form`).
+- **Offline ADO.NET Relational Database Connectivity**:
+  - Emulates `System.Data.SqlClient` architecture (`SqlConnection`, `SqlCommand`, `SqlDataReader`, `SqlParameterCollection`).
+  - In-memory relational database (`SimpleDb`) supporting DDL (`CREATE TABLE`), multi-statement DML (`INSERT`, `UPDATE`, `DELETE`), and query filtering (`SELECT ... WHERE ... ORDER BY ... ASC/DESC`).
+
+### 📚 TYBCA C#.NET Syllabus Practicals (`src/practicals.js`, `src/lab-journal.js`)
+- **10 Official Syllabus Practicals Implemented (CA-314)**:
+  - `csharp-1`: Basic C# Program Structure & Console Output (namespace, class, static void Main, student registration profile).
+  - `csharp-2`: Data Types, Type Conversion & Arithmetic Operators (`int.Parse`, `Convert.ToInt32`, addition, subtraction, multiplication, division, modulo).
+  - `csharp-3`: Student Marks, Percentage & Grade Calculation (nested `if-else`, semester percentage, grade evaluation).
+  - `csharp-4`: Loop Constructs (`for`, `while`, `foreach`, multiplication tables, factorial, array traversal).
+  - `csharp-5`: Employee Class, Auto-Properties & Encapsulation (`{ get; set; }`, parameterized constructors, allowances calculation).
+  - `csharp-6`: Inheritance, Constructor Forwarding & Polymorphism (`Employee` base class, `Manager` derived class, `: base()`, `virtual` / `override` salary calculation).
+  - `csharp-7`: Generic Collection `List<T>` Management (dynamic enrollment, `Count`, `foreach` iteration, search by roll number).
+  - `csharp-8`: Structured Exception Handling (`try`, `catch (DivideByZeroException)`, `catch (FormatException)`, `catch (Exception)`, `finally`).
+  - `csharp-9`: Windows Forms Desktop GUI Application (`Form`, `Label`, `TextBox`, `ComboBox`, `CheckBox`, `Button`, `MessageBox.Show()`).
+  - `csharp-10`: Database Connectivity using ADO.NET Architecture (`SqlConnection`, `SqlCommand`, `SqlDataReader`, SQL Server emulation).
+- **Lab Journal & Verification**:
+  - Configured `SUBJECT_DEFAULTS.csharp` to `'Programming using C#.Net Lab (CA-314)'` in `src/lab-journal.js`.
+  - Added syntax highlighting for C# via CodeMirror 6 clike legacy mode (`csharp`).
+  - Added dedicated automated verification suite `scripts/test-csharp.mjs` (`npm run test:csharp`).
+  - Total project automated verification expanded to **101 passing checks across 8 test suites**.
+  - Expanded global practicals library across all 9 languages from 93 to **103 practicals**.
+
+---
+
 ## 🚀 Version 1.3.10 — TYBCA Web Technology-I (PHP CA-317(A)) Practicals Suite
 *Release Date: November 21, 2026*
 

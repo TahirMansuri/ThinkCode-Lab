@@ -10,7 +10,7 @@
 - **Core Purpose:** Standalone, 100% OFFLINE multi-language coding playground and mobile IDE for computer science students.
 - **Companion Project:** [ThinkCode Interactive Visualizer & Code Tracer](https://thinkcode.infogalaxy.space/).
 - **Released Android APK & AAB:** **v1.3.8 (Build 15)** on Google Play Store (`com.igc.thinkcodelab`), GitHub Releases & `/download` (`ThinkCodeLab-v1.3.8.apk`, SHA-256: `a0cc2ef2092e9482227b8133de2b3314ef6ca6d43106b3f6bb35791011749809` and `ThinkCodeLab-v1.3.8.aab`, SHA-256: `7860ab47bc48d06d9d08636a24de6ca9ab26fed2561a42f64965d253ceee2986`).
-- **Practicals Library:** **93 official university lab practicals** across 8 languages (16 Python, 16 Java, 17 C++, 10 PHP, 10 Shell, 8 SQL, 7 HTML, 5 C, 4 JS).
+- **Practicals Library:** **103 official university lab practicals** across 9 languages (16 Python, 16 Java, 17 C++, 10 C#, 10 PHP, 10 Shell, 8 SQL, 7 HTML, 5 C, 4 JS).
 - **Active Release Branch:** **`release/v1.3.8`** (Web IDE live at `https://thinkcode-lab.web.app`).
 
 ---
@@ -115,6 +115,11 @@
 18. **Android Hardware Back-Press Hierarchical Interception**:
     - On Android 13+ with predictive back gesture, pressing back or swiping would abruptly exit the app if a dropdown, menu drawer, or modal was open.
     - In `MainActivity.java` and `src/main.js`, `OnBackPressedCallback` calls `handleThinkCodeBackPress()` to hierarchically dismiss: 1) open select dropdowns, 2) slide-out menu drawer, 3) open dialogs (`#journalDialog`, `#updateDialog`, etc.), 4) Java GUI frame `#guiWindowModal`, and only when all overlays are closed, presents an exit confirmation dialog (`#exitDialog`) before invoking `exitApp()`.
+19. **C# (.NET) Zero-Bloat AST Transpiler & ADO.NET Architecture**:
+    - Full official Roslyn/Mono WASM packages (`dotnet.wasm`) require 40–60 MB of compiled DLL assemblies, which would triple the APK size and introduce several seconds of compilation cold-start.
+    - Instead, `src/engines/csharp.worker.js` compiles and runs C# 100% offline with zero external downloads (~22 KB bundle).
+    - Accurately transpiles C# OOP auto-properties `{ get; set; }`, constructors, constructor parameter forwarding (`: base(...)`), inheritance, virtual/override polymorphism, string interpolation (`$"..."`) with C# format specifiers (`:F2`, `:N2`, `,width`), generic `List<T>`, and structured exception handling (`DivideByZeroException`, `FormatException`, `try / catch / finally`).
+    - Emulates `System.Windows.Forms` in a desktop GUI window frame and `System.Data.SqlClient` (`SqlConnection`, `SqlCommand`, `SqlDataReader`) via an in-memory relational engine (`SimpleDb`).
 
 ---
 
@@ -123,12 +128,15 @@
 | Command | Action |
 | :--- | :--- |
 | `npm run dev` | Start local Vite development server |
-| `npm test` | Run entire 85-check automated suite (C/C++, Journal, Update, Python, Exit) |
+| `npm test` | Run entire 101-check automated suite (C/C++, Journal, Update, Python, PHP, Exit, Share, C#) |
 | `npm run test:ccpp` | Run automated 47-check C & C++ regression & `SharedArrayBuffer` suite |
-| `node scripts/test-journal.mjs` | Run automated 10-check Lab Journal & A4 PDF 1.4 suite |
-| `node scripts/test-update-checker.mjs` | Run automated 11-check Silent APK Update Checker & `version.json` suite |
-| `node scripts/test-python-datascience.mjs` | Run automated 12-check Python Data Science & input streaming suite |
-| `node scripts/test-backpress-exit.mjs` | Run automated 5-check Android Back-Button & Exit Confirmation suite |
+| `npm run test:journal` | Run automated 10-check Lab Journal & A4 PDF 1.4 suite |
+| `npm run test:update` | Run automated 11-check Silent APK Update Checker & `version.json` suite |
+| `npm run test:py` | Run automated 12-check Python Data Science & input streaming suite |
+| `npm run test:php` | Run automated 6-check TYBCA PHP CA-317(A) practicals suite |
+| `npm run test:exit` | Run automated 5-check Android Back-Button & Exit Confirmation suite |
+| `npm run test:share` | Run automated 17-check Serverless Code Sharing & QR Code suite |
+| `npm run test:csharp` | Run automated 10-check TYBCA C#.NET CA-314 practicals & runtime suite |
 | `npm run build` | Prepare offline runtimes and build production `dist/` |
 | `firebase deploy --only hosting` | Deploy web application to `https://thinkcode-lab.web.app` |
 | `npx cap sync android` | Sync `dist/` web assets with the native Android project |

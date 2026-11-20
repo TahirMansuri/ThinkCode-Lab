@@ -41,7 +41,7 @@ While ThinkCode focuses on visual algorithm tracing and step-by-step memory insp
 
 ## 🧩 3. Supported Language Engines
 
-ThinkCode Lab features 8 fully independent execution engines running in isolated sandboxes:
+ThinkCode Lab features 9 fully independent execution engines running in isolated sandboxes:
 
 1. **Python 3.12 (CPython via Pyodide 0.26.4 WASM)**
    - Complete standard library execution in an isolated Web Worker (`python.worker.js`).
@@ -52,45 +52,54 @@ ThinkCode Lab features 8 fully independent execution engines running in isolated
    - Inline Matplotlib plot visualizer with PNG download and clipboard copy.
    - 16 university syllabus practical assignments (CA-214: Python Programming Lab & Unit 4 Data Science / ML).
 
-2. **Java JDK Simulation & AWT/Swing Window Engine (`java.worker.js`)**
+2. **C# (.NET) Engine & Windows Forms Desktop Frame (`csharp.worker.js`)**
+   - 100% offline client-side C# compiler and AST transpiler supporting classes, auto-properties `{ get; set; }`, constructors, parameter forwarding (`: base(...)`), inheritance, method overriding, polymorphism, and structured exception handling (`try / catch / finally` with `DivideByZeroException` and `FormatException`).
+   - Generic collection support (`List<T>`) with dynamic insertion, count, searching, and `foreach` iteration.
+   - String interpolation (`$"..."`) with C# format specifiers (`:F2`, `:N2`, `,width`).
+   - **Interactive Desktop Window Frame:** Windows Forms desktop GUI emulation (`Form`, `Label`, `TextBox`, `ComboBox`, `CheckBox`, `Button`, `MessageBox.Show()`, `Application.Run()`) with draggable title bar, minimize/maximize/close, and floating reopen button.
+   - **Offline ADO.NET Relational Architecture:** `SqlConnection`, `SqlCommand`, and `SqlDataReader` for in-memory DDL (`CREATE TABLE`) and DML (`INSERT`, `SELECT`, `UPDATE`, `DELETE`) operations.
+   - 10 TYBCA university syllabus practical assignments (CA-312 / CA-314).
+
+3. **Java JDK Simulation & AWT/Swing Window Engine (`java.worker.js`)**
    - 100% offline Java compiler and AST transpiler supporting classes, constructors, methods, overloading, overriding, inheritance, interfaces, and exception handling (`try-catch-finally`).
    - Interactive `Scanner` input with sequential in-console prompting.
    - **Interactive Desktop Window Frame:** Full AWT/Swing graphical window emulation (`JFrame`, `JLabel`, `JTextField`, `JPasswordField`, `JButton`, `GridLayout`, `BorderLayout`, `FlowLayout`) with draggable title bar, minimize/maximize/close, and floating reopen button.
    - Simulated JDBC connectivity (`DriverManager`, `Connection`, `Statement`, `ResultSet`) for academic database practicals.
    - 16 TYBCA university syllabus practical assignments (CA-313 / CA-315).
 
-3. **C (C99) Real WebAssembly Execution Engine (`c.worker.js`)**
+4. **C (C99) Real WebAssembly Execution Engine (`c.worker.js`)**
    - 100% offline ANSI/C99 execution via PicoC WebAssembly (~800 KB bundle).
    - Real pointer arithmetic, dynamic memory (`malloc`/`free`), structures (`struct`), unions, arrays, functions, recursion, and standard headers (`<stdio.h>`, `<stdlib.h>`, `<string.h>`, `<math.h>`).
    - Interactive in-console `scanf` and `getchar` supported via `SharedArrayBuffer` (`Atomics.wait`) and input queue.
    - 5 university syllabus practical assignments.
 
-4. **C++ Interactive & OOP Engine (`cpp.worker.js`)**
+5. **C++ Interactive & OOP Engine (`cpp.worker.js`)**
    - Native `<iostream>` (`cin >>`, `cout <<`, `endl`), formatted I/O (`<iomanip>`), `<cmath>`, 1D/2D arrays, recursion, and pointer arithmetic via JSCPP.
    - User-defined classes (`class`), constructors, destructors, access specifiers (`public:`/`private:`), member methods, and object lifecycles via OOP Transpiler.
    - Real-time sequential input ordering (`cout` outputs before `cin` blocks).
    - 17 university syllabus practical assignments (CA-113 & CA-123).
 
-5. **PHP 8.2 (Official WebAssembly SAPI Runtime & Dual-Section Workspace)**
+6. **PHP 8.2 (Official WebAssembly SAPI Runtime & Dual-Section Workspace)**
    - Standalone PHP 8.2.11 WebAssembly engine (`php.wasm`) self-hosted in `public/php/`.
    - **Dual-Section Split Editor:** Separates HTML frontend form (`index.html`) from PHP backend script (`process.php`) with 3 view modes (`Split`, `HTML`, `PHP`).
    - **Client-Side CGI Simulation:** Real-time form submission via `FormData` populating `$_POST`, `$_GET`, `$_REQUEST`, and `$_SERVER['REQUEST_METHOD']`.
    - Standalone script execution via dedicated `[ ▶ Run PHP ]` button for testing algorithms.
+   - 10 university syllabus practical assignments (CA-317(A)).
 
-6. **Oracle-Compatible SQL Engine (SQLite WASM + Translation Layer)**
+7. **Oracle-Compatible SQL Engine (SQLite WASM + Translation Layer)**
    - 4 pre-seeded relational schemas: **SCOTT** (EMP, DEPT, SALGRADE, BONUS), **UNIVERSITY**, **BANK**, and **WORKSPACE**.
    - Transaction semantics: `COMMIT`, `ROLLBACK`, `SAVEPOINT`, and `ROLLBACK TO`.
    - Comprehensive Oracle function emulation: `NVL`, `NVL2`, `DECODE`, `INITCAP`, `LPAD`, `RPAD`, `TO_CHAR`, `TO_DATE`, `TRUNC`, `ADD_MONTHS`, `MONTHS_BETWEEN`, `LAST_DAY`, `LISTAGG`, `SYSDATE`, `DUAL`, `MINUS`, `ROWNUM`, and `CREATE SEQUENCE`.
    - Interactive Schema Inspector, row count metrics, automatic DDL viewer, 60+ preloaded practice queries, and table export to CSV/TSV.
    - 8 university syllabus practical assignments (CA-223).
 
-7. **Virtual Linux Bash Shell Emulator (`shell.js`)**
+8. **Virtual Linux Bash Shell Emulator (`shell.js`)**
    - In-browser virtual filesystem persisted in `localStorage`.
    - Supports 35+ core UNIX commands (`ls`, `cat`, `grep`, `mkdir`, `rm`, `find`, `curl`, `tree`, `wc`, `head`, `tail`, `touch`, `chmod`, `alias`, etc.).
    - UNIX pipelines (`|`), input/output redirections (`>`, `>>`, `<`), environment variables (`$VAR`), command substitution (`$(...)`, `$((...))`), and control flow (`if`/`for`/`while`).
    - 10 university syllabus practical assignments (CA-123).
 
-8. **Modern JavaScript (ES2022+ Engine) & HTML/CSS Live Web Preview**
+9. **Modern JavaScript (ES2022+ Engine) & HTML/CSS Live Web Preview**
    - Sandboxed Web Worker executing modern JavaScript via `AsyncFunction`.
    - Console intercepts (`log`, `warn`, `error`, `table`, `info`, `dir`).
    - Touch-friendly `prompt()` and `alert()` modal dialog (`#promptModal`) with non-blocking Promise resolution and virtual keyboard support.

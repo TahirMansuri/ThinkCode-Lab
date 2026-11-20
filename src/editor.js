@@ -9,14 +9,15 @@ import { python } from '@codemirror/lang-python';
 import { sql, PLSQL } from '@codemirror/lang-sql';
 import { html } from '@codemirror/lang-html';
 import { shell } from '@codemirror/legacy-modes/mode/shell';
-import { c, cpp, java } from '@codemirror/legacy-modes/mode/clike';
+import { c, cpp, java, csharp } from '@codemirror/legacy-modes/mode/clike';
 import { php } from '@codemirror/lang-php';
 
 const LANG = {
   python: () => python(), js: () => javascript(), sql: () => sql({ dialect: PLSQL }),
   php: () => php(), web: () => html(), shell: () => StreamLanguage.define(shell),
   c: () => StreamLanguage.define(c), cpp: () => StreamLanguage.define(cpp),
-  java: () => StreamLanguage.define(java)
+  java: () => StreamLanguage.define(java),
+  csharp: () => StreamLanguage.define(csharp)
 };
 
 const style = HighlightStyle.define([

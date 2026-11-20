@@ -508,7 +508,7 @@ function warm() {
   const eng = engines[target.engine], label = eng?.label || target.name;
   if (!eng) return Promise.resolve();
   stopped = false;
-  const needsWarm = target.id === 'python' || target.id === 'sql' || target.id === 'php' || target.id === 'c' || target.id === 'cpp' || target.id === 'java';
+  const needsWarm = target.id === 'python' || target.id === 'sql' || target.id === 'php' || target.id === 'c' || target.id === 'cpp' || target.id === 'java' || target.id === 'csharp';
   if (needsWarm && !eng.isReady) {
     setState('loading', `Loading ${label}…`);
     if (!running && con.textContent.trim() === '') {
@@ -664,7 +664,7 @@ async function run(arg) {
     }
 
     if (cur.id !== 'web' && (!opts || opts.tab !== 'preview')) showTab('console');
-    const wasWarming = !eng.isReady && (cur.id === 'python' || cur.id === 'sql' || cur.id === 'php' || cur.id === 'c' || cur.id === 'cpp' || cur.id === 'java');
+    const wasWarming = !eng.isReady && (cur.id === 'python' || cur.id === 'sql' || cur.id === 'php' || cur.id === 'c' || cur.id === 'cpp' || cur.id === 'java' || cur.id === 'csharp');
     sink.clear();
 
     const codeToRun = customCode || editor.get();
@@ -687,6 +687,7 @@ async function run(arg) {
     else if (cur.id === 'c') print(`$ gcc ${cur.file} -o main && ./main\n`, 'cmd');
     else if (cur.id === 'cpp') print(`$ g++ ${cur.file} -o main && ./main\n`, 'cmd');
     else if (cur.id === 'java') print(`$ javac ${cur.file} && java Main\n`, 'cmd');
+    else if (cur.id === 'csharp') print(`$ dotnet run ${cur.file}\n`, 'cmd');
     await eng.load(sink); setState('ready', `${eng.label || cur.name} · offline`);
     if (wasWarming && !stopped) {
       print(`✓ ${eng.label || cur.name} ready! Executing your code…\n`, 'ok');
@@ -967,7 +968,8 @@ function openPracticalsSheet() {
     sql: '🗄️ DBMS Oracle SQL Practicals (CA-223)',
     c: '⚙️ C Programming Practicals',
     java: '☕ Java Programming Practicals (CA-315)',
-    php: '🐘 Web Technology-I PHP Practicals (CA-317(A))'
+    php: '🐘 Web Technology-I PHP Practicals (CA-317(A))',
+    csharp: '💜 C#.NET Programming Practicals (CA-314)'
   };
 
   const title = titles[activeLang] || `📚 ${cur.name} Practicals`;
@@ -1523,7 +1525,8 @@ function renderJavaGuiWindow(winData) {
 
   if (!modal || !win || !contentEl) return;
 
-  if (titleEl) titleEl.textContent = winData.title || 'Java Application Frame';
+  const isCs = cur.id === 'csharp';
+  if (titleEl) titleEl.textContent = winData.title || (isCs ? 'C# Windows Form Application' : 'Java Application Frame');
   if (statusEl) statusEl.textContent = `Active · Dimensions: ${winData.width || 400}x${winData.height || 300}`;
 
   win.classList.remove('maximized');
@@ -1544,7 +1547,7 @@ function renderJavaGuiWindow(winData) {
   modal.hidden = false;
   if (btnReopen) btnReopen.hidden = true;
 
-  toast(`☕ Java GUI Window Launched: "${winData.title}"`);
+  toast(`${isCs ? '💜 C# Windows Form' : '☕ Java GUI Window'} Launched: "${winData.title}"`);
 }
 
 function buildGuiContainer(layout, components = []) {
@@ -1828,17 +1831,32 @@ function initGuiWindowControls() {
   const btnReopen = $('btnReopenGui');
   const titlebar = $('guiWinTitlebar');
 
+  const updateGuiReopenBtn = () => {
+    if (!btnReopen) return;
+    const isCs = cur.id === 'csharp';
+    const iconEl = btnReopen.querySelector('.reopen-icon');
+    const textEl = btnReopen.querySelector('.reopen-text');
+    if (iconEl) iconEl.textContent = isCs ? '💜' : '☕';
+    if (textEl) textEl.textContent = isCs ? 'C# Windows Form' : 'Java GUI Frame';
+  };
+
   btnClose?.addEventListener('click', () => {
     modal.hidden = true;
-    if (btnReopen && cur.id === 'java') btnReopen.hidden = false;
+    if (btnReopen && (cur.id === 'java' || cur.id === 'csharp')) {
+      updateGuiReopenBtn();
+      btnReopen.hidden = false;
+    }
     print(`[GUI Window Closed]\n`, 'sys');
     window.dispatchEvent(new CustomEvent('cf:overlay-closed'));
   });
 
   btnMin?.addEventListener('click', () => {
     modal.hidden = true;
-    if (btnReopen && cur.id === 'java') btnReopen.hidden = false;
-    toast('Window Minimized. Tap "☕ Java GUI Frame" to restore.');
+    if (btnReopen && (cur.id === 'java' || cur.id === 'csharp')) {
+      updateGuiReopenBtn();
+      btnReopen.hidden = false;
+    }
+    toast(`Window Minimized. Tap "${cur.id === 'csharp' ? '💜 C# Windows Form' : '☕ Java GUI Frame'}" to restore.`);
     window.dispatchEvent(new CustomEvent('cf:overlay-closed'));
   });
 
@@ -1854,7 +1872,10 @@ function initGuiWindowControls() {
   modal?.addEventListener('click', e => {
     if (e.target.dataset.closeGui !== undefined || e.target.classList.contains('gui-backdrop')) {
       modal.hidden = true;
-      if (btnReopen && cur.id === 'java') btnReopen.hidden = false;
+      if (btnReopen && (cur.id === 'java' || cur.id === 'csharp')) {
+        updateGuiReopenBtn();
+        btnReopen.hidden = false;
+      }
       window.dispatchEvent(new CustomEvent('cf:overlay-closed'));
     }
   });
@@ -3032,12 +3053,19 @@ export function handleThinkCodeBackPress() {
     return true;
   }
 
-  // 3. Java AWT/Swing desktop GUI window frame
+  // 3. Java AWT/Swing or C# Windows Form desktop GUI window frame
   const guiWindowModal = $('guiWindowModal');
   if (guiWindowModal && !guiWindowModal.hidden) {
     guiWindowModal.hidden = true;
     const btnReopen = $('btnReopenGui');
-    if (btnReopen && cur.id === 'java') btnReopen.hidden = false;
+    if (btnReopen && (cur.id === 'java' || cur.id === 'csharp')) {
+      const isCs = cur.id === 'csharp';
+      const iconEl = btnReopen.querySelector('.reopen-icon');
+      const textEl = btnReopen.querySelector('.reopen-text');
+      if (iconEl) iconEl.textContent = isCs ? '💜' : '☕';
+      if (textEl) textEl.textContent = isCs ? 'C# Windows Form' : 'Java GUI Frame';
+      btnReopen.hidden = false;
+    }
     print('[GUI Window Closed]\n', 'sys');
     window.dispatchEvent(new CustomEvent('cf:overlay-closed'));
     return true;

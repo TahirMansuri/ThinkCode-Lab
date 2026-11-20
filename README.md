@@ -18,7 +18,7 @@
 
 <br>
 
-[👤 Author](#-author--leadership) • [🌟 Why ThinkCode Lab?](#-why-thinkcode-lab) • [✨ Key Features](#-key-features) • [📱 App Screenshots](#-app-screenshots--visual-tour) • [🏛️ System Architecture](#-system-architecture) • [🧩 Supported Languages](#-supported-languages-all-100-offline) • [📚 Syllabus Practicals](#-university-syllabus-practicals-library-93-assignments) • [🚀 Quick Start](#-quick-start) • [📱 Android App](#-android-app--google-play-store-distribution) • [📖 Documentation](#-complete-documentation-directory) • [📄 License](#-license)
+[👤 Author](#-author--leadership) • [🌟 Why ThinkCode Lab?](#-why-thinkcode-lab) • [✨ Key Features](#-key-features) • [📱 App Screenshots](#-app-screenshots--visual-tour) • [🏛️ System Architecture](#-system-architecture) • [🧩 Supported Languages](#-supported-languages-all-100-offline) • [📚 Syllabus Practicals](#-university-syllabus-practicals-library-103-assignments) • [🚀 Quick Start](#-quick-start) • [📱 Android App](#-android-app--google-play-store-distribution) • [📖 Documentation](#-complete-documentation-directory) • [📄 License](#-license)
 
 ---
 
@@ -143,6 +143,7 @@ flowchart TD
   subgraph Engines["⚙️ 100% Offline Execution Engines (Web Workers)"]
     PY["🐍 Python 3.12 Engine\n(Pyodide CPython WASM)"]
     JAVA["☕ Java JDK Engine\n(AST Transpiler & OOP Simulator)"]
+    CS["💜 C# (.NET) Engine\n(AST Transpiler, Forms & ADO.NET)"]
     C["⚙️ C (C99) Engine\n(PicoC WASM Real Pointers)"]
     CPP["⚡ C++ Unified Engine\n(Patched JSCPP + std::string)"]
     PHP["🐘 PHP 8.2 Engine\n(php-wasm SAPI + CGI Bridge)"]
@@ -170,6 +171,7 @@ flowchart TD
   SAB --> C
   SAB --> CPP
   MSG --> JAVA
+  MSG --> CS
   MSG --> PHP
   MSG --> SQL
   MSG --> SH
@@ -184,6 +186,10 @@ flowchart TD
 ## ✨ Key Features
 
 - **⚡ Instant 0ms Execution:** Code compiles and executes directly on the client device CPU via WebAssembly and Web Workers.
+- **💜 C# (.NET) Offline Runtime, Windows Forms & ADO.NET (`CA-312` & `CA-314`):**
+  - Full client-side C# execution: classes, auto-properties `{ get; set; }`, inheritance with constructor forwarding (`: base(...)`), virtual/override method dispatch, string interpolation (`$"..."`) with C# format specifiers (`:F2`, `:N2`, `,width`), generic collections (`List<T>`), and structured exception handling (`DivideByZeroException`, `FormatException`, `try / catch / finally`).
+  - Interactive C# Windows Forms desktop GUI emulation with draggable frame, `Label`, `TextBox`, `ComboBox`, `CheckBox`, `Button`, and `MessageBox.Show()`.
+  - In-memory relational database connectivity using ADO.NET architecture (`SqlConnection`, `SqlCommand`, `SqlDataReader`).
 - **☕ Java AWT / Swing Desktop Window Emulation:**
   - Running GUI code like `JFrame`, `JLabel`, `JTextField`, `JPasswordField`, `JButton` renders an authentic interactive desktop window modal with title bar, minimize `—`, maximize `▢`, and close `✕` buttons.
   - Interactive layouts (`GridLayout`, `BorderLayout`, `FlowLayout`) and live event listeners.
@@ -250,6 +256,7 @@ flowchart TD
 | Language | Engine / Technology | Environment | Key Capabilities |
 | :--- | :--- | :--- | :--- |
 | **Java (JDK)** | AST Transpiler & Swing Runner | Web Worker | Classes, Overloading, Overriding, Interfaces, `try-catch-finally`, `Scanner`, AWT/Swing GUI Window Frame, simulated JDBC |
+| **C# (.NET)** | AST Transpiler & ADO.NET Runner | Web Worker | Auto-Properties, Classes, Inheritance `: base()`, Polymorphism, `List<T>`, `try-catch-finally`, Windows Forms Desktop Frame, ADO.NET SQL Server |
 | **Python 3.12** | Pyodide 0.26.4 (CPython WASM) | Web Worker | Full stdlib, interactive in-console `input()`, clean tracebacks |
 | **C (C99)** | PicoC WebAssembly (WASM) | Web Worker | Real pointers, `malloc`/`free`, `struct`, unions, arrays, `stdio.h`, interactive `scanf` |
 | **C++** | Patched JSCPP Unified Pipeline | Web Worker | `std::string`, `iostream` (`cin`/`cout`), `<iomanip>`, `<cmath>`, classes, constructors, references, pointers, unions |
@@ -261,15 +268,16 @@ flowchart TD
 
 ---
 
-## 📚 University Syllabus Practicals Library (93 Assignments)
+## 📚 University Syllabus Practicals Library (103 Assignments)
 
-ThinkCode Lab comes pre-loaded with **93 official university lab practicals** formatted with clean **2-space indentation** for instant 1-click loading:
+ThinkCode Lab comes pre-loaded with **103 official university lab practicals** formatted with clean **2-space indentation** for instant 1-click loading:
 
 | Subject / Course | Practical Count | Topics Covered |
 | :--- | :---: | :--- |
 | **Python (CA-214 & Unit 4 Data Science)** | **16** | Basic I/O, Conditions, Prime Range, Fibonacci, Matrix Addition, Functions & Recursion, Tuples/Sets, Dictionaries, OOP Class, File Handling, Inheritance, **NumPy Matrices**, **Pandas DataFrames**, **Matplotlib 2D Plots**, **Seaborn Statistical Visuals**, **Scikit-learn ML Models** |
 | **Java (CA-313 / CA-315)** | **16** | Student Info, Switch Arithmetic, Array Largest, CLI Args, Scanner Input, Constructors, Overloading, Inheritance, Overriding, Interface Area, Strings, Exceptions, **AWT Calculator**, **Swing Login Form**, JDBC Connection, CRUD Operations |
 | **C++ (CA-113 & CA-123)** | **17** | Arithmetic, Control Flow, Loops, Primes, Factorial, Fibonacci, 2D Matrix, Functions, Strings, Structs, Exam Tabulation, Default Args, Class, Constructors, Inheritance, Refrigerator App |
+| **C# (.NET) (CA-314 Programming using C#.Net)** | **10** | Basic Structure & Console Output, Data Types & Operators, Student Marks & Grade, Loop Constructs (for/while/foreach), Employee Class & Encapsulation, Inheritance & Polymorphism, Generic `List<T>`, Exception Handling (`DivideByZeroException`), Windows Forms Desktop GUI, ADO.NET Database Connectivity |
 | **PHP (CA-317(A) Web Technology-I)** | **10** | Hello World & Date, Arithmetic Operators, Conditions & Tables, Functions & Arrays (Indexed/Associative Foreach), MySQL URL Parameters, Database CRUD Operations, HTML Form Validation ($_GET/$_POST), Session Authentication (Login/Logout), File Upload & Cookies, OOP Class & JSON API (`json_encode`) |
 | **Linux Shell (CA-123)** | **10** | Commands Demo, Fibonacci, Time Greeting, Login Check, Factorial, Divisible by 7, Prime, Palindrome, Armstrong Number, Result Sheet Filtering |
 | **Oracle SQL (CA-223)** | **8** | DDL Create Table, DML Insert/Update/Delete, WHERE & ORDER BY, Aggregate Functions & GROUP BY, Joins, Subqueries & Nested Queries, Views, Sequences |
@@ -299,9 +307,9 @@ npm run dev
 ```
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-### 3. Run Automated Verification Suites (91 Automated Checks)
+### 3. Run Automated Verification Suites (101 Automated Checks)
 ```bash
-npm test                             # Runs all 91 checks across 7 test suites
+npm test                             # Runs all 101 checks across 8 test suites
 npm run test:ccpp                    # 47 checks: PicoC C99, unified JSCPP C++, SAB stdin, formatter
 npm run test:journal                 # 10 checks: Student Lab Journal & A4 PDF 1.4 structure
 npm run test:update                  # 11 checks: Semver, snooze, Play Store compliance & version.json
@@ -309,6 +317,7 @@ npm run test:py                      # 12 checks: Data Science datasets, Pyodide
 npm run test:php                     # 6 checks: TYBCA PHP CA-317(A) practicals & dual-mode integration
 npm run test:exit                    # 5 checks: Hardware back-press interception & exit dialog
 npm run test:share                   # 17 checks: Serverless Code Sharing, LZ-String compression & QR code
+npm run test:csharp                  # 10 checks: TYBCA C#.NET CA-314 practicals, OOP, forms, ADO.NET
 ```
 
 ### 4. Build Production Web Distribution

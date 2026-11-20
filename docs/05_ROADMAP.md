@@ -116,6 +116,13 @@
 - ✅ **Dual-Mode Workspace Integration (`src/main.js`)**: Automatic loading of both `editorPhp` (`process.php`) and `editorHtml` (`index.html`) with auto-switching to split view and live iframe preview for form-based assignments.
 - ✅ **Lab Journal & Testing (`src/lab-journal.js`, `scripts/test-php-practicals.mjs`)**: Configured `SUBJECT_DEFAULTS.php` to `'Web Technology-I (PHP) Lab (CA-317(A))'`, automated 6-test suite (`npm run test:php`), expanding total project tests to **91 checks** and global practicals count to **93**.
 
+### 10. Phase 10: C# (.NET) Engine & TYBCA CA-312 / CA-314 Practicals Suite (`v1.3.11`)
+- ✅ **100% Offline C# (.NET) Runtime (`src/engines/csharp.worker.js`)**: Zero binary bloat Web Worker AST transpiler and runtime executing C# classes, auto-properties `{ get; set; }`, constructors, constructor parameter forwarding (`: base(...)`), single inheritance, method overriding, polymorphism, string interpolation with C# format specifiers (`:F2`, `:N2`, `,width`), generic `List<T>`, and structured exception handling (`try / catch / finally` with `DivideByZeroException` and `FormatException`).
+- ✅ **Interactive Windows Forms Desktop Window Emulation**: Graphical window frame with draggable title bar, minimize `—`, maximize `▢`, close `✕`, floating reopen button (`💜 C# Windows Form`), and controls (`Form`, `Label`, `TextBox`, `ComboBox`, `CheckBox`, `Button`, `MessageBox.Show()`, `Application.Run()`).
+- ✅ **Offline ADO.NET Relational Architecture**: In-memory SQL Server database emulation (`SimpleDb`) with `SqlConnection`, `SqlCommand`, and `SqlDataReader` supporting DDL and DML operations.
+- ✅ **10 Syllabus Practicals (`src/practicals.js`)**: Complete coverage of official TYBCA CA-314 syllabus assignments (`csharp-1` to `csharp-10`).
+- ✅ **Lab Journal & Automated Testing (`src/lab-journal.js`, `scripts/test-csharp.mjs`)**: Configured `SUBJECT_DEFAULTS.csharp` to `'Programming using C#.Net Lab (CA-314)'`, automated 10-test suite (`npm run test:csharp`), expanding total project tests to **101 checks** and global practicals count to **103**.
+
 ---
 
 ## 🔜 Approved Next Queue (Shortlisted for `v1.4.0+`)

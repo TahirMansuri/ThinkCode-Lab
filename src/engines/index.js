@@ -192,6 +192,7 @@ export const engines = {
   c: new WorkerEngine(() => new Worker(new URL('./c.worker.js', import.meta.url)), 'C (C99)'),
   cpp: new WorkerEngine(() => new Worker(new URL('./cpp.worker.js', import.meta.url)), 'C++'),
   java: new WorkerEngine(() => new Worker(new URL('./java.worker.js', import.meta.url)), 'Java (JDK)'),
+  csharp: new WorkerEngine(() => new Worker(new URL('./csharp.worker.js', import.meta.url)), 'C# (.NET)'),
   shell: new ShellEngine(),
   web: new WebEngine()
 };
