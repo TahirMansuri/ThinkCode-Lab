@@ -8,7 +8,7 @@
   "apkSize": "~17.8 MB",
   "apkSizeBytes": 17782210,
   "playStoreUrl": "https://play.google.com/store/apps/details?id=com.igc.thinkcodelab",
-  "apkUrl": "https://thinkcode-lab.web.app/ThinkCodeLab-v1.3.11.apk",
+  "apkUrl": "https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.11/ThinkCodeLab-v1.3.11.apk",
   "fallbackUrl": "https://thinkcode-lab.web.app/ThinkCodeLab.apk",
   "downloadPageUrl": "https://thinkcode-lab.web.app/download",
   "sha256": "aac56eb80cd6c870f38670bdf592d985e5bd957b12dfdf6f8a3fbedf308ec94d",
