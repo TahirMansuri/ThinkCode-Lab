@@ -4,16 +4,16 @@
 export const APP_META = Object.freeze({
   appId: 'com.igc.thinkcodelab',
   appName: 'ThinkCode Lab',
-  versionName: '1.3.8',
-  versionCode: 15,
-  releaseDate: '2026-11-18',
-  apkFilename: 'ThinkCodeLab-v1.3.8.apk',
-  apkSize: '~17.7 MB',
-  sha256: 'a0cc2ef2092e9482227b8133de2b3314ef6ca6d43106b3f6bb35791011749809',
+  versionName: '1.3.11',
+  versionCode: 16,
+  releaseDate: '2026-11-21',
+  apkFilename: 'ThinkCodeLab-v1.3.11.apk',
+  apkSize: '~17.8 MB',
+  sha256: 'aac56eb80cd6c870f38670bdf592d985e5bd957b12dfdf6f8a3fbedf308ec94d',
   minAndroidVersion: '7.0',
   playStoreUrl: 'https://play.google.com/store/apps/details?id=com.igc.thinkcodelab',
   downloadPageUrl: 'https://thinkcode-lab.web.app/download',
-  defaultApkUrl: 'https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.8/ThinkCodeLab-v1.3.8.apk',
+  defaultApkUrl: 'https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.11/ThinkCodeLab-v1.3.11.apk',
   fallbackApkUrl: 'https://thinkcode-lab.web.app/ThinkCodeLab.apk',
   webManifestUrls: Object.freeze(['/version.json']),
   nativeManifestUrls: Object.freeze([
@@ -21,13 +21,13 @@ export const APP_META = Object.freeze({
     'https://thinkcode-lab.firebaseapp.com/version.json'
   ]),
   defaultReleaseNotes: Object.freeze([
-    'Official Google Play Store integration — in-app updates now open Google Play directly',
-    'Exit confirmation dialog & hierarchical Android back-gesture handling for menus and dialogs',
+    'C# (.NET) Offline Runtime & 10 TYBCA CA-314 Practicals with Windows Forms & ADO.NET simulation',
+    '10 TYBCA Web Technology-I (PHP CA-317(A)) Practicals Suite with dual-mode workspace & forms',
+    '1-Tap "New Blank File" button (Alt+N) with clean minimal boilerplate templates for every language',
+    'Serverless Peer-to-Peer Code & Workspace Sharing via URL Hash & SVG QR Code scanning',
+    'Universal 2-space indentation enforced across all 103 practicals and starter templates',
     'Python Data Science Suite: NumPy, Pandas, Matplotlib, Scikit-learn & Seaborn on-demand',
-    'Interactive CSV & Excel Virtual Filesystem data upload with pre-seeded datasets',
-    'Inline Matplotlib plot visualizer with animated loading dialog & PNG export',
-    'C, C++, Java (with AWT/Swing GUI Frames), PHP, Oracle SQL, JS & Linux Bash offline runtimes',
-    '1-Tap Student Lab Journal & Assignment A4 PDF export with faculty signature block'
+    'Official Google Play Store integration & hierarchical Android back-gesture navigation'
   ])
 });
 

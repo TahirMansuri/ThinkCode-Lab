@@ -4,8 +4,21 @@
 
 ---
 
-## 🚀 Version 1.3.11 — C# (.NET) Engine & TYBCA CA-312 / CA-314 Practicals Suite
+## 🚀 Version 1.3.11 (Build 16) — C# (.NET) Engine, TYBCA Practicals Suite & Signed Android Release
 *Release Date: November 21, 2026*
+
+### 📱 Android Sideload APK & Google Play App Bundle Release (Build 16)
+- **Production Artifacts Compiled & Cryptographically Signed**:
+  - **Standalone Android APK**: `ThinkCodeLab-v1.3.11.apk` (`17,782,210` bytes, `jar verified`, SHA-256: `aac56eb80cd6c870f38670bdf592d985e5bd957b12dfdf6f8a3fbedf308ec94d`).
+  - **Google Play App Bundle**: `ThinkCodeLab-v1.3.11.aab` (`17,532,256` bytes, `jar verified`, SHA-256: `41a342f77d1c822abf20c645202d0fd65a25eb12144a53af95752cce676144a2`).
+  - Signed using official key: `CN=Tahir Mansuri, OU=ThinkCode, O=InfoGalaxy, L=Shirpur, ST=Maharashtra, C=IN` (valid through 2054).
+  - Target SDK: 36 (Android 15), Compile SDK: 36, Min SDK: 24 (Android 7.0+).
+- **Direct Web App Downloads & Global High-Speed CDN**:
+  - Hosted static release APK directly on Firebase Hosting (`/ThinkCodeLab-v1.3.11.apk` and `/ThinkCodeLab.apk`) enabling immediate student downloads from `https://thinkcode-lab.web.app/download` without waiting for Google Play Store review delays.
+  - Added short URL `/apk` redirecting directly to `/ThinkCodeLab-v1.3.11.apk`.
+  - Configured custom binary download headers (`Content-Type: application/vnd.android.package-archive`, `Content-Disposition: attachment`).
+- **Comprehensive Verification**:
+  - All **105 automated unit & integration tests passing across 9 test suites** (`npm test`).
 
 ### 📄 1-Tap "New Program" / Starter Template Button & Universal 2-Space Indentation
 - **Dedicated "New Program" Button (`index.html`, `src/main.js`, `src/styles.css`)**:

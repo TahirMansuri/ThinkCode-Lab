@@ -9,7 +9,7 @@
 - **Author:** Tahir Mansuri (Lead System Engineer & HOD, IMRD College).
 - **Core Purpose:** Standalone, 100% OFFLINE multi-language coding playground and mobile IDE for computer science students.
 - **Companion Project:** [ThinkCode Interactive Visualizer & Code Tracer](https://thinkcode.infogalaxy.space/).
-- **Released Android APK & AAB:** **v1.3.8 (Build 15)** on Google Play Store (`com.igc.thinkcodelab`), GitHub Releases & `/download` (`ThinkCodeLab-v1.3.8.apk`, SHA-256: `a0cc2ef2092e9482227b8133de2b3314ef6ca6d43106b3f6bb35791011749809` and `ThinkCodeLab-v1.3.8.aab`, SHA-256: `7860ab47bc48d06d9d08636a24de6ca9ab26fed2561a42f64965d253ceee2986`).
+- **Released Android APK & AAB:** **v1.3.11 (Build 16)** on Google Play Store (`com.igc.thinkcodelab`), Web Direct Download (`/ThinkCodeLab-v1.3.11.apk`), GitHub Releases & `/download` (`ThinkCodeLab-v1.3.11.apk`, SHA-256: `aac56eb80cd6c870f38670bdf592d985e5bd957b12dfdf6f8a3fbedf308ec94d` and `ThinkCodeLab-v1.3.11.aab`, SHA-256: `41a342f77d1c822abf20c645202d0fd65a25eb12144a53af95752cce676144a2`).
 - **Practicals Library:** **103 official university lab practicals** across 9 languages (16 Python, 16 Java, 17 C++, 10 C#, 10 PHP, 10 Shell, 8 SQL, 7 HTML, 5 C, 4 JS).
 - **Active Release Branch:** **`release/v1.3.8`** (Web IDE live at `https://thinkcode-lab.web.app`).
 

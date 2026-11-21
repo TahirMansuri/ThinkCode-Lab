@@ -141,6 +141,27 @@
             "value": "no-cache, no-store, must-revalidate"
           }
         ]
+      },
+      {
+        "source": "/**/*.apk",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/vnd.android.package-archive"
+          },
+          {
+            "key": "Content-Disposition",
+            "value": "attachment"
+          },
+          {
+            "key": "Access-Control-Allow-Origin",
+            "value": "*"
+          },
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=3600"
+          }
+        ]
       }
     ],
     "redirects": [
@@ -170,13 +191,8 @@
         "type": 302
       },
       {
-        "source": "/ThinkCodeLab.apk",
-        "destination": "https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.8/ThinkCodeLab-v1.3.8.apk",
-        "type": 302
-      },
-      {
         "source": "/apk",
-        "destination": "https://github.com/TahirMansuri/ThinkCode-Lab/releases/download/v1.3.8/ThinkCodeLab-v1.3.8.apk",
+        "destination": "/ThinkCodeLab-v1.3.11.apk",
         "type": 302
       },
       {

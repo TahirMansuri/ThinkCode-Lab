@@ -35,7 +35,7 @@ While ThinkCode focuses on visual algorithm tracing and step-by-step memory insp
 | **Python Data Science Suite** | On-demand Scientific Library Manager (NumPy, Pandas, Matplotlib, Scikit-learn, Seaborn), client-side CSV/Excel data uploader, pre-seeded datasets, and inline plot visualizer with zero base size bloat. |
 | **1-Tap Lab Journal PDF Export** | Generates clean, print-ready A4 assignment PDFs offline (`src/lab-journal.js`) with sticky Student Profile, practical metadata, syntax-colored source code, captured console/SQL/Swing output, and faculty signature block. |
 | **Silent In-App APK Update Check** | Zero-telemetry HTTPS manifest checker (`src/update-checker.js` + `/version.json`) notifies sideloaded Android students cleanly via non-blocking toast, menu badge, and details modal with 24h snooze. |
-| **Cross-Platform Flexibility** | Runs as a responsive Single-Page Application (SPA) on desktop and mobile browsers (`https://thinkcode-lab.web.app`), live on the Google Play Store (`https://play.google.com/store/apps/details?id=com.igc.thinkcodelab`), and as a standalone native Android package (`v1.3.8 / Build 15`, Target API 36) packaged via Capacitor 6. |
+| **Cross-Platform Flexibility** | Runs as a responsive Single-Page Application (SPA) on desktop and mobile browsers (`https://thinkcode-lab.web.app`), live on the Google Play Store (`https://play.google.com/store/apps/details?id=com.igc.thinkcodelab`), and as a standalone native Android package (`v1.3.11 / Build 16`, Target API 36) packaged via Capacitor 6. |
 
 ---
 

@@ -56,7 +56,8 @@ When appealing Play Protect warnings or filing developer verification forms:
 
 | Version | Version Code | Target API | Min API | Artifact Name | Size | Status |
 | :---: | :---: | :---: | :---: | :--- | :---: | :--- |
-| **1.3.8** | **15** | **36** | **24** | `ThinkCodeLab-v1.3.8.aab` / `.apk` | **17.5 / 17.7 MB** | **Google Play Production Track (In Review) & Live APK** |
+| **1.3.11** | **16** | **36** | **24** | `ThinkCodeLab-v1.3.11.aab` / `.apk` | **17.5 / 17.8 MB** | **Google Play Production Track & Web Direct Download** |
+| **1.3.8** | **15** | **36** | **24** | `ThinkCodeLab-v1.3.8.aab` / `.apk` | **17.5 / 17.7 MB** | Google Play Production Track & Live APK |
 | **1.3.7** | **14** | **36** | **24** | `ThinkCodeLab-v1.3.7.aab` / `.apk` | **17.5 / 17.7 MB** | Draft Track (versionCode 14 reserved) |
 | **1.3.6** | **13** | **36** | **24** | `ThinkCodeLab-v1.3.6.apk` | **17.7 MB** | Previous Release |
 | **1.3.5** | **12** | **36** | **24** | `ThinkCodeLab-v1.3.5.apk` | **17.7 MB** | Previous Release |
